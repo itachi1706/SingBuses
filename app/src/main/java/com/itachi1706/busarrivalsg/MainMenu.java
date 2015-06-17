@@ -20,7 +20,7 @@ public class MainMenu extends AppCompatActivity {
     private final static UUID PEBBLE_APP_UUID = UUID.fromString("11198668-4e27-4e94-b51c-a27a1ea5cd82");
 
     //Android Stuff
-    private TextView connectionStatus;
+    private TextView connectionStatus, pressedBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +28,7 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
 
         connectionStatus = (TextView) findViewById(R.id.pebbleConnectionStatus);
+        pressedBtn = (TextView) findViewById(R.id.pressedBtn);
     }
 
     @Override
@@ -42,7 +43,16 @@ public class MainMenu extends AppCompatActivity {
             mReceiver = new PebbleKit.PebbleDataReceiver(PEBBLE_APP_UUID) {
                 @Override
                 public void receiveData(Context context, int i, PebbleDictionary pebbleDictionary) {
+                    PebbleKit.sendAckToPebble(getApplicationContext(), i);
 
+                    //Handle stuff in the dictionary
+                    if (pebbleDictionary.contains(PebbleEnum.KEY_BUTTON_EVENT)){
+                        switch (pebbleDictionary.getUnsignedIntegerAsLong(PebbleEnum.KEY_BUTTON_EVENT).intValue()){
+                            case PebbleEnum.BUTTON_REFRESH: pressedBtn.setText("Refresh Pressed"); break;
+                            case PebbleEnum.BUTTON_NEXT: pressedBtn.setText("Going Next"); break;
+                            case PebbleEnum.BUTTON_PREVIOUS: pressedBtn.setText("Going Previous"); break;
+                        }
+                    }
                 }
             };
             PebbleKit.registerReceivedDataHandler(this, mReceiver);
