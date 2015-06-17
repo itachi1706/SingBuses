@@ -1,16 +1,61 @@
 package com.itachi1706.busarrivalsg;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.getpebble.android.kit.PebbleKit;
+import com.getpebble.android.kit.util.PebbleDictionary;
+
+import java.util.UUID;
 
 public class MainMenu extends AppCompatActivity {
+
+    //Pebble stuff
+    private PebbleKit.PebbleDataReceiver mReceiver;
+    private final static UUID PEBBLE_APP_UUID = UUID.fromString("11198668-4e27-4e94-b51c-a27a1ea5cd82");
+
+    //Android Stuff
+    private TextView connectionStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        connectionStatus = (TextView) findViewById(R.id.pebbleConnectionStatus);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        boolean checkIfPebbleConnected = PebbleKit.isWatchConnected(this);
+        if (checkIfPebbleConnected){
+            //Init
+            connectionStatus.setText("Pebble Connected!");
+            connectionStatus.setTextColor(Color.GREEN);
+            mReceiver = new PebbleKit.PebbleDataReceiver(PEBBLE_APP_UUID) {
+                @Override
+                public void receiveData(Context context, int i, PebbleDictionary pebbleDictionary) {
+
+                }
+            };
+            PebbleKit.registerReceivedDataHandler(this, mReceiver);
+        } else {
+            connectionStatus.setText("Pebble not connected!");
+            connectionStatus.setTextColor(Color.RED);
+        }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        unregisterReceiver(mReceiver);
     }
 
     @Override
