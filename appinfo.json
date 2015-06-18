@@ -7,23 +7,7 @@
     "longName": "SingBuses",
     "projectType": "native",
     "resources": {
-        "media": [
-            {
-                "file": "images/refresh~bw.png",
-                "name": "ACTION_REFRESH_ICON",
-                "type": "png-trans"
-            },
-            {
-                "file": "images/previous~bw.png",
-                "name": "ACTION_PREVIOUS_ICON",
-                "type": "png-trans"
-            },
-            {
-                "file": "images/next~bw.png",
-                "name": "ACTION_NEXT_ICON",
-                "type": "png-trans"
-            }
-        ]
+        "media": []
     },
     "sdkVersion": "2",
     "shortName": "SingBuses",
