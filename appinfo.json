@@ -9,17 +9,17 @@
     "resources": {
         "media": [
             {
-                "file": "images/refresh~bw.png",
+                "file": "images/refresh.png",
                 "name": "ACTIONICON_REFRESH",
                 "type": "png-trans"
             },
             {
-                "file": "images/previous~bw.png",
+                "file": "images/previous.png",
                 "name": "ACTIONICON_PREVIOUS",
                 "type": "png-trans"
             },
             {
-                "file": "images/next~bw.png",
+                "file": "images/next.png",
                 "name": "ACTIONICON_NEXT",
                 "type": "png-trans"
             }
