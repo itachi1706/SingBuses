@@ -1,0 +1,704 @@
+{
+  "d": [
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242290)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242290,
+      "Code": "01013",
+      "Road": "Victoria St",
+      "Description": "St. Joseph's Ch",
+      "Layout_Num": null,
+      "Max_Pages": null,
+      "Summary": "Code: 01013 Road: Victoria St Description: St. Joseph's Ch ",
+      "CreateDate": "\/Date(1428319967947)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242291)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242291,
+      "Code": "01019",
+      "Road": "Victoria St",
+      "Description": "Bras Basah Cplx",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01019 Road: Victoria St Description: Bras Basah Cplx ",
+      "CreateDate": "\/Date(1428319967950)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242292)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242292,
+      "Code": "01029",
+      "Road": "Nth Bridge Rd",
+      "Description": "Cosmic Insurance Bldg",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01029 Road: Nth Bridge Rd Description: Cosmic Insurance Bldg ",
+      "CreateDate": "\/Date(1428319967957)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242293)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242293,
+      "Code": "01039",
+      "Road": "Nth Bridge Rd",
+      "Description": "Nth Bridge Commercial Cplx",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01039 Road: Nth Bridge Rd Description: Nth Bridge Commercial Cplx ",
+      "CreateDate": "\/Date(1428319967963)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242294)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242294,
+      "Code": "01059",
+      "Road": "Victoria St",
+      "Description": "Bugis Stn",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01059 Road: Victoria St Description: Bugis Stn ",
+      "CreateDate": "\/Date(1428319967967)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242295)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242295,
+      "Code": "01109",
+      "Road": "Queen St",
+      "Description": "Queen St Ter",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01109 Road: Queen St Description: Queen St Ter ",
+      "CreateDate": "\/Date(1428319967973)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242296)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242296,
+      "Code": "01112",
+      "Road": "Victoria St",
+      "Description": "Opp Bugis Junction",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01112 Road: Victoria St Description: Opp Bugis Junction ",
+      "CreateDate": "\/Date(1428319967980)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242297)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242297,
+      "Code": "01113",
+      "Road": "Victoria St",
+      "Description": "Bugis Stn",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01113 Road: Victoria St Description: Bugis Stn ",
+      "CreateDate": "\/Date(1428319967983)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242298)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242298,
+      "Code": "01119",
+      "Road": "Victoria St",
+      "Description": "Bugis Junction",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01119 Road: Victoria St Description: Bugis Junction ",
+      "CreateDate": "\/Date(1428319968010)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242299)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242299,
+      "Code": "01121",
+      "Road": "Victoria St",
+      "Description": "Stamford Pr Sch",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01121 Road: Victoria St Description: Stamford Pr Sch ",
+      "CreateDate": "\/Date(1428319968020)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242300)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242300,
+      "Code": "01129",
+      "Road": "Victoria St",
+      "Description": "Opp Stamford Pr Sch",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01129 Road: Victoria St Description: Opp Stamford Pr Sch ",
+      "CreateDate": "\/Date(1428319968027)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242301)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242301,
+      "Code": "01139",
+      "Road": "Nth Bridge Rd",
+      "Description": "Parkview Sq",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01139 Road: Nth Bridge Rd Description: Parkview Sq ",
+      "CreateDate": "\/Date(1428319968033)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242302)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242302,
+      "Code": "01211",
+      "Road": "Victoria St",
+      "Description": "Opp Blk 461",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01211 Road: Victoria St Description: Opp Blk 461 ",
+      "CreateDate": "\/Date(1428319968040)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242303)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242303,
+      "Code": "01219",
+      "Road": "Victoria St",
+      "Description": "Blk 461",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01219 Road: Victoria St Description: Blk 461 ",
+      "CreateDate": "\/Date(1428319968050)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242304)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242304,
+      "Code": "01229",
+      "Road": "Nth Bridge Rd",
+      "Description": "Bef Sultan Mque",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01229 Road: Nth Bridge Rd Description: Bef Sultan Mque ",
+      "CreateDate": "\/Date(1428319968053)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242305)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242305,
+      "Code": "01231",
+      "Road": "Jln Sultan",
+      "Description": "Opp Textile Ctr",
+      "Layout_Num": "4",
+      "Max_Pages": "-",
+      "Summary": "Code: 01231 Road: Jln Sultan Description: Opp Textile Ctr ",
+      "CreateDate": "\/Date(1428319968060)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242306)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242306,
+      "Code": "01239",
+      "Road": "Jln Sultan",
+      "Description": "Sultan Plaza",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01239 Road: Jln Sultan Description: Sultan Plaza ",
+      "CreateDate": "\/Date(1428319968067)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242307)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242307,
+      "Code": "01311",
+      "Road": "Kallang Rd",
+      "Description": "Lavender Stn",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01311 Road: Kallang Rd Description: Lavender Stn ",
+      "CreateDate": "\/Date(1428319968073)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242308)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242308,
+      "Code": "01319",
+      "Road": "Kallang Rd",
+      "Description": "Lavender Stn",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01319 Road: Kallang Rd Description: Lavender Stn ",
+      "CreateDate": "\/Date(1428319968080)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242309)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242309,
+      "Code": "01329",
+      "Road": "Nth Bridge Rd",
+      "Description": "Blk 8",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01329 Road: Nth Bridge Rd Description: Blk 8 ",
+      "CreateDate": "\/Date(1428319968087)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242310)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242310,
+      "Code": "01339",
+      "Road": "Crawford St",
+      "Description": "Bef Crawford Bridge",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01339 Road: Crawford St Description: Bef Crawford Bridge ",
+      "CreateDate": "\/Date(1428319968090)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242311)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242311,
+      "Code": "01341",
+      "Road": "Crawford St",
+      "Description": "Southbank",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01341 Road: Crawford St Description: Southbank ",
+      "CreateDate": "\/Date(1428319968097)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242312)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242312,
+      "Code": "01349",
+      "Road": "Crawford St",
+      "Description": "Opp Blk 4",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01349 Road: Crawford St Description: Opp Blk 4 ",
+      "CreateDate": "\/Date(1428319968103)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242313)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242313,
+      "Code": "01411",
+      "Road": "Beach Rd",
+      "Description": "Keypoint Bldg",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01411 Road: Beach Rd Description: Keypoint Bldg ",
+      "CreateDate": "\/Date(1428319968107)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242314)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242314,
+      "Code": "01419",
+      "Road": "Beach Rd",
+      "Description": "St. John HQ",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01419 Road: Beach Rd Description: St. John HQ ",
+      "CreateDate": "\/Date(1428319968113)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242315)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242315,
+      "Code": "01421",
+      "Road": "Beach Rd",
+      "Description": "Opp Golden Mile Cplx",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01421 Road: Beach Rd Description: Opp Golden Mile Cplx ",
+      "CreateDate": "\/Date(1428319968120)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242316)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242316,
+      "Code": "01429",
+      "Road": "Beach Rd",
+      "Description": "Golden Mile Cplx",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01429 Road: Beach Rd Description: Golden Mile Cplx ",
+      "CreateDate": "\/Date(1428319968123)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242317)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242317,
+      "Code": "01511",
+      "Road": "Beach Rd",
+      "Description": "Opp The Gateway",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01511 Road: Beach Rd Description: Opp The Gateway ",
+      "CreateDate": "\/Date(1428319968130)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242318)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242318,
+      "Code": "01519",
+      "Road": "Beach Rd",
+      "Description": "The Gateway",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01519 Road: Beach Rd Description: The Gateway ",
+      "CreateDate": "\/Date(1428319968137)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242319)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242319,
+      "Code": "01521",
+      "Road": "Beach Rd",
+      "Description": "Opp Plaza Parkroyal",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01521 Road: Beach Rd Description: Opp Plaza Parkroyal ",
+      "CreateDate": "\/Date(1428319968140)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242320)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242320,
+      "Code": "01529",
+      "Road": "Beach Rd",
+      "Description": "Plaza Parkroyal",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01529 Road: Beach Rd Description: Plaza Parkroyal ",
+      "CreateDate": "\/Date(1428319968147)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242321)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242321,
+      "Code": "01541",
+      "Road": "Rochor Rd",
+      "Description": " Aft Beach Rd",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01541 Road: Rochor Rd Description: Aft Beach Rd ",
+      "CreateDate": "\/Date(1428319968153)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242322)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242322,
+      "Code": "01549",
+      "Road": "Ophir Rd",
+      "Description": " Near Bali Lane",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01549 Road: Ophir Rd Description: Near Bali Lane ",
+      "CreateDate": "\/Date(1428319968160)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242323)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242323,
+      "Code": "01559",
+      "Road": "Ophir Rd",
+      "Description": "Landmark Village Hotel",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01559 Road: Ophir Rd Description: Landmark Village Hotel ",
+      "CreateDate": "\/Date(1428319968163)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242324)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242324,
+      "Code": "01611",
+      "Road": "Beach Rd",
+      "Description": "Raffles Hotel",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01611 Road: Beach Rd Description: Raffles Hotel ",
+      "CreateDate": "\/Date(1428319968170)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242325)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242325,
+      "Code": "01619",
+      "Road": "Beach Rd",
+      "Description": "Opp Raffles Hotel",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01619 Road: Beach Rd Description: Opp Raffles Hotel ",
+      "CreateDate": "\/Date(1428319968173)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242326)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242326,
+      "Code": "01621",
+      "Road": "Beach Rd",
+      "Description": "Opp Shaw Twrs",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01621 Road: Beach Rd Description: Opp Shaw Twrs ",
+      "CreateDate": "\/Date(1428319968180)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242327)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242327,
+      "Code": "01629",
+      "Road": "Beach Rd",
+      "Description": "Shaw Twrs",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01629 Road: Beach Rd Description: Shaw Twrs ",
+      "CreateDate": "\/Date(1428319968187)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242328)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242328,
+      "Code": "01631",
+      "Road": "Middle Rd",
+      "Description": "Aft Beach Rd",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01631 Road: Middle Rd Description: Aft Beach Rd ",
+      "CreateDate": "\/Date(1428319968190)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242329)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242329,
+      "Code": "01639",
+      "Road": "Middle Rd",
+      "Description": "Bef Beach Rd",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 01639 Road: Middle Rd Description: Bef Beach Rd ",
+      "CreateDate": "\/Date(1428319968197)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242330)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242330,
+      "Code": "02011",
+      "Road": "Fullerton Rd",
+      "Description": "Victoria Concert Hall",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 02011 Road: Fullerton Rd Description: Victoria Concert Hall ",
+      "CreateDate": "\/Date(1428319968200)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242331)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242331,
+      "Code": "02029",
+      "Road": "Connaught Dr",
+      "Description": "Opp S'pore Cricket Club",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 02029 Road: Connaught Dr Description: Opp S'pore Cricket Club ",
+      "CreateDate": "\/Date(1428319968207)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242332)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242332,
+      "Code": "02031",
+      "Road": "Coleman St",
+      "Description": "Opp The Adelphi",
+      "Layout_Num": "2",
+      "Max_Pages": "-",
+      "Summary": "Code: 02031 Road: Coleman St Description: Opp The Adelphi ",
+      "CreateDate": "\/Date(1428319968210)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242333)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242333,
+      "Code": "02049",
+      "Road": "Bras Basah Rd",
+      "Description": "Raffles Hotel",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 02049 Road: Bras Basah Rd Description: Raffles Hotel ",
+      "CreateDate": "\/Date(1428319968217)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242334)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242334,
+      "Code": "02051",
+      "Road": "Raffles Ave",
+      "Description": "Seating Gallery",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 02051 Road: Raffles Ave Description: Seating Gallery ",
+      "CreateDate": "\/Date(1428319968223)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242335)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242335,
+      "Code": "02061",
+      "Road": "Raffles Ave",
+      "Description": "The Esplanade",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 02061 Road: Raffles Ave Description: The Esplanade ",
+      "CreateDate": "\/Date(1428319968230)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242336)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242336,
+      "Code": "02089",
+      "Road": "Raffles Blvd",
+      "Description": "Pan Pacific Hotel",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 02089 Road: Raffles Blvd Description: Pan Pacific Hotel ",
+      "CreateDate": "\/Date(1428319968233)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242337)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242337,
+      "Code": "02099",
+      "Road": "Raffles Blvd",
+      "Description": "Marina Ctr Ter",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 02099 Road: Raffles Blvd Description: Marina Ctr Ter ",
+      "CreateDate": "\/Date(1428319968240)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242338)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242338,
+      "Code": "02101",
+      "Road": "Raffles Ave",
+      "Description": "Bef Temasek Ave",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 02101 Road: Raffles Ave Description: Bef Temasek Ave ",
+      "CreateDate": "\/Date(1428319968243)\/"
+    },
+    {
+      "__metadata": {
+        "uri": "http://datamall.mytransport.sg/LTAoDataService.svc/BusStopCodeSet(68242339)",
+        "type": "LTAModel.BusStopCode"
+      },
+      "BusStopCodeID": 68242339,
+      "Code": "02111",
+      "Road": "Esplanade Dr",
+      "Description": "Esplanade Bridge",
+      "Layout_Num": "1",
+      "Max_Pages": "-",
+      "Summary": "Code: 02111 Road: Esplanade Dr Description: Esplanade Bridge ",
+      "CreateDate": "\/Date(1428319968250)\/"
+    }
+  ]
+}

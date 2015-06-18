@@ -3,6 +3,8 @@ package com.itachi1706.busarrivalsg;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.itachi1706.busarrivalsg.GsonObjects.Offline.BusArrayJSON;
+import com.itachi1706.busarrivalsg.GsonObjects.Offline.BusJSON;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,9 +64,9 @@ public class BusStorage {
         BusArrayJSON busArray = gson.fromJson(json, BusArrayJSON.class);
         for (BusJSON b : busArray.getStorage()){
             BusServices bs = new BusServices();
-            bs.setOperator(b.getOperator().toString());
-            bs.setServiceNo(b.getService().toString());
-            bs.setStopID(b.getStop().toString());
+            bs.setOperator(b.getOperator());
+            bs.setServiceNo(b.getService());
+            bs.setStopID(b.getStop());
             services.add(bs);
         }
 
