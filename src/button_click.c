@@ -1,8 +1,20 @@
 #include <pebble.h>
+#include "bus_layout.h"
+  
+// Main Loop
+int main(void) {
+  //init();
+  show_bus_layout();
+  app_event_loop();
+  hide_bus_layout();
+  //deinit();
+  return 0;
+}
 
-static Window *window;
-static TextLayer *text_layer;
+//static Window *window;
+//static TextLayer *text_layer;
 
+  /*
 enum {
     KEY_BUTTON_EVENT = 0,
     BUTTON_PREVIOUS = 1,
@@ -11,6 +23,7 @@ enum {
     MESSAGE_DATA = 4,
     MESSAGE_DATA_EVENT = 5
 };
+
 
 // App Message API
 static void in_received_handler(DictionaryIterator *iter, void *context){
@@ -96,11 +109,5 @@ static void init(void) {
 // On Destroy (App Ends)
 static void deinit(void) {
   window_destroy(window);
-}
+}*/
 
-// Main Loop
-int main(void) {
-  init();
-  app_event_loop();
-  deinit();
-}

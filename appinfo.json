@@ -11,17 +11,17 @@
             {
                 "file": "images/refresh~bw.png",
                 "name": "ACTION_REFRESH_ICON",
-                "type": "png-trans"
+                "type": "png"
             },
             {
                 "file": "images/previous~bw.png",
                 "name": "ACTION_PREVIOUS_ICON",
-                "type": "png-trans"
+                "type": "png"
             },
             {
                 "file": "images/next~bw.png",
                 "name": "ACTION_NEXT_ICON",
-                "type": "png-trans"
+                "type": "png"
             }
         ]
     },
