@@ -7,6 +7,9 @@ static GFont s_res_gothic_24_bold;
 static GFont s_res_gothic_14;
 static GFont s_res_gothic_28_bold;
 static GFont s_res_gothic_18_bold;
+static GBitmap *s_res_action_previous_icon_white;
+static GBitmap *s_res_action_refresh_icon_white;
+static GBitmap *s_res_action_next_icon_white;
 static ActionBarLayer *actionbar_layer;
 static TextLayer *textlayer_bus_no;
 static TextLayer *textlayer_busstop_name;
@@ -27,10 +30,16 @@ static void initialise_ui(void) {
   s_res_gothic_14 = fonts_get_system_font(FONT_KEY_GOTHIC_14);
   s_res_gothic_28_bold = fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD);
   s_res_gothic_18_bold = fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);
+  s_res_action_previous_icon_white = gbitmap_create_with_resource(RESOURCE_ID_ACTION_PREVIOUS_ICON_WHITE);
+  s_res_action_refresh_icon_white = gbitmap_create_with_resource(RESOURCE_ID_ACTION_REFRESH_ICON_WHITE);
+  s_res_action_next_icon_white = gbitmap_create_with_resource(RESOURCE_ID_ACTION_NEXT_ICON_WHITE);
   // actionbar_layer
   actionbar_layer = action_bar_layer_create();
   action_bar_layer_add_to_window(actionbar_layer, s_window);
   action_bar_layer_set_background_color(actionbar_layer, GColorBlack);
+  action_bar_layer_set_icon(actionbar_layer, BUTTON_ID_UP, s_res_action_previous_icon_white);
+  action_bar_layer_set_icon(actionbar_layer, BUTTON_ID_SELECT, s_res_action_refresh_icon_white);
+  action_bar_layer_set_icon(actionbar_layer, BUTTON_ID_DOWN, s_res_action_next_icon_white);
   layer_add_child(window_get_root_layer(s_window), (Layer *)actionbar_layer);
   
   // textlayer_bus_no
@@ -96,6 +105,9 @@ static void destroy_ui(void) {
   text_layer_destroy(s_textlayer_1);
   bitmap_layer_destroy(bitmaplayer_current);
   bitmap_layer_destroy(bitmaplayer_next);
+  gbitmap_destroy(s_res_action_previous_icon_white);
+  gbitmap_destroy(s_res_action_refresh_icon_white);
+  gbitmap_destroy(s_res_action_next_icon_white);
 }
 // END AUTO-GENERATED UI CODE
 
