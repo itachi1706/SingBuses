@@ -1,5 +1,7 @@
 package com.itachi1706.busarrivalsg.GsonObjects.LTA;
 
+import android.location.Location;
+
 /**
  * Created by Kenneth on 18/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.GsonObjects.LTA
@@ -8,6 +10,9 @@ public class BusStopJSON {
 
     private String Code, Road, Description, Summary, CreateDate;
     private int BusStopCodeID;
+
+    private boolean hasDistance = false;
+    private float distance;
 
     public int getBusStopCodeID() {
         return BusStopCodeID;
@@ -55,5 +60,21 @@ public class BusStopJSON {
 
     public void setBusStopCodeID(int busStopCodeID) {
         BusStopCodeID = busStopCodeID;
+    }
+
+    public boolean isHasDistance() {
+        return hasDistance;
+    }
+
+    public void setHasDistance(boolean hasDistance) {
+        this.hasDistance = hasDistance;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
     }
 }

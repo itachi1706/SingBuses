@@ -53,7 +53,7 @@ public class MainMenu extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "FAB Clicked!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainMenu.this, AddBusStops.class));
             }
         });
 

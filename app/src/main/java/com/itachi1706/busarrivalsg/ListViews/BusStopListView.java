@@ -44,7 +44,10 @@ public class BusStopListView extends ArrayAdapter<BusStopJSON> {
             stopName.setText(i.getBusStopName());
         }
         if (desc != null){
-            desc.setText(i.getRoad() + " (" + i.getCode() + ")");
+            if (!i.isHasDistance())
+                desc.setText(i.getRoad() + " (" + i.getCode() + ")");
+            else
+                desc.setText(String.format("%s (%s) [%.2fm]",i.getRoad(), i.getCode(), i.getDistance()));
         }
 
         return v;

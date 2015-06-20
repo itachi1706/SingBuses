@@ -182,6 +182,8 @@ public class BusStopsDB extends SQLiteOpenHelper {
         BusStopJSON bs = new BusStopJSON();
 
         Cursor cursor = db.rawQuery(query, null);
+        if (cursor.getCount() == 0)
+            return null;
         if (cursor.moveToFirst()){
             do {
                 bs.setBusStopCodeID(cursor.getInt(0));

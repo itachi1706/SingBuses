@@ -34,7 +34,7 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_gravity="end|bottom"
-        android:src="@drawable/plus_48"
+        android:src="@drawable/plus_black_48"
         app:elevation="@dimen/fab_elevation"
         app:borderWidth="0dp"
         android:adjustViewBounds="false" />

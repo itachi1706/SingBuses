@@ -9,6 +9,7 @@ import com.google.gson.JsonArray;
 public class OnlineGMapsJsonObject {
     private String id, name, place_id, reference, scope, vicinity;
     private JsonArray types;
+    private GmapsGeometry geometry;
 
     public String getId() {
         return id;
@@ -40,5 +41,29 @@ public class OnlineGMapsJsonObject {
 
     public JsonArray getTypes() {
         return types;
+    }
+
+    public GmapsGeometry getGeometry() {
+        return geometry;
+    }
+
+    public class GmapsGeometry{
+        private GmapsLocation location;
+
+        public GmapsLocation getLocation() {
+            return location;
+        }
+
+        public class GmapsLocation{
+            private double lat, lng;
+
+            public double getLat() {
+                return lat;
+            }
+
+            public double getLng() {
+                return lng;
+            }
+        }
     }
 }
