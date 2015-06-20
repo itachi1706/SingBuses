@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.itachi1706.busarrivalsg" >
+    package="com.itachi1706.busarrivalsg"
+    android:installLocation="internalOnly">
 
     <application
         android:allowBackup="true"
