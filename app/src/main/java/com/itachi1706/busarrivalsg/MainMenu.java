@@ -59,8 +59,9 @@ public class MainMenu extends AppCompatActivity {
 
         boolean checkIfPebbleConnected = PebbleKit.isWatchConnected(this);
         if (checkIfPebbleConnected){
+            PebbleKit.FirmwareVersionInfo info = PebbleKit.getWatchFWVersion(this);
             //Init
-            connectionStatus.setText("Pebble Connected!");
+            connectionStatus.setText("Pebble Connected! (" + info.getTag() + ")");
             connectionStatus.setTextColor(Color.GREEN);
             mReceiver = new PebbleKit.PebbleDataReceiver(PEBBLE_APP_UUID) {
                 @Override
