@@ -45,8 +45,9 @@ public class PopulateListWithCurrentLocation extends AsyncTask<Location, Void, S
     @Override
     protected String doInBackground(Location... locate) {
         location = locate[0];
-        String url = "http://api.itachi1706.com/api/nearbyPlaces.php?location=" + location.getLongitude() + "," + location.getLatitude();
+        String url = "http://api.itachi1706.com/api/nearbyPlaces.php?location=" + location.getLatitude() + "," + location.getLongitude();
         String tmp = "";
+        Log.d("CURRENT-LOCATION", url);
         try {
             URL urlConn = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
@@ -79,6 +80,7 @@ public class PopulateListWithCurrentLocation extends AsyncTask<Location, Void, S
         } else {
             //Go parse it
             Gson gson = new Gson();
+            Log.d("CURRENT-LOCATION", json);
             if (!StaticVariables.checkIfYouGotJsonString(json)) {
                 //Invalid JSON string
                 Toast.makeText(activity, "Invalid JSON. Please try again", Toast.LENGTH_SHORT).show();
@@ -96,6 +98,10 @@ public class PopulateListWithCurrentLocation extends AsyncTask<Location, Void, S
                 BusStopJSON stop = db.getBusStopByStopName(name);
                 if (stop == null) {
                     Log.e("LOCATE", "Bus Stop not found in database, ignoring D:");
+                    continue;
+                }
+                if (!map.getVicinity().equalsIgnoreCase("Singapore")){
+                    Log.e("LOCATE", "Bus Stop not in Singapore, ignoring...");
                     continue;
                 }
 

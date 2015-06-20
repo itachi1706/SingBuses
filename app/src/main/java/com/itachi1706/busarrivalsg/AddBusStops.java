@@ -1,5 +1,6 @@
 package com.itachi1706.busarrivalsg;
 
+import android.content.Intent;
 import android.location.Location;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -51,8 +52,8 @@ public class AddBusStops extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Getting your location...", Toast.LENGTH_SHORT).show();
-                longitude = gps.getLatitude();
-                latitude = gps.getLongitude();
+                latitude = gps.getLatitude();
+                longitude = gps.getLongitude();
                 updateList();
             }
         });
@@ -91,6 +92,7 @@ public class AddBusStops extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, MainSettings.class));
             return true;
         }
 

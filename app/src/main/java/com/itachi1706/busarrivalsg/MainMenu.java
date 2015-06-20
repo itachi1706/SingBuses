@@ -110,6 +110,7 @@ public class MainMenu extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, MainSettings.class));
             return true;
         } else if (id == R.id.view_all_stops){
             startActivity(new Intent(this, ListAllBusStops.class));
@@ -127,6 +128,7 @@ public class MainMenu extends AppCompatActivity {
                 new AlertDialog.Builder(this).setTitle("No Internet Access")
                         .setMessage("Internet Access is required for first boot, please ensure that you have internet access" +
                                 " before relaunching this application").setCancelable(false)
+                        .setNeutralButton("Override", null)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
