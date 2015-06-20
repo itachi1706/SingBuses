@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.itachi1706.busarrivalsg"
-    android:installLocation="internalOnly">
+    android:installLocation="internalOnly" >
+
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- Get all the API data duh -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Check if there's internet access -->
 
     <application
         android:allowBackup="true"
@@ -16,6 +19,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ListAllBusStops"
+            android:label="@string/title_activity_list_all_bus_stops" >
         </activity>
     </application>
 

@@ -21,7 +21,7 @@ public class BusStopJSON {
         return Road;
     }
 
-    public String getDescription() {
+    public String getBusStopName() {
         return Description;
     }
 
@@ -31,5 +31,29 @@ public class BusStopJSON {
 
     public String getCreateDate() {
         return CreateDate;
+    }
+
+    public void setCode(String code) {
+        Code = code;
+    }
+
+    public void setRoad(String road) {
+        Road = road;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
+    }
+
+    public void setSummary(String summary) {
+        Summary = summary;
+    }
+
+    public void setCreateDate(String createDate) {
+        CreateDate = createDate;
+    }
+
+    public void setBusStopCodeID(int busStopCodeID) {
+        BusStopCodeID = busStopCodeID;
     }
 }

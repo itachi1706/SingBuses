@@ -6,9 +6,9 @@ package com.itachi1706.busarrivalsg.GsonObjects.LTA;
  */
 public class BusStopJSONArray {
 
-    private BusStopJSON d;
+    private BusStopJSON[] d;
 
-    public BusStopJSON getBusStopsArray() {
+    public BusStopJSON[] getBusStopsArray() {
         return d;
     }
 }
