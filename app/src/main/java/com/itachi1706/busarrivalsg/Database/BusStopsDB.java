@@ -200,6 +200,37 @@ public class BusStopsDB extends SQLiteOpenHelper {
     }
 
     /**
+     * Returns a single Bus Stop Object based on Bus Stop Name
+     * @param stopName Bus Stop Name
+     * @return Bus Stop Object
+     */
+    public ArrayList<BusStopJSON> getBusStopsByStopName(String stopName){
+        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_DESC + "='" + stopName + "';";
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<BusStopJSON> result = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.getCount() == 0)
+            return null;
+        if (cursor.moveToFirst()){
+            do {
+                BusStopJSON bs = new BusStopJSON();
+                bs.setBusStopCodeID(cursor.getInt(0));
+                bs.setCode(cursor.getString(1));
+                bs.setRoad(cursor.getString(2));
+                bs.setDescription(cursor.getString(3));
+                bs.setSummary(cursor.getString(4));
+                bs.setCreateDate(cursor.getString(5));
+
+                result.add(bs);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return result;
+    }
+
+    /**
      * Updates an available bus stop if exist, else it adds it into the database
      * @param busStop The Bus Stop to update
      */

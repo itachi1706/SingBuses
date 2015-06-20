@@ -95,11 +95,35 @@ public class PopulateListWithCurrentLocation extends AsyncTask<Location, Void, S
             ArrayList<BusStopJSON> stops = new ArrayList<>();
             for (OnlineGMapsJsonObject map : maps) {
                 String name = map.getName();
-                BusStopJSON stop = db.getBusStopByStopName(name);
-                if (stop == null) {
+                ArrayList<BusStopJSON> stopsTmp = db.getBusStopsByStopName(name);
+                BusStopJSON stop = null;
+                if (stopsTmp.size() == 0) {
                     Log.e("LOCATE", "Bus Stop not found in database, ignoring D:");
                     continue;
                 }
+                else if (stopsTmp.size() > 1 && stops.size() >= 1){
+                    //Do stuff validating
+                    //TODO HACKY FIX, MAYBE GET SOMETHING MORE LEGIT AS THIS ISNT EXACTLY CORRECT
+                    boolean checks = false;
+                    for (BusStopJSON check : stopsTmp){
+                        char a = stops.get(0).getCode().charAt(0);
+                        char b = check.getCode().charAt(0);
+                        Log.d("CHECK", check.getBusStopName() + " [" + a + "|" + b + "]");
+                        char c = stops.get(0).getCode().charAt(1);
+                        char d = check.getCode().charAt(1);
+                        if (a == b && c == d){
+                            Log.d("CHECK-FOUND", check.getBusStopName() + " [" + a + "|" + b + "]");
+                            stop = check;
+                            checks = true;
+                            break;
+                        }
+                    }
+                    if (!checks)
+                        stop = stopsTmp.get(0);
+                } else {
+                    stop = stopsTmp.get(0);
+                }
+
                 if (!map.getVicinity().equalsIgnoreCase("Singapore")){
                     Log.e("LOCATE", "Bus Stop not in Singapore, ignoring...");
                     continue;
