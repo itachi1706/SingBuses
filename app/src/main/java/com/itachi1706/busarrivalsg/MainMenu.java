@@ -60,6 +60,13 @@ public class MainMenu extends AppCompatActivity {
                 startActivity(new Intent(MainMenu.this, AddBusStops.class));
             }
         });
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainMenu.this, "Add a bus service into favourites", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
         boolean checkIfPebbleConnected = PebbleKit.isWatchConnected(this);
         if (checkIfPebbleConnected){
