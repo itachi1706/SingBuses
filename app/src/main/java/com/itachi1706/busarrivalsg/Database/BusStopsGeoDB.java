@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeoObject;
 
 import java.io.File;
@@ -101,7 +102,7 @@ public class BusStopsGeoDB extends SQLiteOpenHelper {
                 BusStopsGeoObject bs = new BusStopsGeoObject();
                 bs.setNo(cursor.getString(0));
                 bs.setLat(cursor.getString(1));
-                bs.setLat(cursor.getString(2));
+                bs.setLng(cursor.getString(2));
                 bs.setName(cursor.getString(3));
 
                 results.add(bs);
@@ -123,11 +124,14 @@ public class BusStopsGeoDB extends SQLiteOpenHelper {
         BusStopsGeoObject bs = new BusStopsGeoObject();
 
         Cursor cursor = db.rawQuery(query, null);
+        if (cursor.getCount() == 0){
+            return null;
+        }
         if (cursor.moveToFirst()){
             do {
                 bs.setNo(cursor.getString(0));
                 bs.setLat(cursor.getString(1));
-                bs.setLat(cursor.getString(2));
+                bs.setLng(cursor.getString(2));
                 bs.setName(cursor.getString(3));
             } while (cursor.moveToNext());
         }
@@ -153,7 +157,7 @@ public class BusStopsGeoDB extends SQLiteOpenHelper {
             do {
                 bs.setNo(cursor.getString(0));
                 bs.setLat(cursor.getString(1));
-                bs.setLat(cursor.getString(2));
+                bs.setLng(cursor.getString(2));
                 bs.setName(cursor.getString(3));
             } while (cursor.moveToNext());
         }
