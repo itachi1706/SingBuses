@@ -58,6 +58,11 @@ public class BusStopListView extends ArrayAdapter<BusStopJSON> {
         return items != null? items.size() : 0;
     }
 
+    @Override
+    public BusStopJSON getItem(int arg0) {
+        return items.get(arg0);
+    }
+
     public void updateAdapter(ArrayList<BusStopJSON> newArrayData){
         this.items = newArrayData;
     }

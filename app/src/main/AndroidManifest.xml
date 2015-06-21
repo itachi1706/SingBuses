@@ -36,6 +36,10 @@
             android:name=".MainSettings"
             android:label="@string/title_activity_main_settings" >
         </activity>
+        <activity
+            android:name=".BusServicesAtStop"
+            android:label="@string/title_activity_bus_services_at_stop" >
+        </activity>
     </application>
 
 </manifest>

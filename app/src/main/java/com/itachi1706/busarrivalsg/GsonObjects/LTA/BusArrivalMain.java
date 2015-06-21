@@ -7,9 +7,9 @@ package com.itachi1706.busarrivalsg.GsonObjects.LTA;
 public class BusArrivalMain {
 
     private String BusStopID;
-    private BusArrivalArrayObject Services;
+    private BusArrivalArrayObject[] Services;
 
-    public BusArrivalArrayObject getServices() {
+    public BusArrivalArrayObject[] getServices() {
         return Services;
     }
 

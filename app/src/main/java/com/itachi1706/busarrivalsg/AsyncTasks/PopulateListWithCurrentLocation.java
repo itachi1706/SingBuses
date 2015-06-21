@@ -102,6 +102,11 @@ public class PopulateListWithCurrentLocation extends AsyncTask<Location, Void, S
                 String name = map.getName();
                 ArrayList<BusStopJSON> stopsTmp = db.getBusStopsByStopName(name);
                 BusStopJSON stop;
+                if (stopsTmp == null){
+                    Log.e("LOCATE", "Something went wrong here");
+                    Toast.makeText(activity, "Something went wrong here, reobtain your data", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (stopsTmp.size() == 0) {
                     Log.e("LOCATE", "Bus Stop not found in database, ignoring D:");
                     continue;
