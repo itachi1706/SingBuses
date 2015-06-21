@@ -95,6 +95,12 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
             }
 
             BusStopJSONArray replyArr = gson.fromJson(json, BusStopJSONArray.class);
+            if (replyArr == null || replyArr.getBusStopsArray() == null){
+                //Invalid string, retrying
+                Toast.makeText(activity, "Something weird occurred, Retrying", Toast.LENGTH_SHORT).show();
+                new GetAllBusStops(dialog, db, activity, sp).execute(skipValue);
+                return;
+            }
             if (replyArr.getBusStopsArray().length == 0){
                 //End of line can safely return
                 int count = db.getSize();
