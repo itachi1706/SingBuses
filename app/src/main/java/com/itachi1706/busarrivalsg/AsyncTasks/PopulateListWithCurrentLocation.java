@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
+import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsAPIArray;
 import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsJsonObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
@@ -31,15 +32,17 @@ public class PopulateListWithCurrentLocation extends AsyncTask<Location, Void, S
 
     Activity activity;
     BusStopsDB db;
+    BusStopsGeoDB geoDB;
     BusStopListView adapter;
     Exception except;
 
     Location location;
 
-    public PopulateListWithCurrentLocation(Activity activity, BusStopsDB db, BusStopListView adapter){
+    public PopulateListWithCurrentLocation(Activity activity, BusStopsDB db, BusStopsGeoDB geoDB, BusStopListView adapter){
         this.activity = activity;
         this.db = db;
         this.adapter = adapter;
+        this.geoDB = geoDB;
     }
 
     @Override

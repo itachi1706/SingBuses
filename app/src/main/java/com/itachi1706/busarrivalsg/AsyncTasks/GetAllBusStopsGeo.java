@@ -8,8 +8,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSONArray;
+import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
+import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeo;
 import com.itachi1706.busarrivalsg.StaticVariables;
 
 import java.io.BufferedReader;
@@ -24,17 +24,15 @@ import java.net.URL;
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.AsyncTasks
  */
-public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
+public class GetAllBusStopsGeo extends AsyncTask<Void, Void, String> {
 
     private ProgressDialog dialog;
-    private BusStopsDB db;
+    private BusStopsGeoDB db;
     private Activity activity;
     private Exception exception = null;
     private SharedPreferences sp;
 
-    private int skipValue;
-
-    public GetAllBusStops(ProgressDialog dialog, BusStopsDB db, Activity activity, SharedPreferences sp){
+    public GetAllBusStopsGeo(ProgressDialog dialog, BusStopsGeoDB db, Activity activity, SharedPreferences sp){
         this.dialog = dialog;
         this.db = db;
         this.activity = activity;
@@ -42,16 +40,30 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Integer... skipValues) {
-        this.skipValue = skipValues[0];
-        String url = "http://api.itachi1706.com/api/busstops.php?skip=" + this.skipValue;
+    protected String doInBackground(Void... params) {
+        String url = "http://api.itachi1706.com/api/busstopsgeo.php";
         String tmp = "";
 
+        Log.d("INIT-2 GEO", "Awaiting completion of First Init Task...");
+        while (!StaticVariables.init1TaskFinished)
+        {
+            try
+            {
+                Log.d("INIT-2 GEO", "Waiting for First Init Task to Finish");
+                Thread.sleep(1000);
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        Log.d("INIT-2 GEO", "First Init Task Finished");
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dialog.setTitle("Downloading Bus Stop Data");
-                dialog.setMessage("This will take a few minutes. Be patient :) \nGetting Bus Stops " + (skipValue + 1) + " - " + (skipValue + 50));
+                dialog.show();
+                dialog.setTitle("Downloading Bus Stop Geographical Data");
+                dialog.setMessage("This will take a few minutes. Be patient :) \nGetting Bus Stops Geographical Data...");
             }
         });
         try {
@@ -80,7 +92,7 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
         if (exception != null){
             if (exception instanceof SocketTimeoutException) {
                 Toast.makeText(activity, "Database query timed out. Retrying", Toast.LENGTH_SHORT).show();
-                new GetAllBusStops(dialog, db, activity, sp).execute(skipValue);
+                new GetAllBusStopsGeo(dialog, db, activity, sp).execute();
             } else {
                 Toast.makeText(activity, exception.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -90,23 +102,18 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
             if (!StaticVariables.checkIfYouGotJsonString(json)){
                 //Invalid string, retrying
                 Toast.makeText(activity, "Invalid JSON, Retrying", Toast.LENGTH_SHORT).show();
-                new GetAllBusStops(dialog, db, activity, sp).execute(skipValue);
+                new GetAllBusStopsGeo(dialog, db, activity, sp).execute();
                 return;
             }
 
-            BusStopJSONArray replyArr = gson.fromJson(json, BusStopJSONArray.class);
-            if (replyArr.getBusStopsArray().length == 0){
-                //End of line can safely return
-                int count = db.getSize();
-                Toast.makeText(activity, count + " bus stops saved to database!", Toast.LENGTH_SHORT).show();
-                Log.d("GET-STOPS", "Loaded " + count + " bus stops into the database");
-                sp.edit().putBoolean("busDBLoaded", true).apply();
+            BusStopsGeo replyArr = gson.fromJson(json, BusStopsGeo.class);
+            if (replyArr.getGeo().length == 0){
+                //Error occured
+                Toast.makeText(activity, "An error occured, please reload the application and try again", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
-                StaticVariables.init1TaskFinished = true;
-                Log.d("INIT-1", "Task Complete");
                 return;
             }
-            new ParseBusStops(dialog, db, activity, skipValue, sp).execute(replyArr);
+            new ParseBusStopsGeo(dialog, db, activity, sp).execute(replyArr);
         }
     }
 }

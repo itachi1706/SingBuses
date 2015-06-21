@@ -1,10 +1,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference
-        android:title="First Boot"
-        android:defaultValue="true"
-        android:key="firstBoot"
-        android:summary="Whether the app has finished its first boot process already" />
+        android:title="Bus Stops Database Loaded"
+        android:defaultValue="false"
+        android:key="busDBLoaded"
+        android:summary="Whether the bus stops database has already been loaded" />
+
+    <CheckBoxPreference
+        android:title="Bus Stops Geographical Database Loaded"
+        android:defaultValue="false"
+        android:key="geoDBLoaded"
+        android:summary="Whether the bus stops geographical database has already been loaded" />
 
     <Preference android:title="App Version" android:key="view_app_version" android:summary="NULL" />
     <Preference android:title="Package Name" android:key="view_app_name" android:selectable="false" />

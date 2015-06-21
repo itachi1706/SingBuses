@@ -9,10 +9,12 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +24,9 @@ import android.widget.Toast;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
+import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStopsGeo;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
+import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 
 import java.util.UUID;
 
@@ -123,23 +127,17 @@ public class MainMenu extends AppCompatActivity {
 
     private void checkIfDatabaseUpdated(){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        if (sp.getBoolean("firstBoot", true)){
+
+        //Main Database
+        if (!sp.getBoolean("busDBLoaded", false)){
             //First Boot, populate database
             if (!isNetworkAvailable()){
-                new AlertDialog.Builder(this).setTitle("No Internet Access")
-                        .setMessage("Internet Access is required for first boot, please ensure that you have internet access" +
-                                " before relaunching this application").setCancelable(false)
-                        .setNeutralButton("Override", null)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                MainMenu.this.finish();
-                            }
-                        }).show();
+                networkUnavailable("Bus Database");
             } else {
+                Log.d("INIT", "Initializing Bus Stop Database");
                 ProgressDialog dialog = new ProgressDialog(this);
-                dialog.setTitle("First Boot");
-                dialog.setMessage("Retriving data from database");
+                dialog.setTitle("Bus Database");
+                dialog.setMessage("Retriving data from server");
                 dialog.setCancelable(false);
                 dialog.setIndeterminate(true);
                 dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -148,9 +146,42 @@ public class MainMenu extends AppCompatActivity {
                 db.dropAndRebuildDB();
                 dialog.show();
 
-                new GetAllBusStops(dialog, db, this, sp).execute(0);
+                new GetAllBusStops(dialog, db, this, sp).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 0);
             }
         }
+
+        if (!sp.getBoolean("geoDBLoaded", false)){
+            //First Boot with Geo Location db
+            if (!isNetworkAvailable()){
+                networkUnavailable("Bus Geo Location Database");
+            } else {
+                Log.d("INIT", "Initializing Bus Stop Geographical Database");
+                ProgressDialog dialogs = new ProgressDialog(this);
+                dialogs.setTitle("Bus Geographical Database");
+                dialogs.setMessage("Retriving data from server");
+                dialogs.setCancelable(false);
+                dialogs.setIndeterminate(true);
+                dialogs.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+                BusStopsGeoDB geoDB = new BusStopsGeoDB(this);
+                geoDB.dropAndRebuildDB();
+
+                new GetAllBusStopsGeo(dialogs, geoDB, this, sp).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }
+    }
+
+    private void networkUnavailable(String reason){
+        new AlertDialog.Builder(this).setTitle("No Internet Access")
+                .setMessage("Internet Access is required to populate " + reason +", please ensure that you have internet access" +
+                        " before relaunching this application").setCancelable(false)
+                .setNeutralButton("Override", null)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        MainMenu.this.finish();
+                    }
+                }).show();
     }
 
     private boolean isNetworkAvailable() {

@@ -8,6 +8,8 @@ public class StaticVariables {
 
     public static int HTTP_QUERY_TIMEOUT = 15000; //15 seconds timeout
 
+    public static boolean init1TaskFinished = false;
+
     public static boolean checkIfYouGotJsonString(String jsonString){
         return !jsonString.startsWith("<!DOCTYPE html>");
     }

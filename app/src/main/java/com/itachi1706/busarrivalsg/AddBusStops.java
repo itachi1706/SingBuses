@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.itachi1706.busarrivalsg.AsyncTasks.PopulateListWithCurrentLocation;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
+import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.ListViews.BusStopListView;
 import com.itachi1706.busarrivalsg.Services.GPSManager;
@@ -62,11 +63,12 @@ public class AddBusStops extends AppCompatActivity {
     }
 
     private void updateList(){
+        BusStopsGeoDB geoDB = new BusStopsGeoDB(this);
         BusStopsDB db = new BusStopsDB(this);
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
-        new PopulateListWithCurrentLocation(this, db, adapter).execute(location);
+        new PopulateListWithCurrentLocation(this, db, geoDB, adapter).execute(location);
     }
 
     @Override
