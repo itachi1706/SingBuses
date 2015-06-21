@@ -2,6 +2,7 @@ package com.itachi1706.busarrivalsg;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,11 +17,12 @@ import com.itachi1706.busarrivalsg.ListViews.BusServiceListViewAdapter;
 
 import java.util.ArrayList;
 
-public class BusServicesAtStop extends AppCompatActivity {
+public class BusServicesAtStop extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     ListView buses;
     String busStopCode, busStopName;
     BusServiceListViewAdapter adapter;
+    SwipeRefreshLayout swipeToRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,12 @@ public class BusServicesAtStop extends AppCompatActivity {
         buses = (ListView) findViewById(R.id.lvBusService);
         adapter = new BusServiceListViewAdapter(this, R.layout.listview_bus_numbers, new ArrayList<BusArrivalArrayObject>());
         buses.setAdapter(adapter);
+
+        swipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_swipe);
+        swipeToRefresh.setOnRefreshListener(this);
+
+        // TODO Swipe to refresh get 4 colors for the color scheme
+        // https://github.com/itachi1706/HypixelStatistics/blob/master/app/src/main/java/com/itachi1706/hypixelstatistics/BoosterList.java for reference
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -48,6 +56,7 @@ public class BusServicesAtStop extends AppCompatActivity {
                 getSupportActionBar().setTitle(busStopName + " (" + busStopCode + ")");
             else
                 getSupportActionBar().setTitle(busStopCode + "");
+            swipeToRefresh.setRefreshing(true);
             updateBusStop();
         }
     }
@@ -56,7 +65,7 @@ public class BusServicesAtStop extends AppCompatActivity {
         ProgressDialog dialog = new ProgressDialog(this);
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
-        new GetBusServices(dialog, this, adapter).execute(busStopCode);
+        new GetBusServices(dialog, this, adapter, swipeToRefresh).execute(busStopCode);
     }
 
     @Override
@@ -78,10 +87,16 @@ public class BusServicesAtStop extends AppCompatActivity {
             startActivity(new Intent(this, MainSettings.class));
             return true;
         } else if (id == R.id.action_refresh){
+            swipeToRefresh.setRefreshing(true);
             updateBusStop();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRefresh() {
+        updateBusStop();
     }
 }

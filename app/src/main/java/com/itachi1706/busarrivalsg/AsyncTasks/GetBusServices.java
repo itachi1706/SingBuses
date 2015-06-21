@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -34,13 +35,15 @@ public class GetBusServices extends AsyncTask<String, Void, String> {
     private Activity activity;
     private Exception exception = null;
     private BusServiceListViewAdapter adapter;
+    private SwipeRefreshLayout swipe;
 
     private String busCode;
 
-    public GetBusServices(ProgressDialog dialog, Activity activity, BusServiceListViewAdapter adapter){
+    public GetBusServices(ProgressDialog dialog, Activity activity, BusServiceListViewAdapter adapter, SwipeRefreshLayout swipe){
         this.dialog = dialog;
         this.activity = activity;
         this.adapter = adapter;
+        this.swipe = swipe;
     }
 
     @Override
@@ -102,6 +105,8 @@ public class GetBusServices extends AsyncTask<String, Void, String> {
             BusArrivalMain mainArr = gson.fromJson(json, BusArrivalMain.class);
             BusArrivalArrayObject[] array = mainArr.getServices();
             dialog.dismiss();
+            if (swipe.isRefreshing())
+                swipe.setRefreshing(false);
             for (BusArrivalArrayObject obj : array){
                 items.add(obj);
                 adapter.updateAdapter(items);
