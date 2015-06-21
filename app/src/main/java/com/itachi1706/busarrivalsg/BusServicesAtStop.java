@@ -48,11 +48,15 @@ public class BusServicesAtStop extends AppCompatActivity {
                 getSupportActionBar().setTitle(busStopName + " (" + busStopCode + ")");
             else
                 getSupportActionBar().setTitle(busStopCode + "");
-            ProgressDialog dialog = new ProgressDialog(this);
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            new GetBusServices(dialog, this, adapter).execute(busStopCode);
+            updateBusStop();
         }
+    }
+
+    private void updateBusStop(){
+        ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+        new GetBusServices(dialog, this, adapter).execute(busStopCode);
     }
 
     @Override
@@ -72,6 +76,9 @@ public class BusServicesAtStop extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, MainSettings.class));
+            return true;
+        } else if (id == R.id.action_refresh){
+            updateBusStop();
             return true;
         }
 
