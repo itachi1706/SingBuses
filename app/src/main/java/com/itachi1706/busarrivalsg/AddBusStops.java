@@ -38,6 +38,9 @@ public class AddBusStops extends AppCompatActivity {
 
         currentLocationGet = (FloatingActionButton) findViewById(R.id.current_location_fab);
         result = (ListView) findViewById(R.id.lvNearestBusStops);
+
+        adapter = new BusStopListView(this, R.layout.listview_bus_stops, new ArrayList<BusStopJSON>());
+        result.setAdapter(adapter);
     }
 
     @Override
@@ -58,8 +61,6 @@ public class AddBusStops extends AppCompatActivity {
                 updateList();
             }
         });
-        adapter = new BusStopListView(this, R.layout.listview_bus_stops, new ArrayList<BusStopJSON>());
-        result.setAdapter(adapter);
     }
 
     private void updateList(){
