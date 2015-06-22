@@ -1,10 +1,11 @@
-package com.itachi1706.busarrivalsg;
+package com.itachi1706.busarrivalsg.Services;
 
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.GsonObjects.Offline.BusArrayJSON;
 import com.itachi1706.busarrivalsg.GsonObjects.Offline.BusJSON;
+import com.itachi1706.busarrivalsg.Objects.BusServices;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,5 +72,12 @@ public class BusStorage {
         }
 
         return services;
+    }
+
+    public static void updateBusJSON(SharedPreferences pref, ArrayList<BusServices> newServices){
+        pref.edit().remove("stored").apply();
+        for (BusServices s : newServices){
+            addNewBus(s, pref);
+        }
     }
 }

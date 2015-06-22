@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg;
+package com.itachi1706.busarrivalsg.Objects;
 
 /**
  * Created by Kenneth on 17/6/2015
@@ -8,6 +8,8 @@ public class BusServices {
 
     private String serviceNo,operator,stopID;
     private BusStatus currentBus,nextBus;
+    private boolean obtainedNextData;
+    private long time;
 
     public BusStatus getNextBus() {
         return nextBus;
@@ -47,5 +49,21 @@ public class BusServices {
 
     public void setStopID(String stopID) {
         this.stopID = stopID;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public boolean isObtainedNextData() {
+        return obtainedNextData;
+    }
+
+    public void setObtainedNextData(boolean obtainedNextData) {
+        this.obtainedNextData = obtainedNextData;
     }
 }
