@@ -26,6 +26,7 @@ import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStopsGeo;
+import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesFavourites;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.ListViews.FavouritesListViewAdapter;
@@ -35,6 +36,7 @@ import com.itachi1706.busarrivalsg.Services.BusStorage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executor;
 
 public class MainMenu extends AppCompatActivity {
 
@@ -119,12 +121,15 @@ public class MainMenu extends AppCompatActivity {
         if (BusStorage.hasFavourites(sp)) {
             //Go ahead with loading and getting data
             Log.d("FAVOURITES", "Has Favourites. Processing");
-            ArrayList<BusServices> fav = BusStorage.getStoredBuses(sp);
-            adapter.updateAdapter(fav);
+            StaticVariables.favouritesList = BusStorage.getStoredBuses(sp);
+            adapter.updateAdapter(StaticVariables.favouritesList);
             adapter.notifyDataSetChanged();
 
             Log.d("FAVOURITES", "Finished Processing, retrieving estimated arrival data now");
-            //TODO Get Data
+            for (BusServices s : StaticVariables.favouritesList) {
+                new GetBusServicesFavourites(this,adapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, s);
+            }
+            Log.d("FAVOURITES", "Finished casting AsyncTasks to retrieve estimated arrival data");
         }
     }
 

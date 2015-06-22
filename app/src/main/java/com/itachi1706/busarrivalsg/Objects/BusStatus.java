@@ -18,6 +18,13 @@ public class BusStatus {
         this.isWheelChairAccessible = isWheelChairAccessible;
     }
 
+    public void setIsWheelChairAccessible(String isWheelCharAccessible){
+        switch (isWheelCharAccessible){
+            case "WAB": this.isWheelChairAccessible = true; break;
+            default: this.isWheelChairAccessible = false; break;
+        }
+    }
+
     public String getEstimatedArrival() {
         return estimatedArrival;
     }
