@@ -200,9 +200,9 @@ public class BusStopsDB extends SQLiteOpenHelper {
     }
 
     /**
-     * Returns a single Bus Stop Object based on Bus Stop Name
+     * Returns a list of Bus Stop Object based on Bus Stop Name
      * @param stopName Bus Stop Name
-     * @return Bus Stop Object
+     * @return Bus Stop Object ArrayList
      */
     public ArrayList<BusStopJSON> getBusStopsByStopName(String stopName){
         String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_DESC + "='" + stopName + "';";
@@ -210,6 +210,39 @@ public class BusStopsDB extends SQLiteOpenHelper {
         ArrayList<BusStopJSON> result = new ArrayList<>();
 
         Cursor cursor = db.rawQuery(query, null);
+        if (cursor.getCount() == 0)
+            return null;
+        if (cursor.moveToFirst()){
+            do {
+                BusStopJSON bs = new BusStopJSON();
+                bs.setBusStopCodeID(cursor.getInt(0));
+                bs.setCode(cursor.getString(1));
+                bs.setRoad(cursor.getString(2));
+                bs.setDescription(cursor.getString(3));
+                bs.setSummary(cursor.getString(4));
+                bs.setCreateDate(cursor.getString(5));
+
+                result.add(bs);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return result;
+    }
+
+    /**
+     * Returns a list of Bus Stops based on query string
+     * @param query Query String
+     * @return Bus Stop Object ArrayList
+     */
+    public ArrayList<BusStopJSON> getBusStopsByQuery(String query){
+        String queryString = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_CODE + " LIKE '%" + query + "%' COLLATE NOCASE OR "
+                + BUS_STOP_ROAD + " LIKE '%" + query + "%' COLLATE NOCASE OR " + BUS_STOP_DESC + " LIKE '%" + query + "%' COLLATE NOCASE;";
+        System.out.println("DB QUERY-STRING: "+ queryString);
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<BusStopJSON> result = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(queryString, null);
         if (cursor.getCount() == 0)
             return null;
         if (cursor.moveToFirst()){
@@ -250,6 +283,8 @@ public class BusStopsDB extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_ITEMS + ";";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        return cursor.getCount();
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
     }
 }

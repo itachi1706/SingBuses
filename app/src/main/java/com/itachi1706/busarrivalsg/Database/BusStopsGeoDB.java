@@ -186,6 +186,8 @@ public class BusStopsGeoDB extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_ITEMS + ";";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        return cursor.getCount();
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
     }
 }

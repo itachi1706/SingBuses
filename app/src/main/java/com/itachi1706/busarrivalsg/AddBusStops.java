@@ -5,11 +5,14 @@ import android.location.Location;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -26,6 +29,7 @@ public class AddBusStops extends AppCompatActivity {
 
     FloatingActionButton currentLocationGet;
     ListView result;
+    EditText textLane;
 
     GPSManager gps;
 
@@ -55,6 +59,29 @@ public class AddBusStops extends AppCompatActivity {
                 startActivity(serviceIntent);
             }
         });
+
+        textLane = (EditText) findViewById(R.id.inputData);
+        TextWatcher inputWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String query = s.toString();
+                Log.d("TextWatcher", "Query searched: " + query);
+                BusStopsDB db = new BusStopsDB(AddBusStops.this);
+                ArrayList<BusStopJSON> results = db.getBusStopsByQuery(query);
+                if (results != null) {
+                    Log.d("TextWatcher", "Finished Search. Size: " + results.size());
+                    adapter.updateAdapter(results);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        };
+        textLane.addTextChangedListener(inputWatcher);
     }
 
     @Override
