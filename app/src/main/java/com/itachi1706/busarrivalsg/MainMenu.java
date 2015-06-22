@@ -10,10 +10,11 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,11 +35,9 @@ import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Executor;
 
-public class MainMenu extends AppCompatActivity {
+public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     //Pebble stuff
     private PebbleKit.PebbleDataReceiver mReceiver;
@@ -49,6 +48,7 @@ public class MainMenu extends AppCompatActivity {
     private FloatingActionButton fab;
     private ListView favouritesList;
     private FavouritesListViewAdapter adapter;
+    private SwipeRefreshLayout swipeToRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +59,12 @@ public class MainMenu extends AppCompatActivity {
         pressedBtn = (TextView) findViewById(R.id.pressedBtn);
         fab = (FloatingActionButton) findViewById(R.id.add_fab);
         favouritesList = (ListView) findViewById(R.id.lvFav);
+
+        swipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_favourites);
+        swipeToRefresh.setOnRefreshListener(this);
+
+        // TODO Swipe to refresh get 4 colors for the color scheme
+        // https://github.com/itachi1706/HypixelStatistics/blob/master/app/src/main/java/com/itachi1706/hypixelstatistics/BoosterList.java for reference
 
         adapter = new FavouritesListViewAdapter(this, R.layout.listview_bus_numbers, new ArrayList<BusServices>());
         favouritesList.setAdapter(adapter);
@@ -113,24 +119,9 @@ public class MainMenu extends AppCompatActivity {
         //Android Stuff now again :D
         checkIfDatabaseUpdated();
 
-
-        //Populate favourites from favourites list
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        Log.d("FAVOURITES", "Favourites Pref: " + sp.getString("stored", "wot"));
-
-        if (BusStorage.hasFavourites(sp)) {
-            //Go ahead with loading and getting data
-            Log.d("FAVOURITES", "Has Favourites. Processing");
-            StaticVariables.favouritesList = BusStorage.getStoredBuses(sp);
-            adapter.updateAdapter(StaticVariables.favouritesList);
-            adapter.notifyDataSetChanged();
-
-            Log.d("FAVOURITES", "Finished Processing, retrieving estimated arrival data now");
-            for (BusServices s : StaticVariables.favouritesList) {
-                new GetBusServicesFavourites(this,adapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, s);
-            }
-            Log.d("FAVOURITES", "Finished casting AsyncTasks to retrieve estimated arrival data");
-        }
+        //Update Favourites
+        swipeToRefresh.setRefreshing(true);
+        updateFavourites();
     }
 
     @Override
@@ -161,9 +152,37 @@ public class MainMenu extends AppCompatActivity {
         } else if (id == R.id.view_all_stops){
             startActivity(new Intent(this, ListAllBusStops.class));
             return true;
+        } else if (id == R.id.action_refresh){
+            swipeToRefresh.setRefreshing(true);
+            updateFavourites();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateFavourites(){
+        //Populate favourites from favourites list
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d("FAVOURITES", "Favourites Pref: " + sp.getString("stored", "wot"));
+
+        if (BusStorage.hasFavourites(sp)) {
+            //Go ahead with loading and getting data
+            Log.d("FAVOURITES", "Has Favourites. Processing");
+            StaticVariables.favouritesList = BusStorage.getStoredBuses(sp);
+            adapter.updateAdapter(StaticVariables.favouritesList);
+            adapter.notifyDataSetChanged();
+
+            Log.d("FAVOURITES", "Finished Processing, retrieving estimated arrival data now");
+            for (BusServices s : StaticVariables.favouritesList) {
+                new GetBusServicesFavourites(this,adapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, s);
+            }
+            Log.d("FAVOURITES", "Finished casting AsyncTasks to retrieve estimated arrival data");
+        }
+
+        if (swipeToRefresh.isRefreshing()){
+            swipeToRefresh.setRefreshing(false);
+        }
     }
 
     private void checkIfDatabaseUpdated(){
@@ -230,5 +249,10 @@ public class MainMenu extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Override
+    public void onRefresh() {
+        updateFavourites();
     }
 }

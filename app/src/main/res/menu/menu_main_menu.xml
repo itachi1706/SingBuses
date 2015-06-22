@@ -4,5 +4,7 @@
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/view_all_stops" android:title="View All Bus Stops"
-        android:orderInCategory="1" app:showAsAction="never" />
+        android:orderInCategory="2" app:showAsAction="never" />
+    <item android:id="@+id/action_refresh" android:title="Refresh Favourites"
+        android:orderInCategory="1" android:icon="@drawable/refresh_24" app:showAsAction="ifRoom" />
 </menu>
