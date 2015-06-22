@@ -22,8 +22,8 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="20 Min"
         android:gravity="center"
-        android:id="@+id/tvBusArrivalNow"
-        android:layout_alignTop="@+id/tvBusService"
+        android:id="@+id/tvBusArrivalNext"
+        android:layout_alignTop="@+id/tvBusArrivalNow"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -33,7 +33,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="20 Min"
         android:gravity="center"
-        android:id="@+id/tvBusArrivalNext"
+        android:id="@+id/tvBusArrivalNow"
         android:layout_below="@+id/tvBusOperator"
         android:layout_centerHorizontal="true" />
 
