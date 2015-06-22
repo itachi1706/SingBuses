@@ -11,6 +11,8 @@ public class BusServices {
     private boolean obtainedNextData;
     private long time;
 
+    private String operatingStatus;
+
     public BusStatus getNextBus() {
         return nextBus;
     }
@@ -65,5 +67,13 @@ public class BusServices {
 
     public void setObtainedNextData(boolean obtainedNextData) {
         this.obtainedNextData = obtainedNextData;
+    }
+
+    public String getOperatingStatus() {
+        return operatingStatus;
+    }
+
+    public void setOperatingStatus(String operatingStatus) {
+        this.operatingStatus = operatingStatus;
     }
 }

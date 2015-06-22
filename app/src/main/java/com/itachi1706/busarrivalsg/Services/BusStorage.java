@@ -83,4 +83,9 @@ public class BusStorage {
             }
         }
     }
+
+    public static boolean hasFavourites(SharedPreferences pref){
+        String check = pref.getString("stored", "wot");
+        return !check.equals("wot");
+    }
 }

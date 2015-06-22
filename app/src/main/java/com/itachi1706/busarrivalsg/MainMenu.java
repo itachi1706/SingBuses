@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +28,12 @@ import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStopsGeo;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
+import com.itachi1706.busarrivalsg.ListViews.FavouritesListViewAdapter;
+import com.itachi1706.busarrivalsg.Objects.BusServices;
+import com.itachi1706.busarrivalsg.Services.BusStorage;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class MainMenu extends AppCompatActivity {
@@ -39,6 +45,8 @@ public class MainMenu extends AppCompatActivity {
     //Android Stuff
     private TextView connectionStatus, pressedBtn;
     private FloatingActionButton fab;
+    private ListView favouritesList;
+    private FavouritesListViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,11 @@ public class MainMenu extends AppCompatActivity {
         connectionStatus = (TextView) findViewById(R.id.pebbleConnectionStatus);
         pressedBtn = (TextView) findViewById(R.id.pressedBtn);
         fab = (FloatingActionButton) findViewById(R.id.add_fab);
+        favouritesList = (ListView) findViewById(R.id.lvFav);
+
+        adapter = new FavouritesListViewAdapter(this, R.layout.listview_bus_numbers, new ArrayList<BusServices>());
+        favouritesList.setAdapter(adapter);
+        Log.d("MainMenu", "onCreate complete");
     }
 
     @Override
@@ -97,6 +110,22 @@ public class MainMenu extends AppCompatActivity {
 
         //Android Stuff now again :D
         checkIfDatabaseUpdated();
+
+
+        //Populate favourites from favourites list
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d("FAVOURITES", "Favourites Pref: " + sp.getString("stored", "wot"));
+
+        if (BusStorage.hasFavourites(sp)) {
+            //Go ahead with loading and getting data
+            Log.d("FAVOURITES", "Has Favourites. Processing");
+            ArrayList<BusServices> fav = BusStorage.getStoredBuses(sp);
+            adapter.updateAdapter(fav);
+            adapter.notifyDataSetChanged();
+
+            Log.d("FAVOURITES", "Finished Processing, retrieving estimated arrival data now");
+            //TODO Get Data
+        }
     }
 
     @Override
