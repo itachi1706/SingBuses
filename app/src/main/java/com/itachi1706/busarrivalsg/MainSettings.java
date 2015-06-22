@@ -18,6 +18,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
@@ -74,6 +75,17 @@ public class MainSettings extends AppCompatActivity {
             pNamePref.setSummary(packName);
             Preference prefs = findPreference("view_sdk_version");
             prefs.setSummary(android.os.Build.VERSION.RELEASE);
+
+            Preference favJson = findPreference("fav_json");
+            favJson.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    String json = sp.getString("stored", "No Favourites");
+                    new AlertDialog.Builder(getActivity()).setMessage(json).setTitle("Favourites JSON String")
+                            .setPositiveButton("Close", null).show();
+                    return true;
+                }
+            });
         }
     }
 }

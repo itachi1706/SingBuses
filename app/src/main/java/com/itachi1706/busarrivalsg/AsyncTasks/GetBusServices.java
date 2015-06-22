@@ -104,10 +104,12 @@ public class GetBusServices extends AsyncTask<String, Void, String> {
             ArrayList<BusArrivalArrayObject> items = new ArrayList<>();
             BusArrivalMain mainArr = gson.fromJson(json, BusArrivalMain.class);
             BusArrivalArrayObject[] array = mainArr.getServices();
+            String stopID = mainArr.getBusStopID();
             dialog.dismiss();
             if (swipe.isRefreshing())
                 swipe.setRefreshing(false);
             for (BusArrivalArrayObject obj : array){
+                obj.setStopCode(stopID);
                 items.add(obj);
                 adapter.updateAdapter(items);
                 adapter.notifyDataSetChanged();

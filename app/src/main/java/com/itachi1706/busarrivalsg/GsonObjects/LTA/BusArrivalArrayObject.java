@@ -8,6 +8,8 @@ public class BusArrivalArrayObject {
     private String ServiceNo, Status, Operator;
     private BusArrivalArrayObjectEstimate NextBus, SubsequentBus;
 
+    private String stopCode;
+
     public BusArrivalArrayObjectEstimate getSubsequentBus() {
         return SubsequentBus;
     }
@@ -26,5 +28,13 @@ public class BusArrivalArrayObject {
 
     public String getServiceNo() {
         return ServiceNo;
+    }
+
+    public String getStopCode() {
+        return stopCode;
+    }
+
+    public void setStopCode(String stopCode) {
+        this.stopCode = stopCode;
     }
 }

@@ -200,6 +200,11 @@ public class BusServiceListViewAdapter extends ArrayAdapter<BusArrivalArrayObjec
         return items != null? items.size() : 0;
     }
 
+    @Override
+    public BusArrivalArrayObject getItem(int arg0) {
+        return items.get(arg0);
+    }
+
     public void updateAdapter(ArrayList<BusArrivalArrayObject> newArrayData){
         this.items = newArrayData;
     }

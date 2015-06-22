@@ -12,6 +12,8 @@
         android:key="geoDBLoaded"
         android:summary="Whether the bus stops geographical database has already been loaded" />
 
+    <Preference android:title="Favourites JSON" android:key="fav_json" android:summary="View JSON String for your favourites" />
+
     <Preference android:title="App Version" android:key="view_app_version" android:summary="NULL" />
     <Preference android:title="Package Name" android:key="view_app_name" android:selectable="false" />
     <Preference android:summary="None" android:title="Android Version" android:key="view_sdk_version" android:selectable="false"/>

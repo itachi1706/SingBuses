@@ -68,6 +68,7 @@ public class BusStorage {
             bs.setOperator(b.getOperator());
             bs.setServiceNo(b.getService());
             bs.setStopID(b.getStop());
+            bs.setObtainedNextData(false);
             services.add(bs);
         }
 
@@ -76,8 +77,10 @@ public class BusStorage {
 
     public static void updateBusJSON(SharedPreferences pref, ArrayList<BusServices> newServices){
         pref.edit().remove("stored").apply();
-        for (BusServices s : newServices){
-            addNewBus(s, pref);
+        if (newServices.size() != 0) {
+            for (BusServices s : newServices) {
+                addNewBus(s, pref);
+            }
         }
     }
 }
