@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServices;
@@ -22,6 +23,8 @@ import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.ListViews.BusServiceListViewAdapter;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -102,10 +105,16 @@ public class BusServicesAtStop extends AppCompatActivity implements SwipeRefresh
     }
 
     private void addOrRemoveFav(final BusServices fav, final ArrayList<BusServices> all, final SharedPreferences prefs, boolean alrFav){
+        String message;
         if (alrFav){
+            if (busStopName != null)
+                message = "Are you sure you want to remove " + fav.getServiceNo() + " from " + busStopName + " (" + fav.getStopID()
+                        + ") from your favourites? This will also remove it from being accessible from your Pebble device";
+            else
+                message = "Are you sure you want to remove " + fav.getServiceNo() + " from Bus Stop Code " + fav.getStopID()
+                    + " from your favourites? This will also remove it from being accessible from your Pebble device";
             new AlertDialog.Builder(this).setTitle("Remove from Favourites")
-                    .setMessage("Are you sure you want to remove " + fav.getServiceNo() + " from Bus Stop Code " + fav.getStopID()
-                    + " from your favourites? This will also remove it from being accessible from your Pebble device")
+                    .setMessage(message)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -122,9 +131,14 @@ public class BusServicesAtStop extends AppCompatActivity implements SwipeRefresh
                         }
                     }).setNegativeButton(android.R.string.no, null).show();
         } else {
+            if (busStopName != null)
+                message = "Are you sure you want to add " + fav.getServiceNo() + " from " + busStopName + " (" + fav.getStopID()
+                        + ") to your favourites? This will also make it accessible from your Pebble device";
+            else
+                message = "Are you sure you want to add " + fav.getServiceNo() + " from Bus Stop Code " + fav.getStopID()
+                    + " to your favourites? This will also make it accessible from your Pebble device";
             new AlertDialog.Builder(this).setTitle("Add to Favourites")
-                    .setMessage("Are you sure you want to add " + fav.getServiceNo() + " from Bus Stop Code " + fav.getStopID()
-                            + " to your favourites? This will also make it accessible from your Pebble device")
+                    .setMessage(message)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
