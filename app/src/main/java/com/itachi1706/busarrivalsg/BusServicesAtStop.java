@@ -77,6 +77,10 @@ public class BusServicesAtStop extends AppCompatActivity implements SwipeRefresh
                 addOrRemoveFav(fav, exist, pref, alrFavourited);
             }
         });
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sp.getBoolean("showHint", true))
+            Toast.makeText(this, "Click on an individual bus service to add/remove it from favourites!", Toast.LENGTH_SHORT).show();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -120,7 +124,7 @@ public class BusServicesAtStop extends AppCompatActivity implements SwipeRefresh
         } else {
             new AlertDialog.Builder(this).setTitle("Add to Favourites")
                     .setMessage("Are you sure you want to add " + fav.getServiceNo() + " from Bus Stop Code " + fav.getStopID()
-                            + " to your favourites? This will also make it from being accessible from your Pebble device")
+                            + " to your favourites? This will also make it accessible from your Pebble device")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

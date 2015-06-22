@@ -12,6 +12,12 @@
         android:key="geoDBLoaded"
         android:summary="Whether the bus stops geographical database has already been loaded" />
 
+    <CheckBoxPreference
+        android:title="Show Hint"
+        android:defaultValue="true"
+        android:key="showHint"
+        android:summary="Shows hints in the app (e.g. How to add/remove from favourites)" />
+
     <Preference android:title="Favourites JSON" android:key="fav_json" android:summary="View JSON String for your favourites" />
 
     <Preference android:title="App Version" android:key="view_app_version" android:summary="NULL" />
