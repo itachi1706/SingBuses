@@ -53,17 +53,17 @@ public class BusServicesAtStop extends AppCompatActivity implements SwipeRefresh
         // TODO Swipe to refresh get 4 colors for the color scheme
         // https://github.com/itachi1706/HypixelStatistics/blob/master/app/src/main/java/com/itachi1706/hypixelstatistics/BoosterList.java for reference
 
-        buses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        buses.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 BusArrivalArrayObject item = (BusArrivalArrayObject) buses.getItemAtPosition(position);
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 ArrayList<BusServices> exist = BusStorage.getStoredBuses(pref);
                 boolean alrFavourited = false;
-                if (exist != null){
+                if (exist != null) {
                     //Compare if in favourites already
-                    for (BusServices s : exist){
-                        if (s.getServiceNo().equals(item.getServiceNo()) && s.getStopID().equals(item.getStopCode())){
+                    for (BusServices s : exist) {
+                        if (s.getServiceNo().equals(item.getServiceNo()) && s.getStopID().equals(item.getStopCode())) {
                             alrFavourited = true;
                             break;
                         }
@@ -80,12 +80,13 @@ public class BusServicesAtStop extends AppCompatActivity implements SwipeRefresh
                     fav.setStopName(busStopName);
 
                 addOrRemoveFav(fav, exist, pref, alrFavourited);
+                return true;
             }
         });
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         if (sp.getBoolean("showHint", true))
-            Toast.makeText(this, "Click on an individual bus service to add/remove it from favourites!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Long click on an individual bus service to add/remove it from favourites!", Toast.LENGTH_SHORT).show();
     }
 
     @SuppressWarnings("ConstantConditions")
