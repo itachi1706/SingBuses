@@ -135,22 +135,125 @@ static void destroy_ui(void) {
 }
 // END AUTO-GENERATED UI CODE
 
+/*        INITIALIZE VARIABLES       */
 static GBitmap *bus_available;
 static GBitmap *bus_limited;
 static GBitmap *bus_full;
 
+static int current = -1;
+
 enum {
-    KEY_BUTTON_EVENT = 0,
-    BUTTON_PREVIOUS = 1,
-    BUTTON_NEXT = 2,
-    BUTTON_REFRESH = 3,
-    MESSAGE_DATA = 4,
-    MESSAGE_DATA_EVENT = 5
+  KEY_BUTTON_EVENT = 0,
+  BUTTON_PREVIOUS = 1,
+  BUTTON_NEXT = 2,
+  BUTTON_REFRESH = 3,
+  MESSAGE_DATA_EVENT = 4,
+  ESTIMATE_ARR_CURRENT_DATA = 5,
+  ESTIMATE_ARR_NEXT_DATA = 6,
+  ESTIMATE_LOAD_CURRENT_DATA = 7,
+  ESTIMATE_LOAD_NEXT_DATA = 8,
+  MESSAGE_ROAD_NAME = 9,
+  MESSAGE_ROAD_CODE = 10,
+  MESSAGE_BUS_SERVICE = 11,
+  MESSAGE_CURRENT_FAV = 12,
+  MESSAGE_MAX_FAV = 13
 };
+
+/*            APP MESSAGE             */
+
+//Updates Load Image (1 - current, 2 - next)
+static void updateLoad(int load, int l){
+  switch (l){
+    case 1:
+    switch (load){
+      case 0: bitmap_layer_set_bitmap(bitmaplayer_current, s_res_bus_nodata); break;
+      case 1: bitmap_layer_set_bitmap(bitmaplayer_current, bus_available); break;
+      case 2: bitmap_layer_set_bitmap(bitmaplayer_current, bus_limited); break;
+      case 3: bitmap_layer_set_bitmap(bitmaplayer_current, bus_full); break;  
+    }
+    break;
+    case 2:
+    switch (load){
+      case 0: bitmap_layer_set_bitmap(bitmaplayer_next, s_res_bus_nodata); break;
+      case 1: bitmap_layer_set_bitmap(bitmaplayer_next, bus_available); break;
+      case 2: bitmap_layer_set_bitmap(bitmaplayer_next, bus_limited); break;
+      case 3: bitmap_layer_set_bitmap(bitmaplayer_next, bus_full); break;
+    }
+    break;
+  }
+}
 
 // App Message API
 static void in_received_handler(DictionaryIterator *iter, void *context){
   //TODO Handle incoming messages
+  // Get the first pair
+  Tuple *t = dict_read_first(iter);
+
+  // Process all pairs present
+  while(t != NULL) {
+    // Long lived buffers
+    static char roadName_buffer[255];
+    static char roadCode_buffer[10];
+    static char busService_buffer[10];
+    static int max, loadC, loadN;
+    static char arrC_data_buffer[10];
+    static char arrN_data_buffer[10];
+    static bool pgLoad = false, pgMaxLoad = false;
+    
+    // Process this pair's key
+    switch (t->key) {
+      case MESSAGE_DATA_EVENT:
+        APP_LOG(APP_LOG_LEVEL_INFO, "MESSAGE_DATA received with value %d", (int)t->value->int32);
+        break;
+      case MESSAGE_ROAD_NAME:
+        snprintf(roadName_buffer, sizeof(roadName_buffer), "%s", t->value->cstring);
+        text_layer_set_text(textlayer_busstop_name, roadName_buffer);
+        break;
+      case MESSAGE_ROAD_CODE:
+        snprintf(roadCode_buffer, sizeof(roadCode_buffer), "%s", t->value->cstring);
+        text_layer_set_text(textlayer_busstop_code, roadCode_buffer);
+        break;
+      case MESSAGE_BUS_SERVICE:
+        snprintf(busService_buffer, sizeof(busService_buffer), "%s", t->value->cstring);
+        text_layer_set_text(textlayer_bus_no, busService_buffer);
+        break;
+      case ESTIMATE_ARR_CURRENT_DATA:
+        snprintf(arrC_data_buffer, sizeof(arrC_data_buffer), "%s", t->value->cstring);
+        text_layer_set_text(textlayer_arrive_now, arrC_data_buffer);
+        break;
+      case ESTIMATE_ARR_NEXT_DATA:
+        snprintf(arrN_data_buffer, sizeof(arrN_data_buffer), "%s", t->value->cstring);
+        text_layer_set_text(textlayer_arrive_next, arrN_data_buffer);
+        break;
+      
+      case MESSAGE_CURRENT_FAV:
+        current = t->value->int32;
+        pgLoad = true;
+        break;
+      case MESSAGE_MAX_FAV:
+        max = t->value->int32;
+        pgMaxLoad = true;
+        break;
+      
+      case ESTIMATE_LOAD_CURRENT_DATA:
+        loadC = t->value->int32;
+        updateLoad(loadC, 1);
+        break;
+      case ESTIMATE_LOAD_NEXT_DATA:
+        loadN = t->value->int32;
+        updateLoad(loadN, 2);
+        break;
+    }
+    
+    //Handle paging
+    static char paging_buffer[10];
+    if (pgLoad && pgMaxLoad){
+      snprintf(paging_buffer, sizeof(paging_buffer), "%d/%d", current, max);
+    }
+
+    // Get next pair, if any
+    t = dict_read_next(iter);
+  }
 }
 
 // Send command
@@ -165,7 +268,23 @@ void send_int(uint8_t key, uint8_t cmd)
     app_message_outbox_send();
 }
 
-//User Actions
+// Next or previous
+void go_next_or_prev(uint8_t key, uint8_t cmd){
+  DictionaryIterator *iter;
+  app_message_outbox_begin(&iter);
+      
+  Tuplet value = TupletInteger(key, cmd);
+  dict_write_tuplet(iter, &value);
+  
+  if (current != -1){
+    Tuplet page = TupletInteger(MESSAGE_CURRENT_FAV, current);
+    dict_write_tuplet(iter, &page);
+  }
+  
+  app_message_outbox_send();
+}
+
+/*            USER ACTIONS           */
 
 //DEBUG Test Update of pictures
 static void updateMode(char movement){
@@ -218,7 +337,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
   text_layer_set_text(textlayer_debug, "Up (Go Previous)");
   //TODO Go to previous if available
-  send_int(KEY_BUTTON_EVENT, BUTTON_PREVIOUS);
+  go_next_or_prev(KEY_BUTTON_EVENT, BUTTON_PREVIOUS);
   updateMode('u');
 }
 
@@ -226,7 +345,7 @@ static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
 static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
   text_layer_set_text(textlayer_debug, "Down (Go Next)");
   //TODO Go to next if available
-  send_int(KEY_BUTTON_EVENT, BUTTON_NEXT);
+  go_next_or_prev(KEY_BUTTON_EVENT, BUTTON_NEXT);
   updateMode('d');
 }
 
@@ -259,7 +378,7 @@ void show_bus_layout(void) {
   
   //Register AppMessage events
   app_message_register_inbox_received(in_received_handler);           
-  app_message_open(512, 512);    //Large input and output buffer sizes
+  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());    //Large input and output buffer sizes
 }
 
 void hide_bus_layout(void) {
