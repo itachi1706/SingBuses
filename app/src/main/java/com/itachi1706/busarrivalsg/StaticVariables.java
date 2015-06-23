@@ -17,9 +17,11 @@ public class StaticVariables {
     public final static UUID PEBBLE_APP_UUID = UUID.fromString("11198668-4e27-4e94-b51c-a27a1ea5cd82");
 
     //For Pebble Comm
+    public static PebbleDictionary dict1 = null;
     public static PebbleDictionary dict2 = null;
     public static PebbleDictionary dict3 = null;
     public static PebbleDictionary dict4 = null;
+    public static int extraSend = -1;
 
     public static boolean init1TaskFinished = false;
 

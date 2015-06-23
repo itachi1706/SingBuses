@@ -61,6 +61,17 @@ public class PebbleCommunications extends Service {
             @Override
             public void receiveNack(Context context, int i) {
                 Log.e("Pebble Comm", "Message failed to send to Pebble");
+
+                //Check Static Vars. If theres any other message, send them and null it
+                if (StaticVariables.dict1 != null) {
+                    PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict1);
+                } else if (StaticVariables.dict2 != null){
+                    PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict2);
+                } else if (StaticVariables.dict3 != null){
+                    PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict3);
+                } else if (StaticVariables.dict4 != null){
+                    PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict4);
+                }
             }
         };
         PebbleKit.registerReceivedNackHandler(getApplicationContext(), mNack);
@@ -71,16 +82,20 @@ public class PebbleCommunications extends Service {
             public void receiveAck(Context context, int i) {
                 Log.i("Pebble Comm", "Sent message successfully to Pebble");
 
+                switch (StaticVariables.extraSend){
+                    case 1: StaticVariables.extraSend = -1; StaticVariables.dict1 = null; break;
+                    case 2: StaticVariables.extraSend = -1; StaticVariables.dict2 = null; break;
+                    case 3: StaticVariables.extraSend = -1; StaticVariables.dict3 = null; break;
+                    case 4: StaticVariables.extraSend = -1; StaticVariables.dict4 = null; break;
+                }
+
                 //Check Static Vars. If theres any other message, send them and null it
                 if (StaticVariables.dict2 != null){
                     PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict2);
-                    StaticVariables.dict2 = null;
                 } else if (StaticVariables.dict3 != null){
                     PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict3);
-                    StaticVariables.dict3 = null;
                 } else if (StaticVariables.dict4 != null){
                     PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict4);
-                    StaticVariables.dict4 = null;
                 }
             }
         };
@@ -248,6 +263,8 @@ public class PebbleCommunications extends Service {
                 dict4.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst);
                 dict4.addInt32(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, obj.getNextBus().getLoad());
                 PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, dict1);
+                StaticVariables.extraSend = 1;
+                StaticVariables.dict1 = dict1;
                 StaticVariables.dict2 = dict2;
                 StaticVariables.dict3 = dict3;
                 StaticVariables.dict4 = dict4;
@@ -308,6 +325,8 @@ public class PebbleCommunications extends Service {
                 dict4.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst);
                 dict4.addInt32(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, obj.getNextBus().getLoad());
                 PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, dict1);
+                StaticVariables.extraSend = 1;
+                StaticVariables.dict1 = dict1;
                 StaticVariables.dict2 = dict2;
                 StaticVariables.dict3 = dict3;
                 StaticVariables.dict4 = dict4;
