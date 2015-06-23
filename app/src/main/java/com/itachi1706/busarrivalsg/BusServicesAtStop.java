@@ -76,6 +76,8 @@ public class BusServicesAtStop extends AppCompatActivity implements SwipeRefresh
                 fav.setOperator(item.getOperator());
                 fav.setServiceNo(item.getServiceNo());
                 fav.setStopID(item.getStopCode());
+                if (busStopName != null)
+                    fav.setStopName(busStopName);
 
                 addOrRemoveFav(fav, exist, pref, alrFavourited);
             }

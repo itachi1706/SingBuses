@@ -10,6 +10,7 @@ public class BusServices {
     private BusStatus currentBus,nextBus;
     private boolean obtainedNextData;
     private long time;
+    private String stopName;
 
     private String operatingStatus;
 
@@ -75,5 +76,13 @@ public class BusServices {
 
     public void setOperatingStatus(String operatingStatus) {
         this.operatingStatus = operatingStatus;
+    }
+
+    public String getStopName() {
+        return stopName;
+    }
+
+    public void setStopName(String stopName) {
+        this.stopName = stopName;
     }
 }

@@ -7,12 +7,12 @@ import com.google.gson.JsonObject;
  * for SingBuses in package com.itachi1706.busarrivalsg.GsonObjects
  */
 public class BusJSON {
-    private String service, operator, stop;
+    private String service, operator, stop, stopName;
 
     @Override
     public String toString() {
         return "BusObject{" +
-                "service=" + service + ", operator=" + operator + "stop=" + stop + "}";
+                "service=" + service + ", operator=" + operator + ",stop=" + stop + ",stopName=" + stopName + "}";
     }
 
     public String getService(){ return this.service; }
@@ -20,4 +20,6 @@ public class BusJSON {
     public String getOperator(){ return this.operator; }
 
     public String getStop(){ return this.stop; }
+
+    public String getStopName(){ return this.stopName; }
 }

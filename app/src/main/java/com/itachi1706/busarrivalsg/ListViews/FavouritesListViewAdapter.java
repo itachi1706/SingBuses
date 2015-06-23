@@ -53,6 +53,7 @@ public class FavouritesListViewAdapter extends ArrayAdapter<BusServices> {
         TextView busArrivalNow = (TextView) v.findViewById(R.id.tvBusArrivalNow);
         TextView busArrivalNext = (TextView) v.findViewById(R.id.tvBusArrivalNext);
         TextView operatingStatus = (TextView) v.findViewById(R.id.tvBusStatus);
+        TextView stopName = (TextView) v.findViewById(R.id.tvBusStopName);
 
         if (busOperator != null){
             busOperator.setText(i.getOperator());
@@ -66,6 +67,16 @@ public class FavouritesListViewAdapter extends ArrayAdapter<BusServices> {
         }
         if (busNumber != null){
             busNumber.setText(i.getServiceNo());
+        }
+        if (stopName != null){
+            stopName.setVisibility(View.VISIBLE);
+            if (i.getStopName() == null){
+                //Only show stop code
+                stopName.setText(i.getStopID());
+            } else {
+                //Show stop name AND code
+                stopName.setText(i.getStopName() + " (" + i.getStopID() + ")");
+            }
         }
 
         if (i.isObtainedNextData()) {

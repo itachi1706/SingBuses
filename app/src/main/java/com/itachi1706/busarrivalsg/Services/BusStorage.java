@@ -23,6 +23,7 @@ public class BusStorage {
         String serviceNo = bus.getServiceNo();
         String operator = bus.getOperator();
         String stopID = bus.getStopID();
+        String stopName = bus.getStopName();
 
         JSONArray arr = getExistingJSONString(prefs);
         JSONObject obj = new JSONObject();
@@ -31,6 +32,7 @@ public class BusStorage {
             obj.put("service", serviceNo);
             obj.put("operator", operator);
             obj.put("stop", stopID);
+            obj.put("stopName", stopName);
             arr.put(obj);
             main.put("storage",arr);
             prefs.edit().putString("stored", main.toString()).apply();
@@ -68,6 +70,8 @@ public class BusStorage {
             bs.setOperator(b.getOperator());
             bs.setServiceNo(b.getService());
             bs.setStopID(b.getStop());
+            if (b.getStopName() != null)
+                bs.setStopName(b.getStopName());
             bs.setObtainedNextData(false);
             services.add(bs);
         }
