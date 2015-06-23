@@ -44,7 +44,7 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
     private final static UUID PEBBLE_APP_UUID = UUID.fromString("11198668-4e27-4e94-b51c-a27a1ea5cd82");
 
     //Android Stuff
-    private TextView connectionStatus, pressedBtn;
+    private TextView connectionStatus, pressedBtn, firmware, appInstallState;
     private FloatingActionButton fab;
     private ListView favouritesList;
     private FavouritesListViewAdapter adapter;
@@ -57,6 +57,8 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
 
         connectionStatus = (TextView) findViewById(R.id.pebbleConnectionStatus);
         pressedBtn = (TextView) findViewById(R.id.pressedBtn);
+        firmware = (TextView) findViewById(R.id.pebbleFW);
+        appInstallState = (TextView) findViewById(R.id.pebbleAppStatus);
         fab = (FloatingActionButton) findViewById(R.id.add_fab);
         favouritesList = (ListView) findViewById(R.id.lvFav);
 
@@ -93,8 +95,9 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
         if (checkIfPebbleConnected){
             PebbleKit.FirmwareVersionInfo info = PebbleKit.getWatchFWVersion(this);
             //Init
-            connectionStatus.setText("Pebble Connected! (" + info.getTag() + ")");
+            connectionStatus.setText("Pebble Connected!");
             connectionStatus.setTextColor(Color.GREEN);
+            firmware.setText("FW Version: " + info.getTag());
             mReceiver = new PebbleKit.PebbleDataReceiver(PEBBLE_APP_UUID) {
                 @Override
                 public void receiveData(Context context, int i, PebbleDictionary pebbleDictionary) {
@@ -114,6 +117,7 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
         } else {
             connectionStatus.setText("Pebble not connected!");
             connectionStatus.setTextColor(Color.RED);
+            firmware.setText("");
         }
 
         //Android Stuff now again :D
