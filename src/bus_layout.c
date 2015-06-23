@@ -40,20 +40,20 @@ static void initialise_ui(void) {
   // textlayer_bus_no
   textlayer_bus_no = text_layer_create(GRect(3, 1, 51, 26));
   text_layer_set_background_color(textlayer_bus_no, GColorClear);
-  text_layer_set_text(textlayer_bus_no, "9999X");
+  text_layer_set_text(textlayer_bus_no, "...");
   text_layer_set_font(textlayer_bus_no, s_res_gothic_24_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_bus_no);
   
   // textlayer_busstop_name
   textlayer_busstop_name = text_layer_create(GRect(4, 25, 119, 20));
   text_layer_set_background_color(textlayer_busstop_name, GColorClear);
-  text_layer_set_text(textlayer_busstop_name, "Rainbow Rd");
+  text_layer_set_text(textlayer_busstop_name, "...");
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_busstop_name);
   
   // textlayer_busstop_code
   textlayer_busstop_code = text_layer_create(GRect(60, 2, 59, 20));
   text_layer_set_background_color(textlayer_busstop_code, GColorClear);
-  text_layer_set_text(textlayer_busstop_code, "9999999");
+  text_layer_set_text(textlayer_busstop_code, "...");
   text_layer_set_text_alignment(textlayer_busstop_code, GTextAlignmentRight);
   text_layer_set_font(textlayer_busstop_code, s_res_gothic_14);
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_busstop_code);
@@ -61,7 +61,7 @@ static void initialise_ui(void) {
   // textlayer_arrive_now
   textlayer_arrive_now = text_layer_create(GRect(23, 49, 79, 31));
   text_layer_set_background_color(textlayer_arrive_now, GColorClear);
-  text_layer_set_text(textlayer_arrive_now, "600 min");
+  text_layer_set_text(textlayer_arrive_now, "...");
   text_layer_set_text_alignment(textlayer_arrive_now, GTextAlignmentCenter);
   text_layer_set_font(textlayer_arrive_now, s_res_gothic_28_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_arrive_now);
@@ -69,7 +69,7 @@ static void initialise_ui(void) {
   // textlayer_arrive_next
   textlayer_arrive_next = text_layer_create(GRect(28, 104, 68, 24));
   text_layer_set_background_color(textlayer_arrive_next, GColorClear);
-  text_layer_set_text(textlayer_arrive_next, "600 min");
+  text_layer_set_text(textlayer_arrive_next, "...");
   text_layer_set_text_alignment(textlayer_arrive_next, GTextAlignmentCenter);
   text_layer_set_font(textlayer_arrive_next, s_res_gothic_18_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_arrive_next);
@@ -109,7 +109,7 @@ static void initialise_ui(void) {
   // textlayer_pages
   textlayer_pages = text_layer_create(GRect(3, 132, 116, 20));
   text_layer_set_background_color(textlayer_pages, GColorClear);
-  text_layer_set_text(textlayer_pages, "1/100");
+  text_layer_set_text(textlayer_pages, "?/?");
   text_layer_set_text_alignment(textlayer_pages, GTextAlignmentRight);
   text_layer_set_font(textlayer_pages, s_res_gothic_14);
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_pages);
