@@ -1,5 +1,6 @@
 package com.itachi1706.busarrivalsg;
 
+import com.getpebble.android.kit.util.PebbleDictionary;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 
 import java.util.ArrayList;
@@ -14,6 +15,11 @@ public class StaticVariables {
     public static int HTTP_QUERY_TIMEOUT = 15000; //15 seconds timeout
 
     public final static UUID PEBBLE_APP_UUID = UUID.fromString("11198668-4e27-4e94-b51c-a27a1ea5cd82");
+
+    //For Pebble Comm
+    public static PebbleDictionary dict2 = null;
+    public static PebbleDictionary dict3 = null;
+    public static PebbleDictionary dict4 = null;
 
     public static boolean init1TaskFinished = false;
 

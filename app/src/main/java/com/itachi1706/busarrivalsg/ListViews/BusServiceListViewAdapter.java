@@ -138,23 +138,6 @@ public class BusServiceListViewAdapter extends ArrayAdapter<BusArrivalArrayObjec
     }
 
     private long parseEstimateArrival(String arrivalString){
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        final long[] networkTime = new long[1];
-        locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                networkTime[0] = location.getTime();
-                Log.d("NETWORK", "Current Time: " + location.getTime());
-            }
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) { }
-            @Override
-            public void onProviderEnabled(String provider) { }
-            @Override
-            public void onProviderDisabled(String provider) { }
-        },Looper.myLooper());
-
-        Log.d("DATE", networkTime[0] + "");
         Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());
         //GregorianCalendar currentDate = new GregorianCalendar(new SimpleTimeZone(8000, "SST"));
         //currentDate.setTimeInMillis(networkTime[0]);
