@@ -1,27 +1,40 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <CheckBoxPreference
-        android:title="Bus Stops Database Loaded"
-        android:defaultValue="false"
-        android:key="busDBLoaded"
-        android:summary="Whether the bus stops database has already been loaded" />
+    <PreferenceCategory android:title="General Settings">
+        <CheckBoxPreference
+            android:title="Show Hint"
+            android:defaultValue="true"
+            android:key="showHint"
+            android:summary="Shows hints in the app (e.g. How to add/remove from favourites)" />
+        <CheckBoxPreference
+            android:title="Enable Pebble Background Service"
+            android:defaultValue="true"
+            android:key="pebbleSvc"
+            android:summary="@string/pref_summary_pebble_background_svc" />
+    </PreferenceCategory>
 
-    <CheckBoxPreference
-        android:title="Bus Stops Geographical Database Loaded"
-        android:defaultValue="false"
-        android:key="geoDBLoaded"
-        android:summary="Whether the bus stops geographical database has already been loaded" />
+    <PreferenceCategory android:title="Database Settings">
+        <CheckBoxPreference
+            android:title="Bus Stops Database Loaded"
+            android:defaultValue="false"
+            android:key="busDBLoaded"
+            android:summary="Whether the bus stops database has already been loaded" />
 
-    <CheckBoxPreference
-        android:title="Show Hint"
-        android:defaultValue="true"
-        android:key="showHint"
-        android:summary="Shows hints in the app (e.g. How to add/remove from favourites)" />
+        <CheckBoxPreference
+            android:title="Bus Stops Geographical Database Loaded"
+            android:defaultValue="false"
+            android:key="geoDBLoaded"
+            android:summary="Whether the bus stops geographical database has already been loaded" />
+    </PreferenceCategory>
 
-    <Preference android:title="Favourites JSON" android:key="fav_json" android:summary="View JSON String for your favourites" />
+    <PreferenceCategory android:title="App Information">
+        <Preference android:title="App Version" android:key="view_app_version" android:summary="NULL" />
+        <Preference android:title="Package Name" android:key="view_app_name" android:selectable="false" />
+        <Preference android:summary="None" android:title="Android Version" android:key="view_sdk_version" android:selectable="false"/>
+    </PreferenceCategory>
 
-    <Preference android:title="App Version" android:key="view_app_version" android:summary="NULL" />
-    <Preference android:title="Package Name" android:key="view_app_name" android:selectable="false" />
-    <Preference android:summary="None" android:title="Android Version" android:key="view_sdk_version" android:selectable="false"/>
+    <PreferenceCategory android:title="Developer Settings (Advanced)">
+        <Preference android:title="Favourites JSON" android:key="fav_json" android:summary="View JSON String for your favourites" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

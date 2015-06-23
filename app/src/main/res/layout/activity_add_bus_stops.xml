@@ -30,6 +30,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignRight="@+id/lvNearestBusStops"
             android:layout_alignEnd="@+id/lvNearestBusStops"
+            android:maxLines="1"
             android:hint="Stop Code/Stop Name/Road Name" />
     </RelativeLayout>
 
