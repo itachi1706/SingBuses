@@ -183,23 +183,54 @@ static void updateLoad(int load, int l){
   }
 }
 
+char *translate_error(AppMessageResult result) {
+  switch (result) {
+    case APP_MSG_OK: return "APP_MSG_OK";
+    case APP_MSG_SEND_TIMEOUT: return "APP_MSG_SEND_TIMEOUT";
+    case APP_MSG_SEND_REJECTED: return "APP_MSG_SEND_REJECTED";
+    case APP_MSG_NOT_CONNECTED: return "APP_MSG_NOT_CONNECTED";
+    case APP_MSG_APP_NOT_RUNNING: return "APP_MSG_APP_NOT_RUNNING";
+    case APP_MSG_INVALID_ARGS: return "APP_MSG_INVALID_ARGS";
+    case APP_MSG_BUSY: return "APP_MSG_BUSY";
+    case APP_MSG_BUFFER_OVERFLOW: return "APP_MSG_BUFFER_OVERFLOW";
+    case APP_MSG_ALREADY_RELEASED: return "APP_MSG_ALREADY_RELEASED";
+    case APP_MSG_CALLBACK_ALREADY_REGISTERED: return "APP_MSG_CALLBACK_ALREADY_REGISTERED";
+    case APP_MSG_CALLBACK_NOT_REGISTERED: return "APP_MSG_CALLBACK_NOT_REGISTERED";
+    case APP_MSG_OUT_OF_MEMORY: return "APP_MSG_OUT_OF_MEMORY";
+    case APP_MSG_CLOSED: return "APP_MSG_CLOSED";
+    case APP_MSG_INTERNAL_ERROR: return "APP_MSG_INTERNAL_ERROR";
+    default: return "UNKNOWN ERROR";
+  }
+}
+
+static void inbox_dropped_callback(AppMessageResult reason, void *context) {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped! Reason: %i - %s", reason, translate_error(reason));
+}
+
+static void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResult reason, void *context) {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed! Reason: %i - %s", reason, translate_error(reason));
+}
+
+static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
+  APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
+}
+
 // App Message API
 static void in_received_handler(DictionaryIterator *iter, void *context){
-  //TODO Handle incoming messages
+  APP_LOG(APP_LOG_LEVEL_INFO, "Message received!");
   // Get the first pair
   Tuple *t = dict_read_first(iter);
+  // Long lived buffers
+  static char roadName_buffer[255];
+  static char roadCode_buffer[10];
+  static char busService_buffer[10];
+  static int max, loadC, loadN;
+  static char arrC_data_buffer[10];
+  static char arrN_data_buffer[10];
+  static bool pgLoad = false, pgMaxLoad = false;
 
   // Process all pairs present
   while(t != NULL) {
-    // Long lived buffers
-    static char roadName_buffer[255];
-    static char roadCode_buffer[10];
-    static char busService_buffer[10];
-    static int max, loadC, loadN;
-    static char arrC_data_buffer[10];
-    static char arrN_data_buffer[10];
-    static bool pgLoad = false, pgMaxLoad = false;
-    
     // Process this pair's key
     switch (t->key) {
       case MESSAGE_DATA_EVENT:
@@ -259,6 +290,7 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
 // Send command
 void send_int(uint8_t key, uint8_t cmd)
 {
+  APP_LOG(APP_LOG_LEVEL_INFO, "Sending refresh data to phone");
     DictionaryIterator *iter;
     app_message_outbox_begin(&iter);
       
@@ -270,6 +302,7 @@ void send_int(uint8_t key, uint8_t cmd)
 
 // Next or previous
 void go_next_or_prev(uint8_t key, uint8_t cmd){
+  APP_LOG(APP_LOG_LEVEL_INFO, "Sending data to phone");
   DictionaryIterator *iter;
   app_message_outbox_begin(&iter);
       
@@ -376,8 +409,13 @@ void show_bus_layout(void) {
   });
   window_stack_push(s_window, true);
   
+  APP_LOG(APP_LOG_LEVEL_INFO, "Inbox Max Size: %lu", app_message_inbox_size_maximum());
+  
   //Register AppMessage events
-  app_message_register_inbox_received(in_received_handler);           
+  app_message_register_inbox_received(in_received_handler);
+  app_message_register_inbox_dropped(inbox_dropped_callback);
+  app_message_register_outbox_failed(outbox_failed_callback);
+  app_message_register_outbox_sent(outbox_sent_callback);
   app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());    //Large input and output buffer sizes
 }
 
