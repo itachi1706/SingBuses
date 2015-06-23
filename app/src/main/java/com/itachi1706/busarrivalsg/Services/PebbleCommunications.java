@@ -92,10 +92,13 @@ public class PebbleCommunications extends Service {
                 //Check Static Vars. If theres any other message, send them and null it
                 if (StaticVariables.dict2 != null){
                     PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict2);
+                    StaticVariables.extraSend = 2;
                 } else if (StaticVariables.dict3 != null){
                     PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict3);
+                    StaticVariables.extraSend = 3;
                 } else if (StaticVariables.dict4 != null){
                     PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict4);
+                    StaticVariables.extraSend = 4;
                 }
             }
         };
