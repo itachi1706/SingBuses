@@ -3,6 +3,7 @@ package com.itachi1706.busarrivalsg;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 public class StaticVariables {
 
     public static int HTTP_QUERY_TIMEOUT = 15000; //15 seconds timeout
+
+    public final static UUID PEBBLE_APP_UUID = UUID.fromString("11198668-4e27-4e94-b51c-a27a1ea5cd82");
 
     public static boolean init1TaskFinished = false;
 

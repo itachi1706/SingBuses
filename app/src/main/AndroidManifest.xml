@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.itachi1706.busarrivalsg"
     android:installLocation="internalOnly" >
 
@@ -40,6 +41,12 @@
             android:name=".BusServicesAtStop"
             android:label="@string/title_activity_bus_services_at_stop" >
         </activity>
+
+        <service
+            android:name=".Services.PebbleCommunications"
+            android:exported="false"
+            tools:ignore="InnerclassSeparator">
+        </service>
     </application>
 
 </manifest>

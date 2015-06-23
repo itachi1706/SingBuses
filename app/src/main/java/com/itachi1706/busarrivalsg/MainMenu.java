@@ -33,15 +33,14 @@ import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.ListViews.FavouritesListViewAdapter;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
+import com.itachi1706.busarrivalsg.Services.PebbleCommunications;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     //Pebble stuff
     private PebbleKit.PebbleDataReceiver mReceiver;
-    private final static UUID PEBBLE_APP_UUID = UUID.fromString("11198668-4e27-4e94-b51c-a27a1ea5cd82");
 
     //Android Stuff
     private TextView connectionStatus, pressedBtn, firmware, appInstallState;
@@ -98,7 +97,7 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
             connectionStatus.setText("Pebble Connected!");
             connectionStatus.setTextColor(Color.GREEN);
             firmware.setText("FW Version: " + info.getTag());
-            mReceiver = new PebbleKit.PebbleDataReceiver(PEBBLE_APP_UUID) {
+            mReceiver = new PebbleKit.PebbleDataReceiver(StaticVariables.PEBBLE_APP_UUID) {
                 @Override
                 public void receiveData(Context context, int i, PebbleDictionary pebbleDictionary) {
                     PebbleKit.sendAckToPebble(getApplicationContext(), i);
@@ -126,6 +125,15 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
         //Update Favourites
         swipeToRefresh.setRefreshing(true);
         updateFavourites();
+
+        //Start Pebble Service if settings are set
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        Intent pebbleService = new Intent(this, PebbleCommunications.class);
+        if (sp.getBoolean("pebbleSvc", true)){
+            startService(pebbleService);
+        } else {
+            stopService(pebbleService);
+        }
     }
 
     @Override
