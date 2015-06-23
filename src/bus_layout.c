@@ -141,6 +141,7 @@ static GBitmap *bus_limited;
 static GBitmap *bus_full;
 
 static int current = -1;
+static bool debugMode = false;
 
 enum {
   KEY_BUTTON_EVENT = 0,
@@ -318,68 +319,28 @@ void go_next_or_prev(uint8_t key, uint8_t cmd){
 }
 
 /*            USER ACTIONS           */
-
-//DEBUG Test Update of pictures
-static void updateMode(char movement){
-  if (movement == 'u'){
-    //Advance
-    if (bitmap_layer_get_bitmap(bitmaplayer_current) == bus_available){
-      //Become bus limited
-      bitmap_layer_set_bitmap(bitmaplayer_next, bus_limited);
-      bitmap_layer_set_bitmap(bitmaplayer_current, bus_limited);
-    } else if (bitmap_layer_get_bitmap(bitmaplayer_current) == bus_limited){
-      //Become bus full
-      bitmap_layer_set_bitmap(bitmaplayer_next, bus_full);
-      bitmap_layer_set_bitmap(bitmaplayer_current, bus_full);
-    } else if (bitmap_layer_get_bitmap(bitmaplayer_current) == s_res_bus_nodata){
-      //Become bus available
-      bitmap_layer_set_bitmap(bitmaplayer_next, bus_available);
-      bitmap_layer_set_bitmap(bitmaplayer_current, bus_available);
-    }
-  } else if (movement == 'd'){
-    //Descend
-    if (bitmap_layer_get_bitmap(bitmaplayer_current) == bus_available){
-      //Become no data
-      bitmap_layer_set_bitmap(bitmaplayer_next, s_res_bus_nodata);
-      bitmap_layer_set_bitmap(bitmaplayer_current, s_res_bus_nodata);
-    } else if (bitmap_layer_get_bitmap(bitmaplayer_current) == bus_limited){
-      //Become bus available
-      bitmap_layer_set_bitmap(bitmaplayer_next, bus_available);
-      bitmap_layer_set_bitmap(bitmaplayer_current, bus_available);
-    } else if (bitmap_layer_get_bitmap(bitmaplayer_current) == bus_full){
-      //Become bus limited
-      bitmap_layer_set_bitmap(bitmaplayer_next, bus_limited);
-      bitmap_layer_set_bitmap(bitmaplayer_current, bus_limited);
-    }
-  } else if (movement == 'c'){
-    //Reset to no data
-    bitmap_layer_set_bitmap(bitmaplayer_next, s_res_bus_nodata);
-    bitmap_layer_set_bitmap(bitmaplayer_current, s_res_bus_nodata);
-  }
-}
-
 // When the select button is clicked
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
-  text_layer_set_text(textlayer_debug, "Select (Refreshes)");
-  //TODO Tell android to refresh app
+  if (debugMode)
+    text_layer_set_text(textlayer_debug, "Select (Refreshes)");
+  // Tell android to refresh app
   send_int(KEY_BUTTON_EVENT, BUTTON_REFRESH);
-  updateMode('c');
 }
 
 // When the up button is clicked
 static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
-  text_layer_set_text(textlayer_debug, "Up (Go Previous)");
-  //TODO Go to previous if available
+  if (debugMode)
+    text_layer_set_text(textlayer_debug, "Up (Go Previous)");
+  // Go to previous if available
   go_next_or_prev(KEY_BUTTON_EVENT, BUTTON_PREVIOUS);
-  updateMode('u');
 }
 
 // When the down button is clicked
 static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
-  text_layer_set_text(textlayer_debug, "Down (Go Next)");
-  //TODO Go to next if available
+  if (debugMode)
+    text_layer_set_text(textlayer_debug, "Down (Go Next)");
+  // Go to next if available
   go_next_or_prev(KEY_BUTTON_EVENT, BUTTON_NEXT);
-  updateMode('d');
 }
 
 // The Button Config
@@ -417,6 +378,13 @@ void show_bus_layout(void) {
   app_message_register_outbox_failed(outbox_failed_callback);
   app_message_register_outbox_sent(outbox_sent_callback);
   app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());    //Large input and output buffer sizes
+  
+  //Do the initial refresh of bus data and hides debug layer
+  send_int(KEY_BUTTON_EVENT, BUTTON_REFRESH);
+  
+  //If debug mode off, hide it
+  if (!debugMode)
+    text_layer_set_text(textlayer_debug, "");
 }
 
 void hide_bus_layout(void) {
