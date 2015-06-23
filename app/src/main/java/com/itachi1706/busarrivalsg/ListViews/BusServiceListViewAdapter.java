@@ -133,7 +133,7 @@ public class BusServiceListViewAdapter extends ArrayAdapter<BusArrivalArrayObjec
         switch (obj.getLoad()){
             case "Seats Available": view.setTextColor(Color.GREEN); break;
             case "Standing Available": view.setTextColor(Color.YELLOW); break;
-            case "Limited Seating": view.setTextColor(Color.RED); break;
+            case "Limited Standing": view.setTextColor(Color.RED); break;
         }
     }
 

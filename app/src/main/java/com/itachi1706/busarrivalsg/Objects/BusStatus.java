@@ -45,7 +45,7 @@ public class BusStatus {
         switch (load){
             case "Seats Available": this.load = 1; break;
             case "Standing Available": this.load = 2; break;
-            case "Limited Seating": this.load = 3; break;
+            case "Limited Standing": this.load = 3; break;
             default: this.load = 0; break;
         }
     }

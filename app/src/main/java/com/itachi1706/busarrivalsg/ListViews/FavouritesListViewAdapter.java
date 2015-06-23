@@ -141,6 +141,7 @@ public class FavouritesListViewAdapter extends ArrayAdapter<BusServices> {
             case 1: view.setTextColor(Color.GREEN); break;
             case 2: view.setTextColor(Color.YELLOW); break;
             case 3: view.setTextColor(Color.RED); break;
+            default: view.setTextColor(Color.GRAY); break;
         }
     }
 
