@@ -8,8 +8,8 @@ static GFont s_res_gothic_14;
 static GFont s_res_gothic_28_bold;
 static GFont s_res_gothic_18_bold;
 static GBitmap *s_res_bus_nodata;
-static GBitmap *s_res_actionicon_refresh_white;
 static GBitmap *s_res_actionicon_previous_white;
+static GBitmap *s_res_actionicon_refresh_white;
 static GBitmap *s_res_actionicon_next_white;
 static TextLayer *textlayer_bus_no;
 static TextLayer *textlayer_busstop_name;
@@ -34,13 +34,14 @@ static void initialise_ui(void) {
   s_res_gothic_28_bold = fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD);
   s_res_gothic_18_bold = fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);
   s_res_bus_nodata = gbitmap_create_with_resource(RESOURCE_ID_BUS_NODATA);
-  s_res_actionicon_refresh_white = gbitmap_create_with_resource(RESOURCE_ID_ACTIONICON_REFRESH_WHITE);
   s_res_actionicon_previous_white = gbitmap_create_with_resource(RESOURCE_ID_ACTIONICON_PREVIOUS_WHITE);
+  s_res_actionicon_refresh_white = gbitmap_create_with_resource(RESOURCE_ID_ACTIONICON_REFRESH_WHITE);
   s_res_actionicon_next_white = gbitmap_create_with_resource(RESOURCE_ID_ACTIONICON_NEXT_WHITE);
   // textlayer_bus_no
   textlayer_bus_no = text_layer_create(GRect(3, 1, 51, 26));
   text_layer_set_background_color(textlayer_bus_no, GColorClear);
   text_layer_set_text(textlayer_bus_no, "...");
+  text_layer_set_text_alignment(textlayer_bus_no, GTextAlignmentCenter);
   text_layer_set_font(textlayer_bus_no, s_res_gothic_24_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_bus_no);
   
@@ -81,19 +82,19 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_nextbus_label);
   
   // bitmaplayer_current
-  bitmaplayer_current = bitmap_layer_create(GRect(42, 77, 35, 10));
+  bitmaplayer_current = bitmap_layer_create(GRect(45, 77, 35, 10));
   bitmap_layer_set_bitmap(bitmaplayer_current, s_res_bus_nodata);
   layer_add_child(window_get_root_layer(s_window), (Layer *)bitmaplayer_current);
   
   // bitmaplayer_next
-  bitmaplayer_next = bitmap_layer_create(GRect(42, 123, 35, 10));
+  bitmaplayer_next = bitmap_layer_create(GRect(45, 123, 35, 10));
   bitmap_layer_set_bitmap(bitmaplayer_next, s_res_bus_nodata);
   layer_add_child(window_get_root_layer(s_window), (Layer *)bitmaplayer_next);
   
   // textlayer_debug
   textlayer_debug = text_layer_create(GRect(4, 38, 114, 20));
   text_layer_set_background_color(textlayer_debug, GColorClear);
-  text_layer_set_text(textlayer_debug, "Debug Button");
+  text_layer_set_text(textlayer_debug, "Debug/Notices");
   text_layer_set_font(textlayer_debug, s_res_gothic_14);
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_debug);
   
@@ -129,8 +130,8 @@ static void destroy_ui(void) {
   action_bar_layer_destroy(actionbar_layer);
   text_layer_destroy(textlayer_pages);
   gbitmap_destroy(s_res_bus_nodata);
-  gbitmap_destroy(s_res_actionicon_refresh_white);
   gbitmap_destroy(s_res_actionicon_previous_white);
+  gbitmap_destroy(s_res_actionicon_refresh_white);
   gbitmap_destroy(s_res_actionicon_next_white);
 }
 // END AUTO-GENERATED UI CODE
