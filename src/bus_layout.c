@@ -167,6 +167,41 @@ enum {
   LOAD_SUBSEQUENT_BUS = 2
 };
 
+/*         MESSAGE UPDATES            */
+char *translate_error(AppMessageResult result) {
+  switch (result) {
+    case APP_MSG_OK: return "APP_MSG_OK";
+    case APP_MSG_SEND_TIMEOUT: return "APP_MSG_SEND_TIMEOUT";
+    case APP_MSG_SEND_REJECTED: return "APP_MSG_SEND_REJECTED";
+    case APP_MSG_NOT_CONNECTED: return "APP_MSG_NOT_CONNECTED";
+    case APP_MSG_APP_NOT_RUNNING: return "APP_MSG_APP_NOT_RUNNING";
+    case APP_MSG_INVALID_ARGS: return "APP_MSG_INVALID_ARGS";
+    case APP_MSG_BUSY: return "APP_MSG_BUSY";
+    case APP_MSG_BUFFER_OVERFLOW: return "APP_MSG_BUFFER_OVERFLOW";
+    case APP_MSG_ALREADY_RELEASED: return "APP_MSG_ALREADY_RELEASED";
+    case APP_MSG_CALLBACK_ALREADY_REGISTERED: return "APP_MSG_CALLBACK_ALREADY_REGISTERED";
+    case APP_MSG_CALLBACK_NOT_REGISTERED: return "APP_MSG_CALLBACK_NOT_REGISTERED";
+    case APP_MSG_OUT_OF_MEMORY: return "APP_MSG_OUT_OF_MEMORY";
+    case APP_MSG_CLOSED: return "APP_MSG_CLOSED";
+    case APP_MSG_INTERNAL_ERROR: return "APP_MSG_INTERNAL_ERROR";
+    default: return "UNKNOWN ERROR";
+  }
+}
+
+void resetData(){
+  text_layer_set_text(textlayer_bus_no, "...");
+  text_layer_set_text(textlayer_busstop_name, "...");
+  text_layer_set_text(textlayer_busstop_code, "...");
+  text_layer_set_text(textlayer_arrive_now, "...");
+  text_layer_set_text(textlayer_arrive_next, "...");
+  text_layer_set_text(textlayer_pages, "?/?");
+  bitmap_layer_set_bitmap(bitmaplayer_current, s_res_bus_nodata);
+  bitmap_layer_set_bitmap(bitmaplayer_next, s_res_bus_nodata);
+  text_layer_set_text(textlayer_debug, "");
+  action_bar_layer_set_icon(actionbar_layer, BUTTON_ID_UP, s_res_actionicon_previous_white);
+  action_bar_layer_set_icon(actionbar_layer, BUTTON_ID_DOWN, s_res_actionicon_next_white);
+}
+
 /*            APP MESSAGE             */
 
 //Updates Load Image (1 - current, 2 - next)
@@ -188,26 +223,6 @@ static void updateLoad(int load, int l){
       case LOAD_LIMITED_STANDING: bitmap_layer_set_bitmap(bitmaplayer_next, bus_full); break;
     }
     break;
-  }
-}
-
-char *translate_error(AppMessageResult result) {
-  switch (result) {
-    case APP_MSG_OK: return "APP_MSG_OK";
-    case APP_MSG_SEND_TIMEOUT: return "APP_MSG_SEND_TIMEOUT";
-    case APP_MSG_SEND_REJECTED: return "APP_MSG_SEND_REJECTED";
-    case APP_MSG_NOT_CONNECTED: return "APP_MSG_NOT_CONNECTED";
-    case APP_MSG_APP_NOT_RUNNING: return "APP_MSG_APP_NOT_RUNNING";
-    case APP_MSG_INVALID_ARGS: return "APP_MSG_INVALID_ARGS";
-    case APP_MSG_BUSY: return "APP_MSG_BUSY";
-    case APP_MSG_BUFFER_OVERFLOW: return "APP_MSG_BUFFER_OVERFLOW";
-    case APP_MSG_ALREADY_RELEASED: return "APP_MSG_ALREADY_RELEASED";
-    case APP_MSG_CALLBACK_ALREADY_REGISTERED: return "APP_MSG_CALLBACK_ALREADY_REGISTERED";
-    case APP_MSG_CALLBACK_NOT_REGISTERED: return "APP_MSG_CALLBACK_NOT_REGISTERED";
-    case APP_MSG_OUT_OF_MEMORY: return "APP_MSG_OUT_OF_MEMORY";
-    case APP_MSG_CLOSED: return "APP_MSG_CLOSED";
-    case APP_MSG_INTERNAL_ERROR: return "APP_MSG_INTERNAL_ERROR";
-    default: return "UNKNOWN ERROR";
   }
 }
 
@@ -298,11 +313,19 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
     // Get next pair, if any
     t = dict_read_next(iter);
   }
+  
+  //Handle action bar icons hiding
+  if (current == 1){
+    action_bar_layer_clear_icon(actionbar_layer, BUTTON_ID_UP);
+  } else if (current == max) {
+    action_bar_layer_clear_icon(actionbar_layer, BUTTON_ID_DOWN);
+  }
 }
 
 // Send command
 void send_int(uint8_t key, uint8_t cmd)
 {
+  resetData();
   if (debugMode)
     APP_LOG(APP_LOG_LEVEL_INFO, "Sending refresh data to phone");
   DictionaryIterator *iter;
@@ -316,6 +339,7 @@ void send_int(uint8_t key, uint8_t cmd)
 
 // Next or previous
 void go_next_or_prev(uint8_t key, uint8_t cmd){
+  resetData();
   if (debugMode)
     APP_LOG(APP_LOG_LEVEL_INFO, "Sending data to phone");
   DictionaryIterator *iter;
