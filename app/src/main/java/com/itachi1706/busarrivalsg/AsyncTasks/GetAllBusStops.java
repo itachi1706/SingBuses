@@ -107,6 +107,7 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
                 Toast.makeText(activity, count + " bus stops saved to database!", Toast.LENGTH_SHORT).show();
                 Log.d("GET-STOPS", "Loaded " + count + " bus stops into the database");
                 sp.edit().putBoolean("busDBLoaded", true).apply();
+                sp.edit().putLong("busDBTimeUpdated", System.currentTimeMillis()).apply();
                 dialog.dismiss();
                 StaticVariables.init1TaskFinished = true;
                 Log.d("INIT-1", "Task Complete");

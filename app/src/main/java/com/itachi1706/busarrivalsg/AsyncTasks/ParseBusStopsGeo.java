@@ -65,6 +65,7 @@ public class ParseBusStopsGeo extends AsyncTask<BusStopsGeo, String, Void> {
         Toast.makeText(activity, count + " bus stops geo data saved to database!", Toast.LENGTH_SHORT).show();
         Log.d("GET-STOPSGEO", "Loaded " + count + " bus stops geographical data into the database");
         sp.edit().putBoolean("geoDBLoaded", true).apply();
+        sp.edit().putLong("geoDBTimeUpdated", System.currentTimeMillis()).apply();
         dialog.dismiss();
     }
 }

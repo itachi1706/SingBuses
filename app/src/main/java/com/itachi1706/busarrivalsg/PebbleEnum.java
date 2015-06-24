@@ -19,5 +19,12 @@ public class PebbleEnum {
             MESSAGE_ROAD_CODE = 10,
             MESSAGE_BUS_SERVICE = 11,
             MESSAGE_CURRENT_FAV = 12,
-            MESSAGE_MAX_FAV = 13;
+            MESSAGE_MAX_FAV = 13,
+            ERROR_NO_DATA = 14,
+            LOAD_NO_DATA = 0,
+            LOAD_SEATS_AVAILABLE = 1,
+            LOAD_LIMITED_SEATING = 2,
+            LOAD_LIMITED_STANDING = 3,
+            LOAD_CURRENT_BUS = 1,
+            LOAD_SUBSEQUENT_BUS = 2;
 }

@@ -2,6 +2,7 @@ package com.itachi1706.busarrivalsg;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
+import com.itachi1706.busarrivalsg.AsyncTasks.DlAndInstallCompanionApp;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStopsGeo;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesFavourites;
@@ -36,7 +39,9 @@ import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.Services.PebbleCommunications;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -121,7 +126,8 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
             pebbleCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO Install Pebble App automatically
+                    installPebbleApp();
+
                 }
             });
         } else {
@@ -156,6 +162,15 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
             unregisterReceiver(mReceiver);
     }
 
+    public void installPebbleApp(){
+        /*Uri url = Uri.parse("pebble://bundle/?addr=itachi1706.com&path=/android/SingBuses.pbw");
+        Intent installCompanionApp = new Intent(Intent.ACTION_VIEW);
+        installCompanionApp.setDataAndType(url, "application/octet-stream");
+        installCompanionApp.setComponent(new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity"));
+        startActivity(installCompanionApp);*/
+        new DlAndInstallCompanionApp(this).execute("http://itachi1706.com/android/SingBuses.pbw");
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -180,6 +195,9 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
         } else if (id == R.id.action_refresh){
             swipeToRefresh.setRefreshing(true);
             updateFavourites();
+            return true;
+        } else if (id == R.id.action_install_companion){
+            installPebbleApp();
             return true;
         }
 
@@ -213,8 +231,27 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
     private void checkIfDatabaseUpdated(){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
+        long busDBLastUpdate = sp.getLong("busDBTimeUpdated", -1);
+        long geoDBLastUpdate = sp.getLong("geoDBTimeUpdated", -1);
+        long currentTime = System.currentTimeMillis();
+        boolean busDBUpdate = false, geoDBUpdate = false;
+        if (busDBLastUpdate != -1){
+            long lastUpdated = currentTime - busDBLastUpdate;
+            long day = TimeUnit.MILLISECONDS.toDays(lastUpdated);
+            Log.d("INIT", "Bus DB Last Update: " + day);
+            if (day > 30)
+                busDBUpdate = true;
+        }
+        if (geoDBLastUpdate != -1){
+            long lastUpdated = currentTime - geoDBLastUpdate;
+            long day = TimeUnit.MILLISECONDS.toDays(lastUpdated);
+            Log.d("INIT", "Geo DB Last Update: " + day);
+            if (day > 60)
+                geoDBUpdate = true;
+        }
+
         //Main Database
-        if (!sp.getBoolean("busDBLoaded", false)){
+        if (!sp.getBoolean("busDBLoaded", false) || busDBUpdate){
             //First Boot, populate database
             if (!isNetworkAvailable()){
                 networkUnavailable("Bus Database");
@@ -229,13 +266,19 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
 
                 BusStopsDB db = new BusStopsDB(this);
                 db.dropAndRebuildDB();
+                sp.edit().putBoolean("busDBLoaded", false).apply();
                 dialog.show();
 
                 new GetAllBusStops(dialog, db, this, sp).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 0);
             }
+        } else {
+            //Legacy Check
+            if (sp.getLong("busDBTimeUpdated", -1) == -1){
+                sp.edit().putLong("busDBTimeUpdated", System.currentTimeMillis()).apply();
+            }
         }
 
-        if (!sp.getBoolean("geoDBLoaded", false)){
+        if (!sp.getBoolean("geoDBLoaded", false) || geoDBUpdate){
             //First Boot with Geo Location db
             if (!isNetworkAvailable()){
                 networkUnavailable("Bus Geo Location Database");
@@ -250,8 +293,14 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
 
                 BusStopsGeoDB geoDB = new BusStopsGeoDB(this);
                 geoDB.dropAndRebuildDB();
+                sp.edit().putBoolean("geoDBLoaded", false).apply();
 
                 new GetAllBusStopsGeo(dialogs, geoDB, this, sp).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        } else {
+            //Legacy Check
+            if (sp.getLong("geoDBTimeUpdated", -1) == -1){
+                sp.edit().putLong("geoDBTimeUpdated", System.currentTimeMillis()).apply();
             }
         }
     }

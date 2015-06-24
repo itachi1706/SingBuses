@@ -62,15 +62,19 @@ public class PebbleCommunications extends Service {
             public void receiveNack(Context context, int i) {
                 Log.e("Pebble Comm", "Message failed to send to Pebble");
 
-                //Check Static Vars. If theres any other message, send them and null it
+                //Check variables for any dictionaries not sent, and send them
                 if (StaticVariables.dict1 != null) {
                     PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict1);
+                    StaticVariables.extraSend = 1;
                 } else if (StaticVariables.dict2 != null){
                     PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict2);
+                    StaticVariables.extraSend = 2;
                 } else if (StaticVariables.dict3 != null){
                     PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict3);
+                    StaticVariables.extraSend = 3;
                 } else if (StaticVariables.dict4 != null){
                     PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict4);
+                    StaticVariables.extraSend = 4;
                 }
             }
         };
@@ -82,6 +86,7 @@ public class PebbleCommunications extends Service {
             public void receiveAck(Context context, int i) {
                 Log.i("Pebble Comm", "Sent message successfully to Pebble");
 
+                //After sending is successfully, null the dictionary
                 switch (StaticVariables.extraSend){
                     case 1: StaticVariables.extraSend = -1; StaticVariables.dict1 = null; break;
                     case 2: StaticVariables.extraSend = -1; StaticVariables.dict2 = null; break;
@@ -89,7 +94,7 @@ public class PebbleCommunications extends Service {
                     case 4: StaticVariables.extraSend = -1; StaticVariables.dict4 = null; break;
                 }
 
-                //Check Static Vars. If theres any other message, send them and null it
+                //Check Static Vars. If theres any other message, send them
                 if (StaticVariables.dict2 != null){
                     PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict2);
                     StaticVariables.extraSend = 2;
@@ -248,29 +253,26 @@ public class PebbleCommunications extends Service {
                 PebbleDictionary dict1 = new PebbleDictionary();
                 PebbleDictionary dict2 = new PebbleDictionary();
                 PebbleDictionary dict3 = new PebbleDictionary();
-                PebbleDictionary dict4 = new PebbleDictionary();
                 dict1.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
-                dict2.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
-                dict3.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
-                dict4.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
+                dict2.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 2);
+                dict3.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 3);
                 if (obj.getStopName() == null)
-                    dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, "Unknown");
+                    dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, "Unknown Stop");
                 else
                     dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, obj.getStopName());
                 dict2.addString(PebbleEnum.MESSAGE_BUS_SERVICE, obj.getServiceNo());
                 dict2.addString(PebbleEnum.MESSAGE_ROAD_CODE, obj.getStopID());
-                dict3.addInt32(PebbleEnum.MESSAGE_MAX_FAV, StaticVariables.favouritesList.size());
-                dict3.addInt32(PebbleEnum.MESSAGE_CURRENT_FAV, page + 1);
-                dict4.addString(PebbleEnum.ESTIMATE_ARR_CURRENT_DATA, currentEst);
-                dict4.addInt32(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, obj.getCurrentBus().getLoad());
-                dict4.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst);
-                dict4.addInt32(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, obj.getNextBus().getLoad());
+                dict2.addInt32(PebbleEnum.MESSAGE_MAX_FAV, StaticVariables.favouritesList.size());
+                dict2.addInt32(PebbleEnum.MESSAGE_CURRENT_FAV, page + 1);
+                dict3.addString(PebbleEnum.ESTIMATE_ARR_CURRENT_DATA, currentEst);
+                dict3.addInt32(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, obj.getCurrentBus().getLoad());
+                dict3.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst);
+                dict3.addInt32(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, obj.getNextBus().getLoad());
                 PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, dict1);
                 StaticVariables.extraSend = 1;
                 StaticVariables.dict1 = dict1;
                 StaticVariables.dict2 = dict2;
                 StaticVariables.dict3 = dict3;
-                StaticVariables.dict4 = dict4;
             }
         }
 
@@ -310,29 +312,26 @@ public class PebbleCommunications extends Service {
                 PebbleDictionary dict1 = new PebbleDictionary();
                 PebbleDictionary dict2 = new PebbleDictionary();
                 PebbleDictionary dict3 = new PebbleDictionary();
-                PebbleDictionary dict4 = new PebbleDictionary();
                 dict1.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
-                dict2.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
-                dict3.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
-                dict4.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
+                dict2.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 2);
+                dict3.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 3);
                 if (obj.getStopName() == null)
-                    dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, "Unknown");
+                    dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, "Unknown Stop");
                 else
                     dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, obj.getStopName());
                 dict2.addString(PebbleEnum.MESSAGE_BUS_SERVICE, obj.getServiceNo());
                 dict2.addString(PebbleEnum.MESSAGE_ROAD_CODE, obj.getStopID());
-                dict3.addInt32(PebbleEnum.MESSAGE_MAX_FAV, StaticVariables.favouritesList.size());
-                dict3.addInt32(PebbleEnum.MESSAGE_CURRENT_FAV, page - 1);
-                dict4.addString(PebbleEnum.ESTIMATE_ARR_CURRENT_DATA, currentEst);
-                dict4.addInt32(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, obj.getCurrentBus().getLoad());
-                dict4.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst);
-                dict4.addInt32(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, obj.getNextBus().getLoad());
+                dict2.addInt32(PebbleEnum.MESSAGE_MAX_FAV, StaticVariables.favouritesList.size());
+                dict2.addInt32(PebbleEnum.MESSAGE_CURRENT_FAV, page - 1);
+                dict3.addString(PebbleEnum.ESTIMATE_ARR_CURRENT_DATA, currentEst);
+                dict3.addInt32(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, obj.getCurrentBus().getLoad());
+                dict3.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst);
+                dict3.addInt32(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, obj.getNextBus().getLoad());
                 PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, dict1);
                 StaticVariables.extraSend = 1;
                 StaticVariables.dict1 = dict1;
                 StaticVariables.dict2 = dict2;
                 StaticVariables.dict3 = dict3;
-                StaticVariables.dict4 = dict4;
             }
         }
 
@@ -363,6 +362,12 @@ public class PebbleCommunications extends Service {
                     new GetRemainingFavouriteData().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, s);
                 }
                 Log.d("FAVOURITES", "Finished casting AsyncTasks to retrieve estimated arrival data");
+            } else {
+                PebbleDictionary dict = new PebbleDictionary();
+                dict.addInt32(PebbleEnum.ERROR_NO_DATA, 1);
+                StaticVariables.dict1 = dict;
+                StaticVariables.extraSend = 1;
+                PebbleKit.sendDataToPebble(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, dict);
             }
         }
 

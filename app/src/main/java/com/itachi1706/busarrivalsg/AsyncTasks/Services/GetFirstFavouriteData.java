@@ -1,7 +1,6 @@
 package com.itachi1706.busarrivalsg.AsyncTasks.Services;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -22,11 +21,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Handler;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -164,23 +161,21 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
             PebbleDictionary dict1 = new PebbleDictionary();
             PebbleDictionary dict2 = new PebbleDictionary();
             PebbleDictionary dict3 = new PebbleDictionary();
-            PebbleDictionary dict4 = new PebbleDictionary();
             dict1.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
-            dict2.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
-            dict3.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
-            dict4.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
+            dict2.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 2);
+            dict3.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 3);
             if (ob.getStopName() == null)
-                dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, "Unknown");
+                dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, "Unknown Stop");
             else
                 dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, ob.getStopName());
             dict2.addString(PebbleEnum.MESSAGE_BUS_SERVICE, ob.getServiceNo());
             dict2.addString(PebbleEnum.MESSAGE_ROAD_CODE, ob.getStopID());
-            dict3.addInt32(PebbleEnum.MESSAGE_MAX_FAV, StaticVariables.favouritesList.size());
-            dict3.addInt32(PebbleEnum.MESSAGE_CURRENT_FAV, 1);
-            dict4.addString(PebbleEnum.ESTIMATE_ARR_CURRENT_DATA, currentEst);
-            dict4.addInt32(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, ob.getCurrentBus().getLoad());
-            dict4.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst);
-            dict4.addInt32(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, ob.getNextBus().getLoad());
+            dict2.addInt32(PebbleEnum.MESSAGE_MAX_FAV, StaticVariables.favouritesList.size());
+            dict2.addInt32(PebbleEnum.MESSAGE_CURRENT_FAV, 1);
+            dict3.addString(PebbleEnum.ESTIMATE_ARR_CURRENT_DATA, currentEst);
+            dict3.addInt32(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, ob.getCurrentBus().getLoad());
+            dict3.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst);
+            dict3.addInt32(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, ob.getNextBus().getLoad());
 
             Log.i("PebbleComm First Fav", "Sending to Pebble...");
             PebbleKit.sendDataToPebble(context, StaticVariables.PEBBLE_APP_UUID, dict1);
@@ -188,22 +183,18 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
             StaticVariables.dict1 = dict1;
             StaticVariables.dict2 = dict2;
             StaticVariables.dict3 = dict3;
-            StaticVariables.dict4 = dict4;
         }
     }
 
     private long parseEstimateArrival(String arrivalString){
         Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());
-        //GregorianCalendar currentDate = new GregorianCalendar(new SimpleTimeZone(8000, "SST"));
-        //currentDate.setTimeInMillis(networkTime[0]);
-        //currentDate.setTimeInMillis(System.currentTimeMillis());
         Calendar currentDate = Calendar.getInstance();
         currentDate.add(Calendar.MONTH, 1);
 
         Calendar arrivalDate = splitDate(arrivalString);
 
         Log.d("COMPARE","Current: " + currentDate.toString() );
-        Log.d("COMPARE", "Arrival: " + arrivalDate.toString() );
+        Log.d("COMPARE","Arrival: " + arrivalDate.toString() );
         long difference = arrivalDate.getTimeInMillis() - currentDate.getTimeInMillis();
         return TimeUnit.MILLISECONDS.toMinutes(difference);
     }
@@ -229,7 +220,6 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
         Calendar tmp = new GregorianCalendar(year, month, dates, hr, min, sec);
         //Cause Server gives GMT, we need convert to SST
         tmp.add(Calendar.HOUR, 8);
-        //tmp.setTimeZone(new SimpleTimeZone(8000, "SST"));
         return tmp;
     }
 }

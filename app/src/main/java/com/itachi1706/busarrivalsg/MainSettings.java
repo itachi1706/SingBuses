@@ -22,6 +22,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 
@@ -86,6 +89,32 @@ public class MainSettings extends AppCompatActivity {
                     return true;
                 }
             });
+
+            Preference timeDBUpdateBus = findPreference("busDBTimeUpdated");
+            Preference timeDBUpdateGeo = findPreference("geoDBTimeUpdated");
+            long dbBus = sp.getLong("busDBTimeUpdated", -1);
+            long dbGeo = sp.getLong("busDBTimeUpdated", -1);
+            updateSummaryDBBus(timeDBUpdateBus, dbBus);
+            updateSummaryDBGeo(timeDBUpdateGeo, dbGeo);
+
+        }
+
+        private void updateSummaryDBBus(Preference timeDBUpdateBus, long dbBus){
+            if (dbBus == -1) {
+                timeDBUpdateBus.setSummary("Never");
+                return;
+            }
+            Date date = new Date(dbBus);
+            timeDBUpdateBus.setSummary(date.toString());
+        }
+
+        private void updateSummaryDBGeo(Preference timeDBUpdateGeo, long dbGeo){
+            if (dbGeo == -1) {
+                timeDBUpdateGeo.setSummary("Never");
+                return;
+            }
+            Date date = new Date(dbGeo);
+            timeDBUpdateGeo.setSummary(date.toString());
         }
     }
 }
