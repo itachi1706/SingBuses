@@ -233,7 +233,7 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
   // Get the first pair
   Tuple *t = dict_read_first(iter);
   // Long lived buffers
-  static char roadName_buffer[255];
+  static char roadName_buffer[60];
   static char roadCode_buffer[6];
   static char busService_buffer[5];
   static int max, loadC, loadN;
