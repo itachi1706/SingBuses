@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,21 +44,23 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
     private PebbleKit.PebbleDataReceiver mReceiver;
 
     //Android Stuff
-    private TextView connectionStatus, pressedBtn, firmware, appInstallState;
+    private TextView connectionStatus, pressedBtn, firmware, installPrompt;
     private FloatingActionButton fab;
     private ListView favouritesList;
     private FavouritesListViewAdapter adapter;
     private SwipeRefreshLayout swipeToRefresh;
+    private CardView pebbleCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
+        pebbleCard = (CardView) findViewById(R.id.card_view);
+        installPrompt = (TextView) findViewById(R.id.pebbleInstallPrompt);
         connectionStatus = (TextView) findViewById(R.id.pebbleConnectionStatus);
         pressedBtn = (TextView) findViewById(R.id.pressedBtn);
         firmware = (TextView) findViewById(R.id.pebbleFW);
-        appInstallState = (TextView) findViewById(R.id.pebbleAppStatus);
         fab = (FloatingActionButton) findViewById(R.id.add_fab);
         favouritesList = (ListView) findViewById(R.id.lvFav);
 
@@ -93,6 +96,7 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
         boolean checkIfPebbleConnected = PebbleKit.isWatchConnected(this);
         if (checkIfPebbleConnected){
             PebbleKit.FirmwareVersionInfo info = PebbleKit.getWatchFWVersion(this);
+            installPrompt.setVisibility(View.VISIBLE);
             //Init
             connectionStatus.setText("Pebble Connected!");
             connectionStatus.setTextColor(Color.GREEN);
@@ -113,10 +117,19 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
                 }
             };
             PebbleKit.registerReceivedDataHandler(this, mReceiver);
+
+            pebbleCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO Install Pebble App automatically
+                }
+            });
         } else {
             connectionStatus.setText("Pebble not connected!");
             connectionStatus.setTextColor(Color.RED);
             firmware.setText("");
+            installPrompt.setVisibility(View.INVISIBLE);
+            pebbleCard.setOnClickListener(null);
         }
 
         //Android Stuff now again :D
