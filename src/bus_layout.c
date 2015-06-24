@@ -158,7 +158,13 @@ enum {
   MESSAGE_ROAD_CODE = 10,
   MESSAGE_BUS_SERVICE = 11,
   MESSAGE_CURRENT_FAV = 12,
-  MESSAGE_MAX_FAV = 13
+  MESSAGE_MAX_FAV = 13,
+  LOAD_NO_DATA = 0,
+  LOAD_SEATS_AVAILABLE = 1,
+  LOAD_LIMITED_SEATING = 2,
+  LOAD_LIMITED_STANDING = 3,
+  LOAD_CURRENT_BUS = 1,
+  LOAD_SUBSEQUENT_BUS = 2
 };
 
 /*            APP MESSAGE             */
@@ -166,20 +172,20 @@ enum {
 //Updates Load Image (1 - current, 2 - next)
 static void updateLoad(int load, int l){
   switch (l){
-    case 1:
+    case LOAD_CURRENT_BUS:
     switch (load){
-      case 0: bitmap_layer_set_bitmap(bitmaplayer_current, s_res_bus_nodata); break;
-      case 1: bitmap_layer_set_bitmap(bitmaplayer_current, bus_available); break;
-      case 2: bitmap_layer_set_bitmap(bitmaplayer_current, bus_limited); break;
-      case 3: bitmap_layer_set_bitmap(bitmaplayer_current, bus_full); break;  
+      case LOAD_NO_DATA: bitmap_layer_set_bitmap(bitmaplayer_current, s_res_bus_nodata); break;
+      case LOAD_SEATS_AVAILABLE: bitmap_layer_set_bitmap(bitmaplayer_current, bus_available); break;
+      case LOAD_LIMITED_SEATING: bitmap_layer_set_bitmap(bitmaplayer_current, bus_limited); break;
+      case LOAD_LIMITED_STANDING: bitmap_layer_set_bitmap(bitmaplayer_current, bus_full); break;  
     }
     break;
-    case 2:
+    case LOAD_SUBSEQUENT_BUS:
     switch (load){
-      case 0: bitmap_layer_set_bitmap(bitmaplayer_next, s_res_bus_nodata); break;
-      case 1: bitmap_layer_set_bitmap(bitmaplayer_next, bus_available); break;
-      case 2: bitmap_layer_set_bitmap(bitmaplayer_next, bus_limited); break;
-      case 3: bitmap_layer_set_bitmap(bitmaplayer_next, bus_full); break;
+      case LOAD_NO_DATA: bitmap_layer_set_bitmap(bitmaplayer_next, s_res_bus_nodata); break;
+      case LOAD_SEATS_AVAILABLE: bitmap_layer_set_bitmap(bitmaplayer_next, bus_available); break;
+      case LOAD_LIMITED_SEATING: bitmap_layer_set_bitmap(bitmaplayer_next, bus_limited); break;
+      case LOAD_LIMITED_STANDING: bitmap_layer_set_bitmap(bitmaplayer_next, bus_full); break;
     }
     break;
   }
@@ -228,8 +234,8 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
   Tuple *t = dict_read_first(iter);
   // Long lived buffers
   static char roadName_buffer[255];
-  static char roadCode_buffer[10];
-  static char busService_buffer[10];
+  static char roadCode_buffer[6];
+  static char busService_buffer[5];
   static int max, loadC, loadN;
   static char arrC_data_buffer[10];
   static char arrN_data_buffer[10];
@@ -366,6 +372,9 @@ static void init_bus_indicators(void){
 
 static void handle_window_unload(Window* window) {
   destroy_ui();
+  gbitmap_destroy(bus_full);
+  gbitmap_destroy(bus_limited);
+  gbitmap_destroy(bus_available);
 }
 
 void show_bus_layout(void) {
