@@ -205,20 +205,24 @@ char *translate_error(AppMessageResult result) {
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) {
-  APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped! Reason: %i - %s", reason, translate_error(reason));
+  if (debugMode)
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped! Reason: %i - %s", reason, translate_error(reason));
 }
 
 static void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResult reason, void *context) {
-  APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed! Reason: %i - %s", reason, translate_error(reason));
+  if (debugMode)
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed! Reason: %i - %s", reason, translate_error(reason));
 }
 
 static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
-  APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
+  if (debugMode)
+    APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
 }
 
 // App Message API
 static void in_received_handler(DictionaryIterator *iter, void *context){
-  APP_LOG(APP_LOG_LEVEL_INFO, "Message received!");
+  if (debugMode)
+    APP_LOG(APP_LOG_LEVEL_INFO, "Message received!");
   // Get the first pair
   Tuple *t = dict_read_first(iter);
   // Long lived buffers
@@ -235,7 +239,7 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
     // Process this pair's key
     switch (t->key) {
       case MESSAGE_DATA_EVENT:
-        APP_LOG(APP_LOG_LEVEL_INFO, "MESSAGE_DATA received with value %d", (int)t->value->int32);
+        APP_LOG(APP_LOG_LEVEL_INFO, "Data received for Dictionary %d", (int)t->value->int32);
         break;
       case MESSAGE_ROAD_NAME:
         snprintf(roadName_buffer, sizeof(roadName_buffer), "%s", t->value->cstring);
@@ -292,19 +296,21 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
 // Send command
 void send_int(uint8_t key, uint8_t cmd)
 {
-  APP_LOG(APP_LOG_LEVEL_INFO, "Sending refresh data to phone");
-    DictionaryIterator *iter;
-    app_message_outbox_begin(&iter);
-      
-    Tuplet value = TupletInteger(key, cmd);
-    dict_write_tuplet(iter, &value);
-      
-    app_message_outbox_send();
+  if (debugMode)
+    APP_LOG(APP_LOG_LEVEL_INFO, "Sending refresh data to phone");
+  DictionaryIterator *iter;
+  app_message_outbox_begin(&iter);
+  
+  Tuplet value = TupletInteger(key, cmd);
+  dict_write_tuplet(iter, &value);
+  
+  app_message_outbox_send();
 }
 
 // Next or previous
 void go_next_or_prev(uint8_t key, uint8_t cmd){
-  APP_LOG(APP_LOG_LEVEL_INFO, "Sending data to phone");
+  if (debugMode)
+    APP_LOG(APP_LOG_LEVEL_INFO, "Sending data to phone");
   DictionaryIterator *iter;
   app_message_outbox_begin(&iter);
       
@@ -371,7 +377,10 @@ void show_bus_layout(void) {
   });
   window_stack_push(s_window, true);
   
-  APP_LOG(APP_LOG_LEVEL_INFO, "Inbox Max Size: %lu", app_message_inbox_size_maximum());
+  if (debugMode){
+    APP_LOG(APP_LOG_LEVEL_INFO, "Inbox Max Size: %lu", app_message_inbox_size_maximum());
+    APP_LOG(APP_LOG_LEVEL_INFO, "Outbox Max Size: %lu", app_message_outbox_size_maximum());
+  }
   
   //Register AppMessage events
   app_message_register_inbox_received(in_received_handler);
@@ -391,3 +400,4 @@ void show_bus_layout(void) {
 void hide_bus_layout(void) {
   window_stack_remove(s_window, true);
 }
+
