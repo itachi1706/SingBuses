@@ -159,6 +159,7 @@ enum {
   MESSAGE_BUS_SERVICE = 11,
   MESSAGE_CURRENT_FAV = 12,
   MESSAGE_MAX_FAV = 13,
+  ERROR_NO_DATA = 14,
   LOAD_NO_DATA = 0,
   LOAD_SEATS_AVAILABLE = 1,
   LOAD_LIMITED_SEATING = 2,
@@ -234,6 +235,7 @@ static void inbox_dropped_callback(AppMessageResult reason, void *context) {
 static void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResult reason, void *context) {
   if (debugMode)
     APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed! Reason: %i - %s", reason, translate_error(reason));
+  text_layer_set_text(textlayer_debug, "Cannot Contact App Svc");
 }
 
 static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
@@ -300,6 +302,11 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
       case ESTIMATE_LOAD_NEXT_DATA:
         loadN = t->value->int32;
         updateLoad(loadN, 2);
+        break;
+      
+      //No Favourites? Tell them too
+      case ERROR_NO_DATA:
+        text_layer_set_text(textlayer_debug, "No Favourites");
         break;
     }
     
