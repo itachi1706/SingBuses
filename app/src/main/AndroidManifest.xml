@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Check if there's internet access -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Allows write to SD root -->
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- Receives the intent when boot completes -->
+
 
     <!-- For getting your current location pre-GPS (so that you don't need GPS to run) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -46,8 +48,17 @@
         <service
             android:name=".Services.PebbleCommunications"
             android:exported="false"
-            tools:ignore="InnerclassSeparator">
+            tools:ignore="InnerclassSeparator" >
         </service>
+
+        <receiver
+            android:name=".CompleteBootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
