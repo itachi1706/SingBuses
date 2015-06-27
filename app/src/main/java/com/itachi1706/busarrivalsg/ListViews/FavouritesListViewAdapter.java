@@ -113,7 +113,7 @@ public class FavouritesListViewAdapter extends ArrayAdapter<BusServices> {
                         busArrivalNext.setTextColor(Color.GRAY);
                     } else {
                         long est = parseEstimateArrival(i.getNextBus().getEstimatedArrival());
-                        if (est == 0)
+                        if (est <= 0)
                             busArrivalNext.setText("Arr");
                         else if (est == 1)
                             busArrivalNext.setText(est + " min");

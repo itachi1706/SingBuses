@@ -231,7 +231,7 @@ public class PebbleCommunications extends Service {
                     nextEst = "-";
                 } else {
                     long estNxt = parseEstimateArrival(obj.getNextBus().getEstimatedArrival());
-                    if (estNxt == 0)
+                    if (estNxt <= 0)
                         nextEst = "Arr";
                     else if (estNxt == 1)
                         nextEst = estNxt + " min";
@@ -242,7 +242,7 @@ public class PebbleCommunications extends Service {
                     currentEst = "-";
                 } else {
                     long estCur = parseEstimateArrival(obj.getCurrentBus().getEstimatedArrival());
-                    if (estCur == 0)
+                    if (estCur <= 0)
                         currentEst = "Arr";
                     else if (estCur == 1)
                         currentEst = estCur + " min";
@@ -289,7 +289,7 @@ public class PebbleCommunications extends Service {
                     nextEst = "-";
                 } else {
                     long estNxt = parseEstimateArrival(obj.getNextBus().getEstimatedArrival());
-                    if (estNxt == 0)
+                    if (estNxt <= 0)
                         nextEst = "Arr";
                     else if (estNxt == 1)
                         nextEst = estNxt + " min";
@@ -300,7 +300,7 @@ public class PebbleCommunications extends Service {
                     currentEst = "-";
                 } else {
                     long estCur = parseEstimateArrival(obj.getCurrentBus().getEstimatedArrival());
-                    if (estCur == 0)
+                    if (estCur <= 0)
                         currentEst = "Arr";
                     else if (estCur == 1)
                         currentEst = estCur + " min";

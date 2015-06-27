@@ -138,7 +138,7 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
                 nextEst = "-";
             } else {
                 long estNxt = parseEstimateArrival(ob.getNextBus().getEstimatedArrival());
-                if (estNxt == 0)
+                if (estNxt <= 0)
                     nextEst = "Arr";
                 else if (estNxt == 1)
                     nextEst = estNxt + " min";
@@ -149,7 +149,7 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
                 currentEst = "-";
             } else {
                 long estCur = parseEstimateArrival(ob.getCurrentBus().getEstimatedArrival());
-                if (estCur == 0)
+                if (estCur <= 0)
                     currentEst = "Arr";
                 else if (estCur == 1)
                     currentEst = estCur + " min";

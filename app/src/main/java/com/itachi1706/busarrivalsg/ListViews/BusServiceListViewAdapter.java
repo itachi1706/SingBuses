@@ -105,7 +105,7 @@ public class BusServiceListViewAdapter extends ArrayAdapter<BusArrivalArrayObjec
                     busArrivalNext.setTextColor(Color.GRAY);
                 } else {
                     long est = parseEstimateArrival(i.getSubsequentBus().getEstimatedArrival());
-                    if (est == 0)
+                    if (est <= 0)
                         busArrivalNext.setText("Arr");
                     else if (est == 1)
                         busArrivalNext.setText(est + " min");
