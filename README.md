@@ -1,6 +1,6 @@
-# SingBuses [![Build Status](https://travis-ci.org/itachi1706/SingBuses.svg?branch=1.1)](https://travis-ci.org/itachi1706/SingBuses)
+# Bus Arrivals @ SG [![Build Status](https://travis-ci.org/itachi1706/SingBuses.svg?branch=1.1)](https://travis-ci.org/itachi1706/SingBuses)
 
-This is the Official Repository of the SingBuses Android App. The main objective of this app was to provide bus arrival timings in
+This is the Official Repository of the Bus Arrivals @ SG Android App. The main objective of this app was to provide bus arrival timings in
 Singapore while at the same time, be able to send the data onto a smart wearable device. As of this moment, only the Pebble smartwatch
 (Original Pebble and Pebble Steel) are supported.
 
