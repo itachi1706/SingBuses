@@ -61,8 +61,11 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         swipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_swipe);
         swipeToRefresh.setOnRefreshListener(this);
 
-        // TODO Swipe to refresh get 4 colors for the color scheme
-        // https://github.com/itachi1706/HypixelStatistics/blob/master/app/src/main/java/com/itachi1706/hypixelstatistics/BoosterList.java for reference
+        swipeToRefresh.setColorSchemeResources(
+                R.color.refresh_progress_1,
+                R.color.refresh_progress_2,
+                R.color.refresh_progress_3,
+                R.color.refresh_progress_4);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         if (sp.getBoolean("showHint", true))

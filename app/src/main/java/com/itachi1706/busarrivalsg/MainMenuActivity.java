@@ -93,8 +93,11 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         swipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_favourites);
         swipeToRefresh.setOnRefreshListener(this);
 
-        // TODO Swipe to refresh get 4 colors for the color scheme
-        // https://github.com/itachi1706/HypixelStatistics/blob/master/app/src/main/java/com/itachi1706/hypixelstatistics/BoosterList.java for reference
+        swipeToRefresh.setColorSchemeResources(
+                R.color.refresh_progress_1,
+                R.color.refresh_progress_2,
+                R.color.refresh_progress_3,
+                R.color.refresh_progress_4);
 
         adapter = new FavouritesRecyclerAdapter(new ArrayList<BusServices>(), this);
         favouritesList.setAdapter(adapter);
