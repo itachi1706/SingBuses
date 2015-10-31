@@ -3,16 +3,19 @@ package com.itachi1706.busarrivalsg.RecyclerViews;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Objects.BusStatus;
 import com.itachi1706.busarrivalsg.R;
@@ -31,7 +34,6 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     /**
      * This recycler adapter is used in the internal retrive all bus services from main activity's favourites list
      */
-    //TODO: Add an on click listener here to view all bus stops from the favourites?
 
     private List<BusServices> items;
     private Activity activity;
@@ -159,12 +161,19 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             operatingStatus = (TextView) v.findViewById(R.id.tvBusStatus);
             stopName = (TextView) v.findViewById(R.id.tvBusStopName);
             v.setOnLongClickListener(this);
+            v.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             int position = this.getLayoutPosition();
             final BusServices item = items.get(position);
+            Log.d("Size", "" + items.size());
+            Intent serviceIntent = new Intent(activity, BusServicesAtStopRecyclerActivity.class);
+            serviceIntent.putExtra("stopCode", item.getStopID());
+            if (item.getStopName() != null)
+                serviceIntent.putExtra("stopName", item.getStopName());
+            activity.startActivity(serviceIntent);
 
         }
 
