@@ -36,3 +36,6 @@ proguard/
 
 # Mac Files
 .DS_Store
+
+# Fabric Secret Key
+fabric.properties
