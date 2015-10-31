@@ -50,6 +50,7 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
             public void run() {
                 progressDialog.setTitle("Downloading Bus Stop Data");
                 progressDialog.setMessage("This will take a few minutes. Be patient :) \nDownloading latest bus stop data");
+                StaticVariables.init1TaskFinished = false;
             }
         });
         try {

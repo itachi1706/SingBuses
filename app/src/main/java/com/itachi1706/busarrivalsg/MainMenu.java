@@ -246,6 +246,8 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
             Log.d("INIT", "Bus DB Last Update: " + day);
             if (day > 30)
                 busDBUpdate = true;
+            else
+                StaticVariables.init1TaskFinished = true;
         }
         if (geoDBLastUpdate != -1){
             long lastUpdated = currentTime - geoDBLastUpdate;
@@ -294,7 +296,7 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
                 dialogs.setMessage("Retriving data from server");
                 dialogs.setCancelable(false);
                 dialogs.setIndeterminate(true);
-                dialogs.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                dialogs.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 
                 BusStopsGeoDB geoDB = new BusStopsGeoDB(this);
                 geoDB.dropAndRebuildDB();

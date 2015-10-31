@@ -38,7 +38,7 @@ public class ParseBusStops extends AsyncTask<BusStopJSONArray, String, Void> {
         BusStopJSON[] busStops = stops.getBusStopsArray();
         for (int i = 0; i < busStops.length; i++) {
             BusStopJSON busStop = busStops[i];
-            publishProgress((i + 1) + "", (busStops.length + 1) + "", busStop.getCode(), busStop.getRoad() + " - " + busStop.getBusStopName());
+            publishProgress((i + 1) + "", busStops.length + "", busStop.getCode(), busStop.getRoad() + " - " + busStop.getBusStopName());
             db.addToDBIfNotExist(busStop);
         }
         return null;

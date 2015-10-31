@@ -33,30 +33,34 @@ public class ParseBusStopsGeo extends AsyncTask<BusStopsGeo, String, Void> {
     protected Void doInBackground(BusStopsGeo... array) {
         BusStopsGeo stops = array[0];
 
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dialog.setTitle("Parsing Bus Stop Geographical Data...");
+                dialog.setMessage("Parsing bus stops geographical data retrived...");
+            }
+        });
+
         BusStopsGeoObject[] busStops = stops.getGeo();
-        publishProgress("start");
         for (int i = 0; i < busStops.length; i++) {
             BusStopsGeoObject busStop = busStops[i];
-            publishProgress("check", i + "", busStops.length + "", busStop.getNo(), busStop.getName());
+            publishProgress(i + "", busStops.length + "", busStop.getNo(), busStop.getName());
             db.addToDBIfNotExist(busStop);
         }
         return null;
     }
 
     @Override
-    protected void onProgressUpdate(String... data){
-        String check = data[0];
-        if (check.equalsIgnoreCase("start")) {
-            dialog.setTitle("Parsing JSON Data...");
-            dialog.setMessage("Parsing bus stops geographical data retrived...");
-        } else if (check.equalsIgnoreCase("process")) {
-            String i = data[1];
-            String length = data[2];
-            String code = data[3];
-            String name = data[4];
-            Log.d("GET-STOPSGEO", "Importing " + (i + 1) + "/" + length + " (" + code + ")");
-            dialog.setMessage("(" + (i + 1) + "/" + length + ") Parsing " + code + " \n[" + name + "]");
-        }
+    protected void onProgressUpdate(String... data) {
+        int i = Integer.parseInt(data[0]);
+        int length = Integer.parseInt(data[1]);
+        String code = data[2];
+        String name = data[3];
+        dialog.setMax(length);
+        dialog.setProgress(i + 1);
+        dialog.setIndeterminate(false);
+        Log.d("GET-STOPSGEO", "Importing " + (i + 1) + "/" + length + " (" + code + ")");
+        dialog.setMessage("Parsing " + code + " \n[" + name + "]");
     }
 
     protected void onPostExecute(Void param){
