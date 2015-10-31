@@ -1,18 +1,25 @@
 package com.itachi1706.busarrivalsg;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -181,6 +188,15 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     }
 
     public void installPebbleApp(){
+        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (rc == PackageManager.PERMISSION_GRANTED){
+            hasPermissionToInstallPebbleApp();
+        } else {
+            requestStoragePermission();
+        }
+    }
+
+    public void hasPermissionToInstallPebbleApp(){
         /*Uri url = Uri.parse("pebble://bundle/?addr=itachi1706.com&path=/android/SingBuses.pbw");
         Intent installCompanionApp = new Intent(Intent.ACTION_VIEW);
         installCompanionApp.setDataAndType(url, "application/octet-stream");
@@ -345,5 +361,86 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     @Override
     public void onRefresh() {
         updateFavourites();
+    }
+
+    private static final int RC_HANDLE_REQUEST_EXTERNAL_STORAGE = 1;
+
+    private void requestStoragePermission() {
+        Log.w("Pebble", "Storage permission is not granted. Requesting permission");
+        final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            ActivityCompat.requestPermissions(this, permissions, RC_HANDLE_REQUEST_EXTERNAL_STORAGE);
+            return;
+        }
+
+        final Activity thisActivity = this;
+
+        new AlertDialog.Builder(this).setTitle("Requesting External Storage Permission")
+                .setMessage("In order for the app to download the Pebble App File for the Official Pebble App to install, " +
+                        "we require permission to write to your storage.")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions(thisActivity, permissions, RC_HANDLE_REQUEST_EXTERNAL_STORAGE);
+                    }
+                }).show();
+    }
+
+    /**
+     * Callback for the result from requesting permissions. This method
+     * is invoked for every call on {@link #requestPermissions(String[], int)}.
+     * <p>
+     * <strong>Note:</strong> It is possible that the permissions request interaction
+     * with the user is interrupted. In this case you will receive empty permissions
+     * and results arrays which should be treated as a cancellation.
+     * </p>
+     *
+     * @param requestCode  The request code passed in {@link #requestPermissions(String[], int)}.
+     * @param permissions  The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions
+     *                     which is either {@link PackageManager#PERMISSION_GRANTED}
+     *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
+     * @see #requestPermissions(String[], int)
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode != RC_HANDLE_REQUEST_EXTERNAL_STORAGE){
+            Log.d("Pebble", "Got unexpected permission result: " + requestCode);
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            return;
+        }
+
+        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.d("Pebble", "Storage permission granted - download pebble file");
+            // we have permission, so create the camerasource
+            hasPermissionToInstallPebbleApp();
+            return;
+        }
+
+        Log.e("Pebble", "Permission not granted: results len = " + grantResults.length +
+                " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+
+        final Activity thisActivity = this;
+
+        new AlertDialog.Builder(this).setTitle("Permission has been denied")
+                .setMessage("You have denied the app access to your phone's storage. " +
+                        "Due to the fact that installing the companion Pebble app requires you to use the Official " +
+                        "Pebble App for installation, the app needs to save the Pebble App File onto your internal storage." +
+                        " By denying this permission, install cannot proceed as the Offical Pebble App will not be able to" +
+                        " access this app's private storage (which would not have required this permission).\n\n" +
+                        "If you wish to grant the app permissions right now, click the settings button" +
+                        " and grant it permissions there").setPositiveButton(android.R.string.ok, null)
+                .setNeutralButton("APP SETTINGS", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri packageURI = Uri.parse("package:" + thisActivity.getPackageName());
+                        permIntent.setData(packageURI);
+                        startActivity(permIntent);
+                    }
+                }).show();
     }
 }

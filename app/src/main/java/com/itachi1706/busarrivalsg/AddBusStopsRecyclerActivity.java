@@ -182,7 +182,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         }
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d("GPSManager", "Camera permission granted - initialize the camera source");
+            Log.d("GPSManager", "Storage permission granted - initialize the gps source");
             // we have permission, so create the camerasource
             if (gps != null){
                 if (!gps.canGetLocation()){
