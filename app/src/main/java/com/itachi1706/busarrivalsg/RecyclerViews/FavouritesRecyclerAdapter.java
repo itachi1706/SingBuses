@@ -1,18 +1,25 @@
 package com.itachi1706.busarrivalsg.RecyclerViews;
 
-import android.content.Context;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Objects.BusStatus;
 import com.itachi1706.busarrivalsg.R;
+import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,15 +31,14 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     /**
      * This recycler adapter is used in the internal retrive all bus services from main activity's favourites list
      */
-    //TODO: Add a long click listener here to prompt remove from favourites
     //TODO: Add an on click listener here to view all bus stops from the favourites?
 
     private List<BusServices> items;
-    private Context context;
+    private Activity activity;
 
-    public FavouritesRecyclerAdapter(List<BusServices> objectList, Context context){
+    public FavouritesRecyclerAdapter(List<BusServices> objectList, Activity activity){
         this.items = objectList;
-        this.context = context;
+        this.activity = activity;
     }
 
     public void updateAdapter(List<BusServices> newObjects){
@@ -140,7 +146,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     }
 
 
-    public class FavouritesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class FavouritesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         protected TextView busOperator, busNumber, busArrivalNow, busArrivalNext, operatingStatus, stopName;
 
@@ -152,11 +158,50 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             busArrivalNext = (TextView) v.findViewById(R.id.tvBusArrivalNext);
             operatingStatus = (TextView) v.findViewById(R.id.tvBusStatus);
             stopName = (TextView) v.findViewById(R.id.tvBusStopName);
+            v.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+            int position = this.getLayoutPosition();
+            final BusServices item = items.get(position);
 
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            int position = this.getLayoutPosition();
+            final BusServices item = items.get(position);
+
+            String message;
+            if (item.getStopName() != null)
+                message = "Are you sure you want to remove " + item.getServiceNo() + " from " + item.getStopName() + " (" + item.getStopID()
+                        + ") from your favourites? This will also remove it from being accessible from your Pebble device";
+            else
+                message = "Are you sure you want to remove " + item.getServiceNo() + " from Bus Stop Code " + item.getStopID()
+                        + " from your favourites? This will also remove it from being accessible from your Pebble device";
+
+            final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+
+            new AlertDialog.Builder(activity).setTitle("Remove from Favourites")
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Remove from favourites
+                            for (int i = 0; i < items.size(); i++){
+                                BusServices s = items.get(i);
+                                if (s.getStopID().equalsIgnoreCase(item.getStopID()) && s.getServiceNo().equalsIgnoreCase(item.getServiceNo())) {
+                                    items.remove(i);
+                                    break;
+                                }
+                            }
+                            BusStorage.updateBusJSON(sp, (ArrayList<BusServices>) items);
+                            notifyDataSetChanged();
+                            Toast.makeText(activity.getApplicationContext(), "Removed from favourites", Toast.LENGTH_SHORT).show();
+                        }
+                    }).setNegativeButton(android.R.string.no, null).show();
+            return false;
         }
     }
 }
