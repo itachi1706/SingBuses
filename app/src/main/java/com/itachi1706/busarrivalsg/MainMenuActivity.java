@@ -16,11 +16,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,12 +32,12 @@ import com.getpebble.android.kit.util.PebbleDictionary;
 import com.itachi1706.busarrivalsg.AsyncTasks.DlAndInstallCompanionApp;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStopsGeo;
-import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesFavourites;
+import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesFavouritesRecycler;
 import com.itachi1706.busarrivalsg.AsyncTasks.Updater.AppUpdateCheck;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
-import com.itachi1706.busarrivalsg.ListViews.FavouritesListViewAdapter;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
+import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.Services.PebbleCommunications;
 
@@ -44,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
 
-public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     //Pebble stuff
     private PebbleKit.PebbleDataReceiver mReceiver;
@@ -52,8 +54,8 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
     //Android Stuff
     private TextView connectionStatus, pressedBtn, firmware, installPrompt;
     private FloatingActionButton fab;
-    private ListView favouritesList;
-    private FavouritesListViewAdapter adapter;
+    private RecyclerView favouritesList;
+    private FavouritesRecyclerAdapter adapter;
     private SwipeRefreshLayout swipeToRefresh;
     private CardView pebbleCard;
 
@@ -63,7 +65,7 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
-        setContentView(R.layout.activity_main_menu);
+        setContentView(R.layout.activity_main_menu_recycler);
 
         pebbleCard = (CardView) findViewById(R.id.card_view);
         installPrompt = (TextView) findViewById(R.id.pebbleInstallPrompt);
@@ -71,7 +73,13 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
         pressedBtn = (TextView) findViewById(R.id.pressedBtn);
         firmware = (TextView) findViewById(R.id.pebbleFW);
         fab = (FloatingActionButton) findViewById(R.id.add_fab);
-        favouritesList = (ListView) findViewById(R.id.lvFav);
+        favouritesList = (RecyclerView) findViewById(R.id.rvFav);
+
+        favouritesList.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        favouritesList.setLayoutManager(linearLayoutManager);
+        favouritesList.setItemAnimator(new DefaultItemAnimator());
 
         swipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_favourites);
         swipeToRefresh.setOnRefreshListener(this);
@@ -79,7 +87,7 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
         // TODO Swipe to refresh get 4 colors for the color scheme
         // https://github.com/itachi1706/HypixelStatistics/blob/master/app/src/main/java/com/itachi1706/hypixelstatistics/BoosterList.java for reference
 
-        adapter = new FavouritesListViewAdapter(this, R.layout.listview_bus_numbers, new ArrayList<BusServices>());
+        adapter = new FavouritesRecyclerAdapter(new ArrayList<BusServices>(), this);
         favouritesList.setAdapter(adapter);
 
         sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
@@ -96,13 +104,13 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainMenu.this, AddBusStopsRecyclerActivity.class));
+                startActivity(new Intent(MainMenuActivity.this, AddBusStopsRecyclerActivity.class));
             }
         });
         fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(MainMenu.this, "Add a bus service into favourites", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainMenuActivity.this, "Add a bus service into favourites", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
@@ -198,7 +206,7 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
             startActivity(new Intent(this, MainSettings.class));
             return true;
         } else if (id == R.id.view_all_stops){
-            startActivity(new Intent(this, MainMenuActivity.class));
+            startActivity(new Intent(this, ListAllBusStops.class));
             return true;
         } else if (id == R.id.action_refresh){
             swipeToRefresh.setRefreshing(true);
@@ -225,7 +233,7 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
 
             Log.d("FAVOURITES", "Finished Processing, retrieving estimated arrival data now");
             for (BusServices s : StaticVariables.favouritesList) {
-                new GetBusServicesFavourites(this,adapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, s);
+                new GetBusServicesFavouritesRecycler(this, adapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, s);
             }
             Log.d("FAVOURITES", "Finished casting AsyncTasks to retrieve estimated arrival data");
         }
@@ -320,7 +328,7 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        MainMenu.this.finish();
+                        MainMenuActivity.this.finish();
                     }
                 }).show();
     }

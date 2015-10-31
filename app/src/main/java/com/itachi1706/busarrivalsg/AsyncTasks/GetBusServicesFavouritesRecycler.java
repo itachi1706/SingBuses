@@ -11,6 +11,7 @@ import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.ListViews.FavouritesListViewAdapter;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Objects.BusStatus;
+import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.StaticVariables;
 
 import java.io.BufferedReader;
@@ -20,22 +21,20 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.AsyncTasks
  */
-@Deprecated
-public class GetBusServicesFavourites extends AsyncTask<BusServices, Void, String> {
+public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Void, String> {
 
     private Activity activity;
     private Exception exception = null;
-    private FavouritesListViewAdapter adapter;
+    private FavouritesRecyclerAdapter adapter;
 
     private BusServices busObj;
 
-    public GetBusServicesFavourites(Activity activity, FavouritesListViewAdapter adapter){
+    public GetBusServicesFavouritesRecycler(Activity activity, FavouritesRecyclerAdapter adapter){
         this.activity = activity;
         this.adapter = adapter;
     }
@@ -73,7 +72,7 @@ public class GetBusServicesFavourites extends AsyncTask<BusServices, Void, Strin
         if (exception != null){
             if (exception instanceof SocketTimeoutException) {
                 Toast.makeText(activity, "Request Timed Out, Retrying", Toast.LENGTH_SHORT).show();
-                new GetBusServicesFavourites(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObj);
+                new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObj);
             } else {
                 Toast.makeText(activity, exception.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -83,7 +82,7 @@ public class GetBusServicesFavourites extends AsyncTask<BusServices, Void, Strin
             if (!StaticVariables.checkIfYouGotJsonString(json)){
                 //Invalid string, retrying
                 Toast.makeText(activity, "Invalid JSON String, Retrying", Toast.LENGTH_SHORT).show();
-                new GetBusServicesFavourites(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObj);
+                new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObj);
                 return;
             }
 
@@ -94,7 +93,7 @@ public class GetBusServicesFavourites extends AsyncTask<BusServices, Void, Strin
                 Log.e("FAV-GET", "A weird error occured. It seems that the array received had a size of " + array.length);
                 if (array.length == 0) {
                     Log.e("FAV-GET", "Retrying...");
-                    new GetBusServicesFavourites(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObj);
+                    new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObj);
                     return;
                 } else {
                     Log.e("FAV-GET", "Gonna use first data");
