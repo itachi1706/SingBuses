@@ -32,7 +32,7 @@ import java.util.List;
 public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRecyclerAdapter.FavouritesViewHolder> {
 
     /**
-     * This recycler adapter is used in the internal retrive all bus services from main activity's favourites list
+     * This recycler adapter is used in the internal retrieve all bus services from main activity's favourites list
      */
 
     private List<BusServices> items;

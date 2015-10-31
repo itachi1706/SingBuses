@@ -24,7 +24,7 @@ import java.util.List;
 public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRecyclerAdapter.BusServiceViewHolder> {
 
     /**
-     * This recycler adapter is used in the internal retrive all bus services from bus stop activity
+     * This recycler adapter is used in the internal retrieve all bus services from bus stop activity
      */
 
     private List<BusArrivalArrayObject> items;
