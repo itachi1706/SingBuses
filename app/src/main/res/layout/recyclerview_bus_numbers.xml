@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeightLarge"
+    android:padding="2dip">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="184"
+        android:id="@+id/tvBusService"
+        android:layout_below="@+id/tvBusOperator"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="20 Min"
+        android:gravity="center"
+        android:id="@+id/tvBusArrivalNext"
+        android:layout_alignTop="@+id/tvBusArrivalNow"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="20 Min"
+        android:gravity="center"
+        android:id="@+id/tvBusArrivalNow"
+        android:layout_below="@+id/tvBusOperator"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="SMRT"
+        android:id="@+id/tvBusOperator"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Status Unknown"
+        android:id="@+id/tvBusStatus"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/tvBusArrivalNext"
+        android:layout_alignEnd="@+id/tvBusArrivalNext" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Bus Stop Name"
+        android:id="@+id/tvBusStopName"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/tvBusStatus"
+        android:layout_alignEnd="@+id/tvBusStatus"
+        android:visibility="invisible" />
+</RelativeLayout>
