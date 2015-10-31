@@ -2,7 +2,6 @@ package com.itachi1706.busarrivalsg;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -33,6 +31,7 @@ import com.itachi1706.busarrivalsg.AsyncTasks.DlAndInstallCompanionApp;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStopsGeo;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesFavourites;
+import com.itachi1706.busarrivalsg.AsyncTasks.Updater.AppUpdateCheck;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.ListViews.FavouritesListViewAdapter;
@@ -40,7 +39,6 @@ import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.Services.PebbleCommunications;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -58,6 +56,8 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
     private FavouritesListViewAdapter adapter;
     private SwipeRefreshLayout swipeToRefresh;
     private CardView pebbleCard;
+
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +81,11 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
 
         adapter = new FavouritesListViewAdapter(this, R.layout.listview_bus_numbers, new ArrayList<BusServices>());
         favouritesList.setAdapter(adapter);
+
+        sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+
+        Log.d("MainMenu", "Checking for app updates");
+        new AppUpdateCheck(this, sp, true).execute();
         Log.d("MainMenu", "onCreate complete");
     }
 
@@ -150,7 +155,6 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
         updateFavourites();
 
         //Start Pebble Service if settings are set
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         Intent pebbleService = new Intent(this, PebbleCommunications.class);
         if (sp.getBoolean("pebbleSvc", true)){
             startService(pebbleService);
@@ -210,7 +214,6 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
 
     private void updateFavourites(){
         //Populate favourites from favourites list
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         Log.d("FAVOURITES", "Favourites Pref: " + sp.getString("stored", "wot"));
 
         if (BusStorage.hasFavourites(sp)) {
@@ -233,8 +236,6 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
     }
 
     private void checkIfDatabaseUpdated(){
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-
         long busDBLastUpdate = sp.getLong("busDBTimeUpdated", -1);
         long geoDBLastUpdate = sp.getLong("geoDBTimeUpdated", -1);
         long currentTime = System.currentTimeMillis();
@@ -266,7 +267,7 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
                 dialog.setMessage("Retriving data from server");
                 dialog.setCancelable(false);
                 dialog.setIndeterminate(true);
-                dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 
                 BusStopsDB db = new BusStopsDB(this);
                 db.dropAndRebuildDB();

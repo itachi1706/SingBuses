@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -26,16 +27,14 @@ import java.net.URL;
  */
 public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
 
-    private ProgressDialog dialog;
+    private ProgressDialog progressDialog;
     private BusStopsDB db;
     private Activity activity;
     private Exception exception = null;
     private SharedPreferences sp;
 
-    private int skipValue;
-
-    public GetAllBusStops(ProgressDialog dialog, BusStopsDB db, Activity activity, SharedPreferences sp){
-        this.dialog = dialog;
+    public GetAllBusStops(ProgressDialog progressDialog, BusStopsDB db, Activity activity, SharedPreferences sp){
+        this.progressDialog = progressDialog;
         this.db = db;
         this.activity = activity;
         this.sp = sp;
@@ -43,15 +42,14 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
 
     @Override
     protected String doInBackground(Integer... skipValues) {
-        this.skipValue = skipValues[0];
-        String url = "http://api.itachi1706.com/api/busstops.php?skip=" + this.skipValue;
+        String url = "http://api.itachi1706.com/api/busstops.php";
         String tmp = "";
 
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dialog.setTitle("Downloading Bus Stop Data");
-                dialog.setMessage("This will take a few minutes. Be patient :) \nGetting Bus Stops " + (skipValue + 1) + " - " + (skipValue + 50));
+                progressDialog.setTitle("Downloading Bus Stop Data");
+                progressDialog.setMessage("This will take a few minutes. Be patient :) \nDownloading latest bus stop data");
             }
         });
         try {
@@ -80,7 +78,7 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
         if (exception != null){
             if (exception instanceof SocketTimeoutException) {
                 Toast.makeText(activity, "Database query timed out. Retrying", Toast.LENGTH_SHORT).show();
-                new GetAllBusStops(dialog, db, activity, sp).execute(skipValue);
+                new GetAllBusStops(progressDialog, db, activity, sp).execute();
             } else {
                 Toast.makeText(activity, exception.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -90,30 +88,19 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
             if (!StaticVariables.checkIfYouGotJsonString(json)){
                 //Invalid string, retrying
                 Toast.makeText(activity, "Invalid JSON, Retrying", Toast.LENGTH_SHORT).show();
-                new GetAllBusStops(dialog, db, activity, sp).execute(skipValue);
+                new GetAllBusStops(progressDialog, db, activity, sp).execute();
                 return;
             }
-
             BusStopJSONArray replyArr = gson.fromJson(json, BusStopJSONArray.class);
             if (replyArr == null || replyArr.getBusStopsArray() == null){
                 //Invalid string, retrying
                 Toast.makeText(activity, "Something weird occurred, Retrying", Toast.LENGTH_SHORT).show();
-                new GetAllBusStops(dialog, db, activity, sp).execute(skipValue);
+                new GetAllBusStops(progressDialog, db, activity, sp).execute();
                 return;
             }
-            if (replyArr.getBusStopsArray().length == 0){
-                //End of line can safely return
-                int count = db.getSize();
-                Toast.makeText(activity, count + " bus stops saved to database!", Toast.LENGTH_SHORT).show();
-                Log.d("GET-STOPS", "Loaded " + count + " bus stops into the database");
-                sp.edit().putBoolean("busDBLoaded", true).apply();
-                sp.edit().putLong("busDBTimeUpdated", System.currentTimeMillis()).apply();
-                dialog.dismiss();
-                StaticVariables.init1TaskFinished = true;
-                Log.d("INIT-1", "Task Complete");
-                return;
-            }
-            new ParseBusStops(dialog, db, activity, skipValue, sp).execute(replyArr);
+            progressDialog.setTitle("Parsing Bus Stops Data");
+            progressDialog.setMessage("Parsing bus stops data...");
+            new ParseBusStops(progressDialog, db, activity, sp).execute(replyArr);
         }
     }
 }
