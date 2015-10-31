@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.ListViews
  */
+@Deprecated
 public class BusServiceListViewAdapter extends ArrayAdapter<BusArrivalArrayObject> {
 
     private ArrayList<BusArrivalArrayObject> items;

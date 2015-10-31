@@ -1,6 +1,6 @@
 package com.itachi1706.busarrivalsg.RecyclerViews;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObjectEstimate;
+import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.StaticVariables;
 
@@ -26,11 +28,11 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
      */
 
     private List<BusArrivalArrayObject> items;
-    private Context context;
+    private Activity activity;
 
-    public BusServiceRecyclerAdapter(List<BusArrivalArrayObject> objectList, Context context){
+    public BusServiceRecyclerAdapter(List<BusArrivalArrayObject> objectList, Activity activity){
         this.items = objectList;
-        this.context = context;
+        this.activity = activity;
     }
 
     public void updateAdapter(List<BusArrivalArrayObject> newObjects){
@@ -123,7 +125,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     }
 
 
-    public class BusServiceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class BusServiceViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
         protected TextView busOperator, busNumber, busArrivalNow, busArrivalNext, operatingStatus;
 
@@ -134,11 +136,28 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             busArrivalNow = (TextView) v.findViewById(R.id.tvBusArrivalNow);
             busArrivalNext = (TextView) v.findViewById(R.id.tvBusArrivalNext);
             operatingStatus = (TextView) v.findViewById(R.id.tvBusStatus);
+            v.setOnLongClickListener(this);
         }
 
         @Override
-        public void onClick(View v) {
+        public boolean onLongClick(View v) {
+            int position = this.getLayoutPosition();
+            final BusArrivalArrayObject item = items.get(position);
 
+            if (activity instanceof BusServicesAtStopRecyclerActivity){
+                BusServicesAtStopRecyclerActivity newAct = (BusServicesAtStopRecyclerActivity) activity;
+
+                //Check based on thing and verify
+                BusServices fav = new BusServices();
+                fav.setObtainedNextData(false);
+                fav.setOperator(item.getOperator());
+                fav.setServiceNo(item.getServiceNo());
+                fav.setStopID(item.getStopCode());
+
+                newAct.favouriteOrUnfavourite(fav, item);
+                return true;
+            }
+            return false;
         }
     }
 }

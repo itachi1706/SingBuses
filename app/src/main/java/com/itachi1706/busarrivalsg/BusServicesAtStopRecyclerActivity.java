@@ -5,47 +5,55 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServices;
+import com.google.gson.Gson;
+import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesHandler;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
-import com.itachi1706.busarrivalsg.ListViews.BusServiceListViewAdapter;
+import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
+import com.itachi1706.busarrivalsg.RecyclerViews.BusServiceRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 
-import org.w3c.dom.Text;
-
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-@Deprecated
-public class BusServicesAtStop extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
+public class BusServicesAtStopRecyclerActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, IHandleStuff{
 
-    ListView buses;
+    RecyclerView buses;
     String busStopCode, busStopName;
-    BusServiceListViewAdapter adapter;
+    BusServiceRecyclerAdapter adapter;
     SwipeRefreshLayout swipeToRefresh;
+    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bus_services_at_stop);
+        setContentView(R.layout.activity_bus_services_at_stop_recycler);
 
         if (this.getIntent().hasExtra("stopCode")) busStopCode = this.getIntent().getStringExtra("stopCode");
         if (this.getIntent().hasExtra("stopName")) busStopName = this.getIntent().getStringExtra("stopName");
 
-        buses = (ListView) findViewById(R.id.lvBusService);
-        adapter = new BusServiceListViewAdapter(this, R.layout.listview_bus_numbers, new ArrayList<BusArrivalArrayObject>());
+        buses = (RecyclerView) findViewById(R.id.rvBusService);
+        buses.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        buses.setLayoutManager(linearLayoutManager);
+        buses.setItemAnimator(new DefaultItemAnimator());
+
+        adapter = new BusServiceRecyclerAdapter(new ArrayList<BusArrivalArrayObject>(), this);
         buses.setAdapter(adapter);
 
         swipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_swipe);
@@ -53,37 +61,6 @@ public class BusServicesAtStop extends AppCompatActivity implements SwipeRefresh
 
         // TODO Swipe to refresh get 4 colors for the color scheme
         // https://github.com/itachi1706/HypixelStatistics/blob/master/app/src/main/java/com/itachi1706/hypixelstatistics/BoosterList.java for reference
-
-        buses.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                BusArrivalArrayObject item = (BusArrivalArrayObject) buses.getItemAtPosition(position);
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                ArrayList<BusServices> exist = BusStorage.getStoredBuses(pref);
-                boolean alrFavourited = false;
-                if (exist != null) {
-                    //Compare if in favourites already
-                    for (BusServices s : exist) {
-                        if (s.getServiceNo().equals(item.getServiceNo()) && s.getStopID().equals(item.getStopCode())) {
-                            alrFavourited = true;
-                            break;
-                        }
-                    }
-                }
-
-                //Check based on thing and verify
-                BusServices fav = new BusServices();
-                fav.setObtainedNextData(false);
-                fav.setOperator(item.getOperator());
-                fav.setServiceNo(item.getServiceNo());
-                fav.setStopID(item.getStopCode());
-                if (busStopName != null)
-                    fav.setStopName(busStopName);
-
-                addOrRemoveFav(fav, exist, pref, alrFavourited);
-                return true;
-            }
-        });
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         if (sp.getBoolean("showHint", true))
@@ -106,9 +83,10 @@ public class BusServicesAtStop extends AppCompatActivity implements SwipeRefresh
             swipeToRefresh.setRefreshing(true);
             updateBusStop();
         }
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
-    private void addOrRemoveFav(final BusServices fav, final ArrayList<BusServices> all, final SharedPreferences prefs, boolean alrFav){
+    private void addOrRemoveFav(final BusServices fav, final ArrayList<BusServices> all, boolean alrFav){
         String message;
         if (alrFav){
             if (busStopName != null)
@@ -130,7 +108,7 @@ public class BusServicesAtStop extends AppCompatActivity implements SwipeRefresh
                                     break;
                                 }
                             }
-                            BusStorage.updateBusJSON(prefs, all);
+                            BusStorage.updateBusJSON(sp, all);
                             Toast.makeText(getApplicationContext(), "Removed from favourites", Toast.LENGTH_SHORT).show();
                         }
                     }).setNegativeButton(android.R.string.no, null).show();
@@ -147,7 +125,7 @@ public class BusServicesAtStop extends AppCompatActivity implements SwipeRefresh
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //Remove from favourites
-                            BusStorage.addNewBus(fav, prefs);
+                            BusStorage.addNewBus(fav, sp);
                             Toast.makeText(getApplicationContext(), "Added to favourites", Toast.LENGTH_SHORT).show();
                         }
                     }).setNegativeButton(android.R.string.no, null).show();
@@ -158,7 +136,10 @@ public class BusServicesAtStop extends AppCompatActivity implements SwipeRefresh
         ProgressDialog dialog = new ProgressDialog(this);
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
-        new GetBusServices(dialog, this, adapter, swipeToRefresh).execute(busStopCode);
+        dialog.setTitle("Downloading Bus Service Data");
+        dialog.setMessage("Getting all Bus Services in Bus Stop " + busStopCode);
+        dialog.show();
+        new GetBusServicesHandler(dialog, this, new BusServicesAtStopHandler(this)).execute(busStopCode);
     }
 
     @Override
@@ -191,5 +172,70 @@ public class BusServicesAtStop extends AppCompatActivity implements SwipeRefresh
     @Override
     public void onRefresh() {
         updateBusStop();
+    }
+
+    @Override
+    public void favouriteOrUnfavourite(BusServices fav, BusArrivalArrayObject item) {
+        if (busStopName != null)
+            fav.setStopName(busStopName);
+
+        boolean alrFavourited = false;
+        ArrayList<BusServices> exist = BusStorage.getStoredBuses(sp);
+        if (exist != null) {
+            //Compare if in favourites already
+            for (BusServices s : exist) {
+                if (s.getServiceNo().equals(item.getServiceNo()) && s.getStopID().equals(item.getStopCode())) {
+                    alrFavourited = true;
+                    break;
+                }
+            }
+        }
+
+        addOrRemoveFav(fav, exist, alrFavourited);
+    }
+
+
+    static class BusServicesAtStopHandler extends Handler {
+        WeakReference<BusServicesAtStopRecyclerActivity> mActivity;
+
+        BusServicesAtStopHandler(BusServicesAtStopRecyclerActivity activity){
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg){
+            BusServicesAtStopRecyclerActivity activity = mActivity.get();
+
+            super.handleMessage(msg);
+
+            switch (msg.what){
+                case StaticVariables.BUS_SERVICE_JSON_RETRIVED:
+                    String json = (String) msg.getData().get("jsonString");
+                    activity.processMessage(json);
+                    break;
+            }
+        }
+    }
+
+    private void processMessage(String json){
+        Gson gson = new Gson();
+        if (!StaticVariables.checkIfYouGotJsonString(json)){
+            //Invalid string, retrying
+            Toast.makeText(this, "Invalid JSON String", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ArrayList<BusArrivalArrayObject> items = new ArrayList<>();
+        BusArrivalMain mainArr = gson.fromJson(json, BusArrivalMain.class);
+        BusArrivalArrayObject[] array = mainArr.getServices();
+        String stopID = mainArr.getBusStopID();
+        if (swipeToRefresh.isRefreshing())
+            swipeToRefresh.setRefreshing(false);
+        for (BusArrivalArrayObject obj : array){
+            obj.setStopCode(stopID);
+            items.add(obj);
+            adapter.updateAdapter(items);
+            adapter.notifyDataSetChanged();
+        }
     }
 }

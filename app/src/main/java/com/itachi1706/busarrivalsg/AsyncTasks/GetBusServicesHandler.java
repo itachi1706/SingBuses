@@ -2,17 +2,17 @@ package com.itachi1706.busarrivalsg.AsyncTasks;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalMain;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSONArray;
 import com.itachi1706.busarrivalsg.ListViews.BusServiceListViewAdapter;
 import com.itachi1706.busarrivalsg.StaticVariables;
 
@@ -29,39 +29,27 @@ import java.util.ArrayList;
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.AsyncTasks
  */
-@Deprecated
-public class GetBusServices extends AsyncTask<String, Void, String> {
+public class GetBusServicesHandler extends AsyncTask<String, Void, String> {
 
     private ProgressDialog dialog;
     private Activity activity;
     private Exception exception = null;
-    private BusServiceListViewAdapter adapter;
-    private SwipeRefreshLayout swipe;
 
-    private String busCode;
+    private Handler mHandler;
 
-    public GetBusServices(ProgressDialog dialog, Activity activity, BusServiceListViewAdapter adapter, SwipeRefreshLayout swipe){
+    public GetBusServicesHandler(ProgressDialog dialog, Activity activity, Handler handler){
         this.dialog = dialog;
         this.activity = activity;
-        this.adapter = adapter;
-        this.swipe = swipe;
+        this.mHandler = handler;
     }
 
     @Override
     protected String doInBackground(String... busCodes) {
-        this.busCode = busCodes[0];
-        String url = "http://api.itachi1706.com/api/busarrival.php?BusStopID=" + this.busCode;
+        String busCode = busCodes[0];
+        String url = "http://api.itachi1706.com/api/busarrival.php?BusStopID=" + busCode;
         String tmp = "";
 
         Log.d("GET-BUS-SERVICE", url);
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                dialog.setTitle("Downloading Bus Service Data");
-                dialog.setMessage("Getting all Bus Services in Bus Stop " + busCode);
-                dialog.show();
-            }
-        });
         try {
             URL urlConn = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
@@ -94,28 +82,13 @@ public class GetBusServices extends AsyncTask<String, Void, String> {
             dialog.dismiss();
         } else {
             //Go parse it
-            Gson gson = new Gson();
-            if (!StaticVariables.checkIfYouGotJsonString(json)){
-                //Invalid string, retrying
-                Toast.makeText(activity, "Invalid JSON String", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-                return;
-            }
-
-            ArrayList<BusArrivalArrayObject> items = new ArrayList<>();
-            BusArrivalMain mainArr = gson.fromJson(json, BusArrivalMain.class);
-            BusArrivalArrayObject[] array = mainArr.getServices();
-            String stopID = mainArr.getBusStopID();
+            Message msg = Message.obtain();
+            msg.what = StaticVariables.BUS_SERVICE_JSON_RETRIVED;
+            Bundle bundle = new Bundle();
+            bundle.putString("jsonString", json);
+            msg.setData(bundle);
+            mHandler.sendMessage(msg);
             dialog.dismiss();
-            if (swipe.isRefreshing())
-                swipe.setRefreshing(false);
-            for (BusArrivalArrayObject obj : array){
-                obj.setStopCode(stopID);
-                items.add(obj);
-                adapter.updateAdapter(items);
-                adapter.notifyDataSetChanged();
-            }
-
         }
     }
 }

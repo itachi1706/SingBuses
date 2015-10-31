@@ -3,7 +3,8 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeightLarge"
-    android:padding="2dip">
+    android:padding="2dip"
+    android:background="?android:selectableItemBackground">
 
 
     <TextView

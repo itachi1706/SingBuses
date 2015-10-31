@@ -98,4 +98,8 @@ public class StaticVariables {
         long difference = arrivalDate.getTimeInMillis() - currentDate.getTimeInMillis();
         return TimeUnit.MILLISECONDS.toMinutes(difference);
     }
+
+
+    // HANDLER MESSAGES
+    public static final int BUS_SERVICE_JSON_RETRIVED = 101;
 }

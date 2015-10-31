@@ -53,7 +53,7 @@ public class AddBusStops extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("Size", "" + result.getCount());
                 BusStopJSON item = (BusStopJSON) result.getItemAtPosition(position);
-                Intent serviceIntent = new Intent(AddBusStops.this, BusServicesAtStop.class);
+                Intent serviceIntent = new Intent(AddBusStops.this, BusServicesAtStopRecyclerActivity.class);
                 serviceIntent.putExtra("stopCode", item.getCode());
                 serviceIntent.putExtra("stopName", item.getBusStopName());
                 startActivity(serviceIntent);

@@ -47,6 +47,10 @@
             android:name=".BusServicesAtStop"
             android:label="@string/title_activity_bus_services_at_stop" >
         </activity>
+        <activity
+            android:name=".BusServicesAtStopRecyclerActivity"
+            android:label="@string/title_activity_bus_services_at_stop" >
+        </activity>
 
         <service
             android:name=".Services.PebbleCommunications"
