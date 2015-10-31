@@ -8,6 +8,10 @@ public class BusArrivalArrayObject {
     private String ServiceNo, Status, Operator;
     private BusArrivalArrayObjectEstimate NextBus, SubsequentBus;
 
+    //Going to be implemented from 12 November
+    private String OriginatingID, TerminatingID;
+    private BusArrivalArrayObjectEstimate SubsequentBus3;
+
     private String stopCode;
 
     public BusArrivalArrayObjectEstimate getSubsequentBus() {
@@ -36,5 +40,17 @@ public class BusArrivalArrayObject {
 
     public void setStopCode(String stopCode) {
         this.stopCode = stopCode;
+    }
+
+    public String getOriginatingID() {
+        return OriginatingID;
+    }
+
+    public String getTerminatingID() {
+        return TerminatingID;
+    }
+
+    public BusArrivalArrayObjectEstimate getSubsequentBus3() {
+        return SubsequentBus3;
     }
 }

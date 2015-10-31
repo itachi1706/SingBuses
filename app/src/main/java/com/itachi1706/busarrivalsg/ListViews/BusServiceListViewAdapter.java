@@ -89,12 +89,15 @@ public class BusServiceListViewAdapter extends ArrayAdapter<BusArrivalArrayObjec
                     busArrivalNow.setTextColor(Color.GRAY);
                 } else {
                     long est = parseEstimateArrival(i.getNextBus().getEstimatedArrival());
+                    String arrivalStatusNow;
                     if (est <= 0)
-                        busArrivalNow.setText("Arr");
+                        arrivalStatusNow = "Arr";
                     else if (est == 1)
-                        busArrivalNow.setText(est + " min");
+                        arrivalStatusNow = est + " min";
                     else
-                        busArrivalNow.setText(est + " mins");
+                        arrivalStatusNow = est + " mins";
+                    if (!i.getNextBus().getMonitoredStatus()) arrivalStatusNow += "*";
+                    busArrivalNow.setText(arrivalStatusNow);
                     applyColorLoad(busArrivalNow, i.getNextBus());
                 }
 
@@ -105,15 +108,19 @@ public class BusServiceListViewAdapter extends ArrayAdapter<BusArrivalArrayObjec
                     busArrivalNext.setTextColor(Color.GRAY);
                 } else {
                     long est = parseEstimateArrival(i.getSubsequentBus().getEstimatedArrival());
+                    String arrivalStatusNext;
                     if (est <= 0)
-                        busArrivalNext.setText("Arr");
+                        arrivalStatusNext = "Arr";
                     else if (est == 1)
-                        busArrivalNext.setText(est + " min");
+                        arrivalStatusNext = est + " min";
                     else
-                        busArrivalNext.setText(est + " mins");
+                        arrivalStatusNext = est + " mins";
+                    if (!i.getSubsequentBus().getMonitoredStatus()) arrivalStatusNext += "*";
+                    busArrivalNext.setText(arrivalStatusNext);
                     applyColorLoad(busArrivalNext, i.getSubsequentBus());
                 }
             }
+            //TODO: Implement 3rd arrival status
         } else {
             if (busArrivalNow != null) {
                 busArrivalNow.setText("-");

@@ -10,6 +10,11 @@ public class BusStatus {
     private int load;   // 0-NULL,1-Seats Available,2-Limited Seating,3-No Seating
     private boolean isWheelChairAccessible;
 
+    //Going to be implemented from 12 November
+    private long latitude, longitude;
+    private int visitNumber;
+    private boolean isMonitored;
+
     public boolean isWheelChairAccessible() {
         return isWheelChairAccessible;
     }
@@ -48,5 +53,37 @@ public class BusStatus {
             case "Limited Standing": this.load = 3; break;
             default: this.load = 0; break;
         }
+    }
+
+    public long getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(long latitude) {
+        this.latitude = latitude;
+    }
+
+    public long getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(long longitude) {
+        this.longitude = longitude;
+    }
+
+    public int getVisitNumber() {
+        return visitNumber;
+    }
+
+    public void setVisitNumber(int visitNumber) {
+        this.visitNumber = visitNumber;
+    }
+
+    public boolean isMonitored() {
+        return isMonitored;
+    }
+
+    public void setIsMonitored(boolean isMonitored) {
+        this.isMonitored = isMonitored;
     }
 }

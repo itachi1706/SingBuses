@@ -14,6 +14,10 @@ public class BusServices {
 
     private String operatingStatus;
 
+    //Going to be implemented from 12 November
+    private BusStatus subsequentBus;
+    private String originatingID, terminatingID;
+
     public BusStatus getNextBus() {
         return nextBus;
     }
@@ -84,5 +88,29 @@ public class BusServices {
 
     public void setStopName(String stopName) {
         this.stopName = stopName;
+    }
+
+    public BusStatus getSubsequentBus() {
+        return subsequentBus;
+    }
+
+    public void setSubsequentBus(BusStatus subsequentBus) {
+        this.subsequentBus = subsequentBus;
+    }
+
+    public String getOriginatingID() {
+        return originatingID;
+    }
+
+    public void setOriginatingID(String originatingID) {
+        this.originatingID = originatingID;
+    }
+
+    public String getTerminatingID() {
+        return terminatingID;
+    }
+
+    public void setTerminatingID(String terminatingID) {
+        this.terminatingID = terminatingID;
     }
 }
