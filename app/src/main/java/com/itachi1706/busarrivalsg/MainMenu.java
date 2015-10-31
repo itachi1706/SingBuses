@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.itachi1706.busarrivalsg.AsyncTasks.DlAndInstallCompanionApp;
@@ -43,6 +44,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import io.fabric.sdk.android.Fabric;
+
 public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     //Pebble stuff
@@ -59,6 +62,7 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main_menu);
 
         pebbleCard = (CardView) findViewById(R.id.card_view);

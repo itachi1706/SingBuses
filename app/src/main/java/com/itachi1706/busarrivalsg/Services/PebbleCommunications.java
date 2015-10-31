@@ -14,6 +14,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.itachi1706.busarrivalsg.AsyncTasks.Services.GetFirstFavouriteData;
@@ -26,6 +27,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import io.fabric.sdk.android.Fabric;
 
 
 /**
@@ -50,6 +53,7 @@ public class PebbleCommunications extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, final int startId) {
         super.onStartCommand(intent, flags, startId);
+        Fabric.with(this, new Crashlytics());
         Log.i("Pebble Comm", "SYSTEM: Started Pebble Communications Service");
         Log.i("Pebble Comm", "UUID: " + StaticVariables.PEBBLE_APP_UUID.toString());
 
