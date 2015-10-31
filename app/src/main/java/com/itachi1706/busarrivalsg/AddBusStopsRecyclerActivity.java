@@ -2,64 +2,57 @@ package com.itachi1706.busarrivalsg;
 
 import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.itachi1706.busarrivalsg.AsyncTasks.PopulateListWithCurrentLocation;
+import com.itachi1706.busarrivalsg.AsyncTasks.PopulateListWithCurrentLocationRecycler;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
-import com.itachi1706.busarrivalsg.ListViews.BusStopListView;
+import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.GPSManager;
 
 import java.util.ArrayList;
 
-@Deprecated
-public class AddBusStops extends AppCompatActivity {
+public class AddBusStopsRecyclerActivity extends AppCompatActivity {
 
     FloatingActionButton currentLocationGet;
-    ListView result;
+    RecyclerView result;
     EditText textLane;
 
     GPSManager gps;
 
     double longitude, latitude;
 
-    BusStopListView adapter;
+    BusStopRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_bus_stops);
+        setContentView(R.layout.activity_add_bus_stops_recycler);
 
         currentLocationGet = (FloatingActionButton) findViewById(R.id.current_location_fab);
-        result = (ListView) findViewById(R.id.lvNearestBusStops);
+        result = (RecyclerView) findViewById(R.id.rvNearestBusStops);
+        result.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        result.setLayoutManager(linearLayoutManager);
+        result.setItemAnimator(new DefaultItemAnimator());
 
-        adapter = new BusStopListView(this, R.layout.listview_bus_stops, new ArrayList<BusStopJSON>());
+        adapter = new BusStopRecyclerAdapter(new ArrayList<BusStopJSON>(), this);
         result.setAdapter(adapter);
-
-        result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Size", "" + result.getCount());
-                BusStopJSON item = (BusStopJSON) result.getItemAtPosition(position);
-                Intent serviceIntent = new Intent(AddBusStops.this, BusServicesAtStopRecyclerActivity.class);
-                serviceIntent.putExtra("stopCode", item.getCode());
-                serviceIntent.putExtra("stopName", item.getBusStopName());
-                startActivity(serviceIntent);
-            }
-        });
 
         textLane = (EditText) findViewById(R.id.inputData);
         TextWatcher inputWatcher = new TextWatcher() {
@@ -73,7 +66,7 @@ public class AddBusStops extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String query = s.toString();
                 Log.d("TextWatcher", "Query searched: " + query);
-                BusStopsDB db = new BusStopsDB(AddBusStops.this);
+                BusStopsDB db = new BusStopsDB(AddBusStopsRecyclerActivity.this);
                 ArrayList<BusStopJSON> results = db.getBusStopsByQuery(query);
                 if (results != null) {
                     Log.d("TextWatcher", "Finished Search. Size: " + results.size());
@@ -111,7 +104,7 @@ public class AddBusStops extends AppCompatActivity {
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
-        new PopulateListWithCurrentLocation(this, db, geoDB, adapter).execute(location);
+        new PopulateListWithCurrentLocationRecycler(this, db, geoDB, adapter).execute(location);
     }
 
     @Override

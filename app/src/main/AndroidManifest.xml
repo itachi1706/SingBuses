@@ -40,6 +40,10 @@
             android:label="@string/title_activity_add_bus_stops" >
         </activity>
         <activity
+            android:name=".AddBusStopsRecyclerActivity"
+            android:label="@string/title_activity_add_bus_stops" >
+        </activity>
+        <activity
             android:name=".MainSettings"
             android:label="@string/title_activity_main_settings" >
         </activity>

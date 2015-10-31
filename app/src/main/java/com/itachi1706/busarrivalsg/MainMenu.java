@@ -96,7 +96,7 @@ public class MainMenu extends AppCompatActivity implements SwipeRefreshLayout.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainMenu.this, AddBusStops.class));
+                startActivity(new Intent(MainMenu.this, AddBusStopsRecyclerActivity.class));
             }
         });
         fab.setOnLongClickListener(new View.OnLongClickListener() {

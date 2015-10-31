@@ -18,6 +18,7 @@ import java.util.ArrayList;
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.ListViews
  */
+@Deprecated
 public class BusStopListView extends ArrayAdapter<BusStopJSON> {
 
     private ArrayList<BusStopJSON> items;

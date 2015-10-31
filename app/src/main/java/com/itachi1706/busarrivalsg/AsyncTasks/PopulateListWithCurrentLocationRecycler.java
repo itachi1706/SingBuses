@@ -14,7 +14,7 @@ import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsAPIArray;
 import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsJsonObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeoObject;
-import com.itachi1706.busarrivalsg.ListViews.BusStopListView;
+import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 import com.itachi1706.busarrivalsg.StaticVariables;
 
 import java.io.BufferedReader;
@@ -30,18 +30,17 @@ import java.util.ArrayList;
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.AsyncTasks
  */
-@Deprecated
-public class PopulateListWithCurrentLocation extends AsyncTask<Location, Void, String> {
+public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location, Void, String> {
 
     Activity activity;
     BusStopsDB db;
     BusStopsGeoDB geoDB;
-    BusStopListView adapter;
+    BusStopRecyclerAdapter adapter;
     Exception except;
 
     Location location;
 
-    public PopulateListWithCurrentLocation(Activity activity, BusStopsDB db, BusStopsGeoDB geoDB, BusStopListView adapter){
+    public PopulateListWithCurrentLocationRecycler(Activity activity, BusStopsDB db, BusStopsGeoDB geoDB, BusStopRecyclerAdapter adapter){
         this.activity = activity;
         this.db = db;
         this.adapter = adapter;
