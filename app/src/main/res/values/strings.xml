@@ -7,4 +7,6 @@
     <string name="title_activity_add_bus_stops">Bus Stops</string>
     <string name="title_activity_bus_services_at_stop">BusServicesAtStop</string>
     <string name="pref_summary_pebble_background_svc">Enables background service so that you do not need to have this app open when you use the pebble application. (Note: This might have an impact on your battery life)</string>
+    <string name="link_updates">https://github.com/itachi1706/SingBuses/releases/latest</string>
+    <string name="link_legacy">https://github.com/itachi1706/SingBuses/releases</string>
 </resources>

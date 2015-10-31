@@ -31,6 +31,10 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="App Information">
+        <Preference android:title="Check for Update" android:key="launch_updater" android:summary="Checks for new version of the application"/>
+        <Preference android:title="Get Latest App Version" android:key="get_latest_app" android:summary="Launch a webpage to get the latest release of the application!"/>
+        <Preference android:title="Get Legacy Versions of App" android:key="get_old_app" android:summary="Launch a webpage to get older releases of the application!"/>
+        <Preference android:title="View Changelog" android:key="android_changelog" android:summary="View Changelog Information" />
         <Preference android:title="App Version" android:key="view_app_version" android:summary="NULL" />
         <Preference android:title="Package Name" android:key="view_app_name" android:selectable="false" />
         <Preference android:summary="None" android:title="Android Version" android:key="view_sdk_version" android:selectable="false"/>
