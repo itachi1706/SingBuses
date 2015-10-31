@@ -1,9 +1,18 @@
 package com.itachi1706.busarrivalsg;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -78,24 +87,135 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         textLane.addTextChangedListener(inputWatcher);
     }
 
+
+    private static final int RC_HANDLE_ACCESS_FINE_LOCATION = 2;
+    private static final int RC_HANDLE_ACCESS_FINE_LOCATION_INIT = 4;
+
     @Override
     public void onResume(){
         super.onResume();
 
-        gps = new GPSManager(this);
-        if (!gps.canGetLocation()){
-            gps.showSettingsAlert();
+        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if (rc == PackageManager.PERMISSION_GRANTED){
+            //Go ahead and init
+            gps = new GPSManager(this);
+            if (!gps.canGetLocation()){
+                gps.showSettingsAlert();
+            }
+        } else {
+            requestGpsPermission(RC_HANDLE_ACCESS_FINE_LOCATION_INIT);
         }
 
         currentLocationGet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Getting your location...", Toast.LENGTH_SHORT).show();
-                latitude = gps.getLatitude();
-                longitude = gps.getLongitude();
-                updateList();
+                checkIfYouHaveGpsPermissionForThis();
             }
         });
+    }
+
+    private void checkIfYouHaveGpsPermissionForThis(){
+        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if (rc == PackageManager.PERMISSION_GRANTED){
+            getLocationButtonClicked();
+        } else {
+            requestGpsPermission(RC_HANDLE_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    private void requestGpsPermission(final int code) {
+        Log.w("GPSManager", "GPS permission is not granted. Requesting permission");
+        final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+            ActivityCompat.requestPermissions(this, permissions, code);
+            return;
+        }
+
+        if (code == RC_HANDLE_ACCESS_FINE_LOCATION_INIT)
+            return;
+
+        final Activity thisActivity = this;
+
+        new AlertDialog.Builder(this).setTitle("Requesting GPS Permission")
+                .setMessage("In order for the app to retrieve your current position to find bus stops near you, " +
+                        "it requires access to your Location. Please grant it in the next screen to use it")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions(thisActivity, permissions, code);
+                    }
+                }).show();
+    }
+
+    private void getLocationButtonClicked(){
+        Toast.makeText(getApplicationContext(), "Getting your location...", Toast.LENGTH_SHORT).show();
+        latitude = gps.getLatitude();
+        longitude = gps.getLongitude();
+        updateList();
+    }
+
+    /**
+     * Callback for the result from requesting permissions. This method
+     * is invoked for every call on {@link #requestPermissions(String[], int)}.
+     * <p>
+     * <strong>Note:</strong> It is possible that the permissions request interaction
+     * with the user is interrupted. In this case you will receive empty permissions
+     * and results arrays which should be treated as a cancellation.
+     * </p>
+     *
+     * @param requestCode  The request code passed in {@link #requestPermissions(String[], int)}.
+     * @param permissions  The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions
+     *                     which is either {@link PackageManager#PERMISSION_GRANTED}
+     *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
+     * @see #requestPermissions(String[], int)
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode != RC_HANDLE_ACCESS_FINE_LOCATION && requestCode != RC_HANDLE_ACCESS_FINE_LOCATION_INIT){
+            Log.d("GPSManager", "Got unexpected permission result: " + requestCode);
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            return;
+        }
+
+        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.d("GPSManager", "Camera permission granted - initialize the camera source");
+            // we have permission, so create the camerasource
+            if (gps != null){
+                if (!gps.canGetLocation()){
+                    gps.showSettingsAlert();
+                }
+            }
+
+            if (requestCode == RC_HANDLE_ACCESS_FINE_LOCATION){
+                getLocationButtonClicked();
+            }
+            return;
+        }
+
+        Log.e("GPSManager", "Permission not granted: results len = " + grantResults.length +
+                " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+        final Activity thisActivity = this;
+
+        if (requestCode == RC_HANDLE_ACCESS_FINE_LOCATION) {
+            new AlertDialog.Builder(this).setTitle("Permission has been denied")
+                    .setMessage("You have denied the app access to your phone's location. " +
+                            "We are unable to determine your loaction as a result.\n\n" +
+                            "If you wish to grant the app permissions right now, click the settings button" +
+                            " and grant it permissions there").setPositiveButton(android.R.string.ok, null)
+                    .setNeutralButton("APP SETTINGS", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri packageURI = Uri.parse("package:" + thisActivity.getPackageName());
+                            permIntent.setData(packageURI);
+                            startActivity(permIntent);
+                        }
+                    }).show();
+        }
     }
 
     private void updateList(){

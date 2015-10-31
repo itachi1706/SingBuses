@@ -1,5 +1,6 @@
 package com.itachi1706.busarrivalsg.Services;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
@@ -18,6 +20,7 @@ import android.util.Log;
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.Services
  */
+@SuppressWarnings("ResourceType")
 public class GPSManager extends Service implements LocationListener {
 
     private final Context mContext;
@@ -43,6 +46,7 @@ public class GPSManager extends Service implements LocationListener {
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
+    @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     public GPSManager(Context context) {
         this.mContext = context;
         getLocation();
@@ -52,6 +56,7 @@ public class GPSManager extends Service implements LocationListener {
      * Gets current location of the user
      * @return user's current location
      */
+    @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     public Location getLocation() {
         try {
             locationManager = (LocationManager) mContext
