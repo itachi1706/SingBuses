@@ -3,14 +3,12 @@ package com.itachi1706.busarrivalsg.AsyncTasks.Services;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Objects.BusStatus;
-import com.itachi1706.busarrivalsg.PebbleEnum;
-import com.itachi1706.busarrivalsg.StaticVariables;
+import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.io.BufferedReader;
 import java.io.IOException;

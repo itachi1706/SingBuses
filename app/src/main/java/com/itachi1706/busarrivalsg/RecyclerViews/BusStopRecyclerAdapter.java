@@ -2,7 +2,6 @@ package com.itachi1706.busarrivalsg.RecyclerViews;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,12 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObjectEstimate;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
-import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.StaticVariables;
 
 import java.util.List;
 

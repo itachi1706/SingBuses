@@ -13,9 +13,9 @@ import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 import android.util.Log;
 
-import com.itachi1706.busarrivalsg.NotifyUserUtil;
+import com.itachi1706.busarrivalsg.Util.NotifyUserUtil;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.StaticVariables;
+import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.io.BufferedReader;
 import java.io.IOException;

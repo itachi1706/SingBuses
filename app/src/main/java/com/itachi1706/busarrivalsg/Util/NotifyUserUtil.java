@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg;
+package com.itachi1706.busarrivalsg.Util;
 
 import android.content.Context;
 import android.support.design.widget.Snackbar;

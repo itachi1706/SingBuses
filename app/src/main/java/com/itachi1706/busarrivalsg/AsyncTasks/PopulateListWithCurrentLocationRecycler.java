@@ -15,7 +15,7 @@ import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsJsonObjec
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeoObject;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
-import com.itachi1706.busarrivalsg.StaticVariables;
+import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.io.BufferedReader;
 import java.io.IOException;

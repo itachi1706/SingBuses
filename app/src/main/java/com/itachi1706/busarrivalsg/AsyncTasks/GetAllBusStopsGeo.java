@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeo;
-import com.itachi1706.busarrivalsg.StaticVariables;
+import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.io.BufferedReader;
 import java.io.IOException;

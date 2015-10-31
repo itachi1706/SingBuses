@@ -13,7 +13,7 @@ import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObjectEstimate;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.StaticVariables;
+import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.util.List;
 

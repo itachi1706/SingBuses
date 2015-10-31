@@ -6,15 +6,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalMain;
-import com.itachi1706.busarrivalsg.ListViews.BusServiceListViewAdapter;
-import com.itachi1706.busarrivalsg.StaticVariables;
+import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,7 +18,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * Created by Kenneth on 20/6/2015

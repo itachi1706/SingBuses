@@ -23,14 +23,16 @@ import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesHandler;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalMain;
+import com.itachi1706.busarrivalsg.Interface.IHandleStuff;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusServiceRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
+import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class BusServicesAtStopRecyclerActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, IHandleStuff{
+public class BusServicesAtStopRecyclerActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, IHandleStuff {
 
     RecyclerView buses;
     String busStopCode, busStopName;

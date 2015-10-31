@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainMenu"
+            android:name=".MainMenuActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,25 +28,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainMenuActivity"
-            android:label="@string/app_name" >
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4a76e5bed29f3c6bc0d8e90c16212c07cb8efbc0" />
         <activity
-            android:name=".ListAllBusStops"
+            android:name=".ListAllBusStopsActivity"
             android:label="@string/title_activity_list_all_bus_stops" >
-        </activity>
-        <activity
-            android:name=".AddBusStops"
-            android:label="@string/title_activity_add_bus_stops" >
         </activity>
         <activity
             android:name=".AddBusStopsRecyclerActivity"
@@ -55,10 +42,6 @@
         <activity
             android:name=".MainSettings"
             android:label="@string/title_activity_main_settings" >
-        </activity>
-        <activity
-            android:name=".BusServicesAtStop"
-            android:label="@string/title_activity_bus_services_at_stop" >
         </activity>
         <activity
             android:name=".BusServicesAtStopRecyclerActivity"

@@ -8,12 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObjectEstimate;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Objects.BusStatus;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.StaticVariables;
+import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.util.List;
 
@@ -24,8 +22,10 @@ import java.util.List;
 public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRecyclerAdapter.FavouritesViewHolder> {
 
     /**
-     * This recycler adapter is used in the internal retrive all bus services from bus stop activity
+     * This recycler adapter is used in the internal retrive all bus services from main activity's favourites list
      */
+    //TODO: Add a long click listener here to prompt remove from favourites
+    //TODO: Add an on click listener here to view all bus stops from the favourites?
 
     private List<BusServices> items;
     private Context context;

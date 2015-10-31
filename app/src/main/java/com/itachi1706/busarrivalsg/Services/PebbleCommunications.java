@@ -20,12 +20,11 @@ import com.getpebble.android.kit.util.PebbleDictionary;
 import com.itachi1706.busarrivalsg.AsyncTasks.Services.GetFirstFavouriteData;
 import com.itachi1706.busarrivalsg.AsyncTasks.Services.GetRemainingFavouriteData;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
-import com.itachi1706.busarrivalsg.PebbleEnum;
-import com.itachi1706.busarrivalsg.StaticVariables;
+import com.itachi1706.busarrivalsg.Util.PebbleEnum;
+import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;

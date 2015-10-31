@@ -40,6 +40,8 @@ import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.Services.PebbleCommunications;
+import com.itachi1706.busarrivalsg.Util.PebbleEnum;
+import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -206,7 +208,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             startActivity(new Intent(this, MainSettings.class));
             return true;
         } else if (id == R.id.view_all_stops){
-            startActivity(new Intent(this, ListAllBusStops.class));
+            startActivity(new Intent(this, ListAllBusStopsActivity.class));
             return true;
         } else if (id == R.id.action_refresh){
             swipeToRefresh.setRefreshing(true);
