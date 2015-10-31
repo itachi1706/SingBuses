@@ -1,10 +1,15 @@
 package com.itachi1706.busarrivalsg;
 
+import android.util.Log;
+
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -52,5 +57,45 @@ public class StaticVariables {
                 changelogBuilder.append("<br />");
         }
         return changelogBuilder.toString();
+    }
+
+    private static Calendar splitLTADate(String dateString){
+        Log.d("SPLIT", "Date String to parse: " + dateString);
+        String[] firstSplit = dateString.split("T");
+        String date = firstSplit[0];
+        String time = firstSplit[1];
+        String[] timeSplit = time.split("\\+");
+        String trueTime = timeSplit[0];
+
+        String[] dateSplit = date.split("\\-");
+        int year = Integer.parseInt(dateSplit[0]);
+        int month = Integer.parseInt(dateSplit[1]) - 1;
+        int dates = Integer.parseInt(dateSplit[2]);
+
+        String[] trueTimeSplit = trueTime.split(":");
+        int hr = Integer.parseInt(trueTimeSplit[0]);
+        int min = Integer.parseInt(trueTimeSplit[1]);
+        int sec = Integer.parseInt(trueTimeSplit[2]);
+
+        Calendar tmp = new GregorianCalendar(year, month, dates, hr, min, sec);
+        //Cause Server gives GMT, we need convert to SST
+        tmp.add(Calendar.HOUR, 8);
+        //tmp.setTimeZone(new SimpleTimeZone(8000, "SST"));
+        return tmp;
+    }
+
+    public static long parseLTAEstimateArrival(String arrivalString){
+        Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());
+        //GregorianCalendar currentDate = new GregorianCalendar(new SimpleTimeZone(8000, "SST"));
+        //currentDate.setTimeInMillis(networkTime[0]);
+        //currentDate.setTimeInMillis(System.currentTimeMillis());
+        Calendar currentDate = Calendar.getInstance();
+
+        Calendar arrivalDate = StaticVariables.splitLTADate(arrivalString);
+
+        Log.d("COMPARE","Current: " + currentDate.toString() );
+        Log.d("COMPARE", "Arrival: " + arrivalDate.toString());
+        long difference = arrivalDate.getTimeInMillis() - currentDate.getTimeInMillis();
+        return TimeUnit.MILLISECONDS.toMinutes(difference);
     }
 }

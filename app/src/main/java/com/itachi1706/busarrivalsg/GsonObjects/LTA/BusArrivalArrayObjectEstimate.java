@@ -48,7 +48,7 @@ public class BusArrivalArrayObjectEstimate {
         return Monitored;
     }
 
-    public boolean getMonitoredStatus(){
-        return Monitored.equalsIgnoreCase("true");
+    public boolean getMonitoredStatus() {
+        return Monitored == null || Monitored.equalsIgnoreCase("true");
     }
 }

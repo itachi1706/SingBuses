@@ -13,7 +13,7 @@ public class BusStatus {
     //Going to be implemented from 12 November
     private long latitude, longitude;
     private int visitNumber;
-    private boolean isMonitored;
+    private boolean isMonitored = true;
 
     public boolean isWheelChairAccessible() {
         return isWheelChairAccessible;

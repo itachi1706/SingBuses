@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Objects.BusStatus;
 import com.itachi1706.busarrivalsg.R;
+import com.itachi1706.busarrivalsg.StaticVariables;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -96,7 +97,7 @@ public class FavouritesListViewAdapter extends ArrayAdapter<BusServices> {
                         busArrivalNow.setText("-");
                         busArrivalNow.setTextColor(Color.GRAY);
                     } else {
-                        long est = parseEstimateArrival(i.getCurrentBus().getEstimatedArrival());
+                        long est = StaticVariables.parseLTAEstimateArrival(i.getCurrentBus().getEstimatedArrival());
                         String arrivalStatusNow;
                         if (est <= 0)
                             arrivalStatusNow = "Arr";
@@ -115,7 +116,7 @@ public class FavouritesListViewAdapter extends ArrayAdapter<BusServices> {
                         busArrivalNext.setText("-");
                         busArrivalNext.setTextColor(Color.GRAY);
                     } else {
-                        long est = parseEstimateArrival(i.getNextBus().getEstimatedArrival());
+                        long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus().getEstimatedArrival());
                         String arrivalStatusNext;
                         if (est <= 0)
                             arrivalStatusNext = "Arr";
@@ -161,47 +162,6 @@ public class FavouritesListViewAdapter extends ArrayAdapter<BusServices> {
             case 3: view.setTextColor(Color.RED); break;
             default: view.setTextColor(Color.GRAY); break;
         }
-    }
-
-    private long parseEstimateArrival(String arrivalString){
-        Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());
-        //GregorianCalendar currentDate = new GregorianCalendar(new SimpleTimeZone(8000, "SST"));
-        //currentDate.setTimeInMillis(networkTime[0]);
-        //currentDate.setTimeInMillis(System.currentTimeMillis());
-        Calendar currentDate = Calendar.getInstance();
-        currentDate.add(Calendar.MONTH, 1);
-
-        Calendar arrivalDate = splitDate(arrivalString);
-
-        Log.d("COMPARE","Current: " + currentDate.toString() );
-        Log.d("COMPARE", "Arrival: " + arrivalDate.toString() );
-        long difference = arrivalDate.getTimeInMillis() - currentDate.getTimeInMillis();
-        return TimeUnit.MILLISECONDS.toMinutes(difference);
-    }
-
-    private Calendar splitDate(String dateString){
-        Log.d("SPLIT", "Date String to parse: " + dateString);
-        String[] firstSplit = dateString.split("T");
-        String date = firstSplit[0];
-        String time = firstSplit[1];
-        String[] timeSplit = time.split("\\+");
-        String trueTime = timeSplit[0];
-
-        String[] dateSplit = date.split("\\-");
-        int year = Integer.parseInt(dateSplit[0]);
-        int month = Integer.parseInt(dateSplit[1]);
-        int dates = Integer.parseInt(dateSplit[2]);
-
-        String[] trueTimeSplit = trueTime.split(":");
-        int hr = Integer.parseInt(trueTimeSplit[0]);
-        int min = Integer.parseInt(trueTimeSplit[1]);
-        int sec = Integer.parseInt(trueTimeSplit[2]);
-
-        Calendar tmp = new GregorianCalendar(year, month, dates, hr, min, sec);
-        //Cause Server gives GMT, we need convert to SST
-        tmp.add(Calendar.HOUR, 8);
-        //tmp.setTimeZone(new SimpleTimeZone(8000, "SST"));
-        return tmp;
     }
 
     @Override
