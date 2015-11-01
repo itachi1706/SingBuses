@@ -73,4 +73,24 @@
         android:layout_alignRight="@+id/tvBusStatus"
         android:layout_alignEnd="@+id/tvBusStatus"
         android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivWheelchairNow"
+        android:src="@drawable/ic_wheelchair_accessibility_white_18dp"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/tvBusArrivalNow"
+        android:layout_alignEnd="@+id/tvBusArrivalNow"
+        android:contentDescription="@string/content_description_wheelchair" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivWheelchairNext"
+        android:src="@drawable/ic_wheelchair_accessibility_white_18dp"
+        android:layout_alignTop="@+id/ivWheelchairNow"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/content_description_wheelchair" />
 </RelativeLayout>

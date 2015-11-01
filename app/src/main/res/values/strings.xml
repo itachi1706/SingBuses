@@ -5,7 +5,6 @@
     <string name="title_activity_add_bus_stops">Bus Stops</string>
     <string name="title_activity_bus_services_at_stop">BusServicesAtStop</string>
     <string name="invalid_activity_access">Invalid Access to Activity. Exiting…</string>
-    <string name="edittext_hint_search_bus_stop">Stop Code/Stop Name/Road Name</string>
 
     <!-- Menu Actions -->
     <string name="action_settings">Settings</string>
@@ -44,6 +43,8 @@
     <string name="database_name_bus_geo">Bus Geographical Database</string>
     <string name="database_name_bus">Bus Database</string>
     <string name="label_bus_stops_count">Bus Stops Count: %1$s</string>
+    <string name="edittext_hint_search_bus_stop">Stop Code/Stop Name/Road Name</string>
+    <string name="content_description_wheelchair">Wheelchair Supported Bus</string>
 
     <!-- Notifications -->
     <string name="notification_message_download_new_app_update">Downloading new update… (%1$d/%2$dMB)</string>

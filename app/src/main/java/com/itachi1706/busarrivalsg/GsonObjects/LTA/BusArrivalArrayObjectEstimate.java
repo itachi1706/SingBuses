@@ -51,4 +51,8 @@ public class BusArrivalArrayObjectEstimate {
     public boolean getMonitoredStatus() {
         return Monitored == null || Monitored.equalsIgnoreCase("true");
     }
+
+    public boolean isWheelchairAccessible() {
+        return Feature != null && Feature.contains("WAB");
+    }
 }

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,6 +106,9 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             if (!i.getCurrentBus().isMonitored()) arrivalStatusNow += "*";
             holder.busArrivalNow.setText(arrivalStatusNow);
             applyColorLoad(holder.busArrivalNow, i.getCurrentBus());
+            holder.wheelchairNow.setVisibility(View.INVISIBLE);
+            if (i.getCurrentBus().isWheelChairAccessible())
+                holder.wheelchairNow.setVisibility(View.VISIBLE);
         }
 
         //2nd Bus (Next Bus)
@@ -121,6 +125,9 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             if (!i.getNextBus().isMonitored()) arrivalStatusNext += "*";
             holder.busArrivalNext.setText(arrivalStatusNext);
             applyColorLoad(holder.busArrivalNext, i.getNextBus());
+            holder.wheelchairNext.setVisibility(View.INVISIBLE);
+            if (i.getNextBus().isWheelChairAccessible())
+                holder.wheelchairNext.setVisibility(View.VISIBLE);
         }
     }
 
@@ -153,6 +160,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 
         protected TextView busOperator, busNumber, operatingStatus, stopName;
         protected Button busArrivalNow, busArrivalNext;
+        protected ImageView wheelchairNow, wheelchairNext;
 
         public FavouritesViewHolder(View v){
             super(v);
@@ -162,6 +170,10 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             busArrivalNext = (Button) v.findViewById(R.id.tvBusArrivalNext);
             operatingStatus = (TextView) v.findViewById(R.id.tvBusStatus);
             stopName = (TextView) v.findViewById(R.id.tvBusStopName);
+            wheelchairNow = (ImageView) v.findViewById(R.id.ivWheelchairNow);
+            wheelchairNext = (ImageView) v.findViewById(R.id.ivWheelchairNext);
+            wheelchairNow.setVisibility(View.INVISIBLE);
+            wheelchairNext.setVisibility(View.INVISIBLE);
             v.setOnLongClickListener(this);
             v.setOnClickListener(this);
             busArrivalNext.setOnLongClickListener(this);
