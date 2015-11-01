@@ -80,7 +80,7 @@ public class AppUpdateCheck extends AsyncTask<Void, Void, String> {
 
     protected void onPostExecute(String changelog){
         if (except != null){
-            NotifyUserUtil.createShortToast(mActivity.getApplicationContext(), "Unable to contact update server to check for updates");
+            NotifyUserUtil.createShortToast(mActivity.getApplicationContext(), mActivity.getString(R.string.toast_cannot_contact_update_server));
             return;
         }
          /* Legend of Stuff
@@ -91,7 +91,7 @@ public class AppUpdateCheck extends AsyncTask<Void, Void, String> {
         * - Points
          */
         if (changelogStrings.size() <= 0){
-            NotifyUserUtil.createShortToast(mActivity.getApplicationContext(), "Unable to do app update check");
+            NotifyUserUtil.createShortToast(mActivity.getApplicationContext(), mActivity.getString(R.string.toast_cannot_check_update));
             return;
         }
         sp.edit().putString("version-changelog", changelog).apply();
@@ -120,9 +120,9 @@ public class AppUpdateCheck extends AsyncTask<Void, Void, String> {
                     public void onClick(DialogInterface dialog, int which) {
                         NotificationManager manager = (NotificationManager) mActivity.getSystemService(Context.NOTIFICATION_SERVICE);
                         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mActivity);
-                        mBuilder.setContentTitle("Downloading new update").setContentText("Downloading new update...")
-                                .setProgress(0,0,true).setSmallIcon(R.mipmap.ic_launcher).setAutoCancel(false)
-                        .setOngoing(true).setTicker("Downloading new update to the app");
+                        mBuilder.setContentTitle(mActivity.getString(R.string.notification_title_starting_download)).setContentText(mActivity.getString(R.string.notification_content_starting_download))
+                                .setProgress(0, 0, true).setSmallIcon(R.mipmap.ic_launcher).setAutoCancel(false)
+                        .setOngoing(true).setTicker(mActivity.getString(R.string.notification_ticker_starting_download));
                         Random random = new Random();
                         int notificationId = random.nextInt();
                         manager.notify(notificationId, mBuilder.build());
@@ -135,10 +135,10 @@ public class AppUpdateCheck extends AsyncTask<Void, Void, String> {
         if (!main){
             Log.d("UPDATE CHECK", "No Update Needed");
             if (!mActivity.isFinishing()) {
-                new AlertDialog.Builder(mActivity).setTitle("Check for New Update").setMessage("You are on the latest release! No update is required.")
-                        .setNegativeButton("Close", null).show();
+                new AlertDialog.Builder(mActivity).setTitle(R.string.dialog_title_latest_update).setMessage(R.string.dialog_message_latest_update)
+                        .setNegativeButton(R.string.dialog_action_positive_close, null).show();
             } else {
-                NotifyUserUtil.createShortToast(mActivity.getApplicationContext(), "No update is required");
+                NotifyUserUtil.createShortToast(mActivity.getApplicationContext(), mActivity.getString(R.string.toast_message_latest_update));
             }
         }
     }

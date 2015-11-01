@@ -16,6 +16,8 @@ import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import com.itachi1706.busarrivalsg.R;
+
 /**
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.Services
@@ -159,16 +161,16 @@ public class GPSManager extends Service implements LocationListener {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         // Setting Dialog Title
-        alertDialog.setTitle("GPS is disabled");
+        alertDialog.setTitle(getString(R.string.dialog_title_gps_disabled));
 
         // Setting Dialog Message
-        alertDialog.setMessage("GPS is not enabled. Do you want to enable it for better accuracy?");
+        alertDialog.setMessage(getString(R.string.dialog_message_gps_disabled));
 
         // Setting Icon to Dialog
         //alertDialog.setIcon(R.drawable.delete);
 
         // On pressing Settings button
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(getString(R.string.dialog_action_positive_settings), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mContext.startActivity(intent);
@@ -176,7 +178,7 @@ public class GPSManager extends Service implements LocationListener {
         });
 
         // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(getString(R.string.dialog_action_negative_cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }

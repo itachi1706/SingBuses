@@ -184,15 +184,13 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 
             String message;
             if (item.getStopName() != null)
-                message = "Are you sure you want to remove " + item.getServiceNo() + " from " + item.getStopName() + " (" + item.getStopID()
-                        + ") from your favourites? This will also remove it from being accessible from your Pebble device";
+                message = activity.getString(R.string.dialog_message_remove_from_fav_with_stop_name, item.getServiceNo(), item.getStopName(), item.getStopID());
             else
-                message = "Are you sure you want to remove " + item.getServiceNo() + " from Bus Stop Code " + item.getStopID()
-                        + " from your favourites? This will also remove it from being accessible from your Pebble device";
+                message = activity.getString(R.string.dialog_message_remove_from_fav, item.getServiceNo(), item.getStopID());
 
             final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
 
-            new AlertDialog.Builder(activity).setTitle("Remove from Favourites")
+            new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_remove_from_fav)
                     .setMessage(message)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
@@ -207,7 +205,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                             }
                             BusStorage.updateBusJSON(sp, (ArrayList<BusServices>) items);
                             notifyDataSetChanged();
-                            Toast.makeText(activity.getApplicationContext(), "Removed from favourites", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity.getApplicationContext(), R.string.toast_message_remove_from_fav, Toast.LENGTH_SHORT).show();
                         }
                     }).setNegativeButton(android.R.string.no, null).show();
             return false;

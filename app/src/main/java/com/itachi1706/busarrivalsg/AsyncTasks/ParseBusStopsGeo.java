@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeo;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeoObject;
+import com.itachi1706.busarrivalsg.R;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -36,8 +37,8 @@ public class ParseBusStopsGeo extends AsyncTask<BusStopsGeo, String, Void> {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dialog.setTitle("Parsing Bus Stop Geographical Data...");
-                dialog.setMessage("Parsing bus stops geographical data retrived...");
+                dialog.setTitle(activity.getString(R.string.progress_title_bus_stop_geo_data_parse));
+                dialog.setMessage(activity.getString(R.string.progress_message_bus_stop_geo_data_parse_pre));
             }
         });
 
@@ -60,13 +61,13 @@ public class ParseBusStopsGeo extends AsyncTask<BusStopsGeo, String, Void> {
         dialog.setProgress(i + 1);
         dialog.setIndeterminate(false);
         Log.d("GET-STOPSGEO", "Importing " + (i + 1) + "/" + length + " (" + code + ")");
-        dialog.setMessage("Parsing " + code + " \n[" + name + "]");
+        dialog.setMessage(activity.getString(R.string.dialog_message_bus_stop_geo_data_parse, code, name));
     }
 
     protected void onPostExecute(Void param){
         //Done
         int count = db.getSize();
-        Toast.makeText(activity, count + " bus stops geo data saved to database!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, activity.getString(R.string.toast_bus_stop_geo_data_parse_success, count), Toast.LENGTH_SHORT).show();
         Log.d("GET-STOPSGEO", "Loaded " + count + " bus stops geographical data into the database");
         sp.edit().putBoolean("geoDBLoaded", true).apply();
         sp.edit().putLong("geoDBTimeUpdated", System.currentTimeMillis()).apply();

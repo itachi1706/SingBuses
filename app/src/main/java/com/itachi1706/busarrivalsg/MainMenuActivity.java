@@ -122,7 +122,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(MainMenuActivity.this, "Add a bus service into favourites", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainMenuActivity.this, R.string.fab_hint_main_menu, Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
@@ -132,9 +132,9 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             PebbleKit.FirmwareVersionInfo info = PebbleKit.getWatchFWVersion(this);
             installPrompt.setVisibility(View.VISIBLE);
             //Init
-            connectionStatus.setText("Pebble Connected!");
+            connectionStatus.setText(R.string.pebble_connected);
             connectionStatus.setTextColor(Color.GREEN);
-            firmware.setText("FW Version: " + info.getTag());
+            firmware.setText(getString(R.string.pebble_firmware_version, info.getTag()));
             mReceiver = new PebbleKit.PebbleDataReceiver(StaticVariables.PEBBLE_APP_UUID) {
                 @Override
                 public void receiveData(Context context, int i, PebbleDictionary pebbleDictionary) {
@@ -143,9 +143,9 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                     //Handle stuff in the dictionary
                     if (pebbleDictionary.contains(PebbleEnum.KEY_BUTTON_EVENT)){
                         switch (pebbleDictionary.getUnsignedIntegerAsLong(PebbleEnum.KEY_BUTTON_EVENT).intValue()){
-                            case PebbleEnum.BUTTON_REFRESH: pressedBtn.setText("Refresh Pressed"); break;
-                            case PebbleEnum.BUTTON_NEXT: pressedBtn.setText("Going Next"); break;
-                            case PebbleEnum.BUTTON_PREVIOUS: pressedBtn.setText("Going Previous"); break;
+                            case PebbleEnum.BUTTON_REFRESH: pressedBtn.setText(R.string.pebble_button_refresh); break;
+                            case PebbleEnum.BUTTON_NEXT: pressedBtn.setText(R.string.pebble_button_next); break;
+                            case PebbleEnum.BUTTON_PREVIOUS: pressedBtn.setText(R.string.pebble_button_previous); break;
                         }
                     }
                 }
@@ -160,7 +160,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                 }
             });
         } else {
-            connectionStatus.setText("Pebble not connected!");
+            connectionStatus.setText(R.string.pebble_disconnected);
             connectionStatus.setTextColor(Color.RED);
             firmware.setText("");
             installPrompt.setVisibility(View.INVISIBLE);
@@ -205,7 +205,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         installCompanionApp.setDataAndType(url, "application/octet-stream");
         installCompanionApp.setComponent(new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity"));
         startActivity(installCompanionApp);*/
-        new DlAndInstallCompanionApp(this).execute("http://itachi1706.com/android/SingBuses.pbw");
+        new DlAndInstallCompanionApp(this).execute(getString(R.string.link_pebble_app));
     }
 
     @Override
@@ -290,12 +290,12 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         if (!sp.getBoolean("busDBLoaded", false) || busDBUpdate){
             //First Boot, populate database
             if (!isNetworkAvailable()){
-                networkUnavailable("Bus Database");
+                networkUnavailable(getString(R.string.database_name_bus));
             } else {
                 Log.d("INIT", "Initializing Bus Stop Database");
                 ProgressDialog dialog = new ProgressDialog(this);
-                dialog.setTitle("Bus Database");
-                dialog.setMessage("Retriving data from server");
+                dialog.setTitle(getString(R.string.database_name_bus));
+                dialog.setMessage(getString(R.string.dialog_message_retrieve_data_from_server));
                 dialog.setCancelable(false);
                 dialog.setIndeterminate(true);
                 dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -317,12 +317,12 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         if (!sp.getBoolean("geoDBLoaded", false) || geoDBUpdate){
             //First Boot with Geo Location db
             if (!isNetworkAvailable()){
-                networkUnavailable("Bus Geo Location Database");
+                networkUnavailable(getString(R.string.database_name_bus_geo));
             } else {
                 Log.d("INIT", "Initializing Bus Stop Geographical Database");
                 ProgressDialog dialogs = new ProgressDialog(this);
-                dialogs.setTitle("Bus Geographical Database");
-                dialogs.setMessage("Retriving data from server");
+                dialogs.setTitle(getString(R.string.database_name_bus_geo));
+                dialogs.setMessage(getString(R.string.dialog_message_retrieve_data_from_server));
                 dialogs.setCancelable(false);
                 dialogs.setIndeterminate(true);
                 dialogs.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -342,10 +342,9 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     }
 
     private void networkUnavailable(String reason){
-        new AlertDialog.Builder(this).setTitle("No Internet Access")
-                .setMessage("Internet Access is required to populate " + reason +", please ensure that you have internet access" +
-                        " before relaunching this application").setCancelable(false)
-                .setNeutralButton("Override", null)
+        new AlertDialog.Builder(this).setTitle(R.string.dialog_title_no_internet)
+                .setMessage(getString(R.string.dialog_message_no_internet, reason)).setCancelable(false)
+                .setNeutralButton(R.string.dialog_action_neutral_override, null)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -379,9 +378,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
         final Activity thisActivity = this;
 
-        new AlertDialog.Builder(this).setTitle("Requesting External Storage Permission")
-                .setMessage("In order for the app to download the Pebble App File for the Official Pebble App to install, " +
-                        "we require permission to write to your storage.")
+        new AlertDialog.Builder(this).setTitle(R.string.dialog_title_request_permission_external_storage)
+                .setMessage(R.string.dialog_message_request_permission_external_storage_rationale)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -428,15 +426,9 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
         final Activity thisActivity = this;
 
-        new AlertDialog.Builder(this).setTitle("Permission has been denied")
-                .setMessage("You have denied the app access to your phone's storage. " +
-                        "Due to the fact that installing the companion Pebble app requires you to use the Official " +
-                        "Pebble App for installation, the app needs to save the Pebble App File onto your internal storage." +
-                        " By denying this permission, install cannot proceed as the Offical Pebble App will not be able to" +
-                        " access this app's private storage (which would not have required this permission).\n\n" +
-                        "If you wish to grant the app permissions right now, click the settings button" +
-                        " and grant it permissions there").setPositiveButton(android.R.string.ok, null)
-                .setNeutralButton("APP SETTINGS", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(this).setTitle(R.string.dialog_title_permission_denied)
+                .setMessage(R.string.dialog_message_no_permission_external_storage).setPositiveButton(android.R.string.ok, null)
+                .setNeutralButton(R.string.dialog_action_neutral_app_settings, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);

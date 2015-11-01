@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeo;
+import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.io.BufferedReader;
@@ -62,8 +63,8 @@ public class GetAllBusStopsGeo extends AsyncTask<Void, Void, String> {
             @Override
             public void run() {
                 dialog.show();
-                dialog.setTitle("Downloading Bus Stop Geographical Data");
-                dialog.setMessage("This will take a few minutes. Be patient :) \nGetting Bus Stops Geographical Data...");
+                dialog.setTitle(activity.getString(R.string.progress_title_bus_stop_geo_data_download));
+                dialog.setMessage(activity.getString(R.string.progress_message_bus_stop_geo_data_download));
             }
         });
         try {
@@ -91,7 +92,7 @@ public class GetAllBusStopsGeo extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String json){
         if (exception != null){
             if (exception instanceof SocketTimeoutException) {
-                Toast.makeText(activity, "Database query timed out. Retrying", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.toast_message_timeout_database_query_retry, Toast.LENGTH_SHORT).show();
                 new GetAllBusStopsGeo(dialog, db, activity, sp).execute();
             } else {
                 Toast.makeText(activity, exception.getMessage(), Toast.LENGTH_SHORT).show();
@@ -101,7 +102,7 @@ public class GetAllBusStopsGeo extends AsyncTask<Void, Void, String> {
             Gson gson = new Gson();
             if (!StaticVariables.checkIfYouGotJsonString(json)){
                 //Invalid string, retrying
-                Toast.makeText(activity, "Invalid JSON, Retrying", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.toast_message_invalid_json_retry, Toast.LENGTH_SHORT).show();
                 new GetAllBusStopsGeo(dialog, db, activity, sp).execute();
                 return;
             }
@@ -109,7 +110,7 @@ public class GetAllBusStopsGeo extends AsyncTask<Void, Void, String> {
             BusStopsGeo replyArr = gson.fromJson(json, BusStopsGeo.class);
             if (replyArr.getGeo().length == 0){
                 //Error occured
-                Toast.makeText(activity, "An error occured, please reload the application and try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.toast_message_error_occurred, Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 return;
             }

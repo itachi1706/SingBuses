@@ -97,7 +97,7 @@ public class DownloadAndInstallApp extends AsyncTask<String, Float, Boolean> {
             double downloadMB = (double) Math.round((progress[1] / 1024.0 / 1024.0 *100)) / 100;
             double downloadSizeMB = (double) Math.round((progress[2] / 1024.0 / 1024.0 *100)) / 100;
             notification.setProgress(100, Math.round(progress[0]), false);
-            notification.setContentText("Downloading new update... (" + downloadMB + "/" + downloadSizeMB + "MB)");
+            notification.setContentText(activity.getString(R.string.notification_message_download_new_app_update, downloadMB, downloadSizeMB));
             manager.notify(notificationID, notification.build());
         } else {
             notification.setProgress(0, 0, true);
@@ -113,19 +113,19 @@ public class DownloadAndInstallApp extends AsyncTask<String, Float, Boolean> {
             //Update failed, update notification
             if (except != null){
                 //Print Exception
-                notification.setContentTitle("Exception Occurred (Download)").setTicker("Download failed")
-                        .setContentText("An exception occurred while downloading the update file. (" + except.getLocalizedMessage() + ")")
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText("An exception occurred while downloading the update file. (" + except.getLocalizedMessage() + ")\n Click to manually download the file"))
+                notification.setContentTitle(activity.getString(R.string.notification_title_exception_download)).setTicker(activity.getString(R.string.notification_ticker_download_fail))
+                        .setContentText(activity.getString(R.string.notification_content_download_fail_exception, except.getLocalizedMessage()))
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(activity.getString(R.string.notification_content_download_fail_exception_expanded, except.getLocalizedMessage())))
                         .setSmallIcon(R.mipmap.ic_launcher).setProgress(0,0,false);
                 Intent intent = new Intent(Intent.ACTION_VIEW, link);
                 PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0, intent, 0);
                 notification.setContentIntent(pendingIntent);
                 manager.notify(notificationID, notification.build());
             } else {
-                notification.setContentTitle("Exception Occurred (Download)").setTicker("Download failed")
-                        .setContentText("The update is unable to download automatically")
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText("The update is unable to download automatically.\n Click to manually download the file"))
-                        .setSmallIcon(R.mipmap.ic_launcher).setProgress(0,0,false);
+                notification.setContentTitle(activity.getString(R.string.notification_title_exception_download)).setTicker(activity.getString(R.string.notification_ticker_download_fail))
+                        .setContentText(activity.getString(R.string.notification_content_download_fail))
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(activity.getString(R.string.notification_content_download_fail_expanded)))
+                        .setSmallIcon(R.mipmap.ic_launcher).setProgress(0, 0, false);
                 Intent intent = new Intent(Intent.ACTION_VIEW, link);
                 PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0, intent, 0);
                 notification.setContentIntent(pendingIntent);
@@ -143,8 +143,8 @@ public class DownloadAndInstallApp extends AsyncTask<String, Float, Boolean> {
 
         //Notify User and add intent to invoke update
         PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        notification.setContentTitle("Download Complete").setTicker("Download Complete!")
-                .setContentText("Update has been successfully downloaded")
+        notification.setContentTitle(activity.getString(R.string.notification_title_download_success)).setTicker(activity.getString(R.string.notification_ticker_download_success))
+                .setContentText(activity.getString(R.string.notification_content_download_success))
                 .setAutoCancel(true).setContentIntent(pendingIntent)
                 .setSmallIcon(R.mipmap.ic_launcher).setProgress(0, 0, false);
         manager.notify(notificationID, notification.build());

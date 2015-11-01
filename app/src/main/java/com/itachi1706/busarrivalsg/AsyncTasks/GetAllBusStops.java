@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSONArray;
+import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.io.BufferedReader;
@@ -46,8 +47,8 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                progressDialog.setTitle("Downloading Bus Stop Data");
-                progressDialog.setMessage("This will take a few minutes. Be patient :) \nDownloading latest bus stop data");
+                progressDialog.setTitle(activity.getString(R.string.progress_title_bus_stop_data_download));
+                progressDialog.setMessage(activity.getString(R.string.progress_message_bus_stop_data_download));
                 StaticVariables.init1TaskFinished = false;
             }
         });
@@ -76,7 +77,7 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
     protected void onPostExecute(String json){
         if (exception != null){
             if (exception instanceof SocketTimeoutException) {
-                Toast.makeText(activity, "Database query timed out. Retrying", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.toast_message_timeout_database_query_retry, Toast.LENGTH_SHORT).show();
                 new GetAllBusStops(progressDialog, db, activity, sp).execute();
             } else {
                 Toast.makeText(activity, exception.getMessage(), Toast.LENGTH_SHORT).show();
@@ -86,19 +87,19 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
             Gson gson = new Gson();
             if (!StaticVariables.checkIfYouGotJsonString(json)){
                 //Invalid string, retrying
-                Toast.makeText(activity, "Invalid JSON, Retrying", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.toast_message_invalid_json_retry, Toast.LENGTH_SHORT).show();
                 new GetAllBusStops(progressDialog, db, activity, sp).execute();
                 return;
             }
             BusStopJSONArray replyArr = gson.fromJson(json, BusStopJSONArray.class);
             if (replyArr == null || replyArr.getBusStopsArray() == null){
                 //Invalid string, retrying
-                Toast.makeText(activity, "Something weird occurred, Retrying", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.toast_message_unknown_error, Toast.LENGTH_SHORT).show();
                 new GetAllBusStops(progressDialog, db, activity, sp).execute();
                 return;
             }
-            progressDialog.setTitle("Parsing Bus Stops Data");
-            progressDialog.setMessage("Parsing bus stops data...");
+            progressDialog.setTitle(activity.getString(R.string.progress_title_bus_stop_data_parse_pre));
+            progressDialog.setMessage(activity.getString(R.string.progress_message_bus_stop_data_parse_pre));
             new ParseBusStops(progressDialog, db, activity, sp).execute(replyArr);
         }
     }

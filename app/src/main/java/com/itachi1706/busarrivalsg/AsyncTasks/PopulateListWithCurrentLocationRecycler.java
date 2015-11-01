@@ -14,6 +14,7 @@ import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsAPIArray;
 import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsJsonObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeoObject;
+import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
@@ -78,7 +79,7 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
     protected void onPostExecute(String json) {
         if (except != null) {
             if (except instanceof SocketTimeoutException) {
-                Toast.makeText(activity, "Google did not respond after the period of time", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.toast_message_timeout_google_places_api, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(activity, except.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -88,12 +89,12 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
             Log.d("CURRENT-LOCATION", json);
             if (!StaticVariables.checkIfYouGotJsonString(json)) {
                 //Invalid JSON string
-                Toast.makeText(activity, "Invalid JSON. Please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.toast_message_invalid_json, Toast.LENGTH_SHORT).show();
                 return;
             }
             OnlineGMapsAPIArray array = gson.fromJson(json, OnlineGMapsAPIArray.class);
             if (!array.getStatus().equalsIgnoreCase("OK")) {
-                Toast.makeText(activity, "Invalid request. Please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.toast_message_invalid_request, Toast.LENGTH_SHORT).show();
                 return;
             }
             OnlineGMapsJsonObject[] maps = array.getResults();
@@ -104,11 +105,11 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
                 BusStopJSON stop;
                 if (stopsTmp == null){
                     Log.e("LOCATE", "Something went wrong here");
-                    Toast.makeText(activity, "Something went wrong here, reobtain your data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.toast_message_invalid_data, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (stopsTmp.size() == 0) {
-                    Log.e("LOCATE", "Bus Stop not found in database, ignoring D:");
+                    Log.e("LOCATE", activity.getString(R.string.toast_message_invalid_bus_stop));
                     continue;
                 }
                 else if (stopsTmp.size() > 1){

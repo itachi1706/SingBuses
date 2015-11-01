@@ -69,7 +69,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         if (sp.getBoolean("showHint", true))
-            Toast.makeText(this, "Long click on an individual bus service to add/remove it from favourites!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.hint_add_bus_to_fav, Toast.LENGTH_SHORT).show();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -78,7 +78,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         super.onResume();
         if (busStopCode == null){
             Log.e("BUS-SERVICE", "You aren't supposed to be here. Exiting");
-            Toast.makeText(this, "Invalid Access to Activity. Exiting...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.invalid_activity_access, Toast.LENGTH_SHORT).show();
             this.finish();
         }else {
             if (busStopName != null)
@@ -95,12 +95,10 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         String message;
         if (alrFav){
             if (busStopName != null)
-                message = "Are you sure you want to remove " + fav.getServiceNo() + " from " + busStopName + " (" + fav.getStopID()
-                        + ") from your favourites? This will also remove it from being accessible from your Pebble device";
+                message = getString(R.string.dialog_message_remove_from_fav_with_stop_name, fav.getServiceNo(), busStopName, fav.getStopID());
             else
-                message = "Are you sure you want to remove " + fav.getServiceNo() + " from Bus Stop Code " + fav.getStopID()
-                    + " from your favourites? This will also remove it from being accessible from your Pebble device";
-            new AlertDialog.Builder(this).setTitle("Remove from Favourites")
+                message = getString(R.string.dialog_message_remove_from_fav, fav.getServiceNo(), fav.getStopID());
+            new AlertDialog.Builder(this).setTitle(R.string.dialog_title_remove_from_fav)
                     .setMessage(message)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
@@ -114,24 +112,22 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
                                 }
                             }
                             BusStorage.updateBusJSON(sp, all);
-                            Toast.makeText(getApplicationContext(), "Removed from favourites", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.toast_message_remove_from_fav, Toast.LENGTH_SHORT).show();
                         }
                     }).setNegativeButton(android.R.string.no, null).show();
         } else {
             if (busStopName != null)
-                message = "Are you sure you want to add " + fav.getServiceNo() + " from " + busStopName + " (" + fav.getStopID()
-                        + ") to your favourites? This will also make it accessible from your Pebble device";
+                message = getString(R.string.dialog_message_add_to_fav_with_stop_name, fav.getServiceNo(), busStopName, fav.getStopID());
             else
-                message = "Are you sure you want to add " + fav.getServiceNo() + " from Bus Stop Code " + fav.getStopID()
-                    + " to your favourites? This will also make it accessible from your Pebble device";
-            new AlertDialog.Builder(this).setTitle("Add to Favourites")
+                message = getString(R.string.dialog_message_add_to_fav, fav.getServiceNo(), fav.getStopID());
+            new AlertDialog.Builder(this).setTitle(R.string.dialog_title_add_to_fav)
                     .setMessage(message)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //Remove from favourites
                             BusStorage.addNewBus(fav, sp);
-                            Toast.makeText(getApplicationContext(), "Added to favourites", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.toast_message_add_to_fav, Toast.LENGTH_SHORT).show();
                         }
                     }).setNegativeButton(android.R.string.no, null).show();
         }
@@ -141,8 +137,8 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         ProgressDialog dialog = new ProgressDialog(this);
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
-        dialog.setTitle("Downloading Bus Service Data");
-        dialog.setMessage("Getting all Bus Services in Bus Stop " + busStopCode);
+        dialog.setTitle(getString(R.string.dialog_title_retrieve_data_bus_service));
+        dialog.setMessage(getString(R.string.dialog_message_retrieve_data_bus_service,busStopCode));
         dialog.show();
         new GetBusServicesHandler(dialog, this, new BusServicesAtStopHandler(this)).execute(busStopCode);
     }
@@ -226,7 +222,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         Gson gson = new Gson();
         if (!StaticVariables.checkIfYouGotJsonString(json)){
             //Invalid string, retrying
-            Toast.makeText(this, "Invalid JSON String", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_message_invalid_json_string, Toast.LENGTH_SHORT).show();
             return;
         }
 

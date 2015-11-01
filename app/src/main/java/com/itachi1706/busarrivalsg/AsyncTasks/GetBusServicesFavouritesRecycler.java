@@ -10,6 +10,7 @@ import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Objects.BusStatus;
+import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
@@ -70,7 +71,7 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
     protected void onPostExecute(String json){
         if (exception != null){
             if (exception instanceof SocketTimeoutException) {
-                Toast.makeText(activity, "Request Timed Out, Retrying", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.toast_message_timeout_request_retry, Toast.LENGTH_SHORT).show();
                 new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObj);
             } else {
                 Toast.makeText(activity, exception.getMessage(), Toast.LENGTH_SHORT).show();
@@ -80,7 +81,7 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
             Gson gson = new Gson();
             if (!StaticVariables.checkIfYouGotJsonString(json)){
                 //Invalid string, retrying
-                Toast.makeText(activity, "Invalid JSON String, Retrying", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.toast_message_invalid_json_retry, Toast.LENGTH_SHORT).show();
                 new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObj);
                 return;
             }

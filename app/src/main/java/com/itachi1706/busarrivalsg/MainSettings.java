@@ -91,16 +91,16 @@ public class MainSettings extends AppCompatActivity {
                     String changelog = sp.getString("version-changelog", "l");
                     if (changelog.equals("l")) {
                         //Not available
-                        new android.app.AlertDialog.Builder(getActivity()).setTitle("No Changelog")
-                                .setMessage("No changelog was found. Please check if you can connect to the server")
+                        new android.app.AlertDialog.Builder(getActivity()).setTitle(R.string.dialog_title_no_changelog)
+                                .setMessage(R.string.dialog_message_no_changelog)
                                 .setPositiveButton(android.R.string.ok, null).show();
                     } else {
                         String[] changelogArr = changelog.split("\n");
                         ArrayList<String> changelogArrList = new ArrayList<>();
                         Collections.addAll(changelogArrList, changelogArr);
                         String body = StaticVariables.getChangelogStringFromArrayList(changelogArrList);
-                        new android.app.AlertDialog.Builder(getActivity()).setTitle("Changelog")
-                                .setMessage(Html.fromHtml(body)).setPositiveButton("Close", null).show();
+                        new android.app.AlertDialog.Builder(getActivity()).setTitle(R.string.dialog_title_changellog)
+                                .setMessage(Html.fromHtml(body)).setPositiveButton(R.string.dialog_action_positive_close, null).show();
                     }
                     return true;
                 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pebble_connected">Pebble Connected!</string>
+    <string name="pebble_firmware_version">FW Version: %1$s</string>
+    <string name="pebble_button_refresh">Refresh Pressed</string>
+    <string name="pebble_button_next">Going Next</string>
+    <string name="pebble_button_previous">Going Previous</string>
+    <string name="pebble_disconnected">Pebble not connected!</string>
+</resources>

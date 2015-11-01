@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSONArray;
+import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 /**
@@ -53,12 +54,12 @@ public class ParseBusStops extends AsyncTask<BusStopJSONArray, String, Void> {
         progressDialog.setProgress(i);
         progressDialog.setMax(totalLength);
         progressDialog.setIndeterminate(false);
-        progressDialog.setMessage("Parsing bus stops data...\nCurrent Stop: " + code + "\n" + busStopName);
+        progressDialog.setMessage(activity.getString(R.string.progress_message_bus_stop_data_parse, code, busStopName));
     }
 
     protected void onPostExecute(Void params){
         int count = db.getSize();
-        Toast.makeText(activity, count + " bus stops saved to database!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, activity.getString(R.string.toast_bus_stop_data_parse_success, count), Toast.LENGTH_SHORT).show();
         Log.d("GET-STOPS", "Loaded " + count + " bus stops into the database");
         sp.edit().putBoolean("busDBLoaded", true).apply();
         sp.edit().putLong("busDBTimeUpdated", System.currentTimeMillis()).apply();

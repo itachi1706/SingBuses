@@ -9,6 +9,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.io.BufferedReader;
@@ -69,7 +70,7 @@ public class GetBusServicesHandler extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String json){
         if (exception != null){
             if (exception instanceof SocketTimeoutException) {
-                Toast.makeText(activity, "Request Timed Out", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.toast_message_timeout_request, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(activity, exception.getMessage(), Toast.LENGTH_SHORT).show();
             }

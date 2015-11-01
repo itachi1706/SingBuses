@@ -137,9 +137,8 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
 
         final Activity thisActivity = this;
 
-        new AlertDialog.Builder(this).setTitle("Requesting GPS Permission")
-                .setMessage("In order for the app to retrieve your current position to find bus stops near you, " +
-                        "it requires access to your Location. Please grant it in the next screen to use it")
+        new AlertDialog.Builder(this).setTitle(R.string.dialog_title_request_permission_gps)
+                .setMessage(R.string.dialog_message_request_permission_gps_rationale)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -149,7 +148,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
     }
 
     private void getLocationButtonClicked(){
-        Toast.makeText(getApplicationContext(), "Getting your location...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.toast_message_retrieving_location, Toast.LENGTH_SHORT).show();
         latitude = gps.getLatitude();
         longitude = gps.getLongitude();
         updateList();
@@ -201,12 +200,9 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         final Activity thisActivity = this;
 
         if (requestCode == RC_HANDLE_ACCESS_FINE_LOCATION) {
-            new AlertDialog.Builder(this).setTitle("Permission has been denied")
-                    .setMessage("You have denied the app access to your phone's location. " +
-                            "We are unable to determine your loaction as a result.\n\n" +
-                            "If you wish to grant the app permissions right now, click the settings button" +
-                            " and grant it permissions there").setPositiveButton(android.R.string.ok, null)
-                    .setNeutralButton("APP SETTINGS", new DialogInterface.OnClickListener() {
+            new AlertDialog.Builder(this).setTitle(R.string.dialog_title_permission_denied)
+                    .setMessage(R.string.dialog_message_no_permission_gps).setPositiveButton(android.R.string.ok, null)
+                    .setNeutralButton(R.string.dialog_action_neutral_app_settings, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
