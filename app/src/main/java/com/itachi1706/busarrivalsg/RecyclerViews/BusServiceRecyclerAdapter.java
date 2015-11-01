@@ -119,6 +119,35 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 holder.wheelchairNext.setVisibility(View.VISIBLE);
             holder.busArrivalNext.setOnClickListener(new ArrivalButton(i.getSubsequentBus().getLongitude(), i.getSubsequentBus().getLatitude()));
         }
+
+        //3rd bus (Subsequent Bus)
+        if (i.getSubsequentBus3() == null) {
+            comingSoon(holder.busArrivalSub);
+            return;
+        }
+        if (i.getSubsequentBus3().getEstimatedArrival() == null) notArriving(holder.busArrivalSub);
+        else {
+            long est = StaticVariables.parseLTAEstimateArrival(i.getSubsequentBus3().getEstimatedArrival());
+            String arrivalStatusSub;
+            if (est <= 0)
+                arrivalStatusSub = "Arr";
+            else if (est == 1)
+                arrivalStatusSub = est + " min";
+            else
+                arrivalStatusSub = est + " mins";
+            if (!i.getSubsequentBus3().getMonitoredStatus()) arrivalStatusSub += "*";
+            holder.busArrivalSub.setText(arrivalStatusSub);
+            applyColorLoad(holder.busArrivalSub, i.getSubsequentBus3());
+            holder.wheelchairSub.setVisibility(View.INVISIBLE);
+            if (i.getSubsequentBus3().isWheelchairAccessible())
+                holder.wheelchairSub.setVisibility(View.VISIBLE);
+            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i.getSubsequentBus3().getLongitude(), i.getSubsequentBus3().getLatitude()));
+        }
+    }
+
+    private void comingSoon(TextView view){
+        view.setText("Soon");
+        view.setTextColor(Color.GRAY);
     }
 
     private void notArriving(TextView view){
@@ -143,23 +172,27 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     public class BusServiceViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
         protected TextView busOperator, busNumber, operatingStatus;
-        protected Button busArrivalNow, busArrivalNext;
-        protected ImageView wheelchairNow, wheelchairNext;
+        protected Button busArrivalNow, busArrivalNext, busArrivalSub;
+        protected ImageView wheelchairNow, wheelchairNext, wheelchairSub;
 
         public BusServiceViewHolder(View v){
             super(v);
             busOperator = (TextView) v.findViewById(R.id.tvBusOperator);
             busNumber = (TextView) v.findViewById(R.id.tvBusService);
-            busArrivalNow = (Button) v.findViewById(R.id.tvBusArrivalNow);
-            busArrivalNext = (Button) v.findViewById(R.id.tvBusArrivalNext);
+            busArrivalNow = (Button) v.findViewById(R.id.btnBusArrivalNow);
+            busArrivalNext = (Button) v.findViewById(R.id.btnBusArrivalNext);
+            busArrivalSub = (Button) v.findViewById(R.id.btnBusArrivalSub);
             operatingStatus = (TextView) v.findViewById(R.id.tvBusStatus);
             wheelchairNow = (ImageView) v.findViewById(R.id.ivWheelchairNow);
             wheelchairNext = (ImageView) v.findViewById(R.id.ivWheelchairNext);
+            wheelchairSub = (ImageView) v.findViewById(R.id.ivWheelchairSub);
             wheelchairNow.setVisibility(View.INVISIBLE);
             wheelchairNext.setVisibility(View.INVISIBLE);
+            wheelchairSub.setVisibility(View.INVISIBLE);
             v.setOnLongClickListener(this);
             busArrivalNext.setOnLongClickListener(this);
             busArrivalNow.setOnLongClickListener(this);
+            busArrivalSub.setOnLongClickListener(this);
         }
 
         @Override

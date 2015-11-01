@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
@@ -135,6 +134,36 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 holder.wheelchairNext.setVisibility(View.VISIBLE);
             holder.busArrivalNext.setOnClickListener(new ArrivalButton(i.getNextBus().getLongitude(), i.getNextBus().getLatitude()));
         }
+
+        //3rd bus (Subsequent Bus)
+        if (i.getSubsequentBus() == null){
+            comingSoon(holder.busArrivalSub);
+            return;
+        }
+        if (i.getSubsequentBus().getEstimatedArrival() == null) notArriving(holder.busArrivalSub);
+        else {
+            long est = StaticVariables.parseLTAEstimateArrival(i.getSubsequentBus().getEstimatedArrival());
+            String arrivalStatusSub;
+            if (est <= 0)
+                arrivalStatusSub = "Arr";
+            else if (est == 1)
+                arrivalStatusSub = est + " min";
+            else
+                arrivalStatusSub = est + " mins";
+            if (!i.getSubsequentBus().isMonitored()) arrivalStatusSub += "*";
+            holder.busArrivalSub.setText(arrivalStatusSub);
+            applyColorLoad(holder.busArrivalSub, i.getSubsequentBus());
+            holder.wheelchairSub.setVisibility(View.INVISIBLE);
+            if (i.getSubsequentBus().isWheelChairAccessible())
+                holder.wheelchairSub.setVisibility(View.VISIBLE);
+            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i.getSubsequentBus().getLongitude(), i.getSubsequentBus().getLatitude()));
+        }
+
+    }
+
+    private void comingSoon(TextView view){
+        view.setText("Soon");
+        view.setTextColor(Color.GRAY);
     }
 
     private void processing(TextView view){
@@ -165,25 +194,29 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     public class FavouritesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         protected TextView busOperator, busNumber, operatingStatus, stopName;
-        protected Button busArrivalNow, busArrivalNext;
-        protected ImageView wheelchairNow, wheelchairNext;
+        protected Button busArrivalNow, busArrivalNext, busArrivalSub;
+        protected ImageView wheelchairNow, wheelchairNext, wheelchairSub;
 
         public FavouritesViewHolder(View v){
             super(v);
             busOperator = (TextView) v.findViewById(R.id.tvBusOperator);
             busNumber = (TextView) v.findViewById(R.id.tvBusService);
-            busArrivalNow = (Button) v.findViewById(R.id.tvBusArrivalNow);
-            busArrivalNext = (Button) v.findViewById(R.id.tvBusArrivalNext);
+            busArrivalNow = (Button) v.findViewById(R.id.btnBusArrivalNow);
+            busArrivalNext = (Button) v.findViewById(R.id.btnBusArrivalNext);
+            busArrivalSub = (Button) v.findViewById(R.id.btnBusArrivalSub);
             operatingStatus = (TextView) v.findViewById(R.id.tvBusStatus);
             stopName = (TextView) v.findViewById(R.id.tvBusStopName);
             wheelchairNow = (ImageView) v.findViewById(R.id.ivWheelchairNow);
             wheelchairNext = (ImageView) v.findViewById(R.id.ivWheelchairNext);
+            wheelchairSub = (ImageView) v.findViewById(R.id.ivWheelchairSub);
             wheelchairNow.setVisibility(View.INVISIBLE);
             wheelchairNext.setVisibility(View.INVISIBLE);
+            wheelchairSub.setVisibility(View.INVISIBLE);
             v.setOnLongClickListener(this);
             v.setOnClickListener(this);
             busArrivalNext.setOnLongClickListener(this);
             busArrivalNow.setOnLongClickListener(this);
+            busArrivalSub.setOnLongClickListener(this);
         }
 
         @Override

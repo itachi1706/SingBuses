@@ -24,8 +24,8 @@
         android:background="@android:color/transparent"
         android:text="@string/label_time_placeholder"
         android:gravity="center"
-        android:id="@+id/tvBusArrivalNext"
-        android:layout_alignTop="@+id/tvBusArrivalNow"
+        android:id="@+id/btnBusArrivalSub"
+        android:layout_alignTop="@+id/btnBusArrivalNext"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -37,9 +37,10 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/label_time_placeholder"
         android:gravity="center"
-        android:id="@+id/tvBusArrivalNow"
-        android:layout_below="@+id/tvBusOperator"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/btnBusArrivalNext"
+        android:layout_below="@+id/tvBusStatus"
+        android:layout_toLeftOf="@+id/btnBusArrivalSub"
+        android:layout_toStartOf="@+id/btnBusArrivalSub" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -58,8 +59,8 @@
         android:text="@string/label_bus_status_placeholder"
         android:id="@+id/tvBusStatus"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/tvBusArrivalNext"
-        android:layout_alignEnd="@+id/tvBusArrivalNext" />
+        android:layout_alignRight="@+id/btnBusArrivalSub"
+        android:layout_alignEnd="@+id/btnBusArrivalSub" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -77,20 +78,43 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ivWheelchairNow"
+        android:id="@+id/ivWheelchairNext"
         android:src="@drawable/ic_wheelchair_accessibility_white_18dp"
         android:layout_centerVertical="true"
-        android:layout_alignRight="@+id/tvBusArrivalNow"
-        android:layout_alignEnd="@+id/tvBusArrivalNow"
+        android:layout_alignRight="@+id/btnBusArrivalNext"
+        android:layout_alignEnd="@+id/btnBusArrivalNext"
         android:contentDescription="@string/content_description_wheelchair" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ivWheelchairNext"
+        android:id="@+id/ivWheelchairSub"
         android:src="@drawable/ic_wheelchair_accessibility_white_18dp"
-        android:layout_alignTop="@+id/ivWheelchairNow"
+        android:layout_alignTop="@+id/ivWheelchairNext"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:contentDescription="@string/content_description_wheelchair" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/label_time_placeholder"
+        android:gravity="center"
+        android:id="@+id/btnBusArrivalNow"
+        android:layout_alignTop="@+id/btnBusArrivalNext"
+        android:layout_toLeftOf="@+id/btnBusArrivalNext"
+        android:layout_toStartOf="@+id/btnBusArrivalNext" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivWheelchairNow"
+        android:src="@drawable/ic_wheelchair_accessibility_white_18dp"
+        android:contentDescription="@string/content_description_wheelchair"
+        android:layout_alignTop="@+id/ivWheelchairNext"
+        android:layout_toLeftOf="@+id/btnBusArrivalNext"
+        android:layout_toStartOf="@+id/btnBusArrivalNext" />
 </RelativeLayout>
