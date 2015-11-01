@@ -49,7 +49,7 @@
     "shortName": "SingBuses",
     "uuid": "11198668-4e27-4e94-b51c-a27a1ea5cd82",
     "versionCode": 1,
-    "versionLabel": "1.0",
+    "versionLabel": "1.1",
     "watchapp": {
         "watchface": false
     }

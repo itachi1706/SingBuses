@@ -141,7 +141,7 @@ static GBitmap *bus_available;
 static GBitmap *bus_limited;
 static GBitmap *bus_full;
 
-static int current = -1;
+static int current = -1, max = -1;
 static bool debugMode = false;
 
 enum {
@@ -253,7 +253,7 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
   static char roadName_buffer[60];
   static char roadCode_buffer[6];
   static char busService_buffer[5];
-  static int max, loadC, loadN;
+  static int loadC, loadN;
   static char arrC_data_buffer[10];
   static char arrN_data_buffer[10];
   static bool pgLoad = false, pgMaxLoad = false;
@@ -324,8 +324,10 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
   //Handle action bar icons hiding
   if (current == 1){
     action_bar_layer_clear_icon(actionbar_layer, BUTTON_ID_UP);
+    action_bar_layer_set_icon(actionbar_layer, BUTTON_ID_DOWN, s_res_actionicon_next_white);
   } else if (current == max) {
     action_bar_layer_clear_icon(actionbar_layer, BUTTON_ID_DOWN);
+    action_bar_layer_set_icon(actionbar_layer, BUTTON_ID_UP, s_res_actionicon_previous_white);
   }
 }
 
@@ -346,6 +348,18 @@ void send_int(uint8_t key, uint8_t cmd)
 
 // Next or previous
 void go_next_or_prev(uint8_t key, uint8_t cmd){
+  if (current == -1 || max == -1){
+    //Not all data has been received, unable to determine if you can go next/prev
+    return;
+  }
+  if (current == 1 && cmd == BUTTON_PREVIOUS){
+    //First already, cannot prev, exit
+    return;
+  }
+  if (current == max && cmd == BUTTON_NEXT){
+    //Last in list, exit
+    return;
+  }
   resetData();
   if (debugMode)
     APP_LOG(APP_LOG_LEVEL_INFO, "Sending data to phone");
