@@ -94,7 +94,6 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             holder.operatingStatus.setTextColor(Color.GREEN);
         }
 
-        //TODO: Implement 3rd arrival status
         //Current Bus
         if (i.getCurrentBus().getEstimatedArrival() == null) notArriving(holder.busArrivalNow);
         else {

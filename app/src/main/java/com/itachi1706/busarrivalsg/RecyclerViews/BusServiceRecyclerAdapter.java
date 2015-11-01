@@ -71,7 +71,6 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             case "SBST": holder.busOperator.setTextColor(Color.MAGENTA); break;
         }
         holder.busNumber.setText(i.getServiceNo());
-        //TODO: Implement 3rd arrival status
         if (i.getStatus().equalsIgnoreCase("not")){
             notArriving(holder.busArrivalNow);
             notArriving(holder.busArrivalNext);
