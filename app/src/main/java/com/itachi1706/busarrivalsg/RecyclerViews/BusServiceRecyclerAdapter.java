@@ -2,6 +2,7 @@ package com.itachi1706.busarrivalsg.RecyclerViews;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObjectEstimate;
@@ -182,9 +184,9 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
 
     public class ArrivalButton implements View.OnClickListener{
 
-        private float longitude = -1000, latitude = -1000;
+        private double longitude = -1000, latitude = -1000;
 
-        public ArrivalButton(float longitude, float latitude){
+        public ArrivalButton(double longitude, double latitude){
             this.longitude = longitude;
             this.latitude = latitude;
         }
@@ -202,9 +204,13 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_bus_location_coming_soon)
                         .setMessage(R.string.dialog_message_bus_location_coming_soon)
                         .setPositiveButton(R.string.dialog_action_positive_close, null).show();
+                return;
             }
 
-            //TODO: Google Maps Dialog Box
+            Intent mapsIntent = new Intent(activity, BusLocationMapsActivity.class);
+            mapsIntent.putExtra("lat", latitude);
+            mapsIntent.putExtra("lng", longitude);
+            activity.startActivity(mapsIntent);
         }
     }
 }

@@ -8,7 +8,7 @@ public class BusArrivalArrayObjectEstimate {
     private String EstimatedArrival, Load, Feature;
 
     //Going to be implemented from 12 November
-    private float Latitude = -11, Longitude = -11;
+    private double Latitude = -11, Longitude = -11;
     private int VisitNumber;
     private String Monitored;
 
@@ -24,7 +24,7 @@ public class BusArrivalArrayObjectEstimate {
         return EstimatedArrival;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return Latitude;
     }
 
@@ -32,7 +32,7 @@ public class BusArrivalArrayObjectEstimate {
         return Latitude != 0;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return Longitude;
     }
 

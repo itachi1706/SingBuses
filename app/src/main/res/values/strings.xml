@@ -132,4 +132,5 @@
     <string name="dialog_message_bus_location_unavailable">Location of this bus is not available</string>
     <string name="dialog_title_bus_location_coming_soon">Coming Soon</string>
     <string name="dialog_message_bus_location_coming_soon">This feature is coming soon!</string>
+    <string name="title_activity_bus_location_maps">Map</string>
 </resources>

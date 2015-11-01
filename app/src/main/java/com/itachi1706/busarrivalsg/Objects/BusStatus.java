@@ -11,7 +11,7 @@ public class BusStatus {
     private boolean isWheelChairAccessible;
 
     //Going to be implemented from 12 November
-    private long latitude = -11, longitude = -11;
+    private double latitude = -11, longitude = -11;
     private int visitNumber;
     private boolean isMonitored = true;
 
@@ -55,19 +55,19 @@ public class BusStatus {
         }
     }
 
-    public long getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(long latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public long getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(long longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 

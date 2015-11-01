@@ -28,9 +28,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4a76e5bed29f3c6bc0d8e90c16212c07cb8efbc0" />
+
         <activity
             android:name=".ListAllBusStopsActivity"
             android:label="@string/title_activity_list_all_bus_stops" >
@@ -57,11 +59,27 @@
         <receiver
             android:name=".CompleteBootReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".BusLocationMapsActivity"
+            android:label="@string/title_activity_bus_location_maps" >
+        </activity>
     </application>
 
 </manifest>

@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Objects.BusStatus;
@@ -232,9 +233,9 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 
     public class ArrivalButton implements View.OnClickListener{
 
-        private float longitude = -1000, latitude = -1000;
+        private double longitude = -1000, latitude = -1000;
 
-        public ArrivalButton(float longitude, float latitude){
+        public ArrivalButton(double longitude, double latitude){
             this.longitude = longitude;
             this.latitude = latitude;
         }
@@ -252,9 +253,13 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_bus_location_coming_soon)
                         .setMessage(R.string.dialog_message_bus_location_coming_soon)
                         .setPositiveButton(R.string.dialog_action_positive_close, null).show();
+                return;
             }
 
-            //TODO: Google Maps Dialog Box
+            Intent mapsIntent = new Intent(activity, BusLocationMapsActivity.class);
+            mapsIntent.putExtra("lat", latitude);
+            mapsIntent.putExtra("lng", longitude);
+            activity.startActivity(mapsIntent);
         }
     }
 }
