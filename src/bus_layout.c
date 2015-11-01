@@ -11,7 +11,6 @@ static GBitmap *s_res_bus_nodata;
 static GBitmap *s_res_actionicon_previous_white;
 static GBitmap *s_res_actionicon_refresh_white;
 static GBitmap *s_res_actionicon_next_white;
-static GBitmap *s_res_bus_wheelchair_accessible;
 static TextLayer *textlayer_bus_no;
 static TextLayer *textlayer_busstop_name;
 static TextLayer *textlayer_busstop_code;
@@ -40,7 +39,6 @@ static void initialise_ui(void) {
   s_res_actionicon_previous_white = gbitmap_create_with_resource(RESOURCE_ID_ACTIONICON_PREVIOUS_WHITE);
   s_res_actionicon_refresh_white = gbitmap_create_with_resource(RESOURCE_ID_ACTIONICON_REFRESH_WHITE);
   s_res_actionicon_next_white = gbitmap_create_with_resource(RESOURCE_ID_ACTIONICON_NEXT_WHITE);
-  s_res_bus_wheelchair_accessible = gbitmap_create_with_resource(RESOURCE_ID_BUS_WHEELCHAIR_ACCESSIBLE);
   // textlayer_bus_no
   textlayer_bus_no = text_layer_create(GRect(3, 1, 51, 26));
   text_layer_set_background_color(textlayer_bus_no, GColorClear);
@@ -66,7 +64,7 @@ static void initialise_ui(void) {
   // textlayer_arrive_now
   textlayer_arrive_now = text_layer_create(GRect(23, 49, 79, 31));
   text_layer_set_background_color(textlayer_arrive_now, GColorClear);
-  text_layer_set_text(textlayer_arrive_now, "Arrr");
+  text_layer_set_text(textlayer_arrive_now, "...");
   text_layer_set_text_alignment(textlayer_arrive_now, GTextAlignmentCenter);
   text_layer_set_font(textlayer_arrive_now, s_res_gothic_28_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_arrive_now);
@@ -74,7 +72,7 @@ static void initialise_ui(void) {
   // textlayer_arrive_next
   textlayer_arrive_next = text_layer_create(GRect(28, 104, 68, 24));
   text_layer_set_background_color(textlayer_arrive_next, GColorClear);
-  text_layer_set_text(textlayer_arrive_next, "ARrr");
+  text_layer_set_text(textlayer_arrive_next, "...");
   text_layer_set_text_alignment(textlayer_arrive_next, GTextAlignmentCenter);
   text_layer_set_font(textlayer_arrive_next, s_res_gothic_18_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_arrive_next);
@@ -121,12 +119,10 @@ static void initialise_ui(void) {
   
   // bitmap_wab_now
   bitmap_wab_now = bitmap_layer_create(GRect(94, 56, 29, 29));
-  bitmap_layer_set_bitmap(bitmap_wab_now, s_res_bus_wheelchair_accessible);
   layer_add_child(window_get_root_layer(s_window), (Layer *)bitmap_wab_now);
   
   // bitmap_wab_next
   bitmap_wab_next = bitmap_layer_create(GRect(94, 105, 25, 27));
-  bitmap_layer_set_bitmap(bitmap_wab_next, s_res_bus_wheelchair_accessible);
   layer_add_child(window_get_root_layer(s_window), (Layer *)bitmap_wab_next);
 }
 
@@ -149,7 +145,6 @@ static void destroy_ui(void) {
   gbitmap_destroy(s_res_actionicon_previous_white);
   gbitmap_destroy(s_res_actionicon_refresh_white);
   gbitmap_destroy(s_res_actionicon_next_white);
-  gbitmap_destroy(s_res_bus_wheelchair_accessible);
 }
 // END AUTO-GENERATED UI CODE
 
@@ -157,6 +152,7 @@ static void destroy_ui(void) {
 static GBitmap *bus_available;
 static GBitmap *bus_limited;
 static GBitmap *bus_full;
+static GBitmap *bus_wheelchair_accessible;
 
 static short current = -1, max = -1;
 static bool debugMode = false;
@@ -220,6 +216,8 @@ void resetData(){
   text_layer_set_text(textlayer_debug, "");
   action_bar_layer_set_icon(actionbar_layer, BUTTON_ID_UP, s_res_actionicon_previous_white);
   action_bar_layer_set_icon(actionbar_layer, BUTTON_ID_DOWN, s_res_actionicon_next_white);
+  bitmap_layer_set_bitmap(bitmap_wab_now, NULL);
+  bitmap_layer_set_bitmap(bitmap_wab_next, NULL);
 }
 
 /*            APP MESSAGE             */
@@ -325,15 +323,22 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
         updateLoad(loadN, 2);
         break;
       
+      //s_res_bus_wheelchair_accessible
+      //bitmap_wab_now
+      //bitmap_wab_next
       case MESSAGE_WAB_CURRENT: 
         wabC = t->value->int8;
         if (debugMode)
           APP_LOG(APP_LOG_LEVEL_INFO, "Current Has WAB: %i", wabC);
+        if (wabC == 1)
+          bitmap_layer_set_bitmap(bitmap_wab_now, bus_wheelchair_accessible);
         break;
       case MESSAGE_WAB_NEXT: 
         wabN = t->value->int8;
         if (debugMode)
           APP_LOG(APP_LOG_LEVEL_INFO, "Next Has WAB: %i", wabN);  
+        if (wabN == 1)
+          bitmap_layer_set_bitmap(bitmap_wab_next, bus_wheelchair_accessible);
         break;
       
       //No Favourites? Tell them too
@@ -445,6 +450,7 @@ static void init_bus_indicators(void){
   bus_available = gbitmap_create_with_resource(RESOURCE_ID_BUS_SEATSAVAIL);
   bus_limited = gbitmap_create_with_resource(RESOURCE_ID_BUS_SEATSLIMITED);
   bus_full = gbitmap_create_with_resource(RESOURCE_ID_BUS_SEATSNONE);
+  bus_wheelchair_accessible = gbitmap_create_with_resource(RESOURCE_ID_BUS_WHEELCHAIR_ACCESSIBLE);
 }
 
 static void handle_window_unload(Window* window) {
@@ -452,6 +458,7 @@ static void handle_window_unload(Window* window) {
   gbitmap_destroy(bus_full);
   gbitmap_destroy(bus_limited);
   gbitmap_destroy(bus_available);
+  gbitmap_destroy(bus_wheelchair_accessible);
 }
 
 void show_bus_layout(void) {
