@@ -19,12 +19,13 @@ def isTravis = System.getenv("TRAVIS")
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "com.itachi1706.busarrivalsg"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 127
+        versionCode 128
         versionName "1.2.1"
     }
     compileOptions {
@@ -59,6 +60,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.0'
     compile 'com.getpebble:pebblekit:3.0.0'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.google.android.gms:play-services:8.1.0'
-    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.google.android.gms:play-services-maps:8.1.0'
 }
