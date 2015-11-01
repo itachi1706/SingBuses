@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
@@ -204,6 +206,13 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_bus_location_coming_soon)
                         .setMessage(R.string.dialog_message_bus_location_coming_soon)
                         .setPositiveButton(R.string.dialog_action_positive_close, null).show();
+                return;
+            }
+
+            //Check if Google Play Services is enabled
+            int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
+            if (code != ConnectionResult.SUCCESS){
+                GoogleApiAvailability.getInstance().getErrorDialog(activity, code, 0);
                 return;
             }
 
