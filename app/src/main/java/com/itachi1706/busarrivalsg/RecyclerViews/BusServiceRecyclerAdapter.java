@@ -86,9 +86,9 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             if (est <= 0)
                 arrivalStatusNow = "Arr";
             else if (est == 1)
-                arrivalStatusNow = est + " min";
+                arrivalStatusNow = est + "";
             else
-                arrivalStatusNow = est + " mins";
+                arrivalStatusNow = est + "";
             if (!i.getNextBus().getMonitoredStatus()) arrivalStatusNow += "*";
             holder.busArrivalNow.setText(arrivalStatusNow);
             applyColorLoad(holder.busArrivalNow, i.getNextBus());
@@ -107,9 +107,9 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             if (est <= 0)
                 arrivalStatusNext = "Arr";
             else if (est == 1)
-                arrivalStatusNext = est + " min";
+                arrivalStatusNext = est + "";
             else
-                arrivalStatusNext = est + " mins";
+                arrivalStatusNext = est + "";
             if (!i.getSubsequentBus().getMonitoredStatus()) arrivalStatusNext += "*";
             holder.busArrivalNext.setText(arrivalStatusNext);
             applyColorLoad(holder.busArrivalNext, i.getSubsequentBus());
@@ -131,9 +131,9 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             if (est <= 0)
                 arrivalStatusSub = "Arr";
             else if (est == 1)
-                arrivalStatusSub = est + " min";
+                arrivalStatusSub = est + "";
             else
-                arrivalStatusSub = est + " mins";
+                arrivalStatusSub = est + "";
             if (!i.getSubsequentBus3().getMonitoredStatus()) arrivalStatusSub += "*";
             holder.busArrivalSub.setText(arrivalStatusSub);
             applyColorLoad(holder.busArrivalSub, i.getSubsequentBus3());

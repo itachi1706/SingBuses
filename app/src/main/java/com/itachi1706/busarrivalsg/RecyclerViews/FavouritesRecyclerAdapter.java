@@ -102,9 +102,9 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             if (est <= 0)
                 arrivalStatusNow = "Arr";
             else if (est == 1)
-                arrivalStatusNow = est + " min";
+                arrivalStatusNow = est + "";
             else
-                arrivalStatusNow = est + " mins";
+                arrivalStatusNow = est + "";
             if (!i.getCurrentBus().isMonitored()) arrivalStatusNow += "*";
             holder.busArrivalNow.setText(arrivalStatusNow);
             applyColorLoad(holder.busArrivalNow, i.getCurrentBus());
@@ -122,9 +122,9 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             if (est <= 0)
                 arrivalStatusNext = "Arr";
             else if (est == 1)
-                arrivalStatusNext = est + " min";
+                arrivalStatusNext = est + "";
             else
-                arrivalStatusNext = est + " mins";
+                arrivalStatusNext = est + "";
             if (!i.getNextBus().isMonitored()) arrivalStatusNext += "*";
             holder.busArrivalNext.setText(arrivalStatusNext);
             applyColorLoad(holder.busArrivalNext, i.getNextBus());
@@ -146,9 +146,9 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             if (est <= 0)
                 arrivalStatusSub = "Arr";
             else if (est == 1)
-                arrivalStatusSub = est + " min";
+                arrivalStatusSub = est + "";
             else
-                arrivalStatusSub = est + " mins";
+                arrivalStatusSub = est + "";
             if (!i.getSubsequentBus().isMonitored()) arrivalStatusSub += "*";
             holder.busArrivalSub.setText(arrivalStatusSub);
             applyColorLoad(holder.busArrivalSub, i.getSubsequentBus());
