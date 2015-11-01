@@ -17,10 +17,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <TextView
+    <Button
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:background="@android:color/transparent"
         android:text="20 Min"
         android:gravity="center"
         android:id="@+id/tvBusArrivalNext"
@@ -28,9 +29,11 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <TextView
+    <Button
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        style="?android:attr/buttonStyleSmall"
+        android:background="@android:color/transparent"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="20 Min"
         android:gravity="center"

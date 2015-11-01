@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -150,18 +151,21 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 
     public class FavouritesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        protected TextView busOperator, busNumber, busArrivalNow, busArrivalNext, operatingStatus, stopName;
+        protected TextView busOperator, busNumber, operatingStatus, stopName;
+        protected Button busArrivalNow, busArrivalNext;
 
         public FavouritesViewHolder(View v){
             super(v);
             busOperator = (TextView) v.findViewById(R.id.tvBusOperator);
             busNumber = (TextView) v.findViewById(R.id.tvBusService);
-            busArrivalNow = (TextView) v.findViewById(R.id.tvBusArrivalNow);
-            busArrivalNext = (TextView) v.findViewById(R.id.tvBusArrivalNext);
+            busArrivalNow = (Button) v.findViewById(R.id.tvBusArrivalNow);
+            busArrivalNext = (Button) v.findViewById(R.id.tvBusArrivalNext);
             operatingStatus = (TextView) v.findViewById(R.id.tvBusStatus);
             stopName = (TextView) v.findViewById(R.id.tvBusStopName);
             v.setOnLongClickListener(this);
             v.setOnClickListener(this);
+            busArrivalNext.setOnLongClickListener(this);
+            busArrivalNow.setOnLongClickListener(this);
         }
 
         @Override

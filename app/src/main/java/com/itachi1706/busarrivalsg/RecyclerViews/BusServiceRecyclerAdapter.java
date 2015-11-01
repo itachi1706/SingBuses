@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
@@ -127,16 +128,19 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
 
     public class BusServiceViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
-        protected TextView busOperator, busNumber, busArrivalNow, busArrivalNext, operatingStatus;
+        protected TextView busOperator, busNumber, operatingStatus;
+        protected Button busArrivalNow, busArrivalNext;
 
         public BusServiceViewHolder(View v){
             super(v);
             busOperator = (TextView) v.findViewById(R.id.tvBusOperator);
             busNumber = (TextView) v.findViewById(R.id.tvBusService);
-            busArrivalNow = (TextView) v.findViewById(R.id.tvBusArrivalNow);
-            busArrivalNext = (TextView) v.findViewById(R.id.tvBusArrivalNext);
+            busArrivalNow = (Button) v.findViewById(R.id.tvBusArrivalNow);
+            busArrivalNext = (Button) v.findViewById(R.id.tvBusArrivalNext);
             operatingStatus = (TextView) v.findViewById(R.id.tvBusStatus);
             v.setOnLongClickListener(this);
+            busArrivalNext.setOnLongClickListener(this);
+            busArrivalNow.setOnLongClickListener(this);
         }
 
         @Override
