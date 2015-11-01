@@ -4,6 +4,6 @@
     tools:context="com.itachi1706.busarrivalsg.BusServicesAtStop">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_refresh" android:title="Refresh"
-        android:orderInCategory="1" android:icon="@drawable/refresh_24" app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_refresh" android:title="@string/action_refresh"
+        android:orderInCategory="1" android:icon="@drawable/ic_refresh_white_24dp" app:showAsAction="ifRoom" />
 </menu>

@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainMenu">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/view_all_stops" android:title="View All Bus Stops"
+    <item android:id="@+id/view_all_stops" android:title="@string/action_view_all_bus_stops"
         android:orderInCategory="2" app:showAsAction="never" />
-    <item android:id="@+id/action_refresh" android:title="Refresh Favourites"
-        android:orderInCategory="1" android:icon="@drawable/refresh_24" app:showAsAction="ifRoom" />
-    <item android:id="@+id/action_install_companion" android:title="Install Companion Watchapp"
+    <item android:id="@+id/action_refresh" android:title="@string/action_refresh_fav"
+        android:orderInCategory="1" android:icon="@drawable/ic_refresh_white_24dp" app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_install_companion" android:title="@string/action_install_pebble_app"
         android:orderInCategory="3" app:showAsAction="never" />
 </menu>

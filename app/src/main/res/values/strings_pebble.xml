@@ -6,4 +6,5 @@
     <string name="pebble_button_next">Going Next</string>
     <string name="pebble_button_previous">Going Previous</string>
     <string name="pebble_disconnected">Pebble not connected!</string>
+    <string name="action_install_pebble_app">Install Companion Watchapp</string>
 </resources>
