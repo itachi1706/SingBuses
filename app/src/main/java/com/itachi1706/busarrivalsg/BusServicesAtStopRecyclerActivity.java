@@ -228,6 +228,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
 
         ArrayList<BusArrivalArrayObject> items = new ArrayList<>();
         BusArrivalMain mainArr = gson.fromJson(json, BusArrivalMain.class);
+        if (mainArr.getServices() == null) return;
         BusArrivalArrayObject[] array = mainArr.getServices();
         String stopID = mainArr.getBusStopID();
         if (swipeToRefresh.isRefreshing())
