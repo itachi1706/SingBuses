@@ -11,6 +11,7 @@ static GBitmap *s_res_bus_nodata;
 static GBitmap *s_res_actionicon_previous_white;
 static GBitmap *s_res_actionicon_refresh_white;
 static GBitmap *s_res_actionicon_next_white;
+static GBitmap *s_res_bus_wheelchair_accessible;
 static TextLayer *textlayer_bus_no;
 static TextLayer *textlayer_busstop_name;
 static TextLayer *textlayer_busstop_code;
@@ -22,6 +23,8 @@ static BitmapLayer *bitmaplayer_next;
 static TextLayer *textlayer_debug;
 static ActionBarLayer *actionbar_layer;
 static TextLayer *textlayer_pages;
+static BitmapLayer *bitmap_wab_now;
+static BitmapLayer *bitmap_wab_next;
 
 static void initialise_ui(void) {
   s_window = window_create();
@@ -37,6 +40,7 @@ static void initialise_ui(void) {
   s_res_actionicon_previous_white = gbitmap_create_with_resource(RESOURCE_ID_ACTIONICON_PREVIOUS_WHITE);
   s_res_actionicon_refresh_white = gbitmap_create_with_resource(RESOURCE_ID_ACTIONICON_REFRESH_WHITE);
   s_res_actionicon_next_white = gbitmap_create_with_resource(RESOURCE_ID_ACTIONICON_NEXT_WHITE);
+  s_res_bus_wheelchair_accessible = gbitmap_create_with_resource(RESOURCE_ID_BUS_WHEELCHAIR_ACCESSIBLE);
   // textlayer_bus_no
   textlayer_bus_no = text_layer_create(GRect(3, 1, 51, 26));
   text_layer_set_background_color(textlayer_bus_no, GColorClear);
@@ -62,7 +66,7 @@ static void initialise_ui(void) {
   // textlayer_arrive_now
   textlayer_arrive_now = text_layer_create(GRect(23, 49, 79, 31));
   text_layer_set_background_color(textlayer_arrive_now, GColorClear);
-  text_layer_set_text(textlayer_arrive_now, "...");
+  text_layer_set_text(textlayer_arrive_now, "Arrr");
   text_layer_set_text_alignment(textlayer_arrive_now, GTextAlignmentCenter);
   text_layer_set_font(textlayer_arrive_now, s_res_gothic_28_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_arrive_now);
@@ -70,7 +74,7 @@ static void initialise_ui(void) {
   // textlayer_arrive_next
   textlayer_arrive_next = text_layer_create(GRect(28, 104, 68, 24));
   text_layer_set_background_color(textlayer_arrive_next, GColorClear);
-  text_layer_set_text(textlayer_arrive_next, "...");
+  text_layer_set_text(textlayer_arrive_next, "ARrr");
   text_layer_set_text_alignment(textlayer_arrive_next, GTextAlignmentCenter);
   text_layer_set_font(textlayer_arrive_next, s_res_gothic_18_bold);
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_arrive_next);
@@ -114,6 +118,16 @@ static void initialise_ui(void) {
   text_layer_set_text_alignment(textlayer_pages, GTextAlignmentRight);
   text_layer_set_font(textlayer_pages, s_res_gothic_14);
   layer_add_child(window_get_root_layer(s_window), (Layer *)textlayer_pages);
+  
+  // bitmap_wab_now
+  bitmap_wab_now = bitmap_layer_create(GRect(94, 56, 29, 29));
+  bitmap_layer_set_bitmap(bitmap_wab_now, s_res_bus_wheelchair_accessible);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)bitmap_wab_now);
+  
+  // bitmap_wab_next
+  bitmap_wab_next = bitmap_layer_create(GRect(94, 105, 25, 27));
+  bitmap_layer_set_bitmap(bitmap_wab_next, s_res_bus_wheelchair_accessible);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)bitmap_wab_next);
 }
 
 static void destroy_ui(void) {
@@ -129,10 +143,13 @@ static void destroy_ui(void) {
   text_layer_destroy(textlayer_debug);
   action_bar_layer_destroy(actionbar_layer);
   text_layer_destroy(textlayer_pages);
+  bitmap_layer_destroy(bitmap_wab_now);
+  bitmap_layer_destroy(bitmap_wab_next);
   gbitmap_destroy(s_res_bus_nodata);
   gbitmap_destroy(s_res_actionicon_previous_white);
   gbitmap_destroy(s_res_actionicon_refresh_white);
   gbitmap_destroy(s_res_actionicon_next_white);
+  gbitmap_destroy(s_res_bus_wheelchair_accessible);
 }
 // END AUTO-GENERATED UI CODE
 
@@ -310,12 +327,12 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
       
       case MESSAGE_WAB_CURRENT: 
         wabC = t->value->int8;
-        if (debug)
+        if (debugMode)
           APP_LOG(APP_LOG_LEVEL_INFO, "Current Has WAB: %i", wabC);
         break;
       case MESSAGE_WAB_NEXT: 
         wabN = t->value->int8;
-        if (debug)
+        if (debugMode)
           APP_LOG(APP_LOG_LEVEL_INFO, "Next Has WAB: %i", wabN);  
         break;
       

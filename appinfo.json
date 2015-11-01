@@ -9,6 +9,11 @@
     "resources": {
         "media": [
             {
+                "file": "images/ic_wheelchair_accessibility_black_18dp.png",
+                "name": "BUS_WHEELCHAIR_ACCESSIBLE",
+                "type": "png"
+            },
+            {
                 "file": "images/bus_no_seats.png",
                 "name": "BUS_SEATSNONE",
                 "type": "png"
