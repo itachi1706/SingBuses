@@ -214,8 +214,6 @@ void resetData(){
   bitmap_layer_set_bitmap(bitmaplayer_current, s_res_bus_nodata);
   bitmap_layer_set_bitmap(bitmaplayer_next, s_res_bus_nodata);
   text_layer_set_text(textlayer_debug, "");
-  action_bar_layer_set_icon(actionbar_layer, BUTTON_ID_UP, s_res_actionicon_previous_white);
-  action_bar_layer_set_icon(actionbar_layer, BUTTON_ID_DOWN, s_res_actionicon_next_white);
   bitmap_layer_set_bitmap(bitmap_wab_now, NULL);
   bitmap_layer_set_bitmap(bitmap_wab_next, NULL);
 }
@@ -356,15 +354,6 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
 
     // Get next pair, if any
     t = dict_read_next(iter);
-  }
-  
-  //Handle action bar icons hiding
-  if (current == 1){
-    action_bar_layer_clear_icon(actionbar_layer, BUTTON_ID_UP);
-    action_bar_layer_set_icon(actionbar_layer, BUTTON_ID_DOWN, s_res_actionicon_next_white);
-  } else if (current == max) {
-    action_bar_layer_clear_icon(actionbar_layer, BUTTON_ID_DOWN);
-    action_bar_layer_set_icon(actionbar_layer, BUTTON_ID_UP, s_res_actionicon_previous_white);
   }
 }
 
