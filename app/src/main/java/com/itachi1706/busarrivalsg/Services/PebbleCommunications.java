@@ -252,21 +252,21 @@ public class PebbleCommunications extends Service {
                 PebbleDictionary dict1 = new PebbleDictionary();
                 PebbleDictionary dict2 = new PebbleDictionary();
                 PebbleDictionary dict3 = new PebbleDictionary();
-                dict1.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
-                dict2.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 2);
-                dict3.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 3);
+                dict1.addInt16(PebbleEnum.MESSAGE_DATA_EVENT, (short) 1);
+                dict2.addInt16(PebbleEnum.MESSAGE_DATA_EVENT, (short) 2);
+                dict3.addInt16(PebbleEnum.MESSAGE_DATA_EVENT, (short) 3);
                 if (obj.getStopName() == null)
                     dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, "Unknown Stop");
                 else
                     dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, obj.getStopName().trim());
                 dict2.addString(PebbleEnum.MESSAGE_BUS_SERVICE, obj.getServiceNo().trim());
                 dict2.addString(PebbleEnum.MESSAGE_ROAD_CODE, obj.getStopID().trim());
-                dict2.addInt32(PebbleEnum.MESSAGE_MAX_FAV, StaticVariables.favouritesList.size());
-                dict2.addInt32(PebbleEnum.MESSAGE_CURRENT_FAV, page + 1);
+                dict2.addInt16(PebbleEnum.MESSAGE_MAX_FAV, (short) StaticVariables.favouritesList.size());
+                dict2.addInt16(PebbleEnum.MESSAGE_CURRENT_FAV, (short) (page + 1));
                 dict3.addString(PebbleEnum.ESTIMATE_ARR_CURRENT_DATA, currentEst.trim());
-                dict3.addInt32(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, obj.getCurrentBus().getLoad());
+                dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, (short) obj.getCurrentBus().getLoad());
                 dict3.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst.trim());
-                dict3.addInt32(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, obj.getNextBus().getLoad());
+                dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, (short) obj.getNextBus().getLoad());
                 PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, dict1, 1);
                 StaticVariables.dict1 = dict1;
                 StaticVariables.dict2 = dict2;
@@ -310,21 +310,21 @@ public class PebbleCommunications extends Service {
                 PebbleDictionary dict1 = new PebbleDictionary();
                 PebbleDictionary dict2 = new PebbleDictionary();
                 PebbleDictionary dict3 = new PebbleDictionary();
-                dict1.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 1);
-                dict2.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 2);
-                dict3.addInt32(PebbleEnum.MESSAGE_DATA_EVENT, 3);
+                dict1.addInt16(PebbleEnum.MESSAGE_DATA_EVENT, (short) 1);
+                dict2.addInt16(PebbleEnum.MESSAGE_DATA_EVENT, (short) 2);
+                dict3.addInt16(PebbleEnum.MESSAGE_DATA_EVENT, (short) 3);
                 if (obj.getStopName() == null)
                     dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, "Unknown Stop");
                 else
                     dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, obj.getStopName().trim());
                 dict2.addString(PebbleEnum.MESSAGE_BUS_SERVICE, obj.getServiceNo().trim());
                 dict2.addString(PebbleEnum.MESSAGE_ROAD_CODE, obj.getStopID().trim());
-                dict2.addInt32(PebbleEnum.MESSAGE_MAX_FAV, StaticVariables.favouritesList.size());
-                dict2.addInt32(PebbleEnum.MESSAGE_CURRENT_FAV, page - 1);
+                dict2.addInt16(PebbleEnum.MESSAGE_MAX_FAV, (short) StaticVariables.favouritesList.size());
+                dict2.addInt16(PebbleEnum.MESSAGE_CURRENT_FAV, (short) (page - 1));
                 dict3.addString(PebbleEnum.ESTIMATE_ARR_CURRENT_DATA, currentEst.trim());
-                dict3.addInt32(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, obj.getCurrentBus().getLoad());
+                dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, (short) obj.getCurrentBus().getLoad());
                 dict3.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst.trim());
-                dict3.addInt32(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, obj.getNextBus().getLoad());
+                dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, (short) obj.getNextBus().getLoad());
                 PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, dict1, 1);
                 StaticVariables.dict1 = dict1;
                 StaticVariables.dict2 = dict2;
