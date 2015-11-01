@@ -177,6 +177,10 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
             dict3.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst.trim());
             dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, (short) ob.getNextBus().getLoad());
 
+            //Send WAB status
+            dict2.addInt8(PebbleEnum.MESSAGE_WAB_CURRENT, StaticVariables.parseWABStatusToPebble(ob.getCurrentBus().isWheelChairAccessible()));
+            dict2.addInt8(PebbleEnum.MESSAGE_WAB_NEXT, StaticVariables.parseWABStatusToPebble(ob.getNextBus().isWheelChairAccessible()));
+
             Log.i("PebbleComm First Fav", "Sending to Pebble...");
             PebbleKit.sendDataToPebbleWithTransactionId(context, StaticVariables.PEBBLE_APP_UUID, dict1, 1);
             StaticVariables.dict1 = dict1;

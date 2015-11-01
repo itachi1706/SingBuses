@@ -21,6 +21,8 @@ public class PebbleEnum {
             MESSAGE_CURRENT_FAV = 12,
             MESSAGE_MAX_FAV = 13,
             ERROR_NO_DATA = 14,
+            MESSAGE_WAB_CURRENT = 15,
+            MESSAGE_WAB_NEXT = 16,
             LOAD_NO_DATA = 0,
             LOAD_SEATS_AVAILABLE = 1,
             LOAD_LIMITED_SEATING = 2,

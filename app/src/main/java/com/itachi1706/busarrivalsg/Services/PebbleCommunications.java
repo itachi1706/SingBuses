@@ -267,6 +267,11 @@ public class PebbleCommunications extends Service {
                 dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, (short) obj.getCurrentBus().getLoad());
                 dict3.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst.trim());
                 dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, (short) obj.getNextBus().getLoad());
+
+                //Send WAB status
+                dict2.addInt8(PebbleEnum.MESSAGE_WAB_CURRENT, StaticVariables.parseWABStatusToPebble(obj.getCurrentBus().isWheelChairAccessible()));
+                dict2.addInt8(PebbleEnum.MESSAGE_WAB_NEXT, StaticVariables.parseWABStatusToPebble(obj.getNextBus().isWheelChairAccessible()));
+
                 PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, dict1, 1);
                 StaticVariables.dict1 = dict1;
                 StaticVariables.dict2 = dict2;
@@ -325,6 +330,11 @@ public class PebbleCommunications extends Service {
                 dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, (short) obj.getCurrentBus().getLoad());
                 dict3.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst.trim());
                 dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, (short) obj.getNextBus().getLoad());
+
+                //Send WAB status
+                dict2.addInt8(PebbleEnum.MESSAGE_WAB_CURRENT, StaticVariables.parseWABStatusToPebble(obj.getCurrentBus().isWheelChairAccessible()));
+                dict2.addInt8(PebbleEnum.MESSAGE_WAB_NEXT, StaticVariables.parseWABStatusToPebble(obj.getNextBus().isWheelChairAccessible()));
+
                 PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, dict1, 1);
                 StaticVariables.dict1 = dict1;
                 StaticVariables.dict2 = dict2;

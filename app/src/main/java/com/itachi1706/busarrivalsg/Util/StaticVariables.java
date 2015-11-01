@@ -99,6 +99,11 @@ public class StaticVariables {
         return TimeUnit.MILLISECONDS.toMinutes(difference);
     }
 
+    public static byte parseWABStatusToPebble(boolean status){
+        if (status) return Byte.valueOf("1");
+        return Byte.valueOf("0");
+    }
+
 
     // HANDLER MESSAGES
     public static final int BUS_SERVICE_JSON_RETRIVED = 101;
