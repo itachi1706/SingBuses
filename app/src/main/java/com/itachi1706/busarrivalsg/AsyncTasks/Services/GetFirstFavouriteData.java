@@ -178,8 +178,7 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
             dict3.addInt32(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, ob.getNextBus().getLoad());
 
             Log.i("PebbleComm First Fav", "Sending to Pebble...");
-            PebbleKit.sendDataToPebble(context, StaticVariables.PEBBLE_APP_UUID, dict1);
-            StaticVariables.extraSend = 1;
+            PebbleKit.sendDataToPebbleWithTransactionId(context, StaticVariables.PEBBLE_APP_UUID, dict1, 1);
             StaticVariables.dict1 = dict1;
             StaticVariables.dict2 = dict2;
             StaticVariables.dict3 = dict3;
