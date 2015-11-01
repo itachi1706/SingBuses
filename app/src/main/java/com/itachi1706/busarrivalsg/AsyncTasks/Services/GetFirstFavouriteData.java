@@ -167,14 +167,14 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
             if (ob.getStopName() == null)
                 dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, "Unknown Stop");
             else
-                dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, ob.getStopName());
-            dict2.addString(PebbleEnum.MESSAGE_BUS_SERVICE, ob.getServiceNo());
-            dict2.addString(PebbleEnum.MESSAGE_ROAD_CODE, ob.getStopID());
+                dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, ob.getStopName().trim());
+            dict2.addString(PebbleEnum.MESSAGE_BUS_SERVICE, ob.getServiceNo().trim());
+            dict2.addString(PebbleEnum.MESSAGE_ROAD_CODE, ob.getStopID().trim());
             dict2.addInt32(PebbleEnum.MESSAGE_MAX_FAV, StaticVariables.favouritesList.size());
             dict2.addInt32(PebbleEnum.MESSAGE_CURRENT_FAV, 1);
-            dict3.addString(PebbleEnum.ESTIMATE_ARR_CURRENT_DATA, currentEst);
+            dict3.addString(PebbleEnum.ESTIMATE_ARR_CURRENT_DATA, currentEst.trim());
             dict3.addInt32(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, ob.getCurrentBus().getLoad());
-            dict3.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst);
+            dict3.addString(PebbleEnum.ESTIMATE_ARR_NEXT_DATA, nextEst.trim());
             dict3.addInt32(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, ob.getNextBus().getLoad());
 
             Log.i("PebbleComm First Fav", "Sending to Pebble...");
