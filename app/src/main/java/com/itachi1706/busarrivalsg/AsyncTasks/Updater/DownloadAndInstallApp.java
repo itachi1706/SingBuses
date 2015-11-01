@@ -97,7 +97,7 @@ public class DownloadAndInstallApp extends AsyncTask<String, Float, Boolean> {
             double downloadMB = (double) Math.round((progress[1] / 1024.0 / 1024.0 *100)) / 100;
             double downloadSizeMB = (double) Math.round((progress[2] / 1024.0 / 1024.0 *100)) / 100;
             notification.setProgress(100, Math.round(progress[0]), false);
-            notification.setContentText(activity.getString(R.string.notification_message_download_new_app_update, downloadMB, downloadSizeMB));
+            notification.setContentText("Downloading new update... (" + downloadMB + "/" + downloadSizeMB + "MB)");
             manager.notify(notificationID, notification.build());
         } else {
             notification.setProgress(0, 0, true);

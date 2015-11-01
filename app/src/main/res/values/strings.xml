@@ -47,7 +47,6 @@
     <string name="content_description_wheelchair">Wheelchair Supported Bus</string>
 
     <!-- Notifications -->
-    <string name="notification_message_download_new_app_update">Downloading new update… (%1$f/%2$fMB)</string>
     <string name="notification_title_exception_download">Exception Occurred (Download)</string>
     <string name="notification_ticker_download_fail">Download failed</string>
     <string name="notification_content_download_fail_exception">An exception occurred while downloading the update file. (%1$s)</string>
