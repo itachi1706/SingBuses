@@ -7,7 +7,6 @@ env:
     - ANDROID_BUILD_TOOLS_VERSION=23.0.1
     - API_LEVEL=23
     - ANDROID_EMULATOR_API_LEVEL=22
-    - MALLOC_ARENA_MAX=2
 android:
     components:
         # Uncomment the lines below if you want to
@@ -36,8 +35,6 @@ android:
         # - sys-img-x86-android-17
         # - sys-img-armeabi-v7a-android-$ANDROID_BUILD_TOOLS_VERSION
         - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_EMULATOR_API_LEVEL
-
-sudo: required
 
 before_install:
     - chmod +x gradlew
