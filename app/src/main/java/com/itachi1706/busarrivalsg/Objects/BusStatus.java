@@ -11,7 +11,7 @@ public class BusStatus {
     private boolean isWheelChairAccessible;
 
     //Going to be implemented from 12 November
-    private long latitude, longitude;
+    private long latitude = -11, longitude = -11;
     private int visitNumber;
     private boolean isMonitored = true;
 

@@ -8,7 +8,7 @@ public class BusArrivalArrayObjectEstimate {
     private String EstimatedArrival, Load, Feature;
 
     //Going to be implemented from 12 November
-    private float Latitude, Longitude;
+    private float Latitude = -11, Longitude = -11;
     private int VisitNumber;
     private String Monitored;
 

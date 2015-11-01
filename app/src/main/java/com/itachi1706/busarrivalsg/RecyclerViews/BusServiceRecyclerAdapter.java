@@ -1,6 +1,7 @@
 package com.itachi1706.busarrivalsg.RecyclerViews;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -91,6 +92,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
             if (i.getNextBus().isWheelchairAccessible())
                 holder.wheelchairNow.setVisibility(View.VISIBLE);
+            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i.getNextBus().getLongitude(), i.getNextBus().getLatitude()));
         }
 
         //2nd bus (Next bus)
@@ -111,6 +113,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
             if (i.getSubsequentBus().isWheelchairAccessible())
                 holder.wheelchairNext.setVisibility(View.VISIBLE);
+            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i.getSubsequentBus().getLongitude(), i.getSubsequentBus().getLatitude()));
         }
     }
 
@@ -174,6 +177,34 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 return true;
             }
             return false;
+        }
+    }
+
+    public class ArrivalButton implements View.OnClickListener{
+
+        private float longitude = -1000, latitude = -1000;
+
+        public ArrivalButton(float longitude, float latitude){
+            this.longitude = longitude;
+            this.latitude = latitude;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (longitude == -1000 || latitude == -1000){
+                //Error, invalid location
+                new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_bus_location_unavailable)
+                        .setMessage(R.string.dialog_message_bus_location_unavailable)
+                        .setPositiveButton(R.string.dialog_action_positive_close, null).show();
+                return;
+            }
+            if (longitude == -11 && latitude == -11){
+                new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_bus_location_coming_soon)
+                        .setMessage(R.string.dialog_message_bus_location_coming_soon)
+                        .setPositiveButton(R.string.dialog_action_positive_close, null).show();
+            }
+
+            //TODO: Google Maps Dialog Box
         }
     }
 }
