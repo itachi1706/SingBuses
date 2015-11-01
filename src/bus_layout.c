@@ -141,7 +141,7 @@ static GBitmap *bus_available;
 static GBitmap *bus_limited;
 static GBitmap *bus_full;
 
-static int current = -1, max = -1;
+static short current = -1, max = -1;
 static bool debugMode = false;
 
 enum {
@@ -160,6 +160,8 @@ enum {
   MESSAGE_CURRENT_FAV = 12,
   MESSAGE_MAX_FAV = 13,
   ERROR_NO_DATA = 14,
+  MESSAGE_WAB_CURRENT = 15,
+  MESSAGE_WAB_NEXT = 16,
   LOAD_NO_DATA = 0,
   LOAD_SEATS_AVAILABLE = 1,
   LOAD_LIMITED_SEATING = 2,
@@ -257,13 +259,15 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
   static char arrC_data_buffer[10];
   static char arrN_data_buffer[10];
   static bool pgLoad = false, pgMaxLoad = false;
+  static int8_t wabC, wabN;
 
   // Process all pairs present
   while(t != NULL) {
     // Process this pair's key
     switch (t->key) {
       case MESSAGE_DATA_EVENT:
-        APP_LOG(APP_LOG_LEVEL_INFO, "Data received for Dictionary %d", (int)t->value->int32);
+        APP_LOG(APP_LOG_LEVEL_INFO, "Data received for Dictionary %hu", t->value->int16);
+        APP_LOG(APP_LOG_LEVEL_INFO, "Dictionary Size: %lu", dict_size(iter));
         break;
       case MESSAGE_ROAD_NAME:
         snprintf(roadName_buffer, sizeof(roadName_buffer), "%s", t->value->cstring);
@@ -287,21 +291,32 @@ static void in_received_handler(DictionaryIterator *iter, void *context){
         break;
       
       case MESSAGE_CURRENT_FAV:
-        current = t->value->int32;
+        current = t->value->int16;
         pgLoad = true;
         break;
       case MESSAGE_MAX_FAV:
-        max = t->value->int32;
+        max = t->value->int16;
         pgMaxLoad = true;
         break;
       
       case ESTIMATE_LOAD_CURRENT_DATA:
-        loadC = t->value->int32;
+        loadC = t->value->int16;
         updateLoad(loadC, 1);
         break;
       case ESTIMATE_LOAD_NEXT_DATA:
-        loadN = t->value->int32;
+        loadN = t->value->int16;
         updateLoad(loadN, 2);
+        break;
+      
+      case MESSAGE_WAB_CURRENT: 
+        wabC = t->value->int8;
+        if (debug)
+          APP_LOG(APP_LOG_LEVEL_INFO, "Current Has WAB: %i", wabC);
+        break;
+      case MESSAGE_WAB_NEXT: 
+        wabN = t->value->int8;
+        if (debug)
+          APP_LOG(APP_LOG_LEVEL_INFO, "Next Has WAB: %i", wabN);  
         break;
       
       //No Favourites? Tell them too
@@ -432,8 +447,8 @@ void show_bus_layout(void) {
   });
   window_stack_push(s_window, true);
   
+  APP_LOG(APP_LOG_LEVEL_INFO, "Inbox Max Size: %lu", app_message_inbox_size_maximum());
   if (debugMode){
-    APP_LOG(APP_LOG_LEVEL_INFO, "Inbox Max Size: %lu", app_message_inbox_size_maximum());
     APP_LOG(APP_LOG_LEVEL_INFO, "Outbox Max Size: %lu", app_message_outbox_size_maximum());
   }
   
