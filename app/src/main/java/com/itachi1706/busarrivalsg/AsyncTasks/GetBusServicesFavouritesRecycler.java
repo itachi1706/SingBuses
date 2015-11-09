@@ -87,6 +87,17 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
             }
 
             BusArrivalMain mainArr = gson.fromJson(json, BusArrivalMain.class);
+
+            boolean jsonError = false;
+            if (mainArr == null) jsonError = true;
+            if (!jsonError && mainArr.getServices() == null) jsonError = true;
+
+            if (jsonError){
+                Log.e("FAV-GET", "Retrying...");
+                new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObj);
+                return;
+            }
+
             BusArrivalArrayObject[] array = mainArr.getServices();
 
             if (array.length == 0 || array.length > 1){
@@ -111,6 +122,34 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
             subsequentBus.setEstimatedArrival(item.getSubsequentBus().getEstimatedArrival());
             subsequentBus.setIsWheelChairAccessible(item.getSubsequentBus().getFeature());
             subsequentBus.setLoad(item.getSubsequentBus().getLoad());
+
+            if (item.getSubsequentBus3() != null){
+                //New API in place
+
+                //First add the required stuff to the other 2
+                nextBus.setIsMonitored(item.getNextBus().getMonitoredStatus());
+                nextBus.setVisitNumber(item.getNextBus().getVisitNumber());
+                nextBus.setLatitude(item.getNextBus().getLatitude());
+                nextBus.setLongitude(item.getNextBus().getLongitude());
+
+                subsequentBus.setIsMonitored(item.getSubsequentBus().getMonitoredStatus());
+                subsequentBus.setVisitNumber(item.getSubsequentBus().getVisitNumber());
+                subsequentBus.setLatitude(item.getSubsequentBus().getLatitude());
+                subsequentBus.setLongitude(item.getSubsequentBus().getLongitude());
+
+
+                BusStatus subsequent2Bus = new BusStatus();
+                subsequent2Bus.setEstimatedArrival(item.getSubsequentBus3().getEstimatedArrival());
+                subsequent2Bus.setIsWheelChairAccessible(item.getSubsequentBus3().getFeature());
+                subsequent2Bus.setLoad(item.getSubsequentBus3().getLoad());
+                subsequent2Bus.setIsMonitored(item.getSubsequentBus3().getMonitoredStatus());
+                subsequent2Bus.setVisitNumber(item.getSubsequentBus3().getVisitNumber());
+                subsequent2Bus.setLatitude(item.getSubsequentBus3().getLatitude());
+                subsequent2Bus.setLongitude(item.getSubsequentBus3().getLongitude());
+
+                busObj.setSubsequentBus(subsequent2Bus);
+            }
+
 
             busObj.setCurrentBus(nextBus);
             busObj.setNextBus(subsequentBus);
