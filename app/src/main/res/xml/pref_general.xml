@@ -18,13 +18,13 @@
             android:title="Bus Stops Database Loaded"
             android:defaultValue="false"
             android:key="busDBLoaded"
-            android:summary="Whether the bus stops database has already been loaded" />
+            android:summary="Whether the bus stops database has already been loaded. Uncheck to reload database" />
 
         <CheckBoxPreference
             android:title="Bus Stops Geographical Database Loaded"
             android:defaultValue="false"
             android:key="geoDBLoaded"
-            android:summary="Whether the bus stops geographical database has already been loaded" />
+            android:summary="Whether the bus stops geographical database has already been loaded. Uncheck to reload database" />
 
         <Preference android:key="busDBTimeUpdated" android:title="Last Updated (Bus Database)" />
         <Preference android:key="geoDBTimeUpdated" android:title="Last Updated (Bus Geo Database)" />
