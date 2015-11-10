@@ -25,8 +25,8 @@ android {
         applicationId "com.itachi1706.busarrivalsg"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 143
-        versionName "1.2.3"
+        versionCode 151
+        versionName "1.2.4"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7

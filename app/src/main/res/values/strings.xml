@@ -17,7 +17,7 @@
     <string name="label_bus_stop_name">Bus Stop Name</string>
     <string name="label_road_name_code">Road Name (Code)</string>
     <string name="label_bus_service_placeholder">184</string>
-    <string name="label_time_placeholder">200</string>
+    <string name="label_time_placeholder">-</string>
     <string name="label_bus_operator_placeholder">SMRT</string>
     <string name="label_bus_status_placeholder">Status Unknown</string>
     <string name="label_bus_stop_name_placeholder">Bus Stop Name</string>
