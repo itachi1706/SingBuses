@@ -1,5 +1,6 @@
 package com.itachi1706.busarrivalsg;
 
+import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -7,6 +8,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -15,6 +18,7 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
     private GoogleMap mMap;
 
     private double latitude, longitude;
+    private double busLatitude, busLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +27,9 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
 
         latitude = this.getIntent().getDoubleExtra("lat", 0);
         longitude = this.getIntent().getDoubleExtra("lng", 0);
+
+        busLatitude = this.getIntent().getDoubleExtra("buslat", 0);
+        busLongitude = this.getIntent().getDoubleExtra("buslng", 0);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -48,7 +55,12 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
 
         // Add a marker to the bus location and move the camera
         LatLng busLocation = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(busLocation).title("Current Bus Location"));
+        LatLng busStopLocation = new LatLng(busLatitude, busLongitude);
+
+        mMap.addMarker(new MarkerOptions().position(busLocation).title(getString(R.string.maps_marker_bus_location_title))
+                .snippet(getString(R.string.maps_marker_bus_location_snippet))).showInfoWindow();
+        mMap.addMarker(new MarkerOptions().position(busStopLocation).title(getString(R.string.maps_marker_bus_stop_title))
+                .snippet(getString(R.string.maps_marker_bus_stop_snippet)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(busLocation, 17));
     }
 }

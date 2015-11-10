@@ -16,8 +16,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
+import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObjectEstimate;
+import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeoObject;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
@@ -95,7 +97,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
             if (i.getNextBus().isWheelchairAccessible())
                 holder.wheelchairNow.setVisibility(View.VISIBLE);
-            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i.getNextBus().getLongitude(), i.getNextBus().getLatitude()));
+            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i.getNextBus().getLongitude(), i.getNextBus().getLatitude(), i.getStopCode()));
         }
 
         //2nd bus (Next bus)
@@ -116,7 +118,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
             if (i.getSubsequentBus().isWheelchairAccessible())
                 holder.wheelchairNext.setVisibility(View.VISIBLE);
-            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i.getSubsequentBus().getLongitude(), i.getSubsequentBus().getLatitude()));
+            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i.getSubsequentBus().getLongitude(), i.getSubsequentBus().getLatitude(), i.getStopCode()));
         }
 
         //3rd bus (Subsequent Bus)
@@ -140,7 +142,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
             if (i.getSubsequentBus3().isWheelchairAccessible())
                 holder.wheelchairSub.setVisibility(View.VISIBLE);
-            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i.getSubsequentBus3().getLongitude(), i.getSubsequentBus3().getLatitude()));
+            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i.getSubsequentBus3().getLongitude(), i.getSubsequentBus3().getLatitude(), i.getStopCode()));
         }
     }
 
@@ -219,10 +221,12 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     public class ArrivalButton implements View.OnClickListener{
 
         private double longitude = -1000, latitude = -1000;
+        private String stopCode = "";
 
-        public ArrivalButton(double longitude, double latitude){
+        public ArrivalButton(double longitude, double latitude, String busStopCode){
             this.longitude = longitude;
             this.latitude = latitude;
+            this.stopCode = busStopCode.trim();
         }
 
         @Override
@@ -251,6 +255,15 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             Intent mapsIntent = new Intent(activity, BusLocationMapsActivity.class);
             mapsIntent.putExtra("lat", latitude);
             mapsIntent.putExtra("lng", longitude);
+
+            //Get Bus stop longitude and latitude
+            BusStopsGeoDB db = new BusStopsGeoDB(activity);
+            BusStopsGeoObject busStopsGeoObject = db.getBusStopByBusStopCode(stopCode);
+            if (busStopsGeoObject != null){
+                mapsIntent.putExtra("buslat", busStopsGeoObject.getLat());
+                mapsIntent.putExtra("buslng", busStopsGeoObject.getLng());
+            }
+
             activity.startActivity(mapsIntent);
         }
     }

@@ -47,6 +47,12 @@
     <string name="edittext_hint_search_bus_stop">Stop Code/Stop Name/Road Name</string>
     <string name="content_description_wheelchair">Wheelchair Supported Bus</string>
 
+    <!-- Google Maps Activity -->
+    <string name="maps_marker_bus_location_title">Current Bus Location</string>
+    <string name="maps_marker_bus_location_snippet">Current Bus Location as on this data</string>
+    <string name="maps_marker_bus_stop_snippet">Current bus stop</string>
+    <string name="maps_marker_bus_stop_title">Bus Stop</string>
+
     <!-- Notifications -->
     <string name="notification_title_exception_download">Exception Occurred (Download)</string>
     <string name="notification_ticker_download_fail">Download failed</string>

@@ -21,6 +21,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
+import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
+import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeoObject;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Objects.BusStatus;
 import com.itachi1706.busarrivalsg.R;
@@ -111,7 +113,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
             if (i.getCurrentBus().isWheelChairAccessible())
                 holder.wheelchairNow.setVisibility(View.VISIBLE);
-            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i.getCurrentBus().getLongitude(), i.getCurrentBus().getLatitude()));
+            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i.getCurrentBus().getLongitude(), i.getCurrentBus().getLatitude(), i.getStopID()));
         }
 
         //2nd Bus (Next Bus)
@@ -131,7 +133,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
             if (i.getNextBus().isWheelChairAccessible())
                 holder.wheelchairNext.setVisibility(View.VISIBLE);
-            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i.getNextBus().getLongitude(), i.getNextBus().getLatitude()));
+            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i.getNextBus().getLongitude(), i.getNextBus().getLatitude(), i.getStopID()));
         }
 
         //3rd bus (Subsequent Bus)
@@ -155,7 +157,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
             if (i.getSubsequentBus().isWheelChairAccessible())
                 holder.wheelchairSub.setVisibility(View.VISIBLE);
-            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i.getSubsequentBus().getLongitude(), i.getSubsequentBus().getLatitude()));
+            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i.getSubsequentBus().getLongitude(), i.getSubsequentBus().getLatitude(), i.getStopID()));
         }
 
     }
@@ -269,10 +271,12 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     public class ArrivalButton implements View.OnClickListener{
 
         private double longitude = -1000, latitude = -1000;
+        private String stopCode = "";
 
-        public ArrivalButton(double longitude, double latitude){
+        public ArrivalButton(double longitude, double latitude, String busStopCode){
             this.longitude = longitude;
             this.latitude = latitude;
+            this.stopCode = busStopCode.trim();
         }
 
         @Override
@@ -301,6 +305,15 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             Intent mapsIntent = new Intent(activity, BusLocationMapsActivity.class);
             mapsIntent.putExtra("lat", latitude);
             mapsIntent.putExtra("lng", longitude);
+
+            //Get Bus stop longitude and latitude
+            BusStopsGeoDB db = new BusStopsGeoDB(activity);
+            BusStopsGeoObject busStopsGeoObject = db.getBusStopByBusStopCode(stopCode);
+            if (busStopsGeoObject != null){
+                mapsIntent.putExtra("buslat", busStopsGeoObject.getLat());
+                mapsIntent.putExtra("buslng", busStopsGeoObject.getLng());
+            }
+
             activity.startActivity(mapsIntent);
         }
     }
