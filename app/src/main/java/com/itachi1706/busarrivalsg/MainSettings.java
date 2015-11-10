@@ -99,7 +99,7 @@ public class MainSettings extends AppCompatActivity {
                         ArrayList<String> changelogArrList = new ArrayList<>();
                         Collections.addAll(changelogArrList, changelogArr);
                         String body = StaticVariables.getChangelogStringFromArrayList(changelogArrList);
-                        new android.app.AlertDialog.Builder(getActivity()).setTitle(R.string.dialog_title_changellog)
+                        new android.app.AlertDialog.Builder(getActivity()).setTitle(R.string.dialog_title_changelog)
                                 .setMessage(Html.fromHtml(body)).setPositiveButton(R.string.dialog_action_positive_close, null).show();
                     }
                     return true;

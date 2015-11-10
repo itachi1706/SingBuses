@@ -7,4 +7,7 @@
     <string name="pebble_button_previous">Going Previous</string>
     <string name="pebble_disconnected">Pebble not connected!</string>
     <string name="action_install_pebble_app">Install Companion Watchapp</string>
+    <string name="pebble_button_debug">Pebble Btn Press (DEBUG)</string>
+    <string name="pebble_fw_version">FW Version</string>
+    <string name="pebble_install_watchapp_hint">Click to install watchapp</string>
 </resources>

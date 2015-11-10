@@ -106,5 +106,5 @@ public class StaticVariables {
 
 
     // HANDLER MESSAGES
-    public static final int BUS_SERVICE_JSON_RETRIVED = 101;
+    public static final int BUS_SERVICE_JSON_RETRIEVED = 101;
 }

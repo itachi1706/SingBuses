@@ -9,7 +9,7 @@ import com.itachi1706.busarrivalsg.R;
 
 /**
  * Created by Kenneth on 30/5/2015
- * for HypixelStatistics in package com.itachi1706.hypixelstatistics.util
+ * for SingBuses in package com.itachi1706.busarrivalsg.util
  */
 public class NotifyUserUtil {
 

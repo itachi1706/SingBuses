@@ -78,7 +78,7 @@ public class GetBusServicesHandler extends AsyncTask<String, Void, String> {
         } else {
             //Go parse it
             Message msg = Message.obtain();
-            msg.what = StaticVariables.BUS_SERVICE_JSON_RETRIVED;
+            msg.what = StaticVariables.BUS_SERVICE_JSON_RETRIEVED;
             Bundle bundle = new Bundle();
             bundle.putString("jsonString", json);
             msg.setData(bundle);

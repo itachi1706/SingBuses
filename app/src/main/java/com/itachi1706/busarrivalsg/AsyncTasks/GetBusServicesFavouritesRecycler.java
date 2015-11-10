@@ -101,7 +101,7 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
             BusArrivalArrayObject[] array = mainArr.getServices();
 
             if (array.length == 0 || array.length > 1){
-                Log.e("FAV-GET", "A weird error occured. It seems that the array received had a size of " + array.length);
+                Log.e("FAV-GET", "A weird error occurred. It seems that the array received had a size of " + array.length);
                 if (array.length == 0) {
                     Log.e("FAV-GET", "Retrying...");
                     new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObj);
