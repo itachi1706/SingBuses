@@ -76,7 +76,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 
         holder.busNumber.setText(i.getServiceNo());
         holder.stopName.setVisibility(View.VISIBLE);
-        holder.stopName.setText((i.getStopName() == null) ? i.getStopID() : i.getStopName() + " (" + i.getStopID() + ")");
+        holder.stopName.setText((i.getStopName() == null) ? i.getStopID().trim() : i.getStopName().trim() + " (" + i.getStopID().trim() + ")");
 
         if (!i.isObtainedNextData()) {
             processing(holder.busArrivalNow);

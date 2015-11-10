@@ -82,9 +82,9 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
             this.finish();
         }else {
             if (busStopName != null)
-                getSupportActionBar().setTitle(busStopName + " (" + busStopCode + ")");
+                getSupportActionBar().setTitle(busStopName.trim() + " (" + busStopCode.trim() + ")");
             else
-                getSupportActionBar().setTitle(busStopCode + "");
+                getSupportActionBar().setTitle(busStopCode.trim() + "");
             swipeToRefresh.setRefreshing(true);
             updateBusStop();
         }
