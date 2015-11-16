@@ -83,6 +83,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         if (!i.isObtainedNextData()) {
             processing(holder.busArrivalNow);
             processing(holder.busArrivalNext);
+            processing(holder.busArrivalSub);
             return;
         }
 
