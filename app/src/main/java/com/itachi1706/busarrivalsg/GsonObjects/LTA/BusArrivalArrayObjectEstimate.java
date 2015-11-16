@@ -8,8 +8,8 @@ public class BusArrivalArrayObjectEstimate {
     private String EstimatedArrival, Load, Feature;
 
     //Going to be implemented from 12 November
-    private double Latitude = -11, Longitude = -11;
-    private int VisitNumber;
+    private String Latitude = "-11", Longitude = "-11"; //return double option
+    private String VisitNumber; //return int option
     private String Monitored;
 
     public String getFeature() {
@@ -25,22 +25,44 @@ public class BusArrivalArrayObjectEstimate {
     }
 
     public double getLatitude() {
-        return Latitude;
-    }
-
-    public boolean hasLatitude(){
-        return Latitude != 0;
+        try {
+            return Double.parseDouble(Latitude);
+        } catch (NumberFormatException e){
+            return -11;
+        }
     }
 
     public double getLongitude() {
+        try {
+            return Double.parseDouble(Longitude);
+        } catch (NumberFormatException e){
+            return -11;
+        }
+    }
+
+    public int getVisitNumber() {
+        try {
+            return Integer.parseInt(VisitNumber);
+        } catch (NumberFormatException e){
+            return 0;
+        }
+    }
+
+    public String getLatitudeString() {
+        return Latitude;
+    }
+
+    public boolean hasLatitude(){ return Latitude.length() != 0; }
+
+    public String getLongitudeString() {
         return Longitude;
     }
 
     public boolean hasLongitude(){
-        return Longitude != 0;
+        return Longitude.length() != 0;
     }
 
-    public int getVisitNumber() {
+    public String getVisitNumberString() {
         return VisitNumber;
     }
 

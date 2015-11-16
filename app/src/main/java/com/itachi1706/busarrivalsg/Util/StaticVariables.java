@@ -89,6 +89,7 @@ public class StaticVariables {
         //GregorianCalendar currentDate = new GregorianCalendar(new SimpleTimeZone(8000, "SST"));
         //currentDate.setTimeInMillis(networkTime[0]);
         //currentDate.setTimeInMillis(System.currentTimeMillis());
+        if (arrivalString.equalsIgnoreCase("")) return -9999;
         Calendar currentDate = Calendar.getInstance();
 
         Calendar arrivalDate = StaticVariables.splitLTADate(arrivalString);

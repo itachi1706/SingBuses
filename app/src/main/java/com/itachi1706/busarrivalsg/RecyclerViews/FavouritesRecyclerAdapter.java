@@ -101,13 +101,15 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         else {
             long est = StaticVariables.parseLTAEstimateArrival(i.getCurrentBus().getEstimatedArrival());
             String arrivalStatusNow;
-            if (est <= 0)
+            if (est == -9999)
+                arrivalStatusNow = "-";
+            else if (est <= 0)
                 arrivalStatusNow = "Arr";
             else if (est == 1)
                 arrivalStatusNow = est + "";
             else
                 arrivalStatusNow = est + "";
-            if (!i.getCurrentBus().isMonitored()) arrivalStatusNow += "*";
+            if (!i.getCurrentBus().isMonitored() && est != -9999) arrivalStatusNow += "*";
             holder.busArrivalNow.setText(arrivalStatusNow);
             applyColorLoad(holder.busArrivalNow, i.getCurrentBus());
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
@@ -121,13 +123,15 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         else {
             long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus().getEstimatedArrival());
             String arrivalStatusNext;
-            if (est <= 0)
+            if (est == -9999)
+                arrivalStatusNext = "-";
+            else if (est <= 0)
                 arrivalStatusNext = "Arr";
             else if (est == 1)
                 arrivalStatusNext = est + "";
             else
                 arrivalStatusNext = est + "";
-            if (!i.getNextBus().isMonitored()) arrivalStatusNext += "*";
+            if (!i.getNextBus().isMonitored() && est != -9999) arrivalStatusNext += "*";
             holder.busArrivalNext.setText(arrivalStatusNext);
             applyColorLoad(holder.busArrivalNext, i.getNextBus());
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
@@ -145,13 +149,15 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         else {
             long est = StaticVariables.parseLTAEstimateArrival(i.getSubsequentBus().getEstimatedArrival());
             String arrivalStatusSub;
-            if (est <= 0)
+            if (est == -9999)
+                arrivalStatusSub = "-";
+            else if (est <= 0)
                 arrivalStatusSub = "Arr";
             else if (est == 1)
                 arrivalStatusSub = est + "";
             else
                 arrivalStatusSub = est + "";
-            if (!i.getSubsequentBus().isMonitored()) arrivalStatusSub += "*";
+            if (!i.getSubsequentBus().isMonitored() && est != -9999) arrivalStatusSub += "*";
             holder.busArrivalSub.setText(arrivalStatusSub);
             applyColorLoad(holder.busArrivalSub, i.getSubsequentBus());
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
@@ -183,6 +189,10 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     }
 
     private void applyColorLoad(TextView view, BusStatus obj){
+        if (view.getText().toString().equalsIgnoreCase("")) {
+            view.setTextColor(Color.GRAY);
+            return;
+        }
         switch (obj.getLoad()){
             case 1: view.setTextColor(Color.GREEN); break;
             case 2: view.setTextColor(Color.YELLOW); break;
