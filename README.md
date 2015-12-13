@@ -6,17 +6,18 @@ Singapore while at the same time, be able to send the data onto a smart wearable
 
 Releases are located [here](https://github.com/itachi1706/SingBuses/releases)
 
-| Device | Is Supported |
-| ------ | ------------ |
-| Original Pebble | Yes |
-| Pebble Steel | Yes |
-| Pebble Time | Partially (no SDK 3 or color support) |
-| Pebble Time Steel | Partially (no SDK 3 or color support) |
-| Android Wear | No (Planned) |
-| Apple Watch | Hell No (Its an Android only thing) |
-| S Watch | No (Is there even an SDK for that?) |
-| Google Glass | Nope |
-| Any other wearables | Nope |
+| Device | Is Supported | Remarks |
+| ------ | ------------ | ------- |
+| Original Pebble | Yes | SDK 2 |
+| Pebble Steel | Yes | SDK 2 |
+| Pebble Time | Partially (In-Progress) |  |
+| Pebble Time Steel | Partially (In-Progress) |  |
+| Pebble Time Round | Partially (In-Progress) |  |
+| Android Wear | No (Planned) |  |
+| Apple Watch | Hell No (Its an Android only thing) |  |
+| S Watch | No (Is there even an SDK for that?) |  |
+| Google Glass | Nope |  |
+| Any other wearables | Nope |  |
 
 This application is not licensed under any open source license as of now until I feel the need to open source it. And the reason I don't feel the need to right now is because its incomplete and the code base probably sucks.
 
