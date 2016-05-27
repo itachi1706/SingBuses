@@ -202,8 +202,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     public void hasPermissionToInstallPebbleApp(){
         final Activity activity = this;
         new AlertDialog.Builder(this).setTitle("Which OS to install App to").setMessage("Based on your pebble device, " +
-                "where should we launch the install request to?\n\nPebble Time Series: Select Pebble Time\n" +
-                "Pebble with Time OS: Select Pebble Time\nPebble with 2.0 firmware: Select Pebble").setPositiveButton("Pebble Time", new DialogInterface.OnClickListener() {
+                "where should we launch the install request to?\n\nPebble Time: Select Pebble Time\n" +
+                "Pebble with Time OS: Select Pebble Time\nPebble with 2.0 OS: Select Pebble").setPositiveButton("Pebble Time", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 new DlAndInstallCompanionApp(activity, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getString(R.string.link_pebble_app));
