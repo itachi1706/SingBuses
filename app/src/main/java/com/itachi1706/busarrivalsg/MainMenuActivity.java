@@ -40,10 +40,8 @@ import com.getpebble.android.kit.util.PebbleDictionary;
 import com.itachi1706.appupdater.AppUpdateChecker;
 import com.itachi1706.busarrivalsg.AsyncTasks.DlAndInstallCompanionApp;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
-import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStopsGeo;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesFavouritesRecycler;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
@@ -268,9 +266,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
     private void checkIfDatabaseUpdated(){
         long busDBLastUpdate = sp.getLong("busDBTimeUpdated", -1);
-        long geoDBLastUpdate = sp.getLong("geoDBTimeUpdated", -1);
         long currentTime = System.currentTimeMillis();
-        boolean busDBUpdate = false, geoDBUpdate = false;
+        boolean busDBUpdate = false;
         if (busDBLastUpdate != -1){
             long lastUpdated = currentTime - busDBLastUpdate;
             long day = TimeUnit.MILLISECONDS.toDays(lastUpdated);
@@ -279,13 +276,6 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                 busDBUpdate = true;
             else
                 StaticVariables.init1TaskFinished = true;
-        }
-        if (geoDBLastUpdate != -1){
-            long lastUpdated = currentTime - geoDBLastUpdate;
-            long day = TimeUnit.MILLISECONDS.toDays(lastUpdated);
-            Log.d("INIT", "Geo DB Last Update: " + day);
-            if (day > 60)
-                geoDBUpdate = true;
         }
 
         //Main Database
@@ -313,32 +303,6 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             //Legacy Check
             if (sp.getLong("busDBTimeUpdated", -1) == -1){
                 sp.edit().putLong("busDBTimeUpdated", System.currentTimeMillis()).apply();
-            }
-        }
-
-        if (!sp.getBoolean("geoDBLoaded", false) || geoDBUpdate){
-            //First Boot with Geo Location db
-            if (!isNetworkAvailable()){
-                networkUnavailable(getString(R.string.database_name_bus_geo));
-            } else {
-                Log.d("INIT", "Initializing Bus Stop Geographical Database");
-                ProgressDialog dialogs = new ProgressDialog(this);
-                dialogs.setTitle(getString(R.string.database_name_bus_geo));
-                dialogs.setMessage(getString(R.string.dialog_message_retrieve_data_from_server));
-                dialogs.setCancelable(false);
-                dialogs.setIndeterminate(true);
-                dialogs.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-
-                BusStopsGeoDB geoDB = new BusStopsGeoDB(this);
-                geoDB.dropAndRebuildDB();
-                sp.edit().putBoolean("geoDBLoaded", false).apply();
-
-                new GetAllBusStopsGeo(dialogs, geoDB, this, sp).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-        } else {
-            //Legacy Check
-            if (sp.getLong("geoDBTimeUpdated", -1) == -1){
-                sp.edit().putLong("geoDBTimeUpdated", System.currentTimeMillis()).apply();
             }
         }
     }

@@ -141,7 +141,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
      * @param busStopCode Bus Stop ID
      * @return Bus Stop Object
      */
-    public BusStopJSON getBusStopByCode(int busStopCode){
+    public BusStopJSON getBusStopById(int busStopCode){
         String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + CODE_ID + "=" + busStopCode + ";";
         SQLiteDatabase db = this.getReadableDatabase();
         BusStopJSON bs = new BusStopJSON();

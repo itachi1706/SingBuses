@@ -16,10 +16,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
-import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
+import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObjectEstimate;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeoObject;
+import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
@@ -228,7 +228,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         }
     }
 
-    public class ArrivalButton implements View.OnClickListener{
+    public class ArrivalButton implements View.OnClickListener {
 
         private double longitude = -1000, latitude = -1000;
         private String stopCode = "";
@@ -267,11 +267,11 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             mapsIntent.putExtra("lng", longitude);
 
             //Get Bus stop longitude and latitude
-            BusStopsGeoDB db = new BusStopsGeoDB(activity);
-            BusStopsGeoObject busStopsGeoObject = db.getBusStopByBusStopCode(stopCode);
-            if (busStopsGeoObject != null){
-                mapsIntent.putExtra("buslat", busStopsGeoObject.getLat());
-                mapsIntent.putExtra("buslng", busStopsGeoObject.getLng());
+            BusStopsDB db = new BusStopsDB(activity);
+            BusStopJSON busStop = db.getBusStopByBusStopCode(stopCode);
+            if (busStop != null) {
+                mapsIntent.putExtra("buslat", busStop.getLatitude());
+                mapsIntent.putExtra("buslng", busStop.getLongitude());
             }
 
             activity.startActivity(mapsIntent);

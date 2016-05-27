@@ -86,11 +86,7 @@
     <string name="progress_message_bus_stop_data_parse_pre">Parsing bus stops data…</string>
     <string name="progress_title_bus_stop_data_download">Downloading Bus Stop Data</string>
     <string name="progress_message_bus_stop_data_download">This will take a few minutes. Be patient :) \nDownloading latest bus stop data</string>
-    <string name="progress_title_bus_stop_geo_data_download">Downloading Bus Stop Geographical Data</string>
-    <string name="progress_message_bus_stop_geo_data_download">This will take a few minutes. Be patient :) \nGetting Bus Stops Geographical Data…</string>
     <string name="progress_message_bus_stop_data_parse">Parsing bus stops data…\nCurrent Stop: %1$s\n%2$s</string>
-    <string name="progress_title_bus_stop_geo_data_parse">Parsing Bus Stop Geographical Data…</string>
-    <string name="progress_message_bus_stop_geo_data_parse_pre">Parsing bus stops geographical data retrieved…</string>
 
     <!-- Alert Dialogs Messages -->
     <string name="dialog_message_latest_update">You are on the latest release! No update is required.</string>
@@ -111,7 +107,6 @@
     <string name="dialog_title_changelog">Changelog</string>
     <string name="dialog_title_retrieve_data_bus_service">Downloading Bus Service Data</string>
     <string name="dialog_message_retrieve_data_bus_service">Getting all Bus Services in Bus Stop %1$s</string>
-    <string name="dialog_message_bus_stop_geo_data_parse">"Parsing %1$s \n[%2$s]"</string>
 
     <!-- Toast Messages -->
     <string name="toast_message_add_to_fav">Added to favourites</string>
@@ -119,7 +114,6 @@
     <string name="toast_message_invalid_json_string">Invalid JSON String</string>
     <string name="toast_message_retrieving_location">Getting your location…</string>
     <string name="toast_bus_stop_data_parse_success">%1$s bus stops saved to database!</string>
-    <string name="toast_bus_stop_geo_data_parse_success">%1$s bus stops geo data saved to database!</string>
     <string name="toast_message_timeout_google_places_api">Google did not respond after the period of time</string>
     <string name="toast_message_invalid_json">Invalid JSON. Please try again</string>
     <string name="toast_message_invalid_request">Invalid request. Please try again</string>
