@@ -8,7 +8,7 @@ public class BusArrivalArrayObject {
     private String ServiceNo, Status, Operator;
     private BusArrivalArrayObjectEstimate NextBus, SubsequentBus;
 
-    //Going to be implemented from 12 November
+    // Implemented as of 12 November
     private String OriginatingID, TerminatingID;
     private BusArrivalArrayObjectEstimate SubsequentBus3;
 

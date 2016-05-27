@@ -16,7 +16,7 @@ public class BusArrivalArrayObjectEstimate {
     }
 
     public String getLoad() {
-        return Load;
+        return (Load == null) ? "" : Load;
     }
 
     public String getEstimatedArrival() {

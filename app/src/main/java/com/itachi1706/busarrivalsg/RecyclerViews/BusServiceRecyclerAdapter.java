@@ -165,7 +165,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     }
 
     private void applyColorLoad(TextView view, BusArrivalArrayObjectEstimate obj){
-        if (view.getText().toString().equalsIgnoreCase("")) {
+        if (view.getText().toString().equalsIgnoreCase("") || obj.getLoad() == null) {
             view.setTextColor(Color.GRAY);
             return;
         }
