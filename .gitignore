@@ -39,3 +39,5 @@ proguard/
 
 # Fabric Secret Key
 fabric.properties
+
+*.iml
