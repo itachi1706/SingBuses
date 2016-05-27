@@ -49,7 +49,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         if (this.getIntent().hasExtra("stopName")) busStopName = this.getIntent().getStringExtra("stopName");
 
         buses = (RecyclerView) findViewById(R.id.rvBusService);
-        buses.setHasFixedSize(true);
+        if (buses != null) buses.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         buses.setLayoutManager(linearLayoutManager);
@@ -59,13 +59,14 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         buses.setAdapter(adapter);
 
         swipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_swipe);
-        swipeToRefresh.setOnRefreshListener(this);
-
-        swipeToRefresh.setColorSchemeResources(
-                R.color.refresh_progress_1,
-                R.color.refresh_progress_2,
-                R.color.refresh_progress_3,
-                R.color.refresh_progress_4);
+        if (swipeToRefresh != null) {
+            swipeToRefresh.setOnRefreshListener(this);
+            swipeToRefresh.setColorSchemeResources(
+                    R.color.refresh_progress_1,
+                    R.color.refresh_progress_2,
+                    R.color.refresh_progress_3,
+                    R.color.refresh_progress_4);
+        }
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         if (sp.getBoolean("showHint", true))

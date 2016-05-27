@@ -151,7 +151,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     }
 
     private void comingSoon(TextView view){
-        view.setText("Soon");
+        view.setText(R.string.feature_coming_soon);
         view.setTextColor(Color.GRAY);
     }
 

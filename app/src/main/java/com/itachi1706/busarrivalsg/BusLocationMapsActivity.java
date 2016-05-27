@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -20,7 +19,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -146,19 +144,16 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
         Log.e("GPSManager", "Permission not granted: results len = " + grantResults.length +
                 " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
         final Activity thisActivity = this;
-
-        if (requestCode == RC_HANDLE_ACCESS_FINE_LOCATION) {
-            new AlertDialog.Builder(this).setTitle(R.string.dialog_title_permission_denied)
-                    .setMessage(R.string.dialog_message_no_permission_gps).setPositiveButton(android.R.string.ok, null)
-                    .setNeutralButton(R.string.dialog_action_neutral_app_settings, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            Uri packageURI = Uri.parse("package:" + thisActivity.getPackageName());
-                            permIntent.setData(packageURI);
-                            startActivity(permIntent);
-                        }
-                    }).show();
-        }
+        new AlertDialog.Builder(this).setTitle(R.string.dialog_title_permission_denied)
+                .setMessage(R.string.dialog_message_no_permission_gps).setPositiveButton(android.R.string.ok, null)
+                .setNeutralButton(R.string.dialog_action_neutral_app_settings, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri packageURI = Uri.parse("package:" + thisActivity.getPackageName());
+                        permIntent.setData(packageURI);
+                        startActivity(permIntent);
+                    }
+                }).show();
     }
 }

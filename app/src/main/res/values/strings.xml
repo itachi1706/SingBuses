@@ -22,6 +22,7 @@
     <string name="label_bus_status_placeholder">Status Unknown</string>
     <string name="label_bus_stop_name_placeholder">Bus Stop Name</string>
     <string name="label_favourites">Favourites</string>
+    <string name="feature_coming_soon">Soon</string>
 
     <!-- Link URLs -->
     <string name="link_updates">https://github.com/itachi1706/SingBuses/releases/latest</string>

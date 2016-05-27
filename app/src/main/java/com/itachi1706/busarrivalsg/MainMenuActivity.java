@@ -84,20 +84,21 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         fab = (FloatingActionButton) findViewById(R.id.add_fab);
         favouritesList = (RecyclerView) findViewById(R.id.rvFav);
 
-        favouritesList.setHasFixedSize(true);
+        if (favouritesList != null) favouritesList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         favouritesList.setLayoutManager(linearLayoutManager);
         favouritesList.setItemAnimator(new DefaultItemAnimator());
 
         swipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_favourites);
-        swipeToRefresh.setOnRefreshListener(this);
-
-        swipeToRefresh.setColorSchemeResources(
-                R.color.refresh_progress_1,
-                R.color.refresh_progress_2,
-                R.color.refresh_progress_3,
-                R.color.refresh_progress_4);
+        if (swipeToRefresh != null) {
+            swipeToRefresh.setOnRefreshListener(this);
+            swipeToRefresh.setColorSchemeResources(
+                    R.color.refresh_progress_1,
+                    R.color.refresh_progress_2,
+                    R.color.refresh_progress_3,
+                    R.color.refresh_progress_4);
+        }
 
         adapter = new FavouritesRecyclerAdapter(new ArrayList<BusServices>(), this);
         favouritesList.setAdapter(adapter);

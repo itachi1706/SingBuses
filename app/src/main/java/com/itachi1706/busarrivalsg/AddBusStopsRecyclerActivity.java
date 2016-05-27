@@ -53,7 +53,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
 
         currentLocationGet = (FloatingActionButton) findViewById(R.id.current_location_fab);
         result = (RecyclerView) findViewById(R.id.rvNearestBusStops);
-        result.setHasFixedSize(true);
+        if (result != null) result.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         result.setLayoutManager(linearLayoutManager);

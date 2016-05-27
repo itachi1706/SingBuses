@@ -1,7 +1,5 @@
 package com.itachi1706.busarrivalsg.GsonObjects.Offline;
 
-import com.google.gson.JsonObject;
-
 /**
  * Created by Kenneth on 18/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.GsonObjects
