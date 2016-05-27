@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -12,13 +13,11 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 
-import com.itachi1706.busarrivalsg.AsyncTasks.Updater.AppUpdateCheck;
+import com.itachi1706.appupdater.AppUpdateChecker;
+import com.itachi1706.appupdater.Util.UpdaterHelper;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 
 
@@ -75,33 +74,18 @@ public class MainSettings extends AppCompatActivity {
             Preference prefs = findPreference("view_sdk_version");
             prefs.setSummary(android.os.Build.VERSION.RELEASE);
 
-            final Preference updaterPref = findPreference("launch_updater");
-            updaterPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            findPreference("launch_updater").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    new AppUpdateCheck(getActivity(), sp).execute();
+                    new AppUpdateChecker(getActivity(), sp, R.mipmap.ic_launcher, StaticVariables.BASE_SERVER_URL).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     return false;
                 }
             });
 
-            Preference changelogPref = findPreference("android_changelog");
-            changelogPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            findPreference("android_changelog").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    String changelog = sp.getString("version-changelog", "l");
-                    if (changelog.equals("l")) {
-                        //Not available
-                        new android.app.AlertDialog.Builder(getActivity()).setTitle(R.string.dialog_title_no_changelog)
-                                .setMessage(R.string.dialog_message_no_changelog)
-                                .setPositiveButton(android.R.string.ok, null).show();
-                    } else {
-                        String[] changelogArr = changelog.split("\n");
-                        ArrayList<String> changelogArrList = new ArrayList<>();
-                        Collections.addAll(changelogArrList, changelogArr);
-                        String body = StaticVariables.getChangelogStringFromArrayList(changelogArrList);
-                        new android.app.AlertDialog.Builder(getActivity()).setTitle(R.string.dialog_title_changelog)
-                                .setMessage(Html.fromHtml(body)).setPositiveButton(R.string.dialog_action_positive_close, null).show();
-                    }
+                    UpdaterHelper.settingGenerateChangelog(sp, getActivity());
                     return true;
                 }
             });

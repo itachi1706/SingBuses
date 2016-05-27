@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class StaticVariables {
 
     public static int HTTP_QUERY_TIMEOUT = 15000; //15 seconds timeout
+    public static final String BASE_SERVER_URL = "http://api.itachi1706.com/api/appupdatechecker.php?action=androidretrievedata&packagename=";
 
     public final static UUID PEBBLE_APP_UUID = UUID.fromString("11198668-4e27-4e94-b51c-a27a1ea5cd82");
 

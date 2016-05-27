@@ -37,11 +37,11 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
+import com.itachi1706.appupdater.AppUpdateChecker;
 import com.itachi1706.busarrivalsg.AsyncTasks.DlAndInstallCompanionApp;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStopsGeo;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesFavouritesRecycler;
-import com.itachi1706.busarrivalsg.AsyncTasks.Updater.AppUpdateCheck;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
@@ -107,7 +107,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
         Log.d("MainMenu", "Checking for app updates");
-        new AppUpdateCheck(this, sp, true).execute();
+        new AppUpdateChecker(this, sp, true, R.mipmap.ic_launcher, StaticVariables.BASE_SERVER_URL).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         Log.d("MainMenu", "onCreate complete");
     }
 
