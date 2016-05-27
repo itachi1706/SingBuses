@@ -15,6 +15,7 @@ import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.R;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Kenneth on 31/10/2015.
@@ -51,7 +52,7 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
         BusStopJSON i = items.get(position);
 
         holder.stopName.setText(i.getBusStopName());
-        holder.desc.setText((!i.isHasDistance()) ? i.getRoad() + " (" + i.getCode() + ")" : String.format("%s (%s) [%.2fm]",i.getRoad(), i.getCode(), i.getDistance()));
+        holder.desc.setText((!i.isHasDistance()) ? i.getRoad() + " (" + i.getCode() + ")" : String.format(Locale.getDefault(), "%s (%s) [%.2fm]",i.getRoad(), i.getCode(), i.getDistance()));
     }
 
     @Override

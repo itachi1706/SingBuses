@@ -127,12 +127,10 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
                 //New API in place
 
                 //First add the required stuff to the other 2
-                nextBus.setIsMonitored(item.getNextBus().getMonitoredStatus());
                 nextBus.setVisitNumber(item.getNextBus().getVisitNumber());
                 nextBus.setLatitude(item.getNextBus().getLatitude());
                 nextBus.setLongitude(item.getNextBus().getLongitude());
 
-                subsequentBus.setIsMonitored(item.getSubsequentBus().getMonitoredStatus());
                 subsequentBus.setVisitNumber(item.getSubsequentBus().getVisitNumber());
                 subsequentBus.setLatitude(item.getSubsequentBus().getLatitude());
                 subsequentBus.setLongitude(item.getSubsequentBus().getLongitude());
@@ -142,7 +140,6 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
                 subsequent2Bus.setEstimatedArrival(item.getSubsequentBus3().getEstimatedArrival());
                 subsequent2Bus.setIsWheelChairAccessible(item.getSubsequentBus3().getFeature());
                 subsequent2Bus.setLoad(item.getSubsequentBus3().getLoad());
-                subsequent2Bus.setIsMonitored(item.getSubsequentBus3().getMonitoredStatus());
                 subsequent2Bus.setVisitNumber(item.getSubsequentBus3().getVisitNumber());
                 subsequent2Bus.setLatitude(item.getSubsequentBus3().getLatitude());
                 subsequent2Bus.setLongitude(item.getSubsequentBus3().getLongitude());

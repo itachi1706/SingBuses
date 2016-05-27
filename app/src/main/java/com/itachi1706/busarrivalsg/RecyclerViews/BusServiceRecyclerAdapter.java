@@ -16,10 +16,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
-import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
+import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObjectEstimate;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeoObject;
+import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
@@ -71,6 +71,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         switch (i.getOperator().toUpperCase()){
             case "SMRT": holder.busOperator.setTextColor(Color.RED); break;
             case "SBST": holder.busOperator.setTextColor(Color.MAGENTA); break;
+            case "TTS": holder.busOperator.setTextColor(Color.GREEN); break;
         }
         holder.busNumber.setText(i.getServiceNo());
         if (i.getStatus().equalsIgnoreCase("not")){
@@ -93,7 +94,6 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 arrivalStatusNow = est + "";
             else
                 arrivalStatusNow = est + "";
-            if (!i.getNextBus().getMonitoredStatus() && est != -9999) arrivalStatusNow += "*";
             holder.busArrivalNow.setText(arrivalStatusNow);
             applyColorLoad(holder.busArrivalNow, i.getNextBus());
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
@@ -116,7 +116,6 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 arrivalStatusNext = est + "";
             else
                 arrivalStatusNext = est + "";
-            if (!i.getSubsequentBus().getMonitoredStatus() && est != -9999) arrivalStatusNext += "*";
             holder.busArrivalNext.setText(arrivalStatusNext);
             applyColorLoad(holder.busArrivalNext, i.getSubsequentBus());
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
@@ -142,7 +141,6 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 arrivalStatusSub = est + "";
             else
                 arrivalStatusSub = est + "";
-            if (!i.getSubsequentBus3().getMonitoredStatus() && est != -9999) arrivalStatusSub += "*";
             holder.busArrivalSub.setText(arrivalStatusSub);
             applyColorLoad(holder.busArrivalSub, i.getSubsequentBus3());
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
@@ -153,7 +151,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     }
 
     private void comingSoon(TextView view){
-        view.setText("Soon");
+        view.setText(R.string.feature_coming_soon);
         view.setTextColor(Color.GRAY);
     }
 
@@ -168,7 +166,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     }
 
     private void applyColorLoad(TextView view, BusArrivalArrayObjectEstimate obj){
-        if (view.getText().toString().equalsIgnoreCase("")) {
+        if (view.getText().toString().equalsIgnoreCase("") || obj.getLoad() == null) {
             view.setTextColor(Color.GRAY);
             return;
         }
@@ -228,7 +226,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         }
     }
 
-    public class ArrivalButton implements View.OnClickListener{
+    public class ArrivalButton implements View.OnClickListener {
 
         private double longitude = -1000, latitude = -1000;
         private String stopCode = "";
@@ -267,11 +265,11 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             mapsIntent.putExtra("lng", longitude);
 
             //Get Bus stop longitude and latitude
-            BusStopsGeoDB db = new BusStopsGeoDB(activity);
-            BusStopsGeoObject busStopsGeoObject = db.getBusStopByBusStopCode(stopCode);
-            if (busStopsGeoObject != null){
-                mapsIntent.putExtra("buslat", busStopsGeoObject.getLat());
-                mapsIntent.putExtra("buslng", busStopsGeoObject.getLng());
+            BusStopsDB db = new BusStopsDB(activity);
+            BusStopJSON busStop = db.getBusStopByBusStopCode(stopCode);
+            if (busStop != null) {
+                mapsIntent.putExtra("buslat", busStop.getLatitude());
+                mapsIntent.putExtra("buslng", busStop.getLongitude());
             }
 
             activity.startActivity(mapsIntent);

@@ -1,65 +1,64 @@
 package com.itachi1706.busarrivalsg.GsonObjects.LTA;
 
-import android.location.Location;
-
 /**
  * Created by Kenneth on 18/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.GsonObjects.LTA
  */
 public class BusStopJSON {
 
-    private String Code, Road, Description, Summary, CreateDate;
-    private int BusStopCodeID;
+    private String BusStopCode, RoadName, Description;
+    private int timestamp;
+    private double Latitude, Longitude;
 
     private boolean hasDistance = false;
     private float distance;
 
-    public int getBusStopCodeID() {
-        return BusStopCodeID;
-    }
-
     public String getCode() {
-        return Code;
+        return BusStopCode;
     }
 
     public String getRoad() {
-        return Road;
+        return RoadName;
     }
 
     public String getBusStopName() {
         return Description;
     }
 
-    public String getSummary() {
-        return Summary;
-    }
-
-    public String getCreateDate() {
-        return CreateDate;
-    }
-
     public void setCode(String code) {
-        Code = code;
+        BusStopCode = code;
     }
 
     public void setRoad(String road) {
-        Road = road;
+        RoadName = road;
     }
 
     public void setDescription(String description) {
         Description = description;
     }
 
-    public void setSummary(String summary) {
-        Summary = summary;
+    public double getLatitude() {
+        return Latitude;
     }
 
-    public void setCreateDate(String createDate) {
-        CreateDate = createDate;
+    public void setLatitude(double latitude) {
+        Latitude = latitude;
     }
 
-    public void setBusStopCodeID(int busStopCodeID) {
-        BusStopCodeID = busStopCodeID;
+    public double getLongitude() {
+        return Longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        Longitude = longitude;
+    }
+
+    public int getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(int timestamp) {
+        this.timestamp = timestamp;
     }
 
     public boolean isHasDistance() {

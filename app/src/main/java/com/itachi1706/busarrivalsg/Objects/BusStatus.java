@@ -13,7 +13,6 @@ public class BusStatus {
     //Going to be implemented from 12 November
     private double latitude = -11, longitude = -11;
     private int visitNumber;
-    private boolean isMonitored = true;
 
     public boolean isWheelChairAccessible() {
         return isWheelChairAccessible;
@@ -77,13 +76,5 @@ public class BusStatus {
 
     public void setVisitNumber(int visitNumber) {
         this.visitNumber = visitNumber;
-    }
-
-    public boolean isMonitored() {
-        return isMonitored;
-    }
-
-    public void setIsMonitored(boolean isMonitored) {
-        this.isMonitored = isMonitored;
     }
 }

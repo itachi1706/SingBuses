@@ -21,8 +21,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
-import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeoObject;
+import com.itachi1706.busarrivalsg.Database.BusStopsDB;
+import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Objects.BusStatus;
 import com.itachi1706.busarrivalsg.R;
@@ -68,12 +68,9 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 
         holder.busOperator.setText(i.getOperator());
         switch (i.getOperator().toUpperCase()) {
-            case "SMRT":
-                holder.busOperator.setTextColor(Color.RED);
-                break;
-            case "SBST":
-                holder.busOperator.setTextColor(Color.MAGENTA);
-                break;
+            case "SMRT": holder.busOperator.setTextColor(Color.RED); break;
+            case "SBST": holder.busOperator.setTextColor(Color.MAGENTA); break;
+            case "TTS": holder.busOperator.setTextColor(Color.GREEN); break;
         }
 
         holder.busNumber.setText(i.getServiceNo());
@@ -110,7 +107,6 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 arrivalStatusNow = est + "";
             else
                 arrivalStatusNow = est + "";
-            if (!i.getCurrentBus().isMonitored() && est != -9999) arrivalStatusNow += "*";
             holder.busArrivalNow.setText(arrivalStatusNow);
             applyColorLoad(holder.busArrivalNow, i.getCurrentBus());
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
@@ -132,7 +128,6 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 arrivalStatusNext = est + "";
             else
                 arrivalStatusNext = est + "";
-            if (!i.getNextBus().isMonitored() && est != -9999) arrivalStatusNext += "*";
             holder.busArrivalNext.setText(arrivalStatusNext);
             applyColorLoad(holder.busArrivalNext, i.getNextBus());
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
@@ -158,7 +153,6 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 arrivalStatusSub = est + "";
             else
                 arrivalStatusSub = est + "";
-            if (!i.getSubsequentBus().isMonitored() && est != -9999) arrivalStatusSub += "*";
             holder.busArrivalSub.setText(arrivalStatusSub);
             applyColorLoad(holder.busArrivalSub, i.getSubsequentBus());
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
@@ -170,7 +164,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     }
 
     private void comingSoon(TextView view){
-        view.setText("Soon");
+        view.setText(R.string.feature_coming_soon);
         view.setTextColor(Color.GRAY);
     }
 
@@ -318,11 +312,11 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             mapsIntent.putExtra("lng", longitude);
 
             //Get Bus stop longitude and latitude
-            BusStopsGeoDB db = new BusStopsGeoDB(activity);
-            BusStopsGeoObject busStopsGeoObject = db.getBusStopByBusStopCode(stopCode);
-            if (busStopsGeoObject != null){
-                mapsIntent.putExtra("buslat", busStopsGeoObject.getLat());
-                mapsIntent.putExtra("buslng", busStopsGeoObject.getLng());
+            BusStopsDB db = new BusStopsDB(activity);
+            BusStopJSON busStop = db.getBusStopByBusStopCode(stopCode);
+            if (busStop != null) {
+                mapsIntent.putExtra("buslat", busStop.getLatitude());
+                mapsIntent.putExtra("buslng", busStop.getLongitude());
             }
 
             activity.startActivity(mapsIntent);

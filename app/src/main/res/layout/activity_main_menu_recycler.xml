@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainMenu">
+    tools:context=".MainMenuActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -81,6 +81,7 @@
                     android:textColor="@color/black"
                     android:layout_alignParentTop="true"
                     android:layout_toRightOf="@+id/pebbleImg"
+                    android:layout_toEndOf="@+id/pebbleImg"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
             </RelativeLayout>
@@ -125,7 +126,7 @@
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_gravity="end|bottom"
         android:src="@drawable/ic_plus_black_48dp"
-        app:elevation="@dimen/design_fab_elevation"
+        app:elevation="4dp"
         app:borderWidth="0dp"
         android:adjustViewBounds="false" />
 

@@ -40,10 +40,8 @@ import com.getpebble.android.kit.util.PebbleDictionary;
 import com.itachi1706.appupdater.AppUpdateChecker;
 import com.itachi1706.busarrivalsg.AsyncTasks.DlAndInstallCompanionApp;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
-import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStopsGeo;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesFavouritesRecycler;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
@@ -86,20 +84,21 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         fab = (FloatingActionButton) findViewById(R.id.add_fab);
         favouritesList = (RecyclerView) findViewById(R.id.rvFav);
 
-        favouritesList.setHasFixedSize(true);
+        if (favouritesList != null) favouritesList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         favouritesList.setLayoutManager(linearLayoutManager);
         favouritesList.setItemAnimator(new DefaultItemAnimator());
 
         swipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_favourites);
-        swipeToRefresh.setOnRefreshListener(this);
-
-        swipeToRefresh.setColorSchemeResources(
-                R.color.refresh_progress_1,
-                R.color.refresh_progress_2,
-                R.color.refresh_progress_3,
-                R.color.refresh_progress_4);
+        if (swipeToRefresh != null) {
+            swipeToRefresh.setOnRefreshListener(this);
+            swipeToRefresh.setColorSchemeResources(
+                    R.color.refresh_progress_1,
+                    R.color.refresh_progress_2,
+                    R.color.refresh_progress_3,
+                    R.color.refresh_progress_4);
+        }
 
         adapter = new FavouritesRecyclerAdapter(new ArrayList<BusServices>(), this);
         favouritesList.setAdapter(adapter);
@@ -202,12 +201,20 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     }
 
     public void hasPermissionToInstallPebbleApp(){
-        /*Uri url = Uri.parse("pebble://bundle/?addr=itachi1706.com&path=/android/SingBuses.pbw");
-        Intent installCompanionApp = new Intent(Intent.ACTION_VIEW);
-        installCompanionApp.setDataAndType(url, "application/octet-stream");
-        installCompanionApp.setComponent(new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity"));
-        startActivity(installCompanionApp);*/
-        new DlAndInstallCompanionApp(this).execute(getString(R.string.link_pebble_app));
+        final Activity activity = this;
+        new AlertDialog.Builder(this).setTitle("Which OS to install App to").setMessage("Based on your pebble device, " +
+                "where should we launch the install request to?\n\nPebble Time: Select Pebble Time\n" +
+                "Pebble with Time OS: Select Pebble Time\nPebble with 2.0 OS: Select Pebble").setPositiveButton("Pebble Time", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                new DlAndInstallCompanionApp(activity, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getString(R.string.link_pebble_app));
+            }
+        }).setNegativeButton("Pebble", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                new DlAndInstallCompanionApp(activity, false).execute(getString(R.string.link_pebble_app));
+            }
+        }).setNeutralButton(android.R.string.cancel, null).show();
     }
 
     @Override
@@ -268,9 +275,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
     private void checkIfDatabaseUpdated(){
         long busDBLastUpdate = sp.getLong("busDBTimeUpdated", -1);
-        long geoDBLastUpdate = sp.getLong("geoDBTimeUpdated", -1);
         long currentTime = System.currentTimeMillis();
-        boolean busDBUpdate = false, geoDBUpdate = false;
+        boolean busDBUpdate = false;
         if (busDBLastUpdate != -1){
             long lastUpdated = currentTime - busDBLastUpdate;
             long day = TimeUnit.MILLISECONDS.toDays(lastUpdated);
@@ -279,13 +285,6 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                 busDBUpdate = true;
             else
                 StaticVariables.init1TaskFinished = true;
-        }
-        if (geoDBLastUpdate != -1){
-            long lastUpdated = currentTime - geoDBLastUpdate;
-            long day = TimeUnit.MILLISECONDS.toDays(lastUpdated);
-            Log.d("INIT", "Geo DB Last Update: " + day);
-            if (day > 60)
-                geoDBUpdate = true;
         }
 
         //Main Database
@@ -313,32 +312,6 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             //Legacy Check
             if (sp.getLong("busDBTimeUpdated", -1) == -1){
                 sp.edit().putLong("busDBTimeUpdated", System.currentTimeMillis()).apply();
-            }
-        }
-
-        if (!sp.getBoolean("geoDBLoaded", false) || geoDBUpdate){
-            //First Boot with Geo Location db
-            if (!isNetworkAvailable()){
-                networkUnavailable(getString(R.string.database_name_bus_geo));
-            } else {
-                Log.d("INIT", "Initializing Bus Stop Geographical Database");
-                ProgressDialog dialogs = new ProgressDialog(this);
-                dialogs.setTitle(getString(R.string.database_name_bus_geo));
-                dialogs.setMessage(getString(R.string.dialog_message_retrieve_data_from_server));
-                dialogs.setCancelable(false);
-                dialogs.setIndeterminate(true);
-                dialogs.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-
-                BusStopsGeoDB geoDB = new BusStopsGeoDB(this);
-                geoDB.dropAndRebuildDB();
-                sp.edit().putBoolean("geoDBLoaded", false).apply();
-
-                new GetAllBusStopsGeo(dialogs, geoDB, this, sp).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-        } else {
-            //Legacy Check
-            if (sp.getLong("geoDBTimeUpdated", -1) == -1){
-                sp.edit().putLong("geoDBTimeUpdated", System.currentTimeMillis()).apply();
             }
         }
     }

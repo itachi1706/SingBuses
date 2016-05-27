@@ -9,11 +9,9 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsAPIArray;
 import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsJsonObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopsGeoObject;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
@@ -26,6 +24,7 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -35,17 +34,15 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
 
     Activity activity;
     BusStopsDB db;
-    BusStopsGeoDB geoDB;
     BusStopRecyclerAdapter adapter;
     Exception except;
 
     Location location;
 
-    public PopulateListWithCurrentLocationRecycler(Activity activity, BusStopsDB db, BusStopsGeoDB geoDB, BusStopRecyclerAdapter adapter){
+    public PopulateListWithCurrentLocationRecycler(Activity activity, BusStopsDB db, BusStopRecyclerAdapter adapter) {
         this.activity = activity;
         this.db = db;
         this.adapter = adapter;
-        this.geoDB = geoDB;
     }
 
     @Override
@@ -100,13 +97,27 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
             OnlineGMapsJsonObject[] maps = array.getResults();
             ArrayList<BusStopJSON> stops = new ArrayList<>();
             for (OnlineGMapsJsonObject map : maps) {
+                if (!map.getVicinity().equalsIgnoreCase("Singapore")){
+                    Log.e("LOCATE", "Bus Stop not in Singapore, ignoring...");
+                    continue;
+                }
+
                 String name = map.getName();
+                double lat = map.getGeometry().getLocation().getLat();
+                double lng = map.getGeometry().getLocation().getLng();
                 ArrayList<BusStopJSON> stopsTmp = db.getBusStopsByStopName(name);
                 BusStopJSON stop;
                 if (stopsTmp == null){
-                    Log.e("LOCATE", "Something went wrong here");
-                    Toast.makeText(activity, R.string.toast_message_invalid_data, Toast.LENGTH_SHORT).show();
-                    return;
+                    Log.e("LOCATE", "Something went wrong here (" + map.getName() + "). Retrying with GPS coordinates");
+                    BusStopJSON stopRetry = db.getBusStopByLocation(lng, lat);
+                    if (stopRetry == null) {
+                        Log.e("LOCATE", "Something definetely went wrong here (" + map.getName() + ")");
+                        Toast.makeText(activity, R.string.toast_message_invalid_data, Toast.LENGTH_SHORT).show();
+                        continue;
+                    }
+                    Log.w("LOCATE", "Found " + map.getName() + " as " + stopRetry.getBusStopName() + " via location!");
+                    stopsTmp = new ArrayList<>();
+                    stopsTmp.add(stopRetry);
                 }
                 if (stopsTmp.size() == 0) {
                     Log.e("LOCATE", activity.getString(R.string.toast_message_invalid_bus_stop));
@@ -118,22 +129,15 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
 
                     if (stop == null) {
                         //Unable to verify bus stop with new method, fallbacking to legacy method
-                        Log.e("VALIDATION", "Unable to validate location, Fallbacking to legacy method");
-                        stop = legacyVerifyMethod(stops, stopsTmp);
+                        Log.e("VALIDATION", "Unable to validate location, ignoring...");
+                        continue;
                     }
                 } else {
-                    Log.i("VALIDATION", "Validation not needed for " + stopsTmp.get(0).getCode());
+                    Log.i("VALIDATION", "Validation not needed for " + stopsTmp.get(0).getCode() + " (" + stopsTmp.get(0).getBusStopName() + ")");
                     stop = stopsTmp.get(0);
                 }
 
-                if (!map.getVicinity().equalsIgnoreCase("Singapore")){
-                    Log.e("LOCATE", "Bus Stop not in Singapore, ignoring...");
-                    continue;
-                }
-
                 //Get Location of Bus Stop
-                double lat = map.getGeometry().getLocation().getLat();
-                double lng = map.getGeometry().getLocation().getLng();
                 Location locate = new Location("");
                 locate.setLongitude(lng);
                 locate.setLatitude(lat);
@@ -161,65 +165,31 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
         //Each Bus Stop found in database
         Log.d("VALIDATION", "Validation Size: " + stopsTmp.size());
         for (BusStopJSON validation : stopsTmp){
-            BusStopsGeoObject geo = geoDB.getBusStopByBusStopCode(validation.getCode());
-            //Only 1 object
-            if (geo == null){
-                continue;
-            }
+            Location geo = new Location("");
+            geo.setLatitude(validation.getLatitude());
+            geo.setLongitude(validation.getLongitude());
 
-            Log.d("VALIDATE-LAT", "DB Lat: " + geo.getLat() + " | GMaps Lat: " + map.getGeometry().getLocation().getLat());
-            Log.d("VALIDATE-LNG", "DB Lng: " + geo.getLng() + " | GMaps Lng: " + map.getGeometry().getLocation().getLng());
+            Log.d("VALIDATE-LAT", "DB Lat: " + geo.getLatitude() + " | GMaps Lat: " + map.getGeometry().getLocation().getLat());
+            Log.d("VALIDATE-LNG", "DB Lng: " + geo.getLongitude() + " | GMaps Lng: " + map.getGeometry().getLocation().getLng());
 
             /**
              * According to http://gis.stackexchange.com/questions/8650/how-to-measure-the-accuracy-of-latitude-and-longitude
              * 4 decimal place has an accuracy level of up to 11m which hopefully is sufficient enough for us
              * (Don't think there's any bus stops thats less than 11m apart (besides opposite stops)
              */
-            String lat = String.format("%.4f", Double.parseDouble(geo.getLat()));
-            String lng = String.format("%.4f", Double.parseDouble(geo.getLng()));
-            String mapLat = String.format("%.4f", map.getGeometry().getLocation().getLat());
-            String mapLng = String.format("%.4f", map.getGeometry().getLocation().getLng());
-            Log.d("VALIDATION", "Validating with " + geo.getNo());
+            String lat = String.format(Locale.ENGLISH, "%.4f", geo.getLatitude());
+            String lng = String.format(Locale.ENGLISH, "%.4f", geo.getLongitude());
+            String mapLat = String.format(Locale.ENGLISH, "%.4f", map.getGeometry().getLocation().getLat());
+            String mapLng = String.format(Locale.ENGLISH, "%.4f", map.getGeometry().getLocation().getLng());
+            Log.i("VALIDATION", "Validating with " + validation.getCode() + " (" + stopsTmp.get(0).getBusStopName() + ")");
             Log.d("VALIDATE-LAT", "After Formatting DB Lat: " + lat + " | GMaps Lat: " + mapLat);
             Log.d("VALIDATE-LNG", "After Formatting DB Lng: " + lng + " | GMaps Lng: " + mapLng);
             if (lat.equalsIgnoreCase(mapLat) && lng.equalsIgnoreCase(mapLng)){
-                Log.i("VALIDATION", "Found Location at code " + validation.getCode());
+                Log.i("VALIDATION", "Found Location!");
                 return validation;
             }
         }
 
         return null;
-    }
-
-    /**
-     * If new Verification Method fails, falls back to this EXTREMELY hacky method :(
-     * Hopefully the new verification method never fails alright :P
-     * @param stops Current Data Saved
-     * @param stopsTmp The list of bus stops with the road name specified
-     * @return Hacky Bus Stop data
-     */
-    private BusStopJSON legacyVerifyMethod(ArrayList<BusStopJSON> stops, ArrayList<BusStopJSON> stopsTmp){
-        if (stops.size() == 0){
-            return stopsTmp.get(0);
-        }
-        BusStopJSON stop = new BusStopJSON();
-        boolean checks = false;
-        for (BusStopJSON check : stopsTmp){
-            char a = stops.get(0).getCode().charAt(0);
-            char b = check.getCode().charAt(0);
-            Log.d("LEGACY-CHECK", check.getBusStopName() + " [" + a + "|" + b + "]");
-            char c = stops.get(0).getCode().charAt(1);
-            char d = check.getCode().charAt(1);
-            if (a == b && c == d){
-                Log.d("LEGACY-CHECK-FOUND", check.getBusStopName() + " [" + a + "|" + b + "]");
-                stop = check;
-                checks = true;
-                break;
-            }
-        }
-        if (!checks)
-            stop = stopsTmp.get(0);
-
-        return stop;
     }
 }

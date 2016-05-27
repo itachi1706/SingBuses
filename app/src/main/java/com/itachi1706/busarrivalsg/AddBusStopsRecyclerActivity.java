@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.itachi1706.busarrivalsg.AsyncTasks.PopulateListWithCurrentLocationRecycler;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.GPSManager;
@@ -54,7 +53,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
 
         currentLocationGet = (FloatingActionButton) findViewById(R.id.current_location_fab);
         result = (RecyclerView) findViewById(R.id.rvNearestBusStops);
-        result.setHasFixedSize(true);
+        if (result != null) result.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         result.setLayoutManager(linearLayoutManager);
@@ -181,7 +180,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         }
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d("GPSManager", "Storage permission granted - initialize the gps source");
+            Log.d("GPSManager", "Location permission granted - initialize the gps source");
             // we have permission, so create the camerasource
             if (gps != null){
                 if (!gps.canGetLocation()){
@@ -215,12 +214,11 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
     }
 
     private void updateList(){
-        BusStopsGeoDB geoDB = new BusStopsGeoDB(this);
         BusStopsDB db = new BusStopsDB(this);
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
-        new PopulateListWithCurrentLocationRecycler(this, db, geoDB, adapter).execute(location);
+        new PopulateListWithCurrentLocationRecycler(this, db, adapter).execute(location);
     }
 
     @Override

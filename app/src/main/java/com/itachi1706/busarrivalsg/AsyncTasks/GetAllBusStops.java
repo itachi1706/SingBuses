@@ -41,7 +41,7 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
 
     @Override
     protected String doInBackground(Integer... skipValues) {
-        String url = "http://api.itachi1706.com/api/busstops.php";
+        String url = "http://api.itachi1706.com/api/busstops.php?api=2";
         String tmp = "";
 
         activity.runOnUiThread(new Runnable() {

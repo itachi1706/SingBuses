@@ -10,14 +10,13 @@ public class BusArrivalArrayObjectEstimate {
     //Going to be implemented from 12 November
     private String Latitude = "-11", Longitude = "-11"; //return double option
     private String VisitNumber; //return int option
-    private String Monitored;
 
     public String getFeature() {
         return Feature;
     }
 
     public String getLoad() {
-        return Load;
+        return (Load == null) ? "" : Load;
     }
 
     public String getEstimatedArrival() {
@@ -64,14 +63,6 @@ public class BusArrivalArrayObjectEstimate {
 
     public String getVisitNumberString() {
         return VisitNumber;
-    }
-
-    public String getMonitored() {
-        return Monitored;
-    }
-
-    public boolean getMonitoredStatus() {
-        return Monitored == null || Monitored.equalsIgnoreCase("true");
     }
 
     public boolean isWheelchairAccessible() {

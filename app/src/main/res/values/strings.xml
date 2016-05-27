@@ -22,6 +22,7 @@
     <string name="label_bus_status_placeholder">Status Unknown</string>
     <string name="label_bus_stop_name_placeholder">Bus Stop Name</string>
     <string name="label_favourites">Favourites</string>
+    <string name="feature_coming_soon">Soon</string>
 
     <!-- Link URLs -->
     <string name="link_updates">https://github.com/itachi1706/SingBuses/releases/latest</string>
@@ -34,6 +35,7 @@
     <string name="dialog_message_no_permission_gps">You have denied the app access to your phone\'s location. We are unable to determine your location as a result.\n\nIf you wish to grant the app permissions right now, click the settings button and grant it permissions there</string>
     <string name="dialog_title_request_permission_gps">Requesting GPS Permission</string>
     <string name="dialog_message_request_permission_gps_rationale">In order for the app to retrieve your current position to find bus stops near you, it requires access to your Location. Please grant it in the next screen to use it</string>
+    <string name="dialog_message_request_permission_gps_view_map_rationale">In order for the app to retrieve your current position to place a marker on the map, it requires access to your Location. Please grant it in the next screen to use it</string>
     <!-- Storage -->
     <string name="dialog_message_no_permission_external_storage">You have denied the app access to your phone\'s storage. Due to the fact that installing the companion Pebble app requires you to use the Official Pebble App for installation, the app needs to save the Pebble App File onto your internal storage. By denying this permission, install cannot proceed as the Official Pebble App will not be able to access this app\'s private storage (which would not have required this permission).\n\nIf you wish to grant the app permissions right now, click the settings button and grant it permissions there</string>
     <string name="dialog_title_request_permission_external_storage">Requesting External Storage Permission</string>
@@ -86,11 +88,7 @@
     <string name="progress_message_bus_stop_data_parse_pre">Parsing bus stops data…</string>
     <string name="progress_title_bus_stop_data_download">Downloading Bus Stop Data</string>
     <string name="progress_message_bus_stop_data_download">This will take a few minutes. Be patient :) \nDownloading latest bus stop data</string>
-    <string name="progress_title_bus_stop_geo_data_download">Downloading Bus Stop Geographical Data</string>
-    <string name="progress_message_bus_stop_geo_data_download">This will take a few minutes. Be patient :) \nGetting Bus Stops Geographical Data…</string>
     <string name="progress_message_bus_stop_data_parse">Parsing bus stops data…\nCurrent Stop: %1$s\n%2$s</string>
-    <string name="progress_title_bus_stop_geo_data_parse">Parsing Bus Stop Geographical Data…</string>
-    <string name="progress_message_bus_stop_geo_data_parse_pre">Parsing bus stops geographical data retrieved…</string>
 
     <!-- Alert Dialogs Messages -->
     <string name="dialog_message_latest_update">You are on the latest release! No update is required.</string>
@@ -111,7 +109,6 @@
     <string name="dialog_title_changelog">Changelog</string>
     <string name="dialog_title_retrieve_data_bus_service">Downloading Bus Service Data</string>
     <string name="dialog_message_retrieve_data_bus_service">Getting all Bus Services in Bus Stop %1$s</string>
-    <string name="dialog_message_bus_stop_geo_data_parse">"Parsing %1$s \n[%2$s]"</string>
 
     <!-- Toast Messages -->
     <string name="toast_message_add_to_fav">Added to favourites</string>
@@ -119,7 +116,6 @@
     <string name="toast_message_invalid_json_string">Invalid JSON String</string>
     <string name="toast_message_retrieving_location">Getting your location…</string>
     <string name="toast_bus_stop_data_parse_success">%1$s bus stops saved to database!</string>
-    <string name="toast_bus_stop_geo_data_parse_success">%1$s bus stops geo data saved to database!</string>
     <string name="toast_message_timeout_google_places_api">Google did not respond after the period of time</string>
     <string name="toast_message_invalid_json">Invalid JSON. Please try again</string>
     <string name="toast_message_invalid_request">Invalid request. Please try again</string>
