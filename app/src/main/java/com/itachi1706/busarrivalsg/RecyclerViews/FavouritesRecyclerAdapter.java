@@ -110,7 +110,6 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 arrivalStatusNow = est + "";
             else
                 arrivalStatusNow = est + "";
-            if (!i.getCurrentBus().isMonitored() && est != -9999) arrivalStatusNow += "*";
             holder.busArrivalNow.setText(arrivalStatusNow);
             applyColorLoad(holder.busArrivalNow, i.getCurrentBus());
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
@@ -132,7 +131,6 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 arrivalStatusNext = est + "";
             else
                 arrivalStatusNext = est + "";
-            if (!i.getNextBus().isMonitored() && est != -9999) arrivalStatusNext += "*";
             holder.busArrivalNext.setText(arrivalStatusNext);
             applyColorLoad(holder.busArrivalNext, i.getNextBus());
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
@@ -158,7 +156,6 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 arrivalStatusSub = est + "";
             else
                 arrivalStatusSub = est + "";
-            if (!i.getSubsequentBus().isMonitored() && est != -9999) arrivalStatusSub += "*";
             holder.busArrivalSub.setText(arrivalStatusSub);
             applyColorLoad(holder.busArrivalSub, i.getSubsequentBus());
             holder.wheelchairSub.setVisibility(View.INVISIBLE);

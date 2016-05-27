@@ -93,7 +93,6 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 arrivalStatusNow = est + "";
             else
                 arrivalStatusNow = est + "";
-            if (!i.getNextBus().getMonitoredStatus() && est != -9999) arrivalStatusNow += "*";
             holder.busArrivalNow.setText(arrivalStatusNow);
             applyColorLoad(holder.busArrivalNow, i.getNextBus());
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
@@ -116,7 +115,6 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 arrivalStatusNext = est + "";
             else
                 arrivalStatusNext = est + "";
-            if (!i.getSubsequentBus().getMonitoredStatus() && est != -9999) arrivalStatusNext += "*";
             holder.busArrivalNext.setText(arrivalStatusNext);
             applyColorLoad(holder.busArrivalNext, i.getSubsequentBus());
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
@@ -142,7 +140,6 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 arrivalStatusSub = est + "";
             else
                 arrivalStatusSub = est + "";
-            if (!i.getSubsequentBus3().getMonitoredStatus() && est != -9999) arrivalStatusSub += "*";
             holder.busArrivalSub.setText(arrivalStatusSub);
             applyColorLoad(holder.busArrivalSub, i.getSubsequentBus3());
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
