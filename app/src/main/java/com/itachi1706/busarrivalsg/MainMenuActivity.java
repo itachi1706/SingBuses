@@ -287,6 +287,14 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                 StaticVariables.init1TaskFinished = true;
         }
 
+        // Check upgrade
+        int dbver = sp.getInt("busDBVerCheck", 0);
+        Log.d("DB UPGRADE", "Current DB Version: " + dbver);
+        switch (dbver) {
+            case 0:
+            case 1: Log.i("DB UPGRADE", "Upgrading to V2 API DB"); busDBUpdate = true; sp.edit().putInt("busDBVerCheck", 2); break;
+        }
+
         //Main Database
         if (!sp.getBoolean("busDBLoaded", false) || busDBUpdate){
             //First Boot, populate database
