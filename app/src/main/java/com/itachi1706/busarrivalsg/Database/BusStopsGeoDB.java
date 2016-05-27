@@ -19,7 +19,7 @@ import java.util.ArrayList;
 @Deprecated
 public class BusStopsGeoDB extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     //DB Name
     public static final String DATABASE_NAME = "appdb.db";
@@ -121,7 +121,7 @@ public class BusStopsGeoDB extends SQLiteOpenHelper {
      */
     public BusStopsGeoObject getBusStopByBusStopCode(String busStopCode){
         busStopCode = DatabaseUtils.sqlEscapeString(busStopCode);
-        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + GEO_NO + "='" + busStopCode + "';";
+        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + GEO_NO + "=" + busStopCode + ";";
         SQLiteDatabase db = this.getReadableDatabase();
         BusStopsGeoObject bs = new BusStopsGeoObject();
 
@@ -149,7 +149,7 @@ public class BusStopsGeoDB extends SQLiteOpenHelper {
      */
     public BusStopsGeoObject getBusStopByStopName(String stopName){
         stopName = DatabaseUtils.sqlEscapeString(stopName);
-        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + GEO_NAME + "='" + stopName + "';";
+        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + GEO_NAME + "=" + stopName + ";";
         SQLiteDatabase db = this.getReadableDatabase();
         BusStopsGeoObject bs = new BusStopsGeoObject();
 

@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.itachi1706.busarrivalsg.AsyncTasks.PopulateListWithCurrentLocationRecycler;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.Database.BusStopsGeoDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.GPSManager;
@@ -215,12 +214,11 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
     }
 
     private void updateList(){
-        BusStopsGeoDB geoDB = new BusStopsGeoDB(this);
         BusStopsDB db = new BusStopsDB(this);
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
-        new PopulateListWithCurrentLocationRecycler(this, db, geoDB, adapter).execute(location);
+        new PopulateListWithCurrentLocationRecycler(this, db, adapter).execute(location);
     }
 
     @Override

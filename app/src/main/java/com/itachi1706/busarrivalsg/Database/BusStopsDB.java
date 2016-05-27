@@ -77,7 +77,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
 
     public boolean checkIfExistAlready(BusStopJSON busStop){
         String code = DatabaseUtils.sqlEscapeString(busStop.getCode());
-        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_CODE + "='" + code + "';";
+        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_CODE + "=" + code + ";";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         int count = cursor.getCount();
@@ -164,7 +164,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
      */
     public BusStopJSON getBusStopByBusStopCode(String busStopCode){
         busStopCode = DatabaseUtils.sqlEscapeString(busStopCode);
-        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_CODE + "='" + busStopCode + "';";
+        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_CODE + "=" + busStopCode + ";";
         SQLiteDatabase db = this.getReadableDatabase();
         BusStopJSON bs = new BusStopJSON();
 
@@ -186,7 +186,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
      */
     public BusStopJSON getBusStopByStopName(String stopName){
         stopName = DatabaseUtils.sqlEscapeString(stopName);
-        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_DESC + "='" + stopName + "';";
+        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_DESC + "=" + stopName + ";";
         SQLiteDatabase db = this.getReadableDatabase();
         BusStopJSON bs = new BusStopJSON();
 
@@ -210,7 +210,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
      */
     public ArrayList<BusStopJSON> getBusStopsByStopName(String stopName){
         stopName = DatabaseUtils.sqlEscapeString(stopName);
-        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_DESC + "='" + stopName + "';";
+        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_DESC + "=" + stopName + ";";
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<BusStopJSON> result = new ArrayList<>();
 
@@ -228,14 +228,41 @@ public class BusStopsDB extends SQLiteOpenHelper {
     }
 
     /**
+     * Returns a bus stop object that is found
+     * @param lng Longitude
+     * @param lat Latitude
+     * @return Bus Stop Object if found, null otherwise
+     */
+    public BusStopJSON getBusStopByLocation(double lng, double lat) {
+        String longitude = lng + "";
+        String latitude = lat + "";
+        longitude = longitude.substring(0, longitude.length() - 2);
+        latitude = latitude.substring(0, latitude.length() - 2);
+        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_LONGITUDE + " LIKE '" + longitude + "%' AND " + BUS_STOP_LATITUDE + " LIKE '" + latitude + "%';";
+        SQLiteDatabase db = this.getReadableDatabase();
+        BusStopJSON result = new BusStopJSON();
+
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.getCount() == 0) return null;
+        if (cursor.moveToFirst()) {
+            do {
+                result = getBusStopJsonObject(cursor);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return result;
+    }
+
+    /**
      * Returns a list of Bus Stops based on query string
      * @param query Query String
      * @return Bus Stop Object ArrayList
      */
     public ArrayList<BusStopJSON> getBusStopsByQuery(String query){
-        query = DatabaseUtils.sqlEscapeString(query);
-        String queryString = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_CODE + " LIKE '%" + query + "%' COLLATE NOCASE OR "
-                + BUS_STOP_ROAD + " LIKE '%" + query + "%' COLLATE NOCASE OR " + BUS_STOP_DESC + " LIKE '%" + query + "%' COLLATE NOCASE;";
+        query = DatabaseUtils.sqlEscapeString("%" + query + "%");
+        String queryString = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_CODE + " LIKE " + query + " COLLATE NOCASE OR "
+                + BUS_STOP_ROAD + " LIKE " + query + " COLLATE NOCASE OR " + BUS_STOP_DESC + " LIKE " + query + " COLLATE NOCASE;";
         System.out.println("DB QUERY-STRING: "+ queryString);
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<BusStopJSON> result = new ArrayList<>();
