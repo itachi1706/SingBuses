@@ -1,6 +1,8 @@
 package com.itachi1706.busarrivalsg.AsyncTasks;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,9 +30,15 @@ public class DlAndInstallCompanionApp extends AsyncTask<String, Void, Boolean> {
     Exception except = null;
     private Uri link;
     private String filePath;
+    private boolean useNewPebbleApp = false;
+    private boolean isPebbleTime = false; // TODO: This is a placeholder for when a Pebble Time Color version appears
 
-    public DlAndInstallCompanionApp(Activity activity){
+    private ComponentName pebbleO = new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity");
+    private ComponentName pebbleT = new ComponentName("com.getpebble.android.basalt", "com.getpebble.android.ui.UpdateActivity");
+
+    public DlAndInstallCompanionApp(Activity activity, boolean useNewPebbleApp){
         this.activity = activity;
+        this.useNewPebbleApp = useNewPebbleApp;
     }
 
     @Override
@@ -45,7 +53,8 @@ public class DlAndInstallCompanionApp extends AsyncTask<String, Void, Boolean> {
             conn.connect();
             Log.d("DL", "Starting Download");
 
-            filePath = Environment.getExternalStorageDirectory() + File.separator + "SingBuses" + File.separator;
+            //filePath = Environment.getExternalStorageDirectory() + File.separator + "SingBuses" + File.separator;
+            filePath = activity.getExternalCacheDir() + File.separator + "pebble" + File.separator;
 
             Log.d("DL", "File Path: " + filePath);
 
@@ -94,9 +103,14 @@ public class DlAndInstallCompanionApp extends AsyncTask<String, Void, Boolean> {
         }
         Intent installCompanionApp = new Intent(Intent.ACTION_VIEW);
         installCompanionApp.setDataAndType(Uri.fromFile(new File(filePath + "SingBuses.pbw")), "application/octet-stream");
-        installCompanionApp.setComponent(new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity"));
-        //installCompanionApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.startActivity(installCompanionApp);
+        installCompanionApp.setComponent((useNewPebbleApp) ? pebbleT : pebbleO);
+        try {
+            activity.startActivity(installCompanionApp);
+        } catch (ActivityNotFoundException e) {
+            String applicationName = (useNewPebbleApp) ? "Pebble Time" : "Pebble";
+            new AlertDialog.Builder(activity).setTitle("App Not Installed").setMessage("The " + applicationName + " Application is not installed on your device!").setPositiveButton(android.R.string.ok, null).show();
+        }
+
     }
 
     private boolean tryAndCreateFolder(File folder){

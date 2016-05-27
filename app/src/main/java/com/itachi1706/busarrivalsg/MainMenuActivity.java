@@ -200,12 +200,20 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     }
 
     public void hasPermissionToInstallPebbleApp(){
-        /*Uri url = Uri.parse("pebble://bundle/?addr=itachi1706.com&path=/android/SingBuses.pbw");
-        Intent installCompanionApp = new Intent(Intent.ACTION_VIEW);
-        installCompanionApp.setDataAndType(url, "application/octet-stream");
-        installCompanionApp.setComponent(new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity"));
-        startActivity(installCompanionApp);*/
-        new DlAndInstallCompanionApp(this).execute(getString(R.string.link_pebble_app));
+        final Activity activity = this;
+        new AlertDialog.Builder(this).setTitle("Which OS to install App to").setMessage("Based on your pebble device, " +
+                "where should we launch the install request to?\n\nPebble Time Series: Select Pebble Time\n" +
+                "Pebble with Time OS: Select Pebble Time\nPebble with 2.0 firmware: Select Pebble").setPositiveButton("Pebble Time", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                new DlAndInstallCompanionApp(activity, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getString(R.string.link_pebble_app));
+            }
+        }).setNegativeButton("Pebble", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                new DlAndInstallCompanionApp(activity, false).execute(getString(R.string.link_pebble_app));
+            }
+        }).setNeutralButton(android.R.string.cancel, null).show();
     }
 
     @Override
