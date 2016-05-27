@@ -37,29 +37,6 @@ public class StaticVariables {
         return !jsonString.startsWith("<!DOCTYPE html>");
     }
 
-    public static String getChangelogStringFromArrayList(ArrayList<String> changelog){
-        /**
-         * Legend of Stuff
-         * 1st Line - Current Version Code Check
-         * 2nd Line - Current Version Number
-         * 3rd Line - Link to New Version
-         * # - Changelog Version Number (Bold)
-         * * - Points
-         * @ - Break Line
-         */
-        StringBuilder changelogBuilder = new StringBuilder();
-        changelogBuilder.append("Latest Version: ").append(changelog.get(1)).append("-b").append(changelog.get(0)).append("<br/><br/>");
-        for (String line : changelog){
-            if (line.startsWith("#"))
-                changelogBuilder.append("<b>").append(line.replace('#', ' ')).append("</b><br />");
-            else if (line.startsWith("*"))
-                changelogBuilder.append(" - ").append(line.replace('*', ' ')).append("<br />");
-            else if (line.startsWith("@"))
-                changelogBuilder.append("<br />");
-        }
-        return changelogBuilder.toString();
-    }
-
     private static Calendar splitLTADate(String dateString){
         Log.d("SPLIT", "Date String to parse: " + dateString);
         String[] firstSplit = dateString.split("T");

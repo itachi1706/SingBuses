@@ -3,6 +3,7 @@ package com.itachi1706.busarrivalsg.Database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -151,6 +152,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
      * @return Bus Stop Object
      */
     public BusStopJSON getBusStopByBusStopCode(String busStopCode){
+        busStopCode = DatabaseUtils.sqlEscapeString(busStopCode);
         String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_CODE + "='" + busStopCode + "';";
         SQLiteDatabase db = this.getReadableDatabase();
         BusStopJSON bs = new BusStopJSON();
@@ -177,6 +179,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
      * @return Bus Stop Object
      */
     public BusStopJSON getBusStopByStopName(String stopName){
+        stopName = DatabaseUtils.sqlEscapeString(stopName);
         String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_DESC + "='" + stopName + "';";
         SQLiteDatabase db = this.getReadableDatabase();
         BusStopJSON bs = new BusStopJSON();
@@ -205,6 +208,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
      * @return Bus Stop Object ArrayList
      */
     public ArrayList<BusStopJSON> getBusStopsByStopName(String stopName){
+        stopName = DatabaseUtils.sqlEscapeString(stopName);
         String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_DESC + "='" + stopName + "';";
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<BusStopJSON> result = new ArrayList<>();
@@ -236,6 +240,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
      * @return Bus Stop Object ArrayList
      */
     public ArrayList<BusStopJSON> getBusStopsByQuery(String query){
+        query = DatabaseUtils.sqlEscapeString(query);
         String queryString = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_CODE + " LIKE '%" + query + "%' COLLATE NOCASE OR "
                 + BUS_STOP_ROAD + " LIKE '%" + query + "%' COLLATE NOCASE OR " + BUS_STOP_DESC + " LIKE '%" + query + "%' COLLATE NOCASE;";
         System.out.println("DB QUERY-STRING: "+ queryString);

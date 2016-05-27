@@ -3,6 +3,7 @@ package com.itachi1706.busarrivalsg.Database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
  * Created by Kenneth on 21/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.Database
  */
+@Deprecated
 public class BusStopsGeoDB extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
@@ -118,6 +120,7 @@ public class BusStopsGeoDB extends SQLiteOpenHelper {
      * @return Bus Stop Object
      */
     public BusStopsGeoObject getBusStopByBusStopCode(String busStopCode){
+        busStopCode = DatabaseUtils.sqlEscapeString(busStopCode);
         String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + GEO_NO + "='" + busStopCode + "';";
         SQLiteDatabase db = this.getReadableDatabase();
         BusStopsGeoObject bs = new BusStopsGeoObject();
@@ -145,6 +148,7 @@ public class BusStopsGeoDB extends SQLiteOpenHelper {
      * @return Bus Stop Object
      */
     public BusStopsGeoObject getBusStopByStopName(String stopName){
+        stopName = DatabaseUtils.sqlEscapeString(stopName);
         String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + GEO_NAME + "='" + stopName + "';";
         SQLiteDatabase db = this.getReadableDatabase();
         BusStopsGeoObject bs = new BusStopsGeoObject();
