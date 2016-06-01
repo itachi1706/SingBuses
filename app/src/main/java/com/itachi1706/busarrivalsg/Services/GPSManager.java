@@ -158,34 +158,25 @@ public class GPSManager extends Service implements LocationListener {
      * Function to show settings alert dialog
      */
     public void showSettingsAlert(){
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        if (mContext == null) {
+            Log.e("GPSManager", "Invalid Context");
+            return;
+        }
 
-        // Setting Dialog Title
-        alertDialog.setTitle(getString(R.string.dialog_title_gps_disabled));
-
-        // Setting Dialog Message
-        alertDialog.setMessage(getString(R.string.dialog_message_gps_disabled));
-
-        // Setting Icon to Dialog
-        //alertDialog.setIcon(R.drawable.delete);
-
-        // On pressing Settings button
-        alertDialog.setPositiveButton(getString(R.string.dialog_action_positive_settings), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int which) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                mContext.startActivity(intent);
-            }
-        });
-
-        // on pressing cancel button
-        alertDialog.setNegativeButton(getString(R.string.dialog_action_negative_cancel), new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(mContext).setTitle(R.string.dialog_title_gps_disabled)
+                .setMessage(R.string.dialog_message_gps_disabled)
+                .setPositiveButton(R.string.dialog_action_positive_settings, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        mContext.startActivity(intent);
+                    }
+                }).setNegativeButton(R.string.dialog_action_negative_cancel, new DialogInterface.OnClickListener() {
+            @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
-        });
-
-        // Showing Alert Message
-        alertDialog.show();
+        }).show();
     }
 
     /**
