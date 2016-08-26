@@ -1,81 +1,65 @@
 language: android
 jdk: oraclejdk7
-
-
-# Use Container Based
 sudo: false
-
 cache:
   directories:
-    - ${TRAVIS_BUILD_DIR}/gradle/caches/
-    - ${TRAVIS_BUILD_DIR}/gradle/wrapper/dists/
-
+  - "${TRAVIS_BUILD_DIR}/gradle/caches/"
+  - "${TRAVIS_BUILD_DIR}/gradle/wrapper/dists/"
 env:
   global:
-    - API_LEVEL=23
-    - ANDROID_EMULATOR_API_LEVEL=23
-    - ANDROID_BUILD_TOOLS_VERSION=23.0.3
-    - ANDROID_ABI=google_apis/armeabi-v7a
-    - ADB_INSTALL_TIMEOUT=20
-    - ANDROID_TARGET=android-22
+  - API_LEVEL=23
+  - ANDROID_EMULATOR_API_LEVEL=23
+  - ANDROID_BUILD_TOOLS_VERSION=23.0.3
+  - ANDROID_ABI=google_apis/armeabi-v7a
+  - ADB_INSTALL_TIMEOUT=20
+  - ANDROID_TARGET=android-22
 android:
-    components:
-        - platform-tools
-        - tools
-        - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-        - android-$API_LEVEL
-        - android-$ANDROID_EMULATOR_API_LEVEL
-
-        # Additional components
-        # - extra-google-google_play_services
-        - extra-android-support
-        - extra-google-m2repository
-        - extra-android-m2repository
-        - addon-google_apis-google-$API_LEVEL
-        - addon-google_apis-google-$ANDROID_EMULATOR_API_LEVEL
-
-        # Specify at least one system image,
-        # if you need to run emulator(s) during your tests
-        # - sys-img-armeabi-v7a-android-19
-        # - sys-img-x86-android-17
-        - sys-img-armeabi-v7a-google_apis-$ANDROID_EMULATOR_API_LEVEL
-
+  components:
+  - platform-tools
+  - tools
+  - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+  - android-$API_LEVEL
+  - android-$ANDROID_EMULATOR_API_LEVEL
+  - extra-android-support
+  - extra-google-m2repository
+  - extra-android-m2repository
+  - addon-google_apis-google-$API_LEVEL
+  - addon-google_apis-google-$ANDROID_EMULATOR_API_LEVEL
+  - sys-img-armeabi-v7a-google_apis-$ANDROID_EMULATOR_API_LEVEL
 before_install:
-    - android list targets
-    - chmod +x gradlew
-    # Create and start emulator
-    - echo no | android create avd --force -n test -t "android-"$ANDROID_EMULATOR_API_LEVEL --abi $ANDROID_ABI
-    - emulator -avd test -no-skin -no-audio -no-window &
-    - android-wait-for-emulator
-
-script: ./gradlew connectedAndroidTest
-
+- android list targets
+- chmod +x gradlew
+- echo no | android create avd --force -n test -t "android-"$ANDROID_EMULATOR_API_LEVEL
+  --abi $ANDROID_ABI
+- emulator -avd test -no-skin -no-audio -no-window &
+- android-wait-for-emulator
+script: "./gradlew connectedAndroidTest"
 after_success:
-    - mv ./app/build/outputs/apk/app-debug.apk ./app/build/outputs/apk/SingBuses-debug.apk
-    - ls ./app/build/outputs/apk/
-
+- mv ./app/build/outputs/apk/app-debug.apk ./app/build/outputs/apk/SingBuses-debug.apk
+- ls ./app/build/outputs/apk/
 deploy:
-    provider: releases
-    api_key: $OAUTH_KEY
-    file: ./app/build/outputs/apk/SingBuses-debug.apk
-    skip_cleanup: true
-    on:
-        tags: true
-
+  provider: releases
+  api_key: "$OAUTH_KEY"
+  file: "./app/build/outputs/apk/SingBuses-debug.apk"
+  skip_cleanup: true
+  on:
+    tags: true
 notifications:
   irc:
     channels:
-      - "chat.freenode.net#itachi1706mc"
-      - "irc.esper.net#itachi1706"
+    - chat.freenode.net#itachi1706mc
+    - irc.esper.net#itachi1706
     on_success: always
     on_failure: always
     template:
-      - "%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{commit_subject}"
-      - "Build Status : %{message}"
-      - "Change view : %{compare_url}"
-      - "Build details : %{build_url}"
+    - "%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{commit_subject}"
+    - 'Build Status : %{message}'
+    - 'Change view : %{compare_url}'
+    - 'Build details : %{build_url}'
   email:
     recipients:
-      - $PRIVATE_EMAIL
-    on_success: change # default: change
-    on_failure: always # default: always
+    - "$PRIVATE_EMAIL"
+    on_success: change
+    on_failure: always
+  slack:
+    secure: hoZqAanIUu6B/i7tCc8BX9DKHmc2ERJZTVzxrwRZ3lkD5L/AP7tVHQmkPgF0Y1pf6cDBdc4yVTZjQWb8WU2fsFjjje3cswb7RIjsy8/BxKZ7jgN1AhZCNI54efcl46mRZjyNVL9QF2nb089F2+7uauxD381aTewNgaQrwHnuQF0KtIyCIyAlyMUURjP8T5bxj0w64NUDgUKS6ps1D8R5VnKZxViMthhswZN2R5uDPW1/gT+XLnYm1fmPByWPeePGv7GlIZE6XgllpUhPLibLLTeLhiyEpvKTb8pclQdTVCZs9llprNN56c6drMigioCJJ7P6dPLRZifGXJdZ9+BtupvKZ9JhHUALp+cclqP6A5XUQAaabQVHgwSuCRspnjKhf/sLotIG0rCH7btNljugnHcyam6/jTjkpQ0EWvryKhZwMhXcq+BpCk5xwPz4ki0QytCgISa9W5Ww74dpGotxtRiU2IacpLbNtXSU1RRa1JqbySDSiuJ5wFvPx4tDbrW/OVzdMl5ZIiDuQLM4OHKeZjI8xrhOUFakUziKNkt0enxdrBiaFSB5CLUdxVTo4Idd1sFccBpl9MhzJ4Nf3flJ9q83hSaJHeZAGcoQFW+4VwODptnQR7AR8RWCzB/515tOeYqfoEWStF0Tt1F1ZrZ3tPG45UsWXeyFIli2Twd7u4I=
