@@ -72,6 +72,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             case "SMRT": holder.busOperator.setTextColor(Color.RED); break;
             case "SBST": holder.busOperator.setTextColor(Color.MAGENTA); break;
             case "TTS": holder.busOperator.setTextColor(Color.GREEN); break;
+            case "GAS": holder.busOperator.setTextColor(Color.YELLOW); break;
         }
         holder.busNumber.setText(i.getServiceNo());
         if (i.getStatus().equalsIgnoreCase("not")){
