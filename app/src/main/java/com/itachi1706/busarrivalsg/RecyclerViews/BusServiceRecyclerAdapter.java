@@ -167,7 +167,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     }
 
     private void applyColorLoad(TextView view, BusArrivalArrayObjectEstimate obj){
-        if (view.getText().toString().equalsIgnoreCase("") || obj.getLoad() == null) {
+        if (view.getText().toString().equalsIgnoreCase("") || obj.getLoad() == null || view.getText().toString().equalsIgnoreCase("-")) {
             view.setTextColor(Color.GRAY);
             return;
         }
@@ -248,8 +248,8 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 return;
             }
             if (longitude == -11 && latitude == -11){
-                new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_bus_location_coming_soon)
-                        .setMessage(R.string.dialog_message_bus_location_coming_soon)
+                new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_bus_timing_unavailable)
+                        .setMessage(R.string.dialog_message_bus_timing_unavailable)
                         .setPositiveButton(R.string.dialog_action_positive_close, null).show();
                 return;
             }
