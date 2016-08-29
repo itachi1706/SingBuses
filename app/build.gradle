@@ -24,8 +24,8 @@ android {
         applicationId "com.itachi1706.busarrivalsg"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 184
-        versionName "2.0.2"
+        versionCode 190
+        versionName "2.0.3"
         vectorDrawables.useSupportLibrary = true
     }
     compileOptions {
@@ -64,6 +64,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.getpebble:pebblekit:3.0.0'
     compile 'com.google.code.gson:gson:2.4'
-    compile 'com.google.android.gms:play-services-maps:9.0.0'
+    compile 'com.google.android.gms:play-services-maps:9.4.0'
     compile project(':appupdater')
 }
