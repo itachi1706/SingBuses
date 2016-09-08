@@ -24,8 +24,8 @@ android {
         applicationId "com.itachi1706.busarrivalsg"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 190
-        versionName "2.0.3"
+        versionCode 192
+        versionName "2.0.4"
         vectorDrawables.useSupportLibrary = true
     }
     compileOptions {
