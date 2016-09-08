@@ -1,11 +1,8 @@
 package com.itachi1706.busarrivalsg;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -14,8 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
-import com.itachi1706.appupdater.AppUpdateChecker;
-import com.itachi1706.appupdater.Util.UpdaterHelper;
+import com.itachi1706.appupdater.SettingsInitializer;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.util.Date;
@@ -74,43 +70,9 @@ public class MainSettings extends AppCompatActivity {
             Preference prefs = findPreference("view_sdk_version");
             prefs.setSummary(android.os.Build.VERSION.RELEASE);
 
-            findPreference("launch_updater").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    new AppUpdateChecker(getActivity(), sp, R.mipmap.ic_launcher, StaticVariables.BASE_SERVER_URL).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    return false;
-                }
-            });
-
-            findPreference("android_changelog").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    UpdaterHelper.settingGenerateChangelog(sp, getActivity());
-                    return true;
-                }
-            });
-
-            Preference oldVersionPref = findPreference("get_old_app");
-            oldVersionPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(getResources().getString(R.string.link_legacy)));
-                    startActivity(i);
-                    return false;
-                }
-            });
-
-            Preference latestVersionPref = findPreference("get_latest_app");
-            latestVersionPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(getResources().getString(R.string.link_updates)));
-                    startActivity(i);
-                    return false;
-                }
-            });
+            new SettingsInitializer(getActivity(), R.mipmap.ic_launcher, StaticVariables.BASE_SERVER_URL,
+                    getResources().getString(R.string.link_legacy), getResources().getString(R.string.link_updates))
+                    .explodeSettings(this);
 
             Preference favJson = findPreference("fav_json");
             favJson.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
