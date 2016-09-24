@@ -34,7 +34,7 @@ before_install:
 - echo no | android create avd --force -n test -t "android-"$ANDROID_EMULATOR_API_LEVEL --abi $ANDROID_ABI --tag $ANDROID_TAG
 - emulator -avd test -no-skin -no-window &
 - android-wait-for-emulator
-script: "./gradlew connectedAndroidTest"
+script: travis_wait ./gradlew connectedAndroidTest
 after_success:
 - mv ./app/build/outputs/apk/app-debug.apk ./app/build/outputs/apk/SingBuses-debug.apk
 - ls ./app/build/outputs/apk/
