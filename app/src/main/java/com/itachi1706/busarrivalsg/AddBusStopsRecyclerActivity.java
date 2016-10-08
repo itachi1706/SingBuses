@@ -46,6 +46,8 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
 
     BusStopRecyclerAdapter adapter;
 
+    private BusStopsDB db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +64,12 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         adapter = new BusStopRecyclerAdapter(new ArrayList<BusStopJSON>(), this);
         result.setAdapter(adapter);
 
+        // Populate with blank
+        db = new BusStopsDB(this);
+        ArrayList<BusStopJSON> results = db.getAllBusStops();
+        adapter.updateAdapter(results);
+        adapter.notifyDataSetChanged();
+
         textLane = (EditText) findViewById(R.id.inputData);
         TextWatcher inputWatcher = new TextWatcher() {
             @Override
@@ -74,7 +82,6 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String query = s.toString();
                 Log.d("TextWatcher", "Query searched: " + query);
-                BusStopsDB db = new BusStopsDB(AddBusStopsRecyclerActivity.this);
                 ArrayList<BusStopJSON> results = db.getBusStopsByQuery(query);
                 if (results != null) {
                     Log.d("TextWatcher", "Finished Search. Size: " + results.size());
