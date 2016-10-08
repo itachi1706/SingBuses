@@ -49,7 +49,6 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
             public void run() {
                 progressDialog.setTitle(activity.getString(R.string.progress_title_bus_stop_data_download));
                 progressDialog.setMessage(activity.getString(R.string.progress_message_bus_stop_data_download));
-                StaticVariables.init1TaskFinished = false;
             }
         });
         try {

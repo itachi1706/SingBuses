@@ -35,7 +35,6 @@ public class ParseBusStops extends AsyncTask<BusStopJSONArray, String, Void> {
     @Override
     protected Void doInBackground(BusStopJSONArray... array) {
         BusStopJSONArray stops = array[0];
-        // Test Timing
         Timings t = new Timings("PBSTimeDrop", true);
         t.start();
         // Drops database
@@ -57,7 +56,6 @@ public class ParseBusStops extends AsyncTask<BusStopJSONArray, String, Void> {
         sp.edit().putBoolean("busDBLoaded", true).apply();
         sp.edit().putLong("busDBTimeUpdated", System.currentTimeMillis()).apply();
         progressDialog.dismiss();
-        StaticVariables.init1TaskFinished = true;
         Log.d("INIT-1", "Task Complete");
     }
 }

@@ -275,16 +275,12 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
     private void checkIfDatabaseUpdated(){
         long busDBLastUpdate = sp.getLong("busDBTimeUpdated", -1);
-        long currentTime = System.currentTimeMillis();
         boolean busDBUpdate = false;
         if (busDBLastUpdate != -1){
-            long lastUpdated = currentTime - busDBLastUpdate;
-            long day = TimeUnit.MILLISECONDS.toDays(lastUpdated);
+            long day = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - busDBLastUpdate);
             Log.d("INIT", "Bus DB Last Update: " + day);
             if (day > 30)
                 busDBUpdate = true;
-            else
-                StaticVariables.init1TaskFinished = true;
         }
 
         // Check upgrade

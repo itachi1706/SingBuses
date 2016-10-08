@@ -27,9 +27,6 @@ public class StaticVariables {
     public static PebbleDictionary dict2 = null;
     public static PebbleDictionary dict3 = null;
     public static PebbleDictionary dict4 = null;
-    public static int extraSend = -1;
-
-    public static boolean init1TaskFinished = false;
 
     public static ArrayList<BusServices> favouritesList = new ArrayList<>();
 
@@ -82,7 +79,6 @@ public class StaticVariables {
         if (status) return Byte.valueOf("1");
         return Byte.valueOf("0");
     }
-
 
     // HANDLER MESSAGES
     public static final int BUS_SERVICE_JSON_RETRIEVED = 101;
