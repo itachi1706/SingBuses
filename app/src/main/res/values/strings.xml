@@ -115,7 +115,7 @@
     <string name="toast_message_remove_from_fav">Removed from favourites</string>
     <string name="toast_message_invalid_json_string">Invalid JSON String</string>
     <string name="toast_message_retrieving_location">Getting your location…</string>
-    <string name="toast_bus_stop_data_parse_success">%1$s bus stops saved to database!</string>
+    <string name="toast_bus_stop_data_parse_success">%1$d bus stops saved to database!</string>
     <string name="toast_message_timeout_google_places_api">Google did not respond after the period of time</string>
     <string name="toast_message_invalid_json">Invalid JSON. Please try again</string>
     <string name="toast_message_invalid_request">Invalid request. Please try again</string>
