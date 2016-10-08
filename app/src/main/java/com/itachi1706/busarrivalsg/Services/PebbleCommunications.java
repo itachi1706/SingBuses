@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -18,6 +19,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.AsyncTasks.Services.GetFirstFavouriteData;
 import com.itachi1706.busarrivalsg.AsyncTasks.Services.GetRemainingFavouriteData;
 import com.itachi1706.busarrivalsg.BuildConfig;
@@ -156,6 +158,13 @@ public class PebbleCommunications extends Service {
         serviceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(serviceLooper);
 
+        // Obtain the FirebaseAnalytics instance.
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Launched Pebble Service");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "serviceLaunch");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
     }
 
     @Override
@@ -164,6 +173,14 @@ public class PebbleCommunications extends Service {
         Log.i("Pebble Comm", "SYSTEM: Killed Service gracefully");
 
         unregisterPebbleReceivers();
+
+        // Obtain the FirebaseAnalytics instance.
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Killed Pebble Service");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "serviceStopped");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
     }
 
     private void unregisterPebbleReceivers(){

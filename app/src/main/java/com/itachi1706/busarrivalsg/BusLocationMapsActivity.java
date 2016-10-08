@@ -22,6 +22,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class BusLocationMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -40,6 +41,13 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
 
         busLatitude = this.getIntent().getDoubleExtra("buslat", 0);
         busLongitude = this.getIntent().getDoubleExtra("buslng", 0);
+
+        // Obtain the FirebaseAnalytics instance.
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Opened Maps Activity");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "rareActivityOpen");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

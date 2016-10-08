@@ -37,6 +37,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.appupdater.AppUpdateInitializer;
 import com.itachi1706.busarrivalsg.AsyncTasks.DlAndInstallCompanionApp;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
@@ -69,6 +70,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
     private SharedPreferences sp;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +86,10 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         firmware = (TextView) findViewById(R.id.pebbleFW);
         fab = (FloatingActionButton) findViewById(R.id.add_fab);
         favouritesList = (RecyclerView) findViewById(R.id.rvFav);
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null);
 
         if (favouritesList != null) favouritesList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

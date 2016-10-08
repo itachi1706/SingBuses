@@ -41,3 +41,4 @@ proguard/
 fabric.properties
 
 *.iml
+google-services.json

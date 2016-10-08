@@ -5,15 +5,17 @@ This is the Official Repository of the Bus Arrivals @ SG Android App. The main o
 Singapore while at the same time, be able to send the data onto a smart wearable device. As of this moment, only the Pebble smartwatch
 (Original Pebble and Pebble Steel) are supported.
 
+**This app uses Firebase Analytics, as such if you are meeting any crashes or errors related to it, make sure you have generated a google-services.json file from your Firebase project and add it to the app/ folder**
+
 Releases are located [here](https://github.com/itachi1706/SingBuses/releases)
 
 | Device | Is Supported | Remarks |
 | ------ | ------------ | ------- |
-| Original Pebble | Yes | SDK 2 |
-| Pebble Steel | Yes | SDK 2 |
-| Pebble Time | Partially (In-Progress) |  |
-| Pebble Time Steel | Partially (In-Progress) |  |
-| Pebble Time Round | Partially (In-Progress) |  |
+| Original Pebble | Yes |  |
+| Pebble Steel | Yes |  |
+| Pebble Time Series | Yes | Black and White For Now |
+| Pebble Time 2 Series | Technically Yes (Untested) |  |
+| Pebble 2 Series | Technically Yes (Untested) |  |
 | Android Wear | No (Planned) |  |
 | Apple Watch | Hell No (Its an Android only thing) |  |
 | S Watch | No (Is there even an SDK for that?) |  |
