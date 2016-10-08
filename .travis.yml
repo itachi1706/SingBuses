@@ -39,6 +39,7 @@ script: travis_retry travis_wait ./gradlew connectedAndroidTest
 after_success:
 - mv ./app/build/outputs/apk/app-debug.apk ./app/build/outputs/apk/SingBuses-debug.apk
 - ls ./app/build/outputs/apk/
+after_failure: "cat $TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
 deploy:
   provider: releases
   api_key: "$OAUTH_KEY"
