@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 
@@ -18,22 +19,22 @@ import java.util.ArrayList;
  */
 public class BusStopsDB extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 2;
 
     //DB Name
-    public static final String DATABASE_NAME = "appdb.db";
+    private static final String DATABASE_NAME = "appdb.db";
 
     //DB table Name
-    public static final String TABLE_ITEMS = "BusStops";
+    private static final String TABLE_ITEMS = "BusStops";
 
     //Bus Stops Table Column Names
-    public static final String CODE_ID = "id";
-    public static final String BUS_STOP_CODE = "busStopCode";
-    public static final String BUS_STOP_ROAD = "roadName";
-    public static final String BUS_STOP_DESC = "description";
-    public static final String BUS_STOP_LATITUDE = "latitude";
-    public static final String BUS_STOP_LONGITUDE = "longitude";
-    public static final String BUS_STOP_TIMESTAMP = "timestamp";
+    private static final String CODE_ID = "id";
+    private static final String BUS_STOP_CODE = "busStopCode";
+    private static final String BUS_STOP_ROAD = "roadName";
+    private static final String BUS_STOP_DESC = "description";
+    private static final String BUS_STOP_LATITUDE = "latitude";
+    private static final String BUS_STOP_LONGITUDE = "longitude";
+    private static final String BUS_STOP_TIMESTAMP = "timestamp";
 
     public BusStopsDB(Context context){
         super(context, context.getExternalFilesDir(null) + File.separator + DATABASE_NAME, null, DATABASE_VERSION);
@@ -59,6 +60,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    @Deprecated
     private void addFromJSON(BusStopJSON busStop){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -72,7 +74,29 @@ public class BusStopsDB extends SQLiteOpenHelper {
         db.close();
     }
 
-    public boolean checkIfExistAlready(BusStopJSON busStop){
+    private void bulkAddFromJSON(BusStopJSON[] busStops) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sql = "INSERT INTO " + TABLE_ITEMS + " (" + BUS_STOP_CODE + ", " + BUS_STOP_ROAD + ", "
+                + BUS_STOP_DESC + ", " + BUS_STOP_LATITUDE + ", " + BUS_STOP_LONGITUDE + ", "
+                + BUS_STOP_TIMESTAMP + ") VALUES (?,?,?,?,?,?);";
+        db.beginTransaction();
+        SQLiteStatement stmt = db.compileStatement(sql);
+        for (BusStopJSON busStop : busStops) {
+            stmt.bindString(1, busStop.getCode());
+            stmt.bindString(2, busStop.getRoad());
+            stmt.bindString(3, busStop.getBusStopName());
+            stmt.bindDouble(4, busStop.getLatitude());
+            stmt.bindDouble(5,busStop.getLongitude());
+            stmt.bindLong(6, busStop.getTimestamp());
+            stmt.executeInsert();
+            stmt.clearBindings();
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
+    }
+
+    private boolean checkIfExistAlready(BusStopJSON busStop){
         String code = DatabaseUtils.sqlEscapeString(busStop.getCode());
         String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_CODE + "=" + code + ";";
         SQLiteDatabase db = this.getReadableDatabase();
@@ -84,22 +108,11 @@ public class BusStopsDB extends SQLiteOpenHelper {
     }
 
     /**
-     * Adds to the database if the record do not exist
-     * @param busStop The object to compare and add
+     * Add an array of records to the database
+     * @param busStops The array of objects to add
      */
-    @Deprecated
-    public void addToDBIfNotExist(BusStopJSON busStop){
-        if (checkIfExistAlready(busStop))
-            return;
-        addFromJSON(busStop);
-    }
-
-    /**
-     * Adds to the databse if the record do not exist
-     * @param busStop The object to add
-     */
-    public void addToDB(BusStopJSON busStop) {
-        addFromJSON(busStop);
+    public void addMultipleToDB(BusStopJSON[] busStops) {
+        bulkAddFromJSON(busStops);
     }
 
     private BusStopJSON getBusStopJsonObject(Cursor cursor) {
@@ -275,22 +288,6 @@ public class BusStopsDB extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return result;
-    }
-
-    /**
-     * Updates an available bus stop if exist, else it adds it into the database
-     * @param busStop The Bus Stop to update
-     */
-    public void updateBusStop(BusStopJSON busStop){
-        if (checkIfExistAlready(busStop)) {
-            //Remove and update
-            String query = "DELETE FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_CODE + "=" + DatabaseUtils.sqlEscapeString(busStop.getCode()) + ";";
-            SQLiteDatabase db = this.getWritableDatabase();
-            db.execSQL(query);
-            db.close();
-        }
-        //ADD
-        addFromJSON(busStop);
     }
 
     public int getSize(){

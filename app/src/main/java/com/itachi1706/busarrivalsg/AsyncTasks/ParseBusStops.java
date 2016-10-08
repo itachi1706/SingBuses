@@ -12,6 +12,7 @@ import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSONArray;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.Util.Timings;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -34,29 +35,19 @@ public class ParseBusStops extends AsyncTask<BusStopJSONArray, String, Void> {
     @Override
     protected Void doInBackground(BusStopJSONArray... array) {
         BusStopJSONArray stops = array[0];
+        // Test Timing
+        Timings t = new Timings("PBSTimeDrop", true);
+        t.start();
         // Drops database
         db.dropAndRebuildDB();
+        t.end();
 
+        Timings t2 = new Timings("PBSTimeAdd", true);
+        t2.start();
         BusStopJSON[] busStops = stops.getBusStopsArray();
-        for (int i = 0; i < busStops.length; i++) {
-            BusStopJSON busStop = busStops[i];
-            publishProgress((i + 1) + "", busStops.length + "", busStop.getCode(), busStop.getRoad() + " - " + busStop.getBusStopName());
-            db.addToDB(busStop);
-        }
+        db.addMultipleToDB(busStops);
+        t2.end();
         return null;
-    }
-
-    @Override
-    protected void onProgressUpdate(String... values) {
-        int i = Integer.parseInt(values[0]);
-        int totalLength = Integer.parseInt(values[1]);
-        String code = values[2];
-        String busStopName = values[3];
-        Log.d("GET-STOPS", "Importing " + i + "/" + totalLength + " (" + code + ")");
-        progressDialog.setProgress(i);
-        progressDialog.setMax(totalLength);
-        progressDialog.setIndeterminate(false);
-        progressDialog.setMessage(activity.getString(R.string.progress_message_bus_stop_data_parse, code, busStopName));
     }
 
     protected void onPostExecute(Void params){
