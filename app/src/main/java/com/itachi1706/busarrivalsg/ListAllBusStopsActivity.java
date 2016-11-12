@@ -35,7 +35,7 @@ public class ListAllBusStopsActivity extends AppCompatActivity {
         ArrayList<BusStopJSON> data = db.getAllBusStops();
         count.setText(getString(R.string.label_bus_stops_count, data.size()));
 
-        BusStopRecyclerAdapter view = new BusStopRecyclerAdapter(data, this);
+        BusStopRecyclerAdapter view = new BusStopRecyclerAdapter(data);
         busStops.setAdapter(view);
     }
 }

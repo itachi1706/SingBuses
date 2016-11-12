@@ -1,7 +1,10 @@
 package com.itachi1706.busarrivalsg.RecyclerViews;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
+import android.graphics.drawable.Icon;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +17,10 @@ import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.R;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Queue;
 
 /**
  * Created by Kenneth on 31/10/2015.
@@ -28,11 +33,9 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
      */
 
     private List<BusStopJSON> items;
-    private Activity activity;
 
-    public BusStopRecyclerAdapter(List<BusStopJSON> objectList, Activity activity){
+    public BusStopRecyclerAdapter(List<BusStopJSON> objectList){
         this.items = objectList;
-        this.activity = activity;
     }
 
     public void updateAdapter(List<BusStopJSON> newObjects){
@@ -61,11 +64,11 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
     }
 
 
-    public class BusStopViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
+    class BusStopViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
-        protected TextView stopName, desc;
+        TextView stopName, desc;
 
-        public BusStopViewHolder(View v){
+        BusStopViewHolder(View v){
             super(v);
             stopName = (TextView) v.findViewById(R.id.tvName);
             desc = (TextView) v.findViewById(R.id.tvSubText);
@@ -78,10 +81,32 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
             final BusStopJSON item = items.get(position);
 
             Log.d("Size", "" + items.size());
-            Intent serviceIntent = new Intent(activity, BusServicesAtStopRecyclerActivity.class);
+            Intent serviceIntent = new Intent(v.getContext(), BusServicesAtStopRecyclerActivity.class);
             serviceIntent.putExtra("stopCode", item.getCode());
             serviceIntent.putExtra("stopName", item.getBusStopName());
-            activity.startActivity(serviceIntent);
+            v.getContext().startActivity(serviceIntent);
+
+            // Add dynamic shortcuts
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+                ShortcutManager shortcutManager = v.getContext().getSystemService(ShortcutManager.class);
+                Queue<ShortcutInfo> infos = new LinkedList<>(shortcutManager.getDynamicShortcuts());
+                final int shortcutCount = shortcutManager.getMaxShortcutCountPerActivity() - 2;
+                if (infos.size() >= shortcutCount) {
+                    Log.i("ShortcutManager", "Dynamic Shortcuts more than " + shortcutCount
+                            + ". Removing extras");
+                    do {
+                        infos.remove();
+                    } while (infos.size() > shortcutCount);
+                }
+                serviceIntent.setAction(Intent.ACTION_VIEW);
+                ShortcutInfo newShortcut = new ShortcutInfo.Builder(v.getContext(), "bus-" + item.getCode())
+                        .setShortLabel(item.getBusStopName()).setLongLabel("Launch this bus stop directly")
+                        .setIcon(Icon.createWithResource(v.getContext(), R.mipmap.ic_launcher_round))
+                        .setIntent(serviceIntent).build();
+
+                infos.add(newShortcut);
+                shortcutManager.setDynamicShortcuts(new LinkedList<>(infos));
+            }
         }
     }
 }

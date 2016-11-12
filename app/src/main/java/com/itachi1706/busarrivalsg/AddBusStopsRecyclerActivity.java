@@ -61,7 +61,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         result.setLayoutManager(linearLayoutManager);
         result.setItemAnimator(new DefaultItemAnimator());
 
-        adapter = new BusStopRecyclerAdapter(new ArrayList<BusStopJSON>(), this);
+        adapter = new BusStopRecyclerAdapter(new ArrayList<BusStopJSON>());
         result.setAdapter(adapter);
 
         // Populate with blank
