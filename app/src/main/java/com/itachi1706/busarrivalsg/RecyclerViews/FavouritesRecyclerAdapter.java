@@ -2,11 +2,13 @@ package com.itachi1706.busarrivalsg.RecyclerViews;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
+import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
@@ -43,9 +46,9 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
      */
 
     private List<BusServices> items;
-    private Activity activity;
+    private AppCompatActivity activity;
 
-    public FavouritesRecyclerAdapter(List<BusServices> objectList, Activity activity){
+    public FavouritesRecyclerAdapter(List<BusServices> objectList, AppCompatActivity activity){
         this.items = objectList;
         this.activity = activity;
     }
@@ -320,7 +323,13 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 mapsIntent.putExtra("buslng", busStop.getLongitude());
             }
 
-            activity.startActivity(mapsIntent);
+            if (!PreferenceManager.getDefaultSharedPreferences(v.getContext()).getBoolean("mapPopup", true))
+                activity.startActivity(mapsIntent);
+            else {
+                final BusLocationMapsDialogFragment dialog = new BusLocationMapsDialogFragment();
+                dialog.setArguments(mapsIntent.getExtras());
+                dialog.show(activity.getSupportFragmentManager(), "123");
+            }
         }
     }
 }

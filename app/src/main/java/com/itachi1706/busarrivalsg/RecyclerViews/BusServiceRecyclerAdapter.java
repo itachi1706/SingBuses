@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
+import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
@@ -37,9 +40,9 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
      */
 
     private List<BusArrivalArrayObject> items;
-    private Activity activity;
+    private AppCompatActivity activity;
 
-    public BusServiceRecyclerAdapter(List<BusArrivalArrayObject> objectList, Activity activity){
+    public BusServiceRecyclerAdapter(List<BusArrivalArrayObject> objectList, AppCompatActivity activity){
         this.items = objectList;
         this.activity = activity;
     }
@@ -273,7 +276,13 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 mapsIntent.putExtra("buslng", busStop.getLongitude());
             }
 
-            activity.startActivity(mapsIntent);
+            if (!PreferenceManager.getDefaultSharedPreferences(v.getContext()).getBoolean("mapPopup", true))
+                activity.startActivity(mapsIntent);
+            else {
+                final BusLocationMapsDialogFragment dialog = new BusLocationMapsDialogFragment();
+                dialog.setArguments(mapsIntent.getExtras());
+                dialog.show(activity.getSupportFragmentManager(), "123");
+            }
         }
     }
 }

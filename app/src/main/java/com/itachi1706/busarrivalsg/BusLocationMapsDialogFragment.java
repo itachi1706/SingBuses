@@ -7,25 +7,30 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-@Deprecated
-public class BusLocationMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class BusLocationMapsDialogFragment extends DialogFragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
@@ -33,29 +38,40 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
     private double busLatitude, busLongitude;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bus_location_maps);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.dialog_bus_location_map, container, false);
 
-        latitude = this.getIntent().getDoubleExtra("lat", 0);
-        longitude = this.getIntent().getDoubleExtra("lng", 0);
+        Button close = (Button) view.findViewById(R.id.close_btn);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
 
-        busLatitude = this.getIntent().getDoubleExtra("buslat", 0);
-        busLongitude = this.getIntent().getDoubleExtra("buslng", 0);
+        SupportMapFragment mapFragment = new SupportMapFragment();
+
+        getDialog().setTitle("");
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.add(R.id.mapView, mapFragment).commit();
+
+        latitude = this.getArguments().getDouble("lat", 0);
+        longitude = this.getArguments().getDouble("lng", 0);
+
+        busLatitude = this.getArguments().getDouble("buslat", 0);
+        busLongitude = this.getArguments().getDouble("buslng", 0);
 
         // Obtain the FirebaseAnalytics instance.
-        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this.getActivity());
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Opened Maps Activity");
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "rareActivityOpen");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Opened Maps Dialog (Debug)");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "rareActivityOpenDebug");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        return view;
     }
-
 
     /**
      * Manipulates the map once available.
@@ -70,6 +86,17 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setTrafficEnabled(true);
+
+        // Formally from layout
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        UiSettings mapSettings = mMap.getUiSettings();
+        mapSettings.setCompassEnabled(true);
+        mapSettings.setRotateGesturesEnabled(true);
+        mapSettings.setScrollGesturesEnabled(true);
+        mapSettings.setTiltGesturesEnabled(true);
+        mapSettings.setZoomControlsEnabled(true);
+        mapSettings.setZoomGesturesEnabled(true);
+
         checkIfYouHaveGpsPermissionForThis();
 
         // Add a marker to the bus location and move the camera
@@ -86,7 +113,7 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
     private static final int RC_HANDLE_ACCESS_FINE_LOCATION = 3;
 
     private void checkIfYouHaveGpsPermissionForThis() {
-        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int rc = ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
@@ -98,14 +125,14 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
         Log.w("GPSManager", "GPS permission is not granted. Requesting permission");
         final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
 
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            ActivityCompat.requestPermissions(this, permissions, code);
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+            ActivityCompat.requestPermissions(this.getActivity(), permissions, code);
             return;
         }
 
-        final Activity thisActivity = this;
+        final Activity thisActivity = this.getActivity();
 
-        new AlertDialog.Builder(this).setTitle(R.string.dialog_title_request_permission_gps)
+        new AlertDialog.Builder(this.getActivity()).setTitle(R.string.dialog_title_request_permission_gps)
                 .setMessage(R.string.dialog_message_request_permission_gps_view_map_rationale)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -144,7 +171,7 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d("GPSManager", "Location permission granted - enabling my location");
             // we have permission, so create the camerasource
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mMap.setMyLocationEnabled(true);
             }
             return;
@@ -152,8 +179,8 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
 
         Log.e("GPSManager", "Permission not granted: results len = " + grantResults.length +
                 " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-        final Activity thisActivity = this;
-        new AlertDialog.Builder(this).setTitle(R.string.dialog_title_permission_denied)
+        final Activity thisActivity = this.getActivity();
+        new AlertDialog.Builder(this.getActivity()).setTitle(R.string.dialog_title_permission_denied)
                 .setMessage(R.string.dialog_message_no_permission_gps).setPositiveButton(android.R.string.ok, null)
                 .setNeutralButton(R.string.dialog_action_neutral_app_settings, new DialogInterface.OnClickListener() {
                     @Override

@@ -11,6 +11,11 @@
             android:defaultValue="true"
             android:key="pebbleSvc"
             android:summary="@string/pref_summary_pebble_background_svc" />
+        <CheckBoxPreference
+            android:title="Use Map Popup"
+            android:defaultValue="true"
+            android:key="mapPopup"
+            android:summary="Show the map in a popup instead. \nNote: Popup will be forced in a future update" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Database Settings">
