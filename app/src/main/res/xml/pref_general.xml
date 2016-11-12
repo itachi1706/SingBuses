@@ -23,12 +23,6 @@
         <Preference android:key="busDBTimeUpdated" android:title="Last Updated (Bus Database)" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="App Information">
-        <Preference android:title="App Version" android:key="view_app_version" android:summary="NULL" />
-        <Preference android:title="Package Name" android:key="view_app_name" android:selectable="false" />
-        <Preference android:summary="None" android:title="Android Version" android:key="view_sdk_version" android:selectable="false"/>
-    </PreferenceCategory>
-
     <PreferenceCategory android:title="Developer Settings (Advanced)">
         <Preference android:title="Favourites JSON" android:key="fav_json" android:summary="View JSON String for your favourites" />
     </PreferenceCategory>

@@ -52,27 +52,9 @@ public class MainSettings extends AppCompatActivity {
 
             final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
-            //Debug Info Get
-            String version = "NULL", packName = "NULL";
-            int versionCode = 0;
-            try {
-                PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-                version = pInfo.versionName;
-                packName = pInfo.packageName;
-                versionCode = pInfo.versionCode;
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
-            Preference verPref = findPreference("view_app_version");
-            verPref.setSummary(version + "-b" + versionCode);
-            Preference pNamePref = findPreference("view_app_name");
-            pNamePref.setSummary(packName);
-            Preference prefs = findPreference("view_sdk_version");
-            prefs.setSummary(android.os.Build.VERSION.RELEASE);
-
             new SettingsInitializer(getActivity(), R.mipmap.ic_launcher, StaticVariables.BASE_SERVER_URL,
                     getResources().getString(R.string.link_legacy), getResources().getString(R.string.link_updates))
-                    .explodeSettings(this);
+                    .explodeInfoSettings(this).explodeUpdaterSettings(this);
 
             Preference favJson = findPreference("fav_json");
             favJson.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

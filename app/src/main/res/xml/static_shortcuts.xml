@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="staticsearch"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher_round"
+        android:shortcutShortLabel="@string/static_search_label"
+        android:shortcutLongLabel="@string/static_search_long_label"
+        android:shortcutDisabledMessage="@string/static_search_disabled_label"
+        tools:ignore="UnusedAttribute">
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:targetPackage="com.itachi1706.busarrivalsg"
+            android:targetClass="com.itachi1706.busarrivalsg.MainMenuActivity" />
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.itachi1706.busarrivalsg"
+            android:targetClass="com.itachi1706.busarrivalsg.AddBusStopsRecyclerActivity" />
+    </shortcut>
+</shortcuts>
