@@ -33,6 +33,7 @@ import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -56,6 +57,20 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     public void updateAdapter(List<BusServices> newObjects){
         this.items = newObjects;
         notifyDataSetChanged();
+    }
+
+    public boolean moveItem(int from, int to) {
+        if (from < to) {
+            for (int i = from; i < to; i++) {
+                Collections.swap(items, i, i + 1);
+            }
+        } else {
+            for (int i = from; i > to; i--) {
+                Collections.swap(items, i, i - 1);
+            }
+        }
+        notifyItemMoved(from, to);
+        return true;
     }
 
     @Override

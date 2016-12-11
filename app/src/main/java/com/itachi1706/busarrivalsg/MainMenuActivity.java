@@ -26,6 +26,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -109,6 +110,25 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
         adapter = new FavouritesRecyclerAdapter(new ArrayList<BusServices>(), this);
         favouritesList.setAdapter(adapter);
+
+        ItemTouchHelper moveAdapter = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.ACTION_STATE_IDLE) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView,
+                                           RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                final int fromPos = viewHolder.getAdapterPosition();
+                final int toPos = target.getAdapterPosition();
+                // move item in `fromPos` to `toPos` in adapter.
+                return adapter.moveItem(fromPos, toPos);
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+
+        });
+        moveAdapter.attachToRecyclerView(favouritesList);
 
         sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
