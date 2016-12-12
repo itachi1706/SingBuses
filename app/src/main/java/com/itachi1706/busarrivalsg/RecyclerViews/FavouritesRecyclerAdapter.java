@@ -71,6 +71,8 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             }
         }
         notifyItemMoved(from, to);
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        BusStorage.updateBusJSON(sp, (ArrayList<BusServices>) items);
         return true;
     }
 
