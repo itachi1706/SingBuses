@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -215,6 +216,44 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         }
     }
 
+    public boolean removeFavourite(final int position) {
+        final BusServices item = items.get(position);
+        String message;
+        if (item.getStopName() != null)
+            message = activity.getString(R.string.dialog_message_remove_from_fav_with_stop_name, item.getServiceNo(), item.getStopName(), item.getStopID());
+        else
+            message = activity.getString(R.string.dialog_message_remove_from_fav, item.getServiceNo(), item.getStopID());
+
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+
+        AlertDialog alert = new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_remove_from_fav)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Remove from favourites
+                        for (int i = 0; i < items.size(); i++){
+                            BusServices s = items.get(i);
+                            if (s.getStopID().equalsIgnoreCase(item.getStopID()) && s.getServiceNo().equalsIgnoreCase(item.getServiceNo())) {
+                                items.remove(i);
+                                break;
+                            }
+                        }
+                        BusStorage.updateBusJSON(sp, (ArrayList<BusServices>) items);
+                        notifyItemRemoved(position);
+                        Toast.makeText(activity.getApplicationContext(), R.string.toast_message_remove_from_fav, Toast.LENGTH_SHORT).show();
+                    }
+                }).setNegativeButton(android.R.string.no, null).create();
+        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                notifyItemChanged(position);
+            }
+        });
+        alert.show();
+        return true;
+    }
+
 
     public class FavouritesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
@@ -262,32 +301,22 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             int position = this.getLayoutPosition();
             final BusServices item = items.get(position);
 
-            String message;
-            if (item.getStopName() != null)
-                message = activity.getString(R.string.dialog_message_remove_from_fav_with_stop_name, item.getServiceNo(), item.getStopName(), item.getStopID());
-            else
-                message = activity.getString(R.string.dialog_message_remove_from_fav, item.getServiceNo(), item.getStopID());
-
             final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-
-            new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_remove_from_fav)
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            if (sp.getBoolean("showFavHint", true)) {
+                String message;
+                if (item.getStopName() != null)
+                    message = activity.getString(R.string.snackbar_message_remove_from_fav_with_stop_name, item.getServiceNo());
+                else
+                    message = activity.getString(R.string.snackbar_message_remove_from_fav, item.getServiceNo());
+                    Snackbar.make(v, message
+                            , Snackbar.LENGTH_SHORT).setAction("Hide Tips", new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //Remove from favourites
-                            for (int i = 0; i < items.size(); i++){
-                                BusServices s = items.get(i);
-                                if (s.getStopID().equalsIgnoreCase(item.getStopID()) && s.getServiceNo().equalsIgnoreCase(item.getServiceNo())) {
-                                    items.remove(i);
-                                    break;
-                                }
-                            }
-                            BusStorage.updateBusJSON(sp, (ArrayList<BusServices>) items);
-                            notifyDataSetChanged();
-                            Toast.makeText(activity.getApplicationContext(), R.string.toast_message_remove_from_fav, Toast.LENGTH_SHORT).show();
+                        public void onClick(View view) {
+
+                            sp.edit().putBoolean("showFavHint", false).apply();
                         }
-                    }).setNegativeButton(android.R.string.no, null).show();
+                    }).show();
+            }
             return false;
         }
     }

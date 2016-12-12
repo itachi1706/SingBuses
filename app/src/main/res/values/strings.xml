@@ -97,6 +97,8 @@
     <string name="dialog_message_gps_disabled">GPS is not enabled. Do you want to enable it for better accuracy?</string>
     <string name="dialog_message_remove_from_fav_with_stop_name">Are you sure you want to remove %1$s from %2$s (%3$s) from your favourites? This will also remove it from being accessible from your Pebble device</string>
     <string name="dialog_message_remove_from_fav">Are you sure you want to remove %1$s from Bus Stop Code %2$s from your favourites? This will also remove it from being accessible from your Pebble device</string>
+    <string name="snackbar_message_remove_from_fav_with_stop_name">Swipe to remove %1$s or reorder it by moving it up and down</string>
+    <string name="snackbar_message_remove_from_fav">Swipe to remove %1$s or reorder it by moving it up and down</string>
     <string name="dialog_title_remove_from_fav">Remove from Favourites</string>
     <string name="dialog_message_add_to_fav_with_stop_name">Are you sure you want to add %1$s from %2$s (%3$s) to your favourites? This will also make it accessible from your Pebble device</string>
     <string name="dialog_message_add_to_fav">Are you sure you want to add %1$s from Bus Stop Code %2$s to your favourites? This will also make it accessible from your Pebble device</string>

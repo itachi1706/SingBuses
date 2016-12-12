@@ -7,6 +7,11 @@
             android:key="showHint"
             android:summary="Shows hints in the app (e.g. How to add/remove from favourites)" />
         <CheckBoxPreference
+            android:title="Show Favourites List Tips"
+            android:defaultValue="true"
+            android:key="showFavHint"
+            android:summary="Shows tips for your favourites list when you press and hold a bus service" />
+        <CheckBoxPreference
             android:title="Enable Pebble Background Service"
             android:defaultValue="true"
             android:key="pebbleSvc"

@@ -111,7 +111,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         adapter = new FavouritesRecyclerAdapter(new ArrayList<BusServices>(), this);
         favouritesList.setAdapter(adapter);
 
-        ItemTouchHelper moveAdapter = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.ACTION_STATE_IDLE) {
+        ItemTouchHelper moveAdapter = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
             @Override
             public boolean onMove(RecyclerView recyclerView,
@@ -124,7 +125,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
+                int position = viewHolder.getAdapterPosition();
+                adapter.removeFavourite(position);
             }
 
         });
