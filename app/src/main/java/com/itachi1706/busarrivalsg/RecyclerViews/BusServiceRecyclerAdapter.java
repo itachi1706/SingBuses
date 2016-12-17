@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -254,6 +255,13 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_bus_timing_unavailable)
                         .setMessage(R.string.dialog_message_bus_timing_unavailable)
                         .setPositiveButton(R.string.dialog_action_positive_close, null).show();
+                return;
+            }
+
+            if (latitude == 0 && longitude == 0) {
+                new AlertDialog.Builder(activity).setTitle("Bus Service in Depot")
+                        .setMessage("The Bus Service is currently still in the depot so no location can be obtained!")
+                        .setPositiveButton("Close", null).show();
                 return;
             }
 

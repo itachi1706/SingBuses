@@ -348,6 +348,13 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 return;
             }
 
+            if (latitude == 0 && longitude == 0) {
+                new AlertDialog.Builder(activity).setTitle("Bus Service in Depot")
+                        .setMessage("The Bus Service is currently still in the depot so no location can be obtained!")
+                        .setPositiveButton("Close", null).show();
+                return;
+            }
+
             //Check if Google Play Services is enabled
             int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
             if (code != ConnectionResult.SUCCESS){
