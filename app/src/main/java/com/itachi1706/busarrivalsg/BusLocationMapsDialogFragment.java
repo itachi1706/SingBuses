@@ -64,7 +64,7 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
         // Obtain the FirebaseAnalytics instance.
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this.getActivity());
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Opened Maps Dialog (Debug)");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Opened Maps Dialog (Debug)");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "rareActivityOpenDebug");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 

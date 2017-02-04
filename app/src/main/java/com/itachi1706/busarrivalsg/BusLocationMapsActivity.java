@@ -46,7 +46,7 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
         // Obtain the FirebaseAnalytics instance.
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Opened Maps Activity");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Opened Maps Activity");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "rareActivityOpen");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 

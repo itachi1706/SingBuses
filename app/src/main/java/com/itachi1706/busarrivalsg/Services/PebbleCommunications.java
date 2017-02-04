@@ -161,7 +161,7 @@ public class PebbleCommunications extends Service {
         // Obtain the FirebaseAnalytics instance.
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Launched Pebble Service");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Launched Pebble Service");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "serviceLaunch");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
@@ -177,7 +177,7 @@ public class PebbleCommunications extends Service {
         // Obtain the FirebaseAnalytics instance.
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Killed Pebble Service");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Killed Pebble Service");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "serviceStopped");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
