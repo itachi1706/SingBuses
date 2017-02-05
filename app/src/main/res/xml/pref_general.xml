@@ -1,22 +1,22 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="General Settings">
-        <CheckBoxPreference
+        <SwitchPreference
             android:title="Show Hint"
             android:defaultValue="true"
             android:key="showHint"
             android:summary="Shows hints in the app (e.g. How to add/remove from favourites)" />
-        <CheckBoxPreference
+        <SwitchPreference
             android:title="Show Favourites List Tips"
             android:defaultValue="true"
             android:key="showFavHint"
             android:summary="Shows tips for your favourites list when you press and hold a bus service" />
-        <CheckBoxPreference
+        <SwitchPreference
             android:title="Enable Pebble Background Service"
             android:defaultValue="true"
             android:key="pebbleSvc"
             android:summary="@string/pref_summary_pebble_background_svc" />
-        <CheckBoxPreference
+        <SwitchPreference
             android:title="Use Map Popup"
             android:defaultValue="true"
             android:key="mapPopup"
