@@ -1,8 +1,6 @@
 package com.itachi1706.busarrivalsg;
 
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -52,8 +50,8 @@ public class MainSettings extends AppCompatActivity {
 
             final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
-            new SettingsInitializer(getActivity(), R.mipmap.ic_launcher, StaticVariables.BASE_SERVER_URL,
-                    getResources().getString(R.string.link_legacy), getResources().getString(R.string.link_updates))
+            new SettingsInitializer(getActivity(), R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL,
+                    getResources().getString(R.string.link_legacy), getResources().getString(R.string.link_updates), true)
                     .explodeInfoSettings(this).explodeUpdaterSettings(this);
 
             Preference favJson = findPreference("fav_json");

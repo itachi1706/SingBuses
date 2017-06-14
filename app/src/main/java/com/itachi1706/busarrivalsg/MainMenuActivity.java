@@ -135,7 +135,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
         Log.d("MainMenu", "Checking for app updates");
-        new AppUpdateInitializer(this, sp, R.mipmap.ic_launcher, StaticVariables.BASE_SERVER_URL).checkForUpdate(true);
+        new AppUpdateInitializer(this, sp, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL, true).checkForUpdate(true);
         Log.d("MainMenu", "onCreate complete");
     }
 
