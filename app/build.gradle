@@ -11,6 +11,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 repositories {
+    maven { url 'https://maven.google.com' } // Alternative URL is 'https://dl.google.com/dl/android/maven2/'
     maven { url 'https://maven.fabric.io/public' }
 }
 
@@ -73,7 +74,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.getpebble:pebblekit:3.0.0'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.google.android.gms:play-services-maps:10.2.4'
+    compile 'com.google.android.gms:play-services-maps:11.0.0'
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.firebase:firebase-crash:10.0.1'
     testCompile 'junit:junit:4.12'
