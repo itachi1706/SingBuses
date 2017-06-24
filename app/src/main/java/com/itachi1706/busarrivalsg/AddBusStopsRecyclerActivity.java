@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.AsyncTasks.PopulateListWithCurrentLocationRecycler;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
@@ -41,6 +42,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
     EditText textLane;
 
     GPSManager gps;
+    FirebaseAnalytics mAnalytics;
 
     double longitude, latitude;
 
@@ -60,6 +62,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         result.setLayoutManager(linearLayoutManager);
         result.setItemAnimator(new DefaultItemAnimator());
+        mAnalytics = FirebaseAnalytics.getInstance(this);
 
         adapter = new BusStopRecyclerAdapter(new ArrayList<BusStopJSON>());
         result.setAdapter(adapter);
@@ -157,6 +160,10 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), R.string.toast_message_retrieving_location, Toast.LENGTH_SHORT).show();
         latitude = gps.getLatitude();
         longitude = gps.getLongitude();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Lat: " + latitude + " | Lng: " + longitude);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "reqCurrentLocation");
+        mAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         updateList();
     }
 

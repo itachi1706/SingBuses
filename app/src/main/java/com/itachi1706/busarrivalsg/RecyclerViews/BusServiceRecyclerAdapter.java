@@ -1,13 +1,11 @@
 package com.itachi1706.busarrivalsg.RecyclerViews;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,7 +102,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
             if (i.getNextBus().isWheelchairAccessible())
                 holder.wheelchairNow.setVisibility(View.VISIBLE);
-            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i.getNextBus().getLongitude(), i.getNextBus().getLatitude(), i.getStopCode()));
+            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i.getNextBus(), i.getStopCode(), i.getServiceNo()));
         }
 
         //2nd bus (Next bus)
@@ -126,7 +124,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
             if (i.getSubsequentBus().isWheelchairAccessible())
                 holder.wheelchairNext.setVisibility(View.VISIBLE);
-            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i.getSubsequentBus().getLongitude(), i.getSubsequentBus().getLatitude(), i.getStopCode()));
+            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i.getSubsequentBus(), i.getStopCode(), i.getServiceNo()));
         }
 
         //3rd bus (Subsequent Bus)
@@ -151,7 +149,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
             if (i.getSubsequentBus3().isWheelchairAccessible())
                 holder.wheelchairSub.setVisibility(View.VISIBLE);
-            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i.getSubsequentBus3().getLongitude(), i.getSubsequentBus3().getLatitude(), i.getStopCode()));
+            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i.getSubsequentBus3(), i.getStopCode(), i.getServiceNo()));
         }
     }
 
@@ -183,13 +181,13 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     }
 
 
-    public class BusServiceViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    class BusServiceViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
-        protected TextView busOperator, busNumber, operatingStatus;
-        protected Button busArrivalNow, busArrivalNext, busArrivalSub;
-        protected ImageView wheelchairNow, wheelchairNext, wheelchairSub;
+        TextView busOperator, busNumber, operatingStatus;
+        Button busArrivalNow, busArrivalNext, busArrivalSub;
+        ImageView wheelchairNow, wheelchairNext, wheelchairSub;
 
-        public BusServiceViewHolder(View v){
+        BusServiceViewHolder(View v){
             super(v);
             busOperator = (TextView) v.findViewById(R.id.tvBusOperator);
             busNumber = (TextView) v.findViewById(R.id.tvBusService);
@@ -231,15 +229,16 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         }
     }
 
-    public class ArrivalButton implements View.OnClickListener {
+    private class ArrivalButton implements View.OnClickListener {
 
         private double longitude = -1000, latitude = -1000;
-        private String stopCode = "";
+        private String stopCode = "", serviceNo = "Unknown";
 
-        public ArrivalButton(double longitude, double latitude, String busStopCode){
-            this.longitude = longitude;
-            this.latitude = latitude;
+        ArrivalButton(BusArrivalArrayObjectEstimate status, String busStopCode, String svcNo) {
+            this.longitude = status.getLongitude();
+            this.latitude = status.getLatitude();
             this.stopCode = busStopCode.trim();
+            this.serviceNo = svcNo.trim();
         }
 
         @Override
@@ -275,6 +274,10 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             Intent mapsIntent = new Intent(activity, BusLocationMapsActivity.class);
             mapsIntent.putExtra("lat", latitude);
             mapsIntent.putExtra("lng", longitude);
+
+            // Misc Stuff
+            mapsIntent.putExtra("busCode", stopCode);
+            mapsIntent.putExtra("busSvcNo", serviceNo);
 
             //Get Bus stop longitude and latitude
             BusStopsDB db = new BusStopsDB(activity);

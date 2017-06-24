@@ -132,7 +132,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
             if (i.getCurrentBus().isWheelChairAccessible())
                 holder.wheelchairNow.setVisibility(View.VISIBLE);
-            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i.getCurrentBus().getLongitude(), i.getCurrentBus().getLatitude(), i.getStopID()));
+            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i.getCurrentBus(), i.getStopID(), i.getServiceNo()));
         }
 
         //2nd Bus (Next Bus)
@@ -153,7 +153,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
             if (i.getNextBus().isWheelChairAccessible())
                 holder.wheelchairNext.setVisibility(View.VISIBLE);
-            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i.getNextBus().getLongitude(), i.getNextBus().getLatitude(), i.getStopID()));
+            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i.getNextBus(), i.getStopID(), i.getServiceNo()));
         }
 
         //3rd bus (Subsequent Bus)
@@ -178,7 +178,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
             if (i.getSubsequentBus().isWheelChairAccessible())
                 holder.wheelchairSub.setVisibility(View.VISIBLE);
-            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i.getSubsequentBus().getLongitude(), i.getSubsequentBus().getLatitude(), i.getStopID()));
+            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i.getSubsequentBus(), i.getStopID(), i.getServiceNo()));
         }
 
     }
@@ -255,13 +255,13 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     }
 
 
-    public class FavouritesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    class FavouritesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        protected TextView busOperator, busNumber, operatingStatus, stopName;
-        protected Button busArrivalNow, busArrivalNext, busArrivalSub;
-        protected ImageView wheelchairNow, wheelchairNext, wheelchairSub;
+        TextView busOperator, busNumber, operatingStatus, stopName;
+        Button busArrivalNow, busArrivalNext, busArrivalSub;
+        ImageView wheelchairNow, wheelchairNext, wheelchairSub;
 
-        public FavouritesViewHolder(View v){
+        FavouritesViewHolder(View v){
             super(v);
             busOperator = (TextView) v.findViewById(R.id.tvBusOperator);
             busNumber = (TextView) v.findViewById(R.id.tvBusService);
@@ -321,15 +321,16 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         }
     }
 
-    public class ArrivalButton implements View.OnClickListener{
+    private class ArrivalButton implements View.OnClickListener{
 
         private double longitude = -1000, latitude = -1000;
-        private String stopCode = "";
+        private String stopCode = "", serviceNo = "Unknown";
 
-        public ArrivalButton(double longitude, double latitude, String busStopCode){
-            this.longitude = longitude;
-            this.latitude = latitude;
+        ArrivalButton(BusStatus status, String busStopCode, String svcNo) {
+            this.longitude = status.getLongitude();
+            this.latitude = status.getLatitude();
             this.stopCode = busStopCode.trim();
+            this.serviceNo = svcNo.trim();
         }
 
         @Override
@@ -365,6 +366,10 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             Intent mapsIntent = new Intent(activity, BusLocationMapsActivity.class);
             mapsIntent.putExtra("lat", latitude);
             mapsIntent.putExtra("lng", longitude);
+
+            // Misc Stuff
+            mapsIntent.putExtra("busCode", stopCode);
+            mapsIntent.putExtra("busSvcNo", serviceNo);
 
             //Get Bus stop longitude and latitude
             BusStopsDB db = new BusStopsDB(activity);

@@ -43,11 +43,14 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
         busLatitude = this.getIntent().getDoubleExtra("buslat", 0);
         busLongitude = this.getIntent().getDoubleExtra("buslng", 0);
 
+        String bc = this.getIntent().getStringExtra("busCode");
+        String bsn = this.getIntent().getStringExtra("busSvcNo");
+
         // Obtain the FirebaseAnalytics instance.
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Opened Maps Activity");
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "rareActivityOpen");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Service No: " + bsn + " | Stop Code: " + bc);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "deprecatedMapActivityOpened");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.

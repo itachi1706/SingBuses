@@ -61,11 +61,14 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
         busLatitude = this.getArguments().getDouble("buslat", 0);
         busLongitude = this.getArguments().getDouble("buslng", 0);
 
+        String bc = this.getArguments().getString("busCode", "Unknown");
+        String bsn = this.getArguments().getString("busSvcNo", "Unknown");
+
         // Obtain the FirebaseAnalytics instance.
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this.getActivity());
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Opened Maps Dialog (Debug)");
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "rareActivityOpenDebug");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Service No: " + bsn + " | Stop Code: " + bc);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "mapDialogLaunched");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.

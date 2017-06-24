@@ -5,6 +5,7 @@ import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.R;
@@ -85,6 +87,12 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
             serviceIntent.putExtra("stopCode", item.getCode());
             serviceIntent.putExtra("stopName", item.getBusStopName());
             v.getContext().startActivity(serviceIntent);
+
+            FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(v.getContext());
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Code: " + item.getCode());
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "openBusStopDetail");
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
             // Add dynamic shortcuts
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
