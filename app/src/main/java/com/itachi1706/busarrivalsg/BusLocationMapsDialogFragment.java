@@ -107,9 +107,10 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
         LatLng busStopLocation = new LatLng(busLatitude, busLongitude);
 
         mMap.addMarker(new MarkerOptions().position(busLocation).title(getString(R.string.maps_marker_bus_location_title))
-                .snippet(getString(R.string.maps_marker_bus_location_snippet))).showInfoWindow();
+                .snippet(getString(R.string.maps_marker_bus_location_snippet)).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)))
+                .showInfoWindow();
         mMap.addMarker(new MarkerOptions().position(busStopLocation).title(getString(R.string.maps_marker_bus_stop_title))
-                .snippet(getString(R.string.maps_marker_bus_stop_snippet)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+                .snippet(getString(R.string.maps_marker_bus_stop_snippet)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pegman)));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(busLocation, 17));
     }
 
