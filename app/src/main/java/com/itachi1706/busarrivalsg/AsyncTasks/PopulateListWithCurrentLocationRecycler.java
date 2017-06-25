@@ -3,10 +3,12 @@ package com.itachi1706.busarrivalsg.AsyncTasks;
 import android.app.Activity;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsAPIArray;
@@ -24,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 /**
@@ -32,12 +35,12 @@ import java.util.Locale;
  */
 public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location, Void, String> {
 
-    Activity activity;
-    BusStopsDB db;
-    BusStopRecyclerAdapter adapter;
-    Exception except;
+    private Activity activity;
+    private BusStopsDB db;
+    private BusStopRecyclerAdapter adapter;
+    private Exception except;
 
-    Location location;
+    private Location location;
 
     public PopulateListWithCurrentLocationRecycler(Activity activity, BusStopsDB db, BusStopRecyclerAdapter adapter) {
         this.activity = activity;
@@ -112,6 +115,16 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
                     BusStopJSON stopRetry = db.getBusStopByLocation(lng, lat);
                     if (stopRetry == null) {
                         Log.e("LOCATE", "Something definetely went wrong here (" + map.getName() + ")");
+
+                        // Obtain the FirebaseAnalytics instance to report this.
+                        Calendar cal = Calendar.getInstance();
+                        String code = String.format(Locale.getDefault(), "Name: %1$s | Stop LatLng: %2$f|%3$f | On: %4$s/%5$d", name, lat, lng,
+                                cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()), cal.get(Calendar.YEAR));
+                        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(activity);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, code);
+                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "errorLocateBusStop");
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                         Toast.makeText(activity, R.string.toast_message_invalid_data, Toast.LENGTH_SHORT).show();
                         continue;
                     }
@@ -172,10 +185,10 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
             Log.d("VALIDATE-LAT", "DB Lat: " + geo.getLatitude() + " | GMaps Lat: " + map.getGeometry().getLocation().getLat());
             Log.d("VALIDATE-LNG", "DB Lng: " + geo.getLongitude() + " | GMaps Lng: " + map.getGeometry().getLocation().getLng());
 
-            /**
-             * According to http://gis.stackexchange.com/questions/8650/how-to-measure-the-accuracy-of-latitude-and-longitude
-             * 4 decimal place has an accuracy level of up to 11m which hopefully is sufficient enough for us
-             * (Don't think there's any bus stops thats less than 11m apart (besides opposite stops)
+            /*
+              According to http://gis.stackexchange.com/questions/8650/how-to-measure-the-accuracy-of-latitude-and-longitude
+              4 decimal place has an accuracy level of up to 11m which hopefully is sufficient enough for us
+              (Don't think there's any bus stops thats less than 11m apart (besides opposite stops)
              */
             String lat = String.format(Locale.ENGLISH, "%.4f", geo.getLatitude());
             String lng = String.format(Locale.ENGLISH, "%.4f", geo.getLongitude());
