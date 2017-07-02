@@ -26,8 +26,8 @@ android {
         applicationId "com.itachi1706.busarrivalsg"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 224
-        versionName "2.2.2"
+        versionCode 225
+        versionName "2.2.3"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -75,10 +75,10 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.getpebble:pebblekit:3.0.0'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.google.android.gms:play-services-maps:11.0.1'
-    compile 'com.google.firebase:firebase-core:11.0.1'
-    compile 'com.google.firebase:firebase-crash:11.0.1'
-    compile 'com.google.firebase:firebase-perf:11.0.1'
+    compile 'com.google.android.gms:play-services-maps:11.0.2'
+    compile 'com.google.firebase:firebase-core:11.0.2'
+    compile 'com.google.firebase:firebase-crash:11.0.2'
+    compile 'com.google.firebase:firebase-perf:11.0.2'
     testCompile 'junit:junit:4.12'
 }
 
