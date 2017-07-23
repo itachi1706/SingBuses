@@ -1,9 +1,11 @@
 package com.itachi1706.busarrivalsg.Util;
 
+import android.app.AlertDialog;
 import android.util.Log;
 
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
+import com.itachi1706.busarrivalsg.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,6 +23,8 @@ public class StaticVariables {
     public static final String BASE_SERVER_URL = "http://api.itachi1706.com/api/appupdatechecker.php?action=androidretrievedata&packagename=";
 
     public final static UUID PEBBLE_APP_UUID = UUID.fromString("11198668-4e27-4e94-b51c-a27a1ea5cd82");
+
+    public static final int CUR = 0, NEXT = 1, SUB = 2;
 
     //For Pebble Comm
     public static PebbleDictionary dict1 = null;
@@ -78,6 +82,11 @@ public class StaticVariables {
     public static byte parseWABStatusToPebble(boolean status){
         if (status) return Byte.valueOf("1");
         return Byte.valueOf("0");
+    }
+
+    public static boolean checkBusLocationValid(double lat, double lng) {
+        return !(lng == -1000 || lat == -1000) && !(lng == -11 && lat == -11) && !(lat == 0 && lng == 0);
+
     }
 
     // HANDLER MESSAGES

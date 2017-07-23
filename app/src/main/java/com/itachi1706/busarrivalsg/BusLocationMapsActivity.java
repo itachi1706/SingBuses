@@ -21,30 +21,45 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 @Deprecated
 public class BusLocationMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
-    private double latitude, longitude;
     private double busLatitude, busLongitude;
+
+    private double lat1, lng1, lat2, lng2, lat3, lng3;
+    private String arr1, arr2, arr3;
+    private int state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus_location_maps);
 
-        latitude = this.getIntent().getDoubleExtra("lat", 0);
-        longitude = this.getIntent().getDoubleExtra("lng", 0);
-
         busLatitude = this.getIntent().getDoubleExtra("buslat", 0);
         busLongitude = this.getIntent().getDoubleExtra("buslng", 0);
 
         String bc = this.getIntent().getStringExtra("busCode");
         String bsn = this.getIntent().getStringExtra("busSvcNo");
+
+        // 3 buses
+        lat1 = this.getIntent().getDoubleExtra("lat1", 0);
+        lng1 = this.getIntent().getDoubleExtra("lng1", 0);
+        lat2 = this.getIntent().getDoubleExtra("lat2", 0);
+        lng2 = this.getIntent().getDoubleExtra("lng2", 0);
+        lat3 = this.getIntent().getDoubleExtra("lat3", 0);
+        lng3 = this.getIntent().getDoubleExtra("lng3", 0);
+        arr1 = this.getIntent().getStringExtra("arr1");
+        arr2 = this.getIntent().getStringExtra("arr2");
+        arr3 = this.getIntent().getStringExtra("arr3");
+        state = this.getIntent().getIntExtra("state", StaticVariables.CUR);
 
         // Obtain the FirebaseAnalytics instance.
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -76,15 +91,46 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
         checkIfYouHaveGpsPermissionForThis();
 
         // Add a marker to the bus location and move the camera
-        LatLng busLocation = new LatLng(latitude, longitude);
         LatLng busStopLocation = new LatLng(busLatitude, busLongitude);
 
-        mMap.addMarker(new MarkerOptions().position(busLocation).title(getString(R.string.maps_marker_bus_location_title))
-                .snippet(getString(R.string.maps_marker_bus_location_snippet)).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)))
-                .showInfoWindow();
-        mMap.addMarker(new MarkerOptions().position(busStopLocation).title(getString(R.string.maps_marker_bus_stop_title))
+        Marker m1 = null, m2 = null, m3 = null;
+        LatLngBounds.Builder b = new LatLngBounds.Builder();
+
+        // Add 3 buses location
+        if (StaticVariables.checkBusLocationValid(lat1, lng1)) {
+            m1 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, lng1)).title("Location of Bus 1")
+                    .snippet("Time to Arrive: " + processArrival(arr1)).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
+            b.include(m1.getPosition());
+        }
+        if (StaticVariables.checkBusLocationValid(lat2, lng2)) {
+            m2 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat2, lng2)).title("Location of Bus 2")
+                    .snippet("Time to Arrive: " + processArrival(arr2)).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
+            if (state == StaticVariables.NEXT || state == StaticVariables.SUB) b.include(m2.getPosition());
+        }
+        if (StaticVariables.checkBusLocationValid(lat3, lng3)) {
+            m3 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat3, lng3)).title("Location of Bus 3")
+                    .snippet("Time to Arrive: " + processArrival(arr3)).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
+            if (state == StaticVariables.SUB) b.include(m3.getPosition());
+        }
+        switch (state) {
+            case StaticVariables.CUR: if (m1 != null) m1.showInfoWindow(); break;
+            case StaticVariables.NEXT: if (m2 != null) m2.showInfoWindow(); break;
+            case StaticVariables.SUB: if (m3 != null) m3.showInfoWindow(); break;
+        }
+
+        Marker stop = mMap.addMarker(new MarkerOptions().position(busStopLocation).title(getString(R.string.maps_marker_bus_stop_title))
                 .snippet(getString(R.string.maps_marker_bus_stop_snippet)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pegman)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(busLocation, 17));
+        b.include(stop.getPosition());
+        LatLngBounds boundary = b.build();
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundary, 100));
+    }
+
+    private String processArrival(String estString) {
+        long est = StaticVariables.parseLTAEstimateArrival(estString);
+        if (est == -9999) return "=";
+        else if (est <= 0) return "Arr";
+        else if (est == 1) return est + " mins";
+        else return est + " mins";
     }
 
     private static final int RC_HANDLE_ACCESS_FINE_LOCATION = 3;
