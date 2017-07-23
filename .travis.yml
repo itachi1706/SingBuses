@@ -1,6 +1,6 @@
 language: android
 jdk: oraclejdk8
-sudo: true # Temporarily leaving container based solution till Out of space error is fixed
+sudo: false
 cache:
   directories:
   - "${TRAVIS_BUILD_DIR}/gradle/caches/"
