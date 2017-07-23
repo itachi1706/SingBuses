@@ -28,6 +28,10 @@ import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.util.List;
 
+import static com.itachi1706.busarrivalsg.Util.StaticVariables.CUR;
+import static com.itachi1706.busarrivalsg.Util.StaticVariables.NEXT;
+import static com.itachi1706.busarrivalsg.Util.StaticVariables.SUB;
+
 /**
  * Created by Kenneth on 31/10/2015.
  * for SingBuses in package com.itachi1706.busarrivalsg.RecyclerViews
@@ -102,7 +106,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
             if (i.getNextBus().isWheelchairAccessible())
                 holder.wheelchairNow.setVisibility(View.VISIBLE);
-            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i.getNextBus(), i.getStopCode(), i.getServiceNo()));
+            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), CUR));
         }
 
         //2nd bus (Next bus)
@@ -124,7 +128,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
             if (i.getSubsequentBus().isWheelchairAccessible())
                 holder.wheelchairNext.setVisibility(View.VISIBLE);
-            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i.getSubsequentBus(), i.getStopCode(), i.getServiceNo()));
+            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), NEXT));
         }
 
         //3rd bus (Subsequent Bus)
@@ -149,7 +153,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
             if (i.getSubsequentBus3().isWheelchairAccessible())
                 holder.wheelchairSub.setVisibility(View.VISIBLE);
-            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i.getSubsequentBus3(), i.getStopCode(), i.getServiceNo()));
+            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), SUB));
         }
     }
 
@@ -233,8 +237,14 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
 
         private double longitude = -1000, latitude = -1000;
         private String stopCode = "", serviceNo = "Unknown";
+        private BusArrivalArrayObject busObj;
+        private int state;
 
-        ArrivalButton(BusArrivalArrayObjectEstimate status, String busStopCode, String svcNo) {
+        ArrivalButton(BusArrivalArrayObject busObj, String busStopCode, String svcNo, int state) {
+            BusArrivalArrayObjectEstimate status = (state == CUR) ? busObj.getNextBus() :
+                    (state == NEXT) ? busObj.getSubsequentBus() : busObj.getSubsequentBus3();
+            this.busObj = busObj;
+            this.state = state;
             this.longitude = status.getLongitude();
             this.latitude = status.getLatitude();
             this.stopCode = busStopCode.trim();
@@ -272,12 +282,20 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             }
 
             Intent mapsIntent = new Intent(activity, BusLocationMapsActivity.class);
-            mapsIntent.putExtra("lat", latitude);
-            mapsIntent.putExtra("lng", longitude);
-
-            // Misc Stuff
             mapsIntent.putExtra("busCode", stopCode);
             mapsIntent.putExtra("busSvcNo", serviceNo);
+
+            // 3 Bus statuses
+            mapsIntent.putExtra("lat1", busObj.getNextBus().getLatitude());
+            mapsIntent.putExtra("lng1", busObj.getNextBus().getLongitude());
+            mapsIntent.putExtra("arr1", busObj.getNextBus().getEstimatedArrival());
+            mapsIntent.putExtra("lat2", busObj.getSubsequentBus().getLatitude());
+            mapsIntent.putExtra("lng2", busObj.getSubsequentBus().getLongitude());
+            mapsIntent.putExtra("arr2", busObj.getSubsequentBus().getEstimatedArrival());
+            mapsIntent.putExtra("lat3", busObj.getSubsequentBus3().getLatitude());
+            mapsIntent.putExtra("lng3", busObj.getSubsequentBus3().getLongitude());
+            mapsIntent.putExtra("arr3", busObj.getSubsequentBus3().getEstimatedArrival());
+            mapsIntent.putExtra("state", state);
 
             //Get Bus stop longitude and latitude
             BusStopsDB db = new BusStopsDB(activity);
