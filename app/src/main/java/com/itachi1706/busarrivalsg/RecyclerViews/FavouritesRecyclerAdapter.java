@@ -118,6 +118,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 holder.operatingStatus.setTextColor(Color.RED);
                 notArriving(holder.busArrivalNow);
                 notArriving(holder.busArrivalNext);
+                notArriving(holder.busArrivalSub);
                 return;
             } else {
                 holder.operatingStatus.setTextColor(Color.GREEN);

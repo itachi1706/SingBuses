@@ -85,6 +85,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 holder.operatingStatus.setTextColor(Color.RED);
                 notArriving(holder.busArrivalNow);
                 notArriving(holder.busArrivalNext);
+                notArriving(holder.busArrivalSub);
                 return;
             }
             holder.operatingStatus.setTextColor(Color.GREEN);
