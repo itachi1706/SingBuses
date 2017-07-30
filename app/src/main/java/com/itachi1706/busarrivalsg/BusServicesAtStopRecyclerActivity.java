@@ -275,7 +275,12 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
 
         // Add all inoperation into array
         for (Map.Entry<String, String> s : inoperation.entrySet()) {
-            String jsonCraft = "{ServiceNo: \"" + s.getKey() + "\", Operator: \"" + s.getValue() + "\",\"NextBus\":{\"EstimatedArrival\":\"\",\"Latitude\":\"\",\"Longitude\":\"\",\"VisitNumber\":\"\",\"Load\":\"\",\"Feature\":\"\"},\"SubsequentBus\":{\"EstimatedArrival\":\"\",\"Latitude\":\"\",\"Longitude\":\"\",\"VisitNumber\":\"\",\"Load\":\"\",\"Feature\":\"\"},\"SubsequentBus3\":{\"EstimatedArrival\":\"\",\"Latitude\":\"\",\"Longitude\":\"\",\"VisitNumber\":\"\",\"Load\":\"\",\"Feature\":\"\"}}";
+            String jsonCraft = "{ServiceNo: \"" + s.getKey() + "\", Operator: \"" + s.getValue() +
+                    "\",\"NextBus\":{\"EstimatedArrival\":\"\",\"Latitude\":\"\",\"Longitude\":\"\",\"" +
+                    "VisitNumber\":\"\",\"Load\":\"\",\"Feature\":\"\"},\"SubsequentBus\":{\"" +
+                    "EstimatedArrival\":\"\",\"Latitude\":\"\",\"Longitude\":\"\",\"VisitNumber\":\"\",\"" +
+                    "Load\":\"\",\"Feature\":\"\"},\"SubsequentBus3\":{\"EstimatedArrival\":\"\",\"" +
+                    "Latitude\":\"\",\"Longitude\":\"\",\"VisitNumber\":\"\",\"Load\":\"\",\"Feature\":\"\"}}";
             BusArrivalArrayObject obj = gson.fromJson(jsonCraft, BusArrivalArrayObject.class);
             obj.setSvcStatus(false);
             obj.setStopCode(stopID);

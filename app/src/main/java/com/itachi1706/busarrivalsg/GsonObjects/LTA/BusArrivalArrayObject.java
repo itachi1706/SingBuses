@@ -6,7 +6,6 @@ package com.itachi1706.busarrivalsg.GsonObjects.LTA;
  */
 public class BusArrivalArrayObject {
     private String ServiceNo, Operator;
-    @Deprecated private String Status;
     private BusArrivalArrayObjectEstimate NextBus;
 
     // Implemented as of 30 July 2017
@@ -25,10 +24,6 @@ public class BusArrivalArrayObject {
 
     public String getOperator() {
         return Operator;
-    }
-
-    @Deprecated public String getStatus() {
-        return Status;
     }
 
     public String getServiceNo() {

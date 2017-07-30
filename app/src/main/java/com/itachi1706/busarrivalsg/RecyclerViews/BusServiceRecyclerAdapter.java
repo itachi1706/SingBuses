@@ -77,14 +77,14 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         holder.busNumber.setText(i.getServiceNo());
 
         if (!i.isSvcStatus()) {
-            holder.operatingStatus.setText("Not In Operation");
+            holder.operatingStatus.setText(activity.getString(R.string.service_not_operational));
             holder.operatingStatus.setTextColor(Color.RED);
             notArriving(holder.busArrivalNow, holder.wheelchairNow);
             notArriving(holder.busArrivalNext, holder.wheelchairNext);
             notArriving(holder.busArrivalSub, holder.wheelchairSub);
             return;
         }
-        holder.operatingStatus.setText("In Operation");
+        holder.operatingStatus.setText(activity.getString(R.string.service_operational));
         holder.operatingStatus.setTextColor(Color.GREEN);
 
         //Current Bus
