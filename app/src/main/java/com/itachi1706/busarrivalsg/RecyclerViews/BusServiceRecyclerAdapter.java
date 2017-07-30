@@ -23,6 +23,7 @@ import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObjectEstimate;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
+import com.itachi1706.busarrivalsg.Objects.CommonEnums;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
@@ -179,10 +180,11 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             view.setTextColor(Color.GRAY);
             return;
         }
-        switch (obj.getLoad()){
-            case "Seats Available": view.setTextColor(Color.GREEN); break;
-            case "Standing Available": view.setTextColor(Color.YELLOW); break;
-            case "Limited Standing": view.setTextColor(Color.RED); break;
+        switch (obj.getLoadInt()){
+            case CommonEnums.BUS_SEATS_AVAIL: view.setTextColor(Color.GREEN); break;
+            case CommonEnums.BUS_STANDING_AVAIL: view.setTextColor(Color.YELLOW); break;
+            case CommonEnums.BUS_LIMITED_SEATS: view.setTextColor(Color.RED); break;
+            default: view.setTextColor(Color.GRAY); break;
         }
     }
 

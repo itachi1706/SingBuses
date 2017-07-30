@@ -24,6 +24,16 @@ public class BusArrivalArrayObjectEstimate {
         return (Load == null) ? "" : Load;
     }
 
+    public int getLoadInt() {
+        if (Load == null) return CommonEnums.UNKNOWN;
+        switch (Load){
+            case "SEA": return CommonEnums.BUS_SEATS_AVAIL;
+            case "SDA": return CommonEnums.BUS_STANDING_AVAIL;
+            case "LSD": return CommonEnums.BUS_LIMITED_SEATS;
+            default: return CommonEnums.UNKNOWN;
+        }
+    }
+
     public String getEstimatedArrival() {
         return EstimatedArrival;
     }
