@@ -393,6 +393,9 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             mapsIntent.putExtra("lat3", busObj.getSubsequentBus().getLatitude());
             mapsIntent.putExtra("lng3", busObj.getSubsequentBus().getLongitude());
             mapsIntent.putExtra("arr3", busObj.getSubsequentBus().getEstimatedArrival());
+            mapsIntent.putExtra("type1", busObj.getCurrentBus().getBusType());
+            mapsIntent.putExtra("type2", busObj.getNextBus().getBusType());
+            mapsIntent.putExtra("type3", busObj.getSubsequentBus().getBusType());
             mapsIntent.putExtra("state", state);
 
             //Get Bus stop longitude and latitude

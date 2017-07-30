@@ -130,10 +130,16 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
                 nextBus.setVisitNumber(item.getNextBus().getVisitNumber());
                 nextBus.setLatitude(item.getNextBus().getLatitude());
                 nextBus.setLongitude(item.getNextBus().getLongitude());
+                nextBus.setBusType(item.getNextBus().getType());
+                nextBus.setTerminatingID(item.getNextBus().getDestinationCode());
+                nextBus.setOriginatingID(item.getNextBus().getOriginCode());
 
                 subsequentBus.setVisitNumber(item.getNextBus2().getVisitNumber());
                 subsequentBus.setLatitude(item.getNextBus2().getLatitude());
                 subsequentBus.setLongitude(item.getNextBus2().getLongitude());
+                subsequentBus.setBusType(item.getNextBus2().getType());
+                subsequentBus.setTerminatingID(item.getNextBus2().getDestinationCode());
+                subsequentBus.setOriginatingID(item.getNextBus2().getOriginCode());
 
 
                 BusStatus subsequent2Bus = new BusStatus();
@@ -143,6 +149,9 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
                 subsequent2Bus.setVisitNumber(item.getNextBus3().getVisitNumber());
                 subsequent2Bus.setLatitude(item.getNextBus3().getLatitude());
                 subsequent2Bus.setLongitude(item.getNextBus3().getLongitude());
+                subsequent2Bus.setBusType(item.getNextBus3().getType());
+                subsequent2Bus.setTerminatingID(item.getNextBus3().getDestinationCode());
+                subsequent2Bus.setOriginatingID(item.getNextBus3().getOriginCode());
 
                 busObj.setSubsequentBus(subsequent2Bus);
             }
