@@ -203,6 +203,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         view.setText("-");
         view.setTextColor(Color.GRAY);
         wheelchair.setVisibility(View.INVISIBLE);
+        view.setOnClickListener(new UnavailableButton());
     }
 
     @Override
@@ -325,6 +326,16 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                     }).show();
             }
             return false;
+        }
+    }
+
+    private class UnavailableButton implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            new AlertDialog.Builder(v.getContext()).setTitle(R.string.dialog_title_bus_timing_unavailable)
+                    .setMessage(R.string.dialog_message_bus_timing_unavailable)
+                    .setPositiveButton(R.string.dialog_action_positive_close, null).show();
         }
     }
 
