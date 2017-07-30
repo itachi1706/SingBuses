@@ -1,6 +1,7 @@
 language: android
 jdk: oraclejdk8
 sudo: false
+dist: trusty # Using Ubuntu 14.04 Trusty
 cache:
   directories:
   - "${TRAVIS_BUILD_DIR}/gradle/caches/"
