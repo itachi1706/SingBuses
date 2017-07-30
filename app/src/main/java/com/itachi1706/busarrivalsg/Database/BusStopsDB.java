@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class BusStopsDB extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     //DB Name
     private static final String DATABASE_NAME = "appdb.db";
@@ -33,6 +33,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
     private static final String BUS_STOP_DESC = "description";
     private static final String BUS_STOP_LATITUDE = "latitude";
     private static final String BUS_STOP_LONGITUDE = "longitude";
+    private static final String BUS_STOP_SERVICES = "services";
     private static final String BUS_STOP_TIMESTAMP = "timestamp";
 
     public BusStopsDB(Context context){
@@ -43,7 +44,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_BUS_TABLE = "CREATE TABLE " + TABLE_ITEMS + "(" + CODE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + BUS_STOP_CODE + " TEXT," + BUS_STOP_ROAD + " TEXT," + BUS_STOP_DESC + " TEXT," + BUS_STOP_LATITUDE + " DOUBLE,"
-                + BUS_STOP_LONGITUDE + " DOUBLE," + BUS_STOP_TIMESTAMP + " INTEGER);";
+                + BUS_STOP_LONGITUDE + " DOUBLE," + BUS_STOP_SERVICES + " TEXT," + BUS_STOP_TIMESTAMP + " INTEGER);";
         db.execSQL(CREATE_BUS_TABLE);
     }
 
@@ -62,8 +63,8 @@ public class BusStopsDB extends SQLiteOpenHelper {
     private void bulkAddFromJSON(BusStopJSON[] busStops) {
         SQLiteDatabase db = this.getWritableDatabase();
         String sql = "INSERT INTO " + TABLE_ITEMS + " (" + BUS_STOP_CODE + ", " + BUS_STOP_ROAD + ", "
-                + BUS_STOP_DESC + ", " + BUS_STOP_LATITUDE + ", " + BUS_STOP_LONGITUDE + ", "
-                + BUS_STOP_TIMESTAMP + ") VALUES (?,?,?,?,?,?);";
+                + BUS_STOP_DESC + ", " + BUS_STOP_LATITUDE + ", " + BUS_STOP_LONGITUDE + ", " + BUS_STOP_SERVICES + ", "
+                + BUS_STOP_TIMESTAMP + ") VALUES (?,?,?,?,?,?,?);";
         db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement(sql);
         for (BusStopJSON busStop : busStops) {
@@ -71,8 +72,9 @@ public class BusStopsDB extends SQLiteOpenHelper {
             stmt.bindString(2, busStop.getRoad());
             stmt.bindString(3, busStop.getBusStopName());
             stmt.bindDouble(4, busStop.getLatitude());
-            stmt.bindDouble(5,busStop.getLongitude());
-            stmt.bindLong(6, busStop.getTimestamp());
+            stmt.bindDouble(5, busStop.getLongitude());
+            stmt.bindString(6, busStop.getServices());
+            stmt.bindLong(7, busStop.getTimestamp());
             stmt.executeInsert();
             stmt.clearBindings();
         }
@@ -96,7 +98,8 @@ public class BusStopsDB extends SQLiteOpenHelper {
         bs.setDescription(cursor.getString(3));
         bs.setLatitude(cursor.getDouble(4));
         bs.setLongitude(cursor.getDouble(5));
-        bs.setTimestamp(cursor.getInt(5));
+        bs.setServices(cursor.getString(6));
+        bs.setTimestamp(cursor.getInt(7));
         return bs;
     }
 
