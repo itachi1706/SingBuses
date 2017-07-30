@@ -1,6 +1,5 @@
 package com.itachi1706.busarrivalsg.Database;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -60,20 +59,6 @@ public class BusStopsDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    @Deprecated
-    private void addFromJSON(BusStopJSON busStop){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(BUS_STOP_CODE, busStop.getCode());
-        cv.put(BUS_STOP_ROAD, busStop.getRoad());
-        cv.put(BUS_STOP_DESC, busStop.getBusStopName());
-        cv.put(BUS_STOP_LATITUDE, busStop.getLatitude());
-        cv.put(BUS_STOP_LONGITUDE,busStop.getLongitude());
-        cv.put(BUS_STOP_TIMESTAMP, busStop.getTimestamp());
-        db.insert(TABLE_ITEMS, null, cv);
-        db.close();
-    }
-
     private void bulkAddFromJSON(BusStopJSON[] busStops) {
         SQLiteDatabase db = this.getWritableDatabase();
         String sql = "INSERT INTO " + TABLE_ITEMS + " (" + BUS_STOP_CODE + ", " + BUS_STOP_ROAD + ", "
@@ -94,17 +79,6 @@ public class BusStopsDB extends SQLiteOpenHelper {
         db.setTransactionSuccessful();
         db.endTransaction();
         db.close();
-    }
-
-    private boolean checkIfExistAlready(BusStopJSON busStop){
-        String code = DatabaseUtils.sqlEscapeString(busStop.getCode());
-        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_CODE + "=" + code + ";";
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
-        int count = cursor.getCount();
-        cursor.close();
-        db.close();
-        return count != 0;
     }
 
     /**
@@ -147,27 +121,6 @@ public class BusStopsDB extends SQLiteOpenHelper {
     }
 
     /**
-     * Returns a single Bus Stop Object based on Unique Bus Stop ID
-     * @param busStopCode Bus Stop ID
-     * @return Bus Stop Object
-     */
-    public BusStopJSON getBusStopById(int busStopCode){
-        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + CODE_ID + "=" + busStopCode + ";";
-        SQLiteDatabase db = this.getReadableDatabase();
-        BusStopJSON bs = new BusStopJSON();
-
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()){
-            do {
-                bs = getBusStopJsonObject(cursor);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-        return bs;
-    }
-
-    /**
      * Returns a single Bus Stop Object based on Unique Bus Stop Code
      * @param busStopCode Bus Stop Code
      * @return Bus Stop Object
@@ -179,30 +132,6 @@ public class BusStopsDB extends SQLiteOpenHelper {
         BusStopJSON bs = new BusStopJSON();
 
         Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()){
-            do {
-                bs = getBusStopJsonObject(cursor);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-        return bs;
-    }
-
-    /**
-     * Returns a single Bus Stop Object based on Bus Stop Name
-     * @param stopName Bus Stop Name
-     * @return Bus Stop Object
-     */
-    public BusStopJSON getBusStopByStopName(String stopName){
-        stopName = DatabaseUtils.sqlEscapeString(stopName);
-        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_DESC + "=" + stopName + ";";
-        SQLiteDatabase db = this.getReadableDatabase();
-        BusStopJSON bs = new BusStopJSON();
-
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.getCount() == 0)
-            return null;
         if (cursor.moveToFirst()){
             do {
                 bs = getBusStopJsonObject(cursor);
