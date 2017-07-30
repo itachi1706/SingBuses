@@ -27,11 +27,9 @@ import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Util.PebbleEnum;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
-
 import io.fabric.sdk.android.Fabric;
+
+import static com.itachi1706.busarrivalsg.Util.StaticVariables.parseEstimateArrival;
 
 
 /**
@@ -219,26 +217,35 @@ public class PebbleCommunications extends Service {
 
     private class ServiceHandler extends Handler {
 
-        public ServiceHandler(Looper looper){
+        public ServiceHandler(Looper looper) {
             super(looper);
         }
 
         @Override
-        public void handleMessage(Message msg){
+        public void handleMessage(Message msg) {
             //Do stuff here
 
             int buttonPress = msg.arg1;
             int currentPage = msg.arg2;
 
-            switch (buttonPress){
-                case PebbleEnum.BUTTON_PREVIOUS: Log.d("Pebble Comm", "Going Previous!"); prevHandler(currentPage); break;
-                case PebbleEnum.BUTTON_NEXT: Log.d("Pebble Comm", "Going Next!"); nextHandler(currentPage); break;
-                case PebbleEnum.BUTTON_REFRESH: Log.d("Pebble Comm", "Going Refresh!"); refreshHandler(); break;
+            switch (buttonPress) {
+                case PebbleEnum.BUTTON_PREVIOUS:
+                    Log.d("Pebble Comm", "Going Previous!");
+                    prevHandler(currentPage);
+                    break;
+                case PebbleEnum.BUTTON_NEXT:
+                    Log.d("Pebble Comm", "Going Next!");
+                    nextHandler(currentPage);
+                    break;
+                case PebbleEnum.BUTTON_REFRESH:
+                    Log.d("Pebble Comm", "Going Refresh!");
+                    refreshHandler();
+                    break;
             }
         }
 
-        private void nextHandler(int page){
-            if (page != StaticVariables.favouritesList.size()){
+        private void nextHandler(int page) {
+            if (page != StaticVariables.favouritesList.size()) {
                 //Get Next
                 BusServices obj = StaticVariables.favouritesList.get(page);
 
@@ -299,8 +306,8 @@ public class PebbleCommunications extends Service {
             }
         }
 
-        private void prevHandler(int page){
-            if (page > 1){
+        private void prevHandler(int page) {
+            if (page > 1) {
                 //Get Previous
                 BusServices obj = StaticVariables.favouritesList.get(page - 2);
 
@@ -362,7 +369,7 @@ public class PebbleCommunications extends Service {
             }
         }
 
-        private void refreshHandler(){
+        private void refreshHandler() {
             Log.d("PebbleComm", "Received intent to refresh :D");
 
             String json = sp.getString("stored", "wot");
@@ -374,14 +381,14 @@ public class PebbleCommunications extends Service {
                 StaticVariables.favouritesList = BusStorage.getStoredBuses(sp);
 
                 Log.d("FAVOURITES", "Finished Processing, retrieving estimated arrival data now");
-                if (StaticVariables.favouritesList.size() > 0){
+                if (StaticVariables.favouritesList.size() > 0) {
                     //Process first one
                     new GetFirstFavouriteData(getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StaticVariables.favouritesList.get(0));
                 }
 
                 boolean first = true;
                 for (BusServices s : StaticVariables.favouritesList) {
-                    if (first){
+                    if (first) {
                         first = false;
                         continue;
                     }
@@ -395,47 +402,6 @@ public class PebbleCommunications extends Service {
                 StaticVariables.dict1 = dict;
                 PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, dict, 1);
             }
-        }
-
-        private long parseEstimateArrival(String arrivalString){
-            Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());
-            //GregorianCalendar currentDate = new GregorianCalendar(new SimpleTimeZone(8000, "SST"));
-            //currentDate.setTimeInMillis(networkTime[0]);
-            //currentDate.setTimeInMillis(System.currentTimeMillis());
-            Calendar currentDate = Calendar.getInstance();
-            currentDate.add(Calendar.MONTH, 1);
-
-            Calendar arrivalDate = splitDate(arrivalString);
-
-            Log.d("COMPARE","Current: " + currentDate.toString() );
-            Log.d("COMPARE", "Arrival: " + arrivalDate.toString() );
-            long difference = arrivalDate.getTimeInMillis() - currentDate.getTimeInMillis();
-            return TimeUnit.MILLISECONDS.toMinutes(difference);
-        }
-
-        private Calendar splitDate(String dateString){
-            Log.d("SPLIT", "Date String to parse: " + dateString);
-            String[] firstSplit = dateString.split("T");
-            String date = firstSplit[0];
-            String time = firstSplit[1];
-            String[] timeSplit = time.split("\\+");
-            String trueTime = timeSplit[0];
-
-            String[] dateSplit = date.split("\\-");
-            int year = Integer.parseInt(dateSplit[0]);
-            int month = Integer.parseInt(dateSplit[1]);
-            int dates = Integer.parseInt(dateSplit[2]);
-
-            String[] trueTimeSplit = trueTime.split(":");
-            int hr = Integer.parseInt(trueTimeSplit[0]);
-            int min = Integer.parseInt(trueTimeSplit[1]);
-            int sec = Integer.parseInt(trueTimeSplit[2]);
-
-            Calendar tmp = new GregorianCalendar(year, month, dates, hr, min, sec);
-            //Cause Server gives GMT, we need convert to SST
-            tmp.add(Calendar.HOUR, 8);
-            //tmp.setTimeZone(new SimpleTimeZone(8000, "SST"));
-            return tmp;
         }
     }
 }

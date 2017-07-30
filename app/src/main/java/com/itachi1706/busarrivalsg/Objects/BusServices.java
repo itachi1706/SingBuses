@@ -12,11 +12,10 @@ public class BusServices {
     private long time;
     private String stopName;
 
-    private String operatingStatus;
+    private boolean svcStatus;
 
-    //Going to be implemented from 12 November
+    //Going to be implemented from 12 November 2016
     private BusStatus subsequentBus;
-    private String originatingID, terminatingID;
 
     public BusStatus getNextBus() {
         return nextBus;
@@ -74,12 +73,12 @@ public class BusServices {
         this.obtainedNextData = obtainedNextData;
     }
 
-    public String getOperatingStatus() {
-        return operatingStatus;
+    public boolean isSvcStatus() {
+        return svcStatus;
     }
 
-    public void setOperatingStatus(String operatingStatus) {
-        this.operatingStatus = operatingStatus;
+    public void setSvcStatus(boolean svcStatus) {
+        this.svcStatus = svcStatus;
     }
 
     public String getStopName() {
@@ -96,21 +95,5 @@ public class BusServices {
 
     public void setSubsequentBus(BusStatus subsequentBus) {
         this.subsequentBus = subsequentBus;
-    }
-
-    public String getOriginatingID() {
-        return originatingID;
-    }
-
-    public void setOriginatingID(String originatingID) {
-        this.originatingID = originatingID;
-    }
-
-    public String getTerminatingID() {
-        return terminatingID;
-    }
-
-    public void setTerminatingID(String terminatingID) {
-        this.terminatingID = terminatingID;
     }
 }

@@ -23,6 +23,7 @@ import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObjectEstimate;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
+import com.itachi1706.busarrivalsg.Objects.CommonEnums;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
@@ -66,13 +67,6 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     public void onBindViewHolder(BusServiceViewHolder holder, int position) {
         BusArrivalArrayObject i = items.get(position);
 
-        holder.operatingStatus.setText(i.getStatus());
-        if (i.getStatus().contains("Not") || i.getStatus().contains("not")){
-            holder.operatingStatus.setTextColor(Color.RED);
-        } else {
-            holder.operatingStatus.setTextColor(Color.GREEN);
-        }
-
         holder.busOperator.setText(i.getOperator());
         switch (i.getOperator().toUpperCase()){
             case "SMRT": holder.busOperator.setTextColor(Color.RED); break;
@@ -81,15 +75,21 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             case "GAS": holder.busOperator.setTextColor(Color.YELLOW); break;
         }
         holder.busNumber.setText(i.getServiceNo());
-        if (i.getStatus().equalsIgnoreCase("not")){
-            notArriving(holder.busArrivalNow);
-            notArriving(holder.busArrivalNext);
+
+        if (!i.isSvcStatus()) {
+            holder.operatingStatus.setText(activity.getString(R.string.service_not_operational));
+            holder.operatingStatus.setTextColor(Color.RED);
+            notArriving(holder.busArrivalNow, holder.wheelchairNow);
+            notArriving(holder.busArrivalNext, holder.wheelchairNext);
+            notArriving(holder.busArrivalSub, holder.wheelchairSub);
             return;
         }
+        holder.operatingStatus.setText(activity.getString(R.string.service_operational));
+        holder.operatingStatus.setTextColor(Color.GREEN);
 
         //Current Bus
         if (i.getNextBus().getEstimatedArrival() == null){
-            notArriving(holder.busArrivalNow);
+            notArriving(holder.busArrivalNow, holder.wheelchairNow);
         } else {
             long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus().getEstimatedArrival());
             String arrivalStatusNow;
@@ -110,10 +110,10 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         }
 
         //2nd bus (Next bus)
-        if (i.getSubsequentBus().getEstimatedArrival() == null){
-            notArriving(holder.busArrivalNext);
+        if (i.getNextBus2().getEstimatedArrival() == null){
+            notArriving(holder.busArrivalNext, holder.wheelchairNext);
         } else {
-            long est = StaticVariables.parseLTAEstimateArrival(i.getSubsequentBus().getEstimatedArrival());
+            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus2().getEstimatedArrival());
             String arrivalStatusNext;
             if (est == -9999)
                 arrivalStatusNext = "-";
@@ -124,21 +124,21 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             else
                 arrivalStatusNext = est + "";
             holder.busArrivalNext.setText(arrivalStatusNext);
-            applyColorLoad(holder.busArrivalNext, i.getSubsequentBus());
+            applyColorLoad(holder.busArrivalNext, i.getNextBus2());
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
-            if (i.getSubsequentBus().isWheelchairAccessible())
+            if (i.getNextBus2().isWheelchairAccessible())
                 holder.wheelchairNext.setVisibility(View.VISIBLE);
             holder.busArrivalNext.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), NEXT));
         }
 
         //3rd bus (Subsequent Bus)
-        if (i.getSubsequentBus3() == null) {
+        if (i.getNextBus3() == null) {
             comingSoon(holder.busArrivalSub);
             return;
         }
-        if (i.getSubsequentBus3().getEstimatedArrival() == null) notArriving(holder.busArrivalSub);
+        if (i.getNextBus3().getEstimatedArrival() == null) notArriving(holder.busArrivalSub, holder.wheelchairSub);
         else {
-            long est = StaticVariables.parseLTAEstimateArrival(i.getSubsequentBus3().getEstimatedArrival());
+            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus3().getEstimatedArrival());
             String arrivalStatusSub;
             if (est == -9999)
                 arrivalStatusSub = "-";
@@ -149,9 +149,9 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             else
                 arrivalStatusSub = est + "";
             holder.busArrivalSub.setText(arrivalStatusSub);
-            applyColorLoad(holder.busArrivalSub, i.getSubsequentBus3());
+            applyColorLoad(holder.busArrivalSub, i.getNextBus3());
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
-            if (i.getSubsequentBus3().isWheelchairAccessible())
+            if (i.getNextBus3().isWheelchairAccessible())
                 holder.wheelchairSub.setVisibility(View.VISIBLE);
             holder.busArrivalSub.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), SUB));
         }
@@ -162,9 +162,10 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         view.setTextColor(Color.GRAY);
     }
 
-    private void notArriving(TextView view){
+    private void notArriving(TextView view, ImageView wheelchair){
         view.setText("-");
         view.setTextColor(Color.GRAY);
+        wheelchair.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -177,10 +178,11 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             view.setTextColor(Color.GRAY);
             return;
         }
-        switch (obj.getLoad()){
-            case "Seats Available": view.setTextColor(Color.GREEN); break;
-            case "Standing Available": view.setTextColor(Color.YELLOW); break;
-            case "Limited Standing": view.setTextColor(Color.RED); break;
+        switch (obj.getLoadInt()){
+            case CommonEnums.BUS_SEATS_AVAIL: view.setTextColor(Color.GREEN); break;
+            case CommonEnums.BUS_STANDING_AVAIL: view.setTextColor(Color.YELLOW); break;
+            case CommonEnums.BUS_LIMITED_SEATS: view.setTextColor(Color.RED); break;
+            default: view.setTextColor(Color.GRAY); break;
         }
     }
 
@@ -242,7 +244,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
 
         ArrivalButton(BusArrivalArrayObject busObj, String busStopCode, String svcNo, int state) {
             BusArrivalArrayObjectEstimate status = (state == CUR) ? busObj.getNextBus() :
-                    (state == NEXT) ? busObj.getSubsequentBus() : busObj.getSubsequentBus3();
+                    (state == NEXT) ? busObj.getNextBus2() : busObj.getNextBus3();
             this.busObj = busObj;
             this.state = state;
             this.longitude = status.getLongitude();
@@ -289,12 +291,15 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             mapsIntent.putExtra("lat1", busObj.getNextBus().getLatitude());
             mapsIntent.putExtra("lng1", busObj.getNextBus().getLongitude());
             mapsIntent.putExtra("arr1", busObj.getNextBus().getEstimatedArrival());
-            mapsIntent.putExtra("lat2", busObj.getSubsequentBus().getLatitude());
-            mapsIntent.putExtra("lng2", busObj.getSubsequentBus().getLongitude());
-            mapsIntent.putExtra("arr2", busObj.getSubsequentBus().getEstimatedArrival());
-            mapsIntent.putExtra("lat3", busObj.getSubsequentBus3().getLatitude());
-            mapsIntent.putExtra("lng3", busObj.getSubsequentBus3().getLongitude());
-            mapsIntent.putExtra("arr3", busObj.getSubsequentBus3().getEstimatedArrival());
+            mapsIntent.putExtra("type1", busObj.getNextBus().getTypeInt());
+            mapsIntent.putExtra("lat2", busObj.getNextBus2().getLatitude());
+            mapsIntent.putExtra("lng2", busObj.getNextBus2().getLongitude());
+            mapsIntent.putExtra("arr2", busObj.getNextBus2().getEstimatedArrival());
+            mapsIntent.putExtra("type2", busObj.getNextBus2().getTypeInt());
+            mapsIntent.putExtra("lat3", busObj.getNextBus3().getLatitude());
+            mapsIntent.putExtra("lng3", busObj.getNextBus3().getLongitude());
+            mapsIntent.putExtra("arr3", busObj.getNextBus3().getEstimatedArrival());
+            mapsIntent.putExtra("type3", busObj.getNextBus3().getTypeInt());
             mapsIntent.putExtra("state", state);
 
             //Get Bus stop longitude and latitude

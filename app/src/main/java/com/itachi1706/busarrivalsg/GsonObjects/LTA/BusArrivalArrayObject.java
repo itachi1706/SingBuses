@@ -5,17 +5,17 @@ package com.itachi1706.busarrivalsg.GsonObjects.LTA;
  * for SingBuses in package com.itachi1706.busarrivalsg.GsonObjects.LTA
  */
 public class BusArrivalArrayObject {
-    private String ServiceNo, Status, Operator;
-    private BusArrivalArrayObjectEstimate NextBus, SubsequentBus;
+    private String ServiceNo, Operator;
+    private BusArrivalArrayObjectEstimate NextBus;
 
-    // Implemented as of 12 November
-    private String OriginatingID, TerminatingID;
-    private BusArrivalArrayObjectEstimate SubsequentBus3;
+    // Implemented as of 30 July 2017
+    private BusArrivalArrayObjectEstimate NextBus2, NextBus3;
 
     private String stopCode;
+    private boolean svcStatus;
 
-    public BusArrivalArrayObjectEstimate getSubsequentBus() {
-        return SubsequentBus;
+    public BusArrivalArrayObjectEstimate getNextBus2() {
+        return NextBus2;
     }
 
     public BusArrivalArrayObjectEstimate getNextBus() {
@@ -24,10 +24,6 @@ public class BusArrivalArrayObject {
 
     public String getOperator() {
         return Operator;
-    }
-
-    public String getStatus() {
-        return Status;
     }
 
     public String getServiceNo() {
@@ -42,15 +38,15 @@ public class BusArrivalArrayObject {
         this.stopCode = stopCode;
     }
 
-    public String getOriginatingID() {
-        return OriginatingID;
+    public BusArrivalArrayObjectEstimate getNextBus3() {
+        return NextBus3;
     }
 
-    public String getTerminatingID() {
-        return TerminatingID;
+    public boolean isSvcStatus() {
+        return svcStatus;
     }
 
-    public BusArrivalArrayObjectEstimate getSubsequentBus3() {
-        return SubsequentBus3;
+    public void setSvcStatus(boolean svcStatus) {
+        this.svcStatus = svcStatus;
     }
 }

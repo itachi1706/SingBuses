@@ -6,14 +6,14 @@ package com.itachi1706.busarrivalsg.GsonObjects.LTA;
  */
 public class BusArrivalMain {
 
-    private String BusStopID;
+    private String BusStopCode;
     private BusArrivalArrayObject[] Services;
 
     public BusArrivalArrayObject[] getServices() {
         return Services;
     }
 
-    public String getBusStopID() {
-        return BusStopID;
+    public String getBusStopCode() {
+        return BusStopCode;
     }
 }

@@ -14,6 +14,10 @@ public class BusStatus {
     private double latitude = -11, longitude = -11;
     private int visitNumber;
 
+    // Implemented as of 30 July 2017
+    private String originatingID, terminatingID;
+    private int busType;
+
     public boolean isWheelChairAccessible() {
         return isWheelChairAccessible;
     }
@@ -41,16 +45,12 @@ public class BusStatus {
         return load;
     }
 
-    public void setLoad(int load) {
-        this.load = load;
-    }
-
     public void setLoad(String load){
         switch (load){
-            case "Seats Available": this.load = 1; break;
-            case "Standing Available": this.load = 2; break;
-            case "Limited Standing": this.load = 3; break;
-            default: this.load = 0; break;
+            case "SEA": this.load = CommonEnums.BUS_SEATS_AVAIL; break;
+            case "SDA": this.load = CommonEnums.BUS_STANDING_AVAIL; break;
+            case "LSD": this.load = CommonEnums.BUS_LIMITED_SEATS; break;
+            default: this.load = CommonEnums.UNKNOWN; break;
         }
     }
 
@@ -76,5 +76,34 @@ public class BusStatus {
 
     public void setVisitNumber(int visitNumber) {
         this.visitNumber = visitNumber;
+    }
+
+    public String getOriginatingID() {
+        return originatingID;
+    }
+
+    public void setOriginatingID(String originatingID) {
+        this.originatingID = originatingID;
+    }
+
+    public String getTerminatingID() {
+        return terminatingID;
+    }
+
+    public void setTerminatingID(String terminatingID) {
+        this.terminatingID = terminatingID;
+    }
+
+    public int getBusType() {
+        return busType;
+    }
+
+    public void setBusType(String busType) {
+        switch (busType) {
+            case "SD": this.busType = CommonEnums.BUS_SINGLE_DECK; break;
+            case "DD": this.busType = CommonEnums.BUS_DOUBLE_DECK; break;
+            case "BD": this.busType = CommonEnums.BUS_BENDY; break;
+            default: this.busType = CommonEnums.UNKNOWN; break;
+        }
     }
 }

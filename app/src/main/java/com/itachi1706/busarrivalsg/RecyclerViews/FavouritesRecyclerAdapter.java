@@ -27,6 +27,7 @@ import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Objects.BusStatus;
+import com.itachi1706.busarrivalsg.Objects.CommonEnums;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
@@ -108,18 +109,19 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             return;
         }
 
-        holder.operatingStatus.setText(i.getOperatingStatus());
-        if (i.getOperatingStatus().contains("N") || i.getOperatingStatus().contains("not")) {
+        if (!i.isSvcStatus()) {
+            holder.operatingStatus.setText(activity.getString(R.string.service_not_operational));
             holder.operatingStatus.setTextColor(Color.RED);
-            notArriving(holder.busArrivalNow);
-            notArriving(holder.busArrivalNext);
+            notArriving(holder.busArrivalNow, holder.wheelchairNow);
+            notArriving(holder.busArrivalNext, holder.wheelchairNext);
+            notArriving(holder.busArrivalSub, holder.wheelchairSub);
             return;
-        } else {
-            holder.operatingStatus.setTextColor(Color.GREEN);
         }
+        holder.operatingStatus.setText(activity.getString(R.string.service_operational));
+        holder.operatingStatus.setTextColor(Color.GREEN);
 
         //Current Bus
-        if (i.getCurrentBus().getEstimatedArrival() == null) notArriving(holder.busArrivalNow);
+        if (i.getCurrentBus().getEstimatedArrival() == null) notArriving(holder.busArrivalNow, holder.wheelchairNow);
         else {
             long est = StaticVariables.parseLTAEstimateArrival(i.getCurrentBus().getEstimatedArrival());
             String arrivalStatusNow;
@@ -140,7 +142,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         }
 
         //2nd Bus (Next Bus)
-        if (i.getNextBus().getEstimatedArrival() == null) notArriving(holder.busArrivalNext);
+        if (i.getNextBus().getEstimatedArrival() == null) notArriving(holder.busArrivalNext, holder.wheelchairNext);
         else {
             long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus().getEstimatedArrival());
             String arrivalStatusNext;
@@ -165,7 +167,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             comingSoon(holder.busArrivalSub);
             return;
         }
-        if (i.getSubsequentBus().getEstimatedArrival() == null) notArriving(holder.busArrivalSub);
+        if (i.getSubsequentBus().getEstimatedArrival() == null) notArriving(holder.busArrivalSub, holder.wheelchairSub);
         else {
             long est = StaticVariables.parseLTAEstimateArrival(i.getSubsequentBus().getEstimatedArrival());
             String arrivalStatusSub;
@@ -197,9 +199,10 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         view.setTextColor(Color.GRAY);
     }
 
-    private void notArriving(TextView view){
+    private void notArriving(TextView view, ImageView wheelchair){
         view.setText("-");
         view.setTextColor(Color.GRAY);
+        wheelchair.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -213,9 +216,9 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             return;
         }
         switch (obj.getLoad()){
-            case 1: view.setTextColor(Color.GREEN); break;
-            case 2: view.setTextColor(Color.YELLOW); break;
-            case 3: view.setTextColor(Color.RED); break;
+            case CommonEnums.BUS_SEATS_AVAIL: view.setTextColor(Color.GREEN); break;
+            case CommonEnums.BUS_STANDING_AVAIL: view.setTextColor(Color.YELLOW); break;
+            case CommonEnums.BUS_LIMITED_SEATS: view.setTextColor(Color.RED); break;
             default: view.setTextColor(Color.GRAY); break;
         }
     }
@@ -387,6 +390,9 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             mapsIntent.putExtra("lat3", busObj.getSubsequentBus().getLatitude());
             mapsIntent.putExtra("lng3", busObj.getSubsequentBus().getLongitude());
             mapsIntent.putExtra("arr3", busObj.getSubsequentBus().getEstimatedArrival());
+            mapsIntent.putExtra("type1", busObj.getCurrentBus().getBusType());
+            mapsIntent.putExtra("type2", busObj.getNextBus().getBusType());
+            mapsIntent.putExtra("type3", busObj.getSubsequentBus().getBusType());
             mapsIntent.putExtra("state", state);
 
             //Get Bus stop longitude and latitude

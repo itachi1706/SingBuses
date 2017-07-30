@@ -1,11 +1,9 @@
 package com.itachi1706.busarrivalsg.Util;
 
-import android.app.AlertDialog;
 import android.util.Log;
 
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
-import com.itachi1706.busarrivalsg.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,45 +36,9 @@ public class StaticVariables {
         return !jsonString.startsWith("<!DOCTYPE html>");
     }
 
-    private static Calendar splitLTADate(String dateString){
-        Log.d("SPLIT", "Date String to parse: " + dateString);
-        String[] firstSplit = dateString.split("T");
-        String date = firstSplit[0];
-        String time = firstSplit[1];
-        String[] timeSplit = time.split("\\+");
-        String trueTime = timeSplit[0];
-
-        String[] dateSplit = date.split("\\-");
-        int year = Integer.parseInt(dateSplit[0]);
-        int month = Integer.parseInt(dateSplit[1]) - 1;
-        int dates = Integer.parseInt(dateSplit[2]);
-
-        String[] trueTimeSplit = trueTime.split(":");
-        int hr = Integer.parseInt(trueTimeSplit[0]);
-        int min = Integer.parseInt(trueTimeSplit[1]);
-        int sec = Integer.parseInt(trueTimeSplit[2]);
-
-        Calendar tmp = new GregorianCalendar(year, month, dates, hr, min, sec);
-        //Cause Server gives GMT, we need convert to SST
-        tmp.add(Calendar.HOUR, 8);
-        //tmp.setTimeZone(new SimpleTimeZone(8000, "SST"));
-        return tmp;
-    }
-
     public static long parseLTAEstimateArrival(String arrivalString){
-        Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());
-        //GregorianCalendar currentDate = new GregorianCalendar(new SimpleTimeZone(8000, "SST"));
-        //currentDate.setTimeInMillis(networkTime[0]);
-        //currentDate.setTimeInMillis(System.currentTimeMillis());
         if (arrivalString.equalsIgnoreCase("")) return -9999;
-        Calendar currentDate = Calendar.getInstance();
-
-        Calendar arrivalDate = StaticVariables.splitLTADate(arrivalString);
-
-        Log.d("COMPARE","Current: " + currentDate.toString() );
-        Log.d("COMPARE", "Arrival: " + arrivalDate.toString());
-        long difference = arrivalDate.getTimeInMillis() - currentDate.getTimeInMillis();
-        return TimeUnit.MILLISECONDS.toMinutes(difference);
+        return parseEstimateArrival(arrivalString);
     }
 
     public static byte parseWABStatusToPebble(boolean status){
@@ -86,7 +48,40 @@ public class StaticVariables {
 
     public static boolean checkBusLocationValid(double lat, double lng) {
         return !(lng == -1000 || lat == -1000) && !(lng == -11 && lat == -11) && !(lat == 0 && lng == 0);
+    }
 
+    public static long parseEstimateArrival(String arrivalString){
+        Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());
+        Calendar currentDate = Calendar.getInstance();
+        currentDate.add(Calendar.MONTH, 1);
+
+        Calendar arrivalDate = parseDate(arrivalString);
+
+        Log.d("COMPARE","Current: " + currentDate.toString() );
+        Log.d("COMPARE","Arrival: " + arrivalDate.toString() );
+        long difference = arrivalDate.getTimeInMillis() - currentDate.getTimeInMillis();
+        return TimeUnit.MILLISECONDS.toMinutes(difference);
+    }
+
+    private static Calendar parseDate(String dateString) {
+        Log.d("SPLIT", "Date String to parse: " + dateString);
+        String[] firstSplit = dateString.split("T");
+        String date = firstSplit[0];
+        String time = firstSplit[1];
+        String[] timeSplit = time.split("\\+");
+        String trueTime = timeSplit[0];
+
+        String[] dateSplit = date.split("-");
+        int year = Integer.parseInt(dateSplit[0]);
+        int month = Integer.parseInt(dateSplit[1]);
+        int dates = Integer.parseInt(dateSplit[2]);
+
+        String[] trueTimeSplit = trueTime.split(":");
+        int hr = Integer.parseInt(trueTimeSplit[0]);
+        int min = Integer.parseInt(trueTimeSplit[1]);
+        int sec = Integer.parseInt(trueTimeSplit[2]);
+
+        return new GregorianCalendar(year, month, dates, hr, min, sec);
     }
 
     // HANDLER MESSAGES

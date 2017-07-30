@@ -21,9 +21,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
+
+import static com.itachi1706.busarrivalsg.Util.StaticVariables.parseEstimateArrival;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -43,7 +42,7 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
     @Override
     protected String doInBackground(BusServices... busObject) {
         this.busObj = busObject[0];
-        String url = "http://api.itachi1706.com/api/busarrival.php?BusStopID=" + this.busObj.getStopID() + "&ServiceNo=" + this.busObj.getServiceNo();
+        String url = "http://api.itachi1706.com/api/busarrival.php?BusStopCode=" + this.busObj.getStopID() + "&ServiceNo=" + this.busObj.getServiceNo() + "&api=2";
         String tmp = "";
 
         Log.d("GET-FIRST-BUS-SERVICE", url);
@@ -110,14 +109,13 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
             nextBus.setLoad(item.getNextBus().getLoad());
 
             BusStatus subsequentBus = new BusStatus();
-            subsequentBus.setEstimatedArrival(item.getSubsequentBus().getEstimatedArrival());
-            subsequentBus.setIsWheelChairAccessible(item.getSubsequentBus().getFeature());
-            subsequentBus.setLoad(item.getSubsequentBus().getLoad());
+            subsequentBus.setEstimatedArrival(item.getNextBus2().getEstimatedArrival());
+            subsequentBus.setIsWheelChairAccessible(item.getNextBus2().getFeature());
+            subsequentBus.setLoad(item.getNextBus2().getLoad());
 
             busObj.setCurrentBus(nextBus);
             busObj.setNextBus(subsequentBus);
             busObj.setTime(System.currentTimeMillis());
-            busObj.setOperatingStatus(item.getStatus());
             busObj.setObtainedNextData(true);
 
             //Go through arrayList and update the current one
@@ -187,42 +185,5 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
             StaticVariables.dict2 = dict2;
             StaticVariables.dict3 = dict3;
         }
-    }
-
-    private long parseEstimateArrival(String arrivalString){
-        Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());
-        Calendar currentDate = Calendar.getInstance();
-        currentDate.add(Calendar.MONTH, 1);
-
-        Calendar arrivalDate = splitDate(arrivalString);
-
-        Log.d("COMPARE","Current: " + currentDate.toString() );
-        Log.d("COMPARE","Arrival: " + arrivalDate.toString() );
-        long difference = arrivalDate.getTimeInMillis() - currentDate.getTimeInMillis();
-        return TimeUnit.MILLISECONDS.toMinutes(difference);
-    }
-
-    private Calendar splitDate(String dateString){
-        Log.d("SPLIT", "Date String to parse: " + dateString);
-        String[] firstSplit = dateString.split("T");
-        String date = firstSplit[0];
-        String time = firstSplit[1];
-        String[] timeSplit = time.split("\\+");
-        String trueTime = timeSplit[0];
-
-        String[] dateSplit = date.split("\\-");
-        int year = Integer.parseInt(dateSplit[0]);
-        int month = Integer.parseInt(dateSplit[1]);
-        int dates = Integer.parseInt(dateSplit[2]);
-
-        String[] trueTimeSplit = trueTime.split(":");
-        int hr = Integer.parseInt(trueTimeSplit[0]);
-        int min = Integer.parseInt(trueTimeSplit[1]);
-        int sec = Integer.parseInt(trueTimeSplit[2]);
-
-        Calendar tmp = new GregorianCalendar(year, month, dates, hr, min, sec);
-        //Cause Server gives GMT, we need convert to SST
-        tmp.add(Calendar.HOUR, 8);
-        return tmp;
     }
 }
