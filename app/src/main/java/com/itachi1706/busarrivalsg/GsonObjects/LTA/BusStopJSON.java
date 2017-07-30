@@ -6,7 +6,7 @@ package com.itachi1706.busarrivalsg.GsonObjects.LTA;
  */
 public class BusStopJSON {
 
-    private String BusStopCode, RoadName, Description;
+    private String BusStopCode, RoadName, Description, Services;
     private int timestamp;
     private double Latitude, Longitude;
 
@@ -75,5 +75,13 @@ public class BusStopJSON {
 
     public void setDistance(float distance) {
         this.distance = distance;
+    }
+
+    public String getServices() {
+        return Services;
+    }
+
+    public void setServices(String services) {
+        this.Services = services;
     }
 }

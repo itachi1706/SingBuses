@@ -123,44 +123,43 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
             subsequentBus.setIsWheelChairAccessible(item.getNextBus2().getFeature());
             subsequentBus.setLoad(item.getNextBus2().getLoad());
 
-            if (item.getNextBus3() != null){
-                //New API in place
+            //New API changes (12 November 2016 and 30 July 2017)
 
-                //First add the required stuff to the other 2
-                nextBus.setVisitNumber(item.getNextBus().getVisitNumber());
-                nextBus.setLatitude(item.getNextBus().getLatitude());
-                nextBus.setLongitude(item.getNextBus().getLongitude());
-                nextBus.setBusType(item.getNextBus().getType());
-                nextBus.setTerminatingID(item.getNextBus().getDestinationCode());
-                nextBus.setOriginatingID(item.getNextBus().getOriginCode());
+            //First add the required stuff to the other 2
+            nextBus.setVisitNumber(item.getNextBus().getVisitNumber());
+            nextBus.setLatitude(item.getNextBus().getLatitude());
+            nextBus.setLongitude(item.getNextBus().getLongitude());
+            nextBus.setBusType(item.getNextBus().getType());
+            nextBus.setTerminatingID(item.getNextBus().getDestinationCode());
+            nextBus.setOriginatingID(item.getNextBus().getOriginCode());
 
-                subsequentBus.setVisitNumber(item.getNextBus2().getVisitNumber());
-                subsequentBus.setLatitude(item.getNextBus2().getLatitude());
-                subsequentBus.setLongitude(item.getNextBus2().getLongitude());
-                subsequentBus.setBusType(item.getNextBus2().getType());
-                subsequentBus.setTerminatingID(item.getNextBus2().getDestinationCode());
-                subsequentBus.setOriginatingID(item.getNextBus2().getOriginCode());
+            subsequentBus.setVisitNumber(item.getNextBus2().getVisitNumber());
+            subsequentBus.setLatitude(item.getNextBus2().getLatitude());
+            subsequentBus.setLongitude(item.getNextBus2().getLongitude());
+            subsequentBus.setBusType(item.getNextBus2().getType());
+            subsequentBus.setTerminatingID(item.getNextBus2().getDestinationCode());
+            subsequentBus.setOriginatingID(item.getNextBus2().getOriginCode());
 
 
-                BusStatus subsequent2Bus = new BusStatus();
-                subsequent2Bus.setEstimatedArrival(item.getNextBus3().getEstimatedArrival());
-                subsequent2Bus.setIsWheelChairAccessible(item.getNextBus3().getFeature());
-                subsequent2Bus.setLoad(item.getNextBus3().getLoad());
-                subsequent2Bus.setVisitNumber(item.getNextBus3().getVisitNumber());
-                subsequent2Bus.setLatitude(item.getNextBus3().getLatitude());
-                subsequent2Bus.setLongitude(item.getNextBus3().getLongitude());
-                subsequent2Bus.setBusType(item.getNextBus3().getType());
-                subsequent2Bus.setTerminatingID(item.getNextBus3().getDestinationCode());
-                subsequent2Bus.setOriginatingID(item.getNextBus3().getOriginCode());
+            BusStatus subsequent2Bus = new BusStatus();
+            subsequent2Bus.setEstimatedArrival(item.getNextBus3().getEstimatedArrival());
+            subsequent2Bus.setIsWheelChairAccessible(item.getNextBus3().getFeature());
+            subsequent2Bus.setLoad(item.getNextBus3().getLoad());
+            subsequent2Bus.setVisitNumber(item.getNextBus3().getVisitNumber());
+            subsequent2Bus.setLatitude(item.getNextBus3().getLatitude());
+            subsequent2Bus.setLongitude(item.getNextBus3().getLongitude());
+            subsequent2Bus.setBusType(item.getNextBus3().getType());
+            subsequent2Bus.setTerminatingID(item.getNextBus3().getDestinationCode());
+            subsequent2Bus.setOriginatingID(item.getNextBus3().getOriginCode());
 
-                busObj.setSubsequentBus(subsequent2Bus);
-            }
+            busObj.setSubsequentBus(subsequent2Bus);
 
+            // End of New API Changes
 
             busObj.setCurrentBus(nextBus);
             busObj.setNextBus(subsequentBus);
             busObj.setTime(System.currentTimeMillis());
-            busObj.setOperatingStatus(item.getStatus());
+            busObj.setSvcStatus(checkServiceOperational(nextBus, subsequentBus, subsequent2Bus));
             busObj.setObtainedNextData(true);
 
             //Go through arrayList and update the current one
@@ -176,5 +175,10 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
             }
 
         }
+    }
+
+    private boolean checkServiceOperational(BusStatus one, BusStatus two, BusStatus three) {
+        return !(one.getEstimatedArrival() == null && two.getEstimatedArrival() == null && three.getEstimatedArrival() == null)
+                && !(one.getEstimatedArrival().isEmpty() && two.getEstimatedArrival().isEmpty() && three.getEstimatedArrival().isEmpty());
     }
 }

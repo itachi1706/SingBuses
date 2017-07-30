@@ -12,9 +12,9 @@ public class BusServices {
     private long time;
     private String stopName;
 
-    @Deprecated private String operatingStatus;
+    private boolean svcStatus;
 
-    //Going to be implemented from 12 November
+    //Going to be implemented from 12 November 2016
     private BusStatus subsequentBus;
 
     public BusStatus getNextBus() {
@@ -73,14 +73,12 @@ public class BusServices {
         this.obtainedNextData = obtainedNextData;
     }
 
-    @Deprecated
-    public String getOperatingStatus() {
-        return operatingStatus;
+    public boolean isSvcStatus() {
+        return svcStatus;
     }
 
-    @Deprecated
-    public void setOperatingStatus(String operatingStatus) {
-        this.operatingStatus = operatingStatus;
+    public void setSvcStatus(boolean svcStatus) {
+        this.svcStatus = svcStatus;
     }
 
     public String getStopName() {

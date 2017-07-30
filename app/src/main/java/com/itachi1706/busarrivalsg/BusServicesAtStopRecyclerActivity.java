@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesHandler;
+import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.Interface.IHandleStuff;
@@ -31,14 +33,16 @@ import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class BusServicesAtStopRecyclerActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, IHandleStuff {
 
     RecyclerView buses;
-    String busStopCode, busStopName;
+    String busStopCode, busStopName, busServicesString;
     BusServiceRecyclerAdapter adapter;
     SwipeRefreshLayout swipeToRefresh;
     SharedPreferences sp;
+    ArrayMap<String, String> busServices; // Svc No, Operator
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
 
         if (this.getIntent().hasExtra("stopCode")) busStopCode = this.getIntent().getStringExtra("stopCode");
         if (this.getIntent().hasExtra("stopName")) busStopName = this.getIntent().getStringExtra("stopName");
+        if (this.getIntent().hasExtra("busServices")) busServicesString = this.getIntent().getStringExtra("busServices");
 
         buses = (RecyclerView) findViewById(R.id.rvBusService);
         if (buses != null) buses.setHasFixedSize(true);
@@ -81,12 +86,25 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
             Log.e("BUS-SERVICE", "You aren't supposed to be here. Exiting");
             Toast.makeText(this, R.string.invalid_activity_access, Toast.LENGTH_SHORT).show();
             this.finish();
-        }else {
+        } else {
             if (busStopName != null)
                 getSupportActionBar().setTitle(busStopName.trim() + " (" + busStopCode.trim() + ")");
             else
                 getSupportActionBar().setTitle(busStopCode.trim() + "");
             swipeToRefresh.setRefreshing(true);
+
+            if (busServicesString == null || busServicesString.isEmpty()) {
+                // Retrieve it from DB
+                BusStopsDB db = new BusStopsDB(this);
+                busServicesString = db.getBusStopByBusStopCode(busStopCode).getServices();
+            }
+
+            String[] bsWithO = busServicesString.split(",");
+            busServices = new ArrayMap<>();
+            for (String s : bsWithO) {
+                String[] bs = s.split(":");
+                busServices.put(bs[0], bs[1]);
+            }
             updateBusStop();
         }
         sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -237,9 +255,39 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
             swipeToRefresh.setRefreshing(false);
         for (BusArrivalArrayObject obj : array){
             obj.setStopCode(stopID);
+            // Check for service status
+            obj.setSvcStatus(true);
             items.add(obj);
-            adapter.updateAdapter(items);
-            adapter.notifyDataSetChanged();
         }
+
+        // Find all not operational services
+        ArrayMap<String, String> inoperation = new ArrayMap<>();
+        for (Map.Entry<String, String> svc : busServices.entrySet()) {
+            boolean found = false;
+            for (BusArrivalArrayObject i : items) {
+                if (svc.getKey().trim().equals(i.getServiceNo().trim())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) inoperation.put(svc.getKey(), svc.getValue());
+        }
+
+        // Add all inoperation into array
+        for (Map.Entry<String, String> s : inoperation.entrySet()) {
+            String jsonCraft = "{ServiceNo: \"" + s.getKey() + "\", Operator: \"" + s.getValue() +
+                    "\",\"NextBus\":{\"EstimatedArrival\":\"\",\"Latitude\":\"\",\"Longitude\":\"\",\"" +
+                    "VisitNumber\":\"\",\"Load\":\"\",\"Feature\":\"\"},\"SubsequentBus\":{\"" +
+                    "EstimatedArrival\":\"\",\"Latitude\":\"\",\"Longitude\":\"\",\"VisitNumber\":\"\",\"" +
+                    "Load\":\"\",\"Feature\":\"\"},\"SubsequentBus3\":{\"EstimatedArrival\":\"\",\"" +
+                    "Latitude\":\"\",\"Longitude\":\"\",\"VisitNumber\":\"\",\"Load\":\"\",\"Feature\":\"\"}}";
+            BusArrivalArrayObject obj = gson.fromJson(jsonCraft, BusArrivalArrayObject.class);
+            obj.setSvcStatus(false);
+            obj.setStopCode(stopID);
+            items.add(obj);
+        }
+
+        adapter.updateAdapter(items);
+        adapter.notifyDataSetChanged();
     }
 }

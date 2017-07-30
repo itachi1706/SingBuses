@@ -318,6 +318,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         switch (dbver) {
             case 0:
             case 1: Log.i("DB UPGRADE", "Upgrading to V2 API DB"); busDBUpdate = true; sp.edit().putInt("busDBVerCheck", 2).apply(); break;
+            case 2: Log.i("DB UPGRADE", "Upgrading to DB with Bus Services"); busDBUpdate = true; sp.edit().putInt("busDBVerCheck", 3).apply(); break;
         }
 
         //Main Database
