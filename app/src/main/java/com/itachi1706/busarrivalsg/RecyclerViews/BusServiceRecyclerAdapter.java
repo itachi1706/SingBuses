@@ -76,24 +76,20 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         }
         holder.busNumber.setText(i.getServiceNo());
 
-        if (i.getStatus() == null || i.getStatus().isEmpty()) {
+        if (!i.isSvcStatus()) {
+            holder.operatingStatus.setText("Not In Operation");
             holder.operatingStatus.setTextColor(Color.RED);
-            holder.operatingStatus.setText("Unknown Status");
-        } else {
-            holder.operatingStatus.setText(i.getStatus());
-            if (i.getStatus().contains("Not") || i.getStatus().contains("not")) {
-                holder.operatingStatus.setTextColor(Color.RED);
-                notArriving(holder.busArrivalNow);
-                notArriving(holder.busArrivalNext);
-                notArriving(holder.busArrivalSub);
-                return;
-            }
-            holder.operatingStatus.setTextColor(Color.GREEN);
+            notArriving(holder.busArrivalNow, holder.wheelchairNow);
+            notArriving(holder.busArrivalNext, holder.wheelchairNext);
+            notArriving(holder.busArrivalSub, holder.wheelchairSub);
+            return;
         }
+        holder.operatingStatus.setText("In Operation");
+        holder.operatingStatus.setTextColor(Color.GREEN);
 
         //Current Bus
         if (i.getNextBus().getEstimatedArrival() == null){
-            notArriving(holder.busArrivalNow);
+            notArriving(holder.busArrivalNow, holder.wheelchairNow);
         } else {
             long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus().getEstimatedArrival());
             String arrivalStatusNow;
@@ -115,7 +111,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
 
         //2nd bus (Next bus)
         if (i.getNextBus2().getEstimatedArrival() == null){
-            notArriving(holder.busArrivalNext);
+            notArriving(holder.busArrivalNext, holder.wheelchairNext);
         } else {
             long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus2().getEstimatedArrival());
             String arrivalStatusNext;
@@ -140,7 +136,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             comingSoon(holder.busArrivalSub);
             return;
         }
-        if (i.getNextBus3().getEstimatedArrival() == null) notArriving(holder.busArrivalSub);
+        if (i.getNextBus3().getEstimatedArrival() == null) notArriving(holder.busArrivalSub, holder.wheelchairSub);
         else {
             long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus3().getEstimatedArrival());
             String arrivalStatusSub;
@@ -166,9 +162,10 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         view.setTextColor(Color.GRAY);
     }
 
-    private void notArriving(TextView view){
+    private void notArriving(TextView view, ImageView wheelchair){
         view.setText("-");
         view.setTextColor(Color.GRAY);
+        wheelchair.setVisibility(View.INVISIBLE);
     }
 
     @Override

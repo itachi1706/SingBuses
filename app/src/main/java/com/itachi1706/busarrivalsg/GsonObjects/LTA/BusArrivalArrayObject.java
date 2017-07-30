@@ -46,4 +46,12 @@ public class BusArrivalArrayObject {
     public BusArrivalArrayObjectEstimate getNextBus3() {
         return NextBus3;
     }
+
+    public boolean isSvcStatus() {
+        return svcStatus;
+    }
+
+    public void setSvcStatus(boolean svcStatus) {
+        this.svcStatus = svcStatus;
+    }
 }
