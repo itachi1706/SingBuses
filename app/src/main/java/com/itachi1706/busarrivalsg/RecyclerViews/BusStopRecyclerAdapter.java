@@ -86,6 +86,7 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
             Intent serviceIntent = new Intent(v.getContext(), BusServicesAtStopRecyclerActivity.class);
             serviceIntent.putExtra("stopCode", item.getCode());
             serviceIntent.putExtra("stopName", item.getBusStopName());
+            serviceIntent.putExtra("busServices", item.getServices());
             v.getContext().startActivity(serviceIntent);
 
             FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(v.getContext());

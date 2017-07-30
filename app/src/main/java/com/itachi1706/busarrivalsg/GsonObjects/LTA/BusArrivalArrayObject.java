@@ -13,6 +13,7 @@ public class BusArrivalArrayObject {
     private BusArrivalArrayObjectEstimate NextBus2, NextBus3;
 
     private String stopCode;
+    private boolean svcStatus;
 
     public BusArrivalArrayObjectEstimate getNextBus2() {
         return NextBus2;
