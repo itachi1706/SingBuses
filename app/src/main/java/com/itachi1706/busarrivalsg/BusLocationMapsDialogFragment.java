@@ -131,19 +131,19 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
         // Add 3 buses location
         if (StaticVariables.checkBusLocationValid(lat1, lng1)) {
             m1 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, lng1)).title("Location of Bus 1")
-                    .snippet("Time to Arrive: " + processArrival(arr1) + "\nBus Type: " + processType(type1))
+                    .snippet("ETA: " + processArrival(arr1) + " (" + processType(type1) + ")")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
             b.include(m1.getPosition());
         }
         if (StaticVariables.checkBusLocationValid(lat2, lng2)) {
             m2 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat2, lng2)).title("Location of Bus 2")
-                    .snippet("Time to Arrive: " + processArrival(arr2) + "\nBus Type: " + processType(type2))
+                    .snippet("ETA: " + processArrival(arr2) + " (" + processType(type2) + ")")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
             if (state == StaticVariables.NEXT || state == StaticVariables.SUB) b.include(m2.getPosition());
         }
         if (StaticVariables.checkBusLocationValid(lat3, lng3)) {
             m3 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat3, lng3)).title("Location of Bus 3")
-                    .snippet("Time to Arrive: " + processArrival(arr3) + " \nBus Type: " + processType(type3))
+                    .snippet("ETA: " + processArrival(arr3) + " (" + processType(type3) + ")")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
             if (state == StaticVariables.SUB) b.include(m3.getPosition());
         }
@@ -163,7 +163,7 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
     private String processArrival(String estString) {
         long est = StaticVariables.parseLTAEstimateArrival(estString);
         if (est == -9999) return "=";
-        else if (est <= 0) return "Arr";
+        else if (est <= 0) return "Arriving";
         else if (est == 1) return est + " mins";
         else return est + " mins";
     }
@@ -172,7 +172,7 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
         switch (type) {
             case CommonEnums.BUS_BENDY: return "Bendy Bus";
             case CommonEnums.BUS_DOUBLE_DECK: return "Double Decker Bus";
-            case CommonEnums.BUS_SINGLE_DECK: return "Normal Single Deck Bus";
+            case CommonEnums.BUS_SINGLE_DECK: return "Normal Bus";
             case CommonEnums.UNKNOWN:
             default: return "Unknown Bus Type";
         }
