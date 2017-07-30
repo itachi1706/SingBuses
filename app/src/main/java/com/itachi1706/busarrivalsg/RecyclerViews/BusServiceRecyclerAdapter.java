@@ -66,13 +66,6 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     public void onBindViewHolder(BusServiceViewHolder holder, int position) {
         BusArrivalArrayObject i = items.get(position);
 
-        holder.operatingStatus.setText(i.getStatus());
-        if (i.getStatus().contains("Not") || i.getStatus().contains("not")){
-            holder.operatingStatus.setTextColor(Color.RED);
-        } else {
-            holder.operatingStatus.setTextColor(Color.GREEN);
-        }
-
         holder.busOperator.setText(i.getOperator());
         switch (i.getOperator().toUpperCase()){
             case "SMRT": holder.busOperator.setTextColor(Color.RED); break;
@@ -81,10 +74,19 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             case "GAS": holder.busOperator.setTextColor(Color.YELLOW); break;
         }
         holder.busNumber.setText(i.getServiceNo());
-        if (i.getStatus().equalsIgnoreCase("not")){
-            notArriving(holder.busArrivalNow);
-            notArriving(holder.busArrivalNext);
-            return;
+
+        if (i.getStatus() == null || i.getStatus().isEmpty()) {
+            holder.operatingStatus.setTextColor(Color.RED);
+            holder.operatingStatus.setText("Unknown Status");
+        } else {
+            holder.operatingStatus.setText(i.getStatus());
+            if (i.getStatus().contains("Not") || i.getStatus().contains("not")) {
+                holder.operatingStatus.setTextColor(Color.RED);
+                notArriving(holder.busArrivalNow);
+                notArriving(holder.busArrivalNext);
+                return;
+            }
+            holder.operatingStatus.setTextColor(Color.GREEN);
         }
 
         //Current Bus
@@ -289,12 +291,15 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             mapsIntent.putExtra("lat1", busObj.getNextBus().getLatitude());
             mapsIntent.putExtra("lng1", busObj.getNextBus().getLongitude());
             mapsIntent.putExtra("arr1", busObj.getNextBus().getEstimatedArrival());
+            mapsIntent.putExtra("type1", busObj.getNextBus().getTypeInt());
             mapsIntent.putExtra("lat2", busObj.getNextBus2().getLatitude());
             mapsIntent.putExtra("lng2", busObj.getNextBus2().getLongitude());
             mapsIntent.putExtra("arr2", busObj.getNextBus2().getEstimatedArrival());
+            mapsIntent.putExtra("type2", busObj.getNextBus2().getTypeInt());
             mapsIntent.putExtra("lat3", busObj.getNextBus3().getLatitude());
             mapsIntent.putExtra("lng3", busObj.getNextBus3().getLongitude());
             mapsIntent.putExtra("arr3", busObj.getNextBus3().getEstimatedArrival());
+            mapsIntent.putExtra("type3", busObj.getNextBus3().getTypeInt());
             mapsIntent.putExtra("state", state);
 
             //Get Bus stop longitude and latitude

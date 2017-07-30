@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.itachi1706.busarrivalsg.Objects.CommonEnums;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 @Deprecated
@@ -36,6 +37,7 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
 
     private double lat1, lng1, lat2, lng2, lat3, lng3;
     private String arr1, arr2, arr3;
+    private int type1, type2, type3;
     private int state;
 
     @Override
@@ -59,6 +61,9 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
         arr1 = this.getIntent().getStringExtra("arr1");
         arr2 = this.getIntent().getStringExtra("arr2");
         arr3 = this.getIntent().getStringExtra("arr3");
+        type1 = this.getIntent().getIntExtra("type1", CommonEnums.UNKNOWN);
+        type2 = this.getIntent().getIntExtra("type2", CommonEnums.UNKNOWN);
+        type3 = this.getIntent().getIntExtra("type3", CommonEnums.UNKNOWN);
         state = this.getIntent().getIntExtra("state", StaticVariables.CUR);
 
         // Obtain the FirebaseAnalytics instance.
@@ -99,17 +104,20 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
         // Add 3 buses location
         if (StaticVariables.checkBusLocationValid(lat1, lng1)) {
             m1 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, lng1)).title("Location of Bus 1")
-                    .snippet("Time to Arrive: " + processArrival(arr1)).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
+                    .snippet("Time to Arrive: " + processArrival(arr1) + "\nBus Type: " + processType(type1))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
             b.include(m1.getPosition());
         }
         if (StaticVariables.checkBusLocationValid(lat2, lng2)) {
             m2 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat2, lng2)).title("Location of Bus 2")
-                    .snippet("Time to Arrive: " + processArrival(arr2)).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
+                    .snippet("Time to Arrive: " + processArrival(arr2) + "\nBus Type: " + processType(type2))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
             if (state == StaticVariables.NEXT || state == StaticVariables.SUB) b.include(m2.getPosition());
         }
         if (StaticVariables.checkBusLocationValid(lat3, lng3)) {
             m3 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat3, lng3)).title("Location of Bus 3")
-                    .snippet("Time to Arrive: " + processArrival(arr3)).icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
+                    .snippet("Time to Arrive: " + processArrival(arr3) + "\nBus Type: " + processType(type3))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
             if (state == StaticVariables.SUB) b.include(m3.getPosition());
         }
         switch (state) {
@@ -131,6 +139,16 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
         else if (est <= 0) return "Arr";
         else if (est == 1) return est + " mins";
         else return est + " mins";
+    }
+
+    private String processType(int type) {
+        switch (type) {
+            case CommonEnums.BUS_BENDY: return "Bendy Bus";
+            case CommonEnums.BUS_DOUBLE_DECK: return "Double Decker Bus";
+            case CommonEnums.BUS_SINGLE_DECK: return "Normal Single Deck Bus";
+            case CommonEnums.UNKNOWN:
+            default: return "Unknown Bus Type";
+        }
     }
 
     private static final int RC_HANDLE_ACCESS_FINE_LOCATION = 3;

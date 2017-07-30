@@ -42,7 +42,7 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
     @Override
     protected String doInBackground(BusServices... busObject) {
         this.busObj = busObject[0];
-        String url = "http://api.itachi1706.com/api/busarrival.php?BusStopID=" + this.busObj.getStopID() + "&ServiceNo=" + this.busObj.getServiceNo() + "&api=2";
+        String url = "http://api.itachi1706.com/api/busarrival.php?BusStopCode=" + this.busObj.getStopID() + "&ServiceNo=" + this.busObj.getServiceNo() + "&api=2";
         String tmp = "";
 
         Log.d("GET-FIRST-BUS-SERVICE", url);

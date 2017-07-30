@@ -1,5 +1,7 @@
 package com.itachi1706.busarrivalsg.GsonObjects.LTA;
 
+import com.itachi1706.busarrivalsg.Objects.CommonEnums;
+
 /**
  * Created by Kenneth on 18/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.GsonObjects.LTA
@@ -82,5 +84,14 @@ public class BusArrivalArrayObjectEstimate {
 
     public String getType() {
         return Type;
+    }
+
+    public int getTypeInt() {
+        switch (Type) {
+            case "SD": return CommonEnums.BUS_SINGLE_DECK;
+            case "DD": return CommonEnums.BUS_DOUBLE_DECK;
+            case "BD": return CommonEnums.BUS_BENDY;
+            default: return CommonEnums.UNKNOWN;
+        }
     }
 }

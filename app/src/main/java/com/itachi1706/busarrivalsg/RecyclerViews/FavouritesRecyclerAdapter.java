@@ -109,14 +109,19 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             return;
         }
 
-        holder.operatingStatus.setText(i.getOperatingStatus());
-        if (i.getOperatingStatus().contains("N") || i.getOperatingStatus().contains("not")) {
+        if (i.getOperatingStatus() == null || i.getOperatingStatus().isEmpty()) {
             holder.operatingStatus.setTextColor(Color.RED);
-            notArriving(holder.busArrivalNow);
-            notArriving(holder.busArrivalNext);
-            return;
+            holder.operatingStatus.setText("Unknown Status");
         } else {
-            holder.operatingStatus.setTextColor(Color.GREEN);
+            holder.operatingStatus.setText(i.getOperatingStatus());
+            if (i.getOperatingStatus().contains("N") || i.getOperatingStatus().contains("not")) {
+                holder.operatingStatus.setTextColor(Color.RED);
+                notArriving(holder.busArrivalNow);
+                notArriving(holder.busArrivalNext);
+                return;
+            } else {
+                holder.operatingStatus.setTextColor(Color.GREEN);
+            }
         }
 
         //Current Bus

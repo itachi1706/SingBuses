@@ -41,7 +41,7 @@ public class GetBusServicesHandler extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... busCodes) {
         String busCode = busCodes[0];
-        String url = "http://api.itachi1706.com/api/busarrival.php?BusStopID=" + busCode + "&api=2";
+        String url = "http://api.itachi1706.com/api/busarrival.php?BusStopCode=" + busCode + "&api=2";
         String tmp = "";
 
         Log.d("GET-BUS-SERVICE", url);
