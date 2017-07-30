@@ -5,17 +5,17 @@ package com.itachi1706.busarrivalsg.GsonObjects.LTA;
  * for SingBuses in package com.itachi1706.busarrivalsg.GsonObjects.LTA
  */
 public class BusArrivalArrayObject {
-    private String ServiceNo, Status, Operator;
-    private BusArrivalArrayObjectEstimate NextBus, SubsequentBus;
+    private String ServiceNo, Operator;
+    @Deprecated private String Status;
+    private BusArrivalArrayObjectEstimate NextBus;
 
-    // Implemented as of 12 November
-    private String OriginatingID, TerminatingID;
-    private BusArrivalArrayObjectEstimate SubsequentBus3;
+    // Implemented as of 30 July 2017
+    private BusArrivalArrayObjectEstimate NextBus2, NextBus3;
 
     private String stopCode;
 
-    public BusArrivalArrayObjectEstimate getSubsequentBus() {
-        return SubsequentBus;
+    public BusArrivalArrayObjectEstimate getNextBus2() {
+        return NextBus2;
     }
 
     public BusArrivalArrayObjectEstimate getNextBus() {
@@ -26,7 +26,7 @@ public class BusArrivalArrayObject {
         return Operator;
     }
 
-    public String getStatus() {
+    @Deprecated public String getStatus() {
         return Status;
     }
 
@@ -42,15 +42,7 @@ public class BusArrivalArrayObject {
         this.stopCode = stopCode;
     }
 
-    public String getOriginatingID() {
-        return OriginatingID;
-    }
-
-    public String getTerminatingID() {
-        return TerminatingID;
-    }
-
-    public BusArrivalArrayObjectEstimate getSubsequentBus3() {
-        return SubsequentBus3;
+    public BusArrivalArrayObjectEstimate getNextBus3() {
+        return NextBus3;
     }
 }

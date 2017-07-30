@@ -12,11 +12,10 @@ public class BusServices {
     private long time;
     private String stopName;
 
-    private String operatingStatus;
+    @Deprecated private String operatingStatus;
 
     //Going to be implemented from 12 November
     private BusStatus subsequentBus;
-    private String originatingID, terminatingID;
 
     public BusStatus getNextBus() {
         return nextBus;
@@ -74,10 +73,12 @@ public class BusServices {
         this.obtainedNextData = obtainedNextData;
     }
 
+    @Deprecated
     public String getOperatingStatus() {
         return operatingStatus;
     }
 
+    @Deprecated
     public void setOperatingStatus(String operatingStatus) {
         this.operatingStatus = operatingStatus;
     }
@@ -96,21 +97,5 @@ public class BusServices {
 
     public void setSubsequentBus(BusStatus subsequentBus) {
         this.subsequentBus = subsequentBus;
-    }
-
-    public String getOriginatingID() {
-        return originatingID;
-    }
-
-    public void setOriginatingID(String originatingID) {
-        this.originatingID = originatingID;
-    }
-
-    public String getTerminatingID() {
-        return terminatingID;
-    }
-
-    public void setTerminatingID(String terminatingID) {
-        this.terminatingID = terminatingID;
     }
 }

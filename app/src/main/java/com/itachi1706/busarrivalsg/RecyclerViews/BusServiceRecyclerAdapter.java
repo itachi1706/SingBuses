@@ -110,10 +110,10 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         }
 
         //2nd bus (Next bus)
-        if (i.getSubsequentBus().getEstimatedArrival() == null){
+        if (i.getNextBus2().getEstimatedArrival() == null){
             notArriving(holder.busArrivalNext);
         } else {
-            long est = StaticVariables.parseLTAEstimateArrival(i.getSubsequentBus().getEstimatedArrival());
+            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus2().getEstimatedArrival());
             String arrivalStatusNext;
             if (est == -9999)
                 arrivalStatusNext = "-";
@@ -124,21 +124,21 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             else
                 arrivalStatusNext = est + "";
             holder.busArrivalNext.setText(arrivalStatusNext);
-            applyColorLoad(holder.busArrivalNext, i.getSubsequentBus());
+            applyColorLoad(holder.busArrivalNext, i.getNextBus2());
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
-            if (i.getSubsequentBus().isWheelchairAccessible())
+            if (i.getNextBus2().isWheelchairAccessible())
                 holder.wheelchairNext.setVisibility(View.VISIBLE);
             holder.busArrivalNext.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), NEXT));
         }
 
         //3rd bus (Subsequent Bus)
-        if (i.getSubsequentBus3() == null) {
+        if (i.getNextBus3() == null) {
             comingSoon(holder.busArrivalSub);
             return;
         }
-        if (i.getSubsequentBus3().getEstimatedArrival() == null) notArriving(holder.busArrivalSub);
+        if (i.getNextBus3().getEstimatedArrival() == null) notArriving(holder.busArrivalSub);
         else {
-            long est = StaticVariables.parseLTAEstimateArrival(i.getSubsequentBus3().getEstimatedArrival());
+            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus3().getEstimatedArrival());
             String arrivalStatusSub;
             if (est == -9999)
                 arrivalStatusSub = "-";
@@ -149,9 +149,9 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             else
                 arrivalStatusSub = est + "";
             holder.busArrivalSub.setText(arrivalStatusSub);
-            applyColorLoad(holder.busArrivalSub, i.getSubsequentBus3());
+            applyColorLoad(holder.busArrivalSub, i.getNextBus3());
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
-            if (i.getSubsequentBus3().isWheelchairAccessible())
+            if (i.getNextBus3().isWheelchairAccessible())
                 holder.wheelchairSub.setVisibility(View.VISIBLE);
             holder.busArrivalSub.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), SUB));
         }
@@ -242,7 +242,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
 
         ArrivalButton(BusArrivalArrayObject busObj, String busStopCode, String svcNo, int state) {
             BusArrivalArrayObjectEstimate status = (state == CUR) ? busObj.getNextBus() :
-                    (state == NEXT) ? busObj.getSubsequentBus() : busObj.getSubsequentBus3();
+                    (state == NEXT) ? busObj.getNextBus2() : busObj.getNextBus3();
             this.busObj = busObj;
             this.state = state;
             this.longitude = status.getLongitude();
@@ -289,12 +289,12 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             mapsIntent.putExtra("lat1", busObj.getNextBus().getLatitude());
             mapsIntent.putExtra("lng1", busObj.getNextBus().getLongitude());
             mapsIntent.putExtra("arr1", busObj.getNextBus().getEstimatedArrival());
-            mapsIntent.putExtra("lat2", busObj.getSubsequentBus().getLatitude());
-            mapsIntent.putExtra("lng2", busObj.getSubsequentBus().getLongitude());
-            mapsIntent.putExtra("arr2", busObj.getSubsequentBus().getEstimatedArrival());
-            mapsIntent.putExtra("lat3", busObj.getSubsequentBus3().getLatitude());
-            mapsIntent.putExtra("lng3", busObj.getSubsequentBus3().getLongitude());
-            mapsIntent.putExtra("arr3", busObj.getSubsequentBus3().getEstimatedArrival());
+            mapsIntent.putExtra("lat2", busObj.getNextBus2().getLatitude());
+            mapsIntent.putExtra("lng2", busObj.getNextBus2().getLongitude());
+            mapsIntent.putExtra("arr2", busObj.getNextBus2().getEstimatedArrival());
+            mapsIntent.putExtra("lat3", busObj.getNextBus3().getLatitude());
+            mapsIntent.putExtra("lng3", busObj.getNextBus3().getLongitude());
+            mapsIntent.putExtra("arr3", busObj.getNextBus3().getEstimatedArrival());
             mapsIntent.putExtra("state", state);
 
             //Get Bus stop longitude and latitude

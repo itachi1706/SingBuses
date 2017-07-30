@@ -27,6 +27,7 @@ import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Objects.BusStatus;
+import com.itachi1706.busarrivalsg.Objects.CommonEnums;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
@@ -213,9 +214,9 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             return;
         }
         switch (obj.getLoad()){
-            case 1: view.setTextColor(Color.GREEN); break;
-            case 2: view.setTextColor(Color.YELLOW); break;
-            case 3: view.setTextColor(Color.RED); break;
+            case CommonEnums.BUS_SEATS_AVAIL: view.setTextColor(Color.GREEN); break;
+            case CommonEnums.BUS_STANDING_AVAIL: view.setTextColor(Color.YELLOW); break;
+            case CommonEnums.BUS_LIMITED_SEATS: view.setTextColor(Color.RED); break;
             default: view.setTextColor(Color.GRAY); break;
         }
     }

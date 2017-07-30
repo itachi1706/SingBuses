@@ -232,7 +232,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         if (mainArr == null) return;
         if (mainArr.getServices() == null) return;
         BusArrivalArrayObject[] array = mainArr.getServices();
-        String stopID = mainArr.getBusStopID();
+        String stopID = mainArr.getBusStopCode();
         if (swipeToRefresh.isRefreshing())
             swipeToRefresh.setRefreshing(false);
         for (BusArrivalArrayObject obj : array){

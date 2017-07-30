@@ -33,7 +33,7 @@ public class GetRemainingFavouriteData extends AsyncTask<BusServices, Void, Stri
     @Override
     protected String doInBackground(BusServices... busObject) {
         this.busObj = busObject[0];
-        String url = "http://api.itachi1706.com/api/busarrival.php?BusStopID=" + this.busObj.getStopID() + "&ServiceNo=" + this.busObj.getServiceNo();
+        String url = "http://api.itachi1706.com/api/busarrival.php?BusStopID=" + this.busObj.getStopID() + "&ServiceNo=" + this.busObj.getServiceNo() + "&api=2";
         String tmp = "";
 
         Log.d("GET-FAV-BUS-SERVICE", url);
@@ -100,14 +100,13 @@ public class GetRemainingFavouriteData extends AsyncTask<BusServices, Void, Stri
             nextBus.setLoad(item.getNextBus().getLoad());
 
             BusStatus subsequentBus = new BusStatus();
-            subsequentBus.setEstimatedArrival(item.getSubsequentBus().getEstimatedArrival());
-            subsequentBus.setIsWheelChairAccessible(item.getSubsequentBus().getFeature());
-            subsequentBus.setLoad(item.getSubsequentBus().getLoad());
+            subsequentBus.setEstimatedArrival(item.getNextBus2().getEstimatedArrival());
+            subsequentBus.setIsWheelChairAccessible(item.getNextBus2().getFeature());
+            subsequentBus.setLoad(item.getNextBus2().getLoad());
 
             busObj.setCurrentBus(nextBus);
             busObj.setNextBus(subsequentBus);
             busObj.setTime(System.currentTimeMillis());
-            busObj.setOperatingStatus(item.getStatus());
             busObj.setObtainedNextData(true);
 
             //Go through arrayList and update the current one

@@ -7,9 +7,12 @@ package com.itachi1706.busarrivalsg.GsonObjects.LTA;
 public class BusArrivalArrayObjectEstimate {
     private String EstimatedArrival, Load, Feature;
 
-    //Going to be implemented from 12 November
+    // Implemented from 12 November 2016
     private String Latitude = "-11", Longitude = "-11"; //return double option
     private String VisitNumber; //return int option
+
+    // Implemented from 30 July 2017
+    private String OriginCode, DestinationCode, Type;
 
     public String getFeature() {
         return Feature;
@@ -67,5 +70,17 @@ public class BusArrivalArrayObjectEstimate {
 
     public boolean isWheelchairAccessible() {
         return Feature != null && Feature.contains("WAB");
+    }
+
+    public String getOriginCode() {
+        return OriginCode;
+    }
+
+    public String getDestinationCode() {
+        return DestinationCode;
+    }
+
+    public String getType() {
+        return Type;
     }
 }
