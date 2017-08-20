@@ -2,10 +2,16 @@ language: android
 jdk: oraclejdk8
 sudo: true
 dist: trusty # Using Ubuntu 14.04 Trusty
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
   - "${TRAVIS_BUILD_DIR}/gradle/caches/"
   - "${TRAVIS_BUILD_DIR}/gradle/wrapper/dists/"
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  - $HOME/.android/build-cache
 env:
   global:
   - API_LEVEL=25
