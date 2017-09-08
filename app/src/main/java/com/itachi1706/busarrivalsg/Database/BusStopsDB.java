@@ -6,7 +6,9 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 
+import com.itachi1706.busarrivalsg.BuildConfig;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 
 import java.io.File;
@@ -68,6 +70,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
         db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement(sql);
         for (BusStopJSON busStop : busStops) {
+            if (BuildConfig.DEBUG) Log.d("DEBUG-BusStops", "Processing Bus Stop: " + busStop.getCode());
             stmt.bindString(1, busStop.getCode());
             stmt.bindString(2, busStop.getRoad());
             stmt.bindString(3, busStop.getBusStopName());

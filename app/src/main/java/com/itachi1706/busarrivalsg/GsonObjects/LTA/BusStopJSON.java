@@ -78,7 +78,7 @@ public class BusStopJSON {
     }
 
     public String getServices() {
-        return Services;
+        return (Services == null) ? "" : Services;
     }
 
     public void setServices(String services) {
