@@ -155,7 +155,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
      */
     public ArrayList<BusStopJSON> getBusStopsByStopName(String stopName){
         stopName = DatabaseUtils.sqlEscapeString(stopName);
-        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_DESC + "=" + stopName + ";";
+        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_DESC + " LIKE " + stopName + ";";
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<BusStopJSON> result = new ArrayList<>();
 
