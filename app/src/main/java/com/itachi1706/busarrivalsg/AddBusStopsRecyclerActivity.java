@@ -55,8 +55,8 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_bus_stops_recycler);
 
-        currentLocationGet = (FloatingActionButton) findViewById(R.id.current_location_fab);
-        result = (RecyclerView) findViewById(R.id.rvNearestBusStops);
+        currentLocationGet = findViewById(R.id.current_location_fab);
+        result = findViewById(R.id.rvNearestBusStops);
         if (result != null) result.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -73,7 +73,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         adapter.updateAdapter(results);
         adapter.notifyDataSetChanged();
 
-        textLane = (EditText) findViewById(R.id.inputData);
+        textLane = findViewById(R.id.inputData);
         TextWatcher inputWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

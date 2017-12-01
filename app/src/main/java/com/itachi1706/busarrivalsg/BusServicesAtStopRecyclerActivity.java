@@ -53,7 +53,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         if (this.getIntent().hasExtra("stopName")) busStopName = this.getIntent().getStringExtra("stopName");
         if (this.getIntent().hasExtra("busServices")) busServicesString = this.getIntent().getStringExtra("busServices");
 
-        buses = (RecyclerView) findViewById(R.id.rvBusService);
+        buses = findViewById(R.id.rvBusService);
         if (buses != null) buses.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -63,7 +63,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         adapter = new BusServiceRecyclerAdapter(new ArrayList<>(), this);
         buses.setAdapter(adapter);
 
-        swipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_swipe);
+        swipeToRefresh = findViewById(R.id.refresh_swipe);
         if (swipeToRefresh != null) {
             swipeToRefresh.setOnRefreshListener(this);
             swipeToRefresh.setColorSchemeResources(

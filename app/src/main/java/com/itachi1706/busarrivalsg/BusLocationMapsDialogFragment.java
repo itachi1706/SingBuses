@@ -49,7 +49,7 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_bus_location_map, container, false);
 
-        Button close = (Button) view.findViewById(R.id.close_btn);
+        Button close = view.findViewById(R.id.close_btn);
         close.setOnClickListener(view1 -> dismiss());
 
         SupportMapFragment mapFragment = new SupportMapFragment();

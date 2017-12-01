@@ -72,8 +72,8 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
 
         BusStopViewHolder(View v){
             super(v);
-            stopName = (TextView) v.findViewById(R.id.tvName);
-            desc = (TextView) v.findViewById(R.id.tvSubText);
+            stopName = v.findViewById(R.id.tvName);
+            desc = v.findViewById(R.id.tvSubText);
             v.setOnClickListener(this);
         }
 
