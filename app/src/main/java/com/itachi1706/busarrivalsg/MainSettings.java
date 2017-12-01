@@ -8,6 +8,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.itachi1706.appupdater.SettingsInitializer;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
@@ -51,6 +52,7 @@ public class MainSettings extends AppCompatActivity {
             addPreferencesFromResource(R.xml.pref_general);
 
             final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+            handleCompanions(sp);
 
             new SettingsInitializer(getActivity(), R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL,
                     getResources().getString(R.string.link_legacy), getResources().getString(R.string.link_updates), true)
@@ -72,6 +74,15 @@ public class MainSettings extends AppCompatActivity {
             Preference timeDBUpdateBus = findPreference("busDBTimeUpdated");
             long dbBus = sp.getLong("busDBTimeUpdated", -1);
             updateSummaryDBBus(timeDBUpdateBus, dbBus);
+
+            findPreference("companionDevice").setOnPreferenceChangeListener((preference, o) -> {
+                String companion = (String) o;
+                Log.d("DEBUG", "Companion: " + companion);
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new GeneralPreferenceFragment())
+                        .commit();
+                return true;
+            });
         }
 
         private void updateSummaryDBBus(Preference timeDBUpdateBus, long dbBus){
@@ -81,6 +92,15 @@ public class MainSettings extends AppCompatActivity {
             }
             Date date = new Date(dbBus);
             timeDBUpdateBus.setSummary(date.toString());
+        }
+
+        // Handling of all companion devices starts here
+        private void handleCompanions(SharedPreferences sharedPreferences) {
+            switch (sharedPreferences.getString("companionDevice", "none")) {
+                case "pebble": addPreferencesFromResource(R.xml.pref_pebble); break;
+                case "none":
+                    default: sharedPreferences.edit().putBoolean("pebbleSvc", false).apply(); break;
+            }
         }
     }
 }
