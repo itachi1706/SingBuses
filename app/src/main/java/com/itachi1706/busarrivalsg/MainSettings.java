@@ -55,14 +55,11 @@ public class MainSettings extends AppCompatActivity {
                     .explodeInfoSettings(this).explodeUpdaterSettings(this);
 
             Preference favJson = findPreference("fav_json");
-            favJson.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    String json = sp.getString("stored", "No Favourites");
-                    new AlertDialog.Builder(getActivity()).setMessage(json).setTitle("Favourites JSON String")
-                            .setPositiveButton("Close", null).show();
-                    return true;
-                }
+            favJson.setOnPreferenceClickListener(preference -> {
+                String json = sp.getString("stored", "No Favourites");
+                new AlertDialog.Builder(getActivity()).setMessage(json).setTitle("Favourites JSON String")
+                        .setPositiveButton("Close", null).show();
+                return true;
             });
 
             Preference timeDBUpdateBus = findPreference("busDBTimeUpdated");

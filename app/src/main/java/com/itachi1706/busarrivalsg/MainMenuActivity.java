@@ -108,7 +108,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                     R.color.refresh_progress_4);
         }
 
-        adapter = new FavouritesRecyclerAdapter(new ArrayList<BusServices>(), this);
+        adapter = new FavouritesRecyclerAdapter(new ArrayList<>(), this);
         favouritesList.setAdapter(adapter);
 
         ItemTouchHelper moveAdapter = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
@@ -143,18 +143,10 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     public void onResume(){
         super.onResume();
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainMenuActivity.this, AddBusStopsRecyclerActivity.class));
-            }
-        });
-        fab.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(MainMenuActivity.this, R.string.fab_hint_main_menu, Toast.LENGTH_SHORT).show();
-                return true;
-            }
+        fab.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, AddBusStopsRecyclerActivity.class)));
+        fab.setOnLongClickListener(v -> {
+            Toast.makeText(MainMenuActivity.this, R.string.fab_hint_main_menu, Toast.LENGTH_SHORT).show();
+            return true;
         });
 
         boolean checkIfPebbleConnected = PebbleKit.isWatchConnected(this);
@@ -182,13 +174,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             };
             PebbleKit.registerReceivedDataHandler(this, mReceiver);
 
-            pebbleCard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    installPebbleApp();
-
-                }
-            });
+            pebbleCard.setOnClickListener(v -> installPebbleApp());
         } else {
             connectionStatus.setText(R.string.pebble_disconnected);
             connectionStatus.setTextColor(Color.RED);
@@ -233,17 +219,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         final Activity activity = this;
         new AlertDialog.Builder(this).setTitle("Which OS to install App to").setMessage("Based on your pebble device, " +
                 "where should we launch the install request to?\n\nPebble Time: Select Pebble Time\n" +
-                "Pebble with Time OS: Select Pebble Time\nPebble with 2.0 OS: Select Pebble").setPositiveButton("Pebble Time", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                new DlAndInstallCompanionApp(activity, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getString(R.string.link_pebble_app));
-            }
-        }).setNegativeButton("Pebble", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                new DlAndInstallCompanionApp(activity, false).execute(getString(R.string.link_pebble_app));
-            }
-        }).setNeutralButton(android.R.string.cancel, null).show();
+                "Pebble with Time OS: Select Pebble Time\nPebble with 2.0 OS: Select Pebble").setPositiveButton("Pebble Time", (dialog, which) -> new DlAndInstallCompanionApp(activity, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getString(R.string.link_pebble_app))).setNegativeButton("Pebble", (dialog, which) -> new DlAndInstallCompanionApp(activity, false).execute(getString(R.string.link_pebble_app))).setNeutralButton(android.R.string.cancel, null).show();
     }
 
     @Override
@@ -354,12 +330,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         new AlertDialog.Builder(this).setTitle(R.string.dialog_title_no_internet)
                 .setMessage(getString(R.string.dialog_message_no_internet, reason)).setCancelable(false)
                 .setNeutralButton(R.string.dialog_action_neutral_override, null)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        MainMenuActivity.this.finish();
-                    }
-                }).show();
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> MainMenuActivity.this.finish()).show();
     }
 
     private boolean isNetworkAvailable() {
@@ -389,12 +360,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
         new AlertDialog.Builder(this).setTitle(R.string.dialog_title_request_permission_external_storage)
                 .setMessage(R.string.dialog_message_request_permission_external_storage_rationale)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ActivityCompat.requestPermissions(thisActivity, permissions, RC_HANDLE_REQUEST_EXTERNAL_STORAGE);
-                    }
-                }).show();
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(thisActivity, permissions, RC_HANDLE_REQUEST_EXTERNAL_STORAGE)).show();
     }
 
     /**
@@ -437,14 +403,11 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
         new AlertDialog.Builder(this).setTitle(R.string.dialog_title_permission_denied)
                 .setMessage(R.string.dialog_message_no_permission_external_storage).setPositiveButton(android.R.string.ok, null)
-                .setNeutralButton(R.string.dialog_action_neutral_app_settings, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri packageURI = Uri.parse("package:" + thisActivity.getPackageName());
-                        permIntent.setData(packageURI);
-                        startActivity(permIntent);
-                    }
+                .setNeutralButton(R.string.dialog_action_neutral_app_settings, (dialog, which) -> {
+                    Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri packageURI = Uri.parse("package:" + thisActivity.getPackageName());
+                    permIntent.setData(packageURI);
+                    startActivity(permIntent);
                 }).show();
     }
 }

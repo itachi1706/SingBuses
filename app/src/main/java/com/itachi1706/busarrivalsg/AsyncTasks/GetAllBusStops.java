@@ -44,12 +44,9 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
         String url = "http://api.itachi1706.com/api/busstops.php?api=2";
         String tmp = "";
 
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                progressDialog.setTitle(activity.getString(R.string.progress_title_bus_stop_data_download));
-                progressDialog.setMessage(activity.getString(R.string.progress_message_bus_stop_data_download));
-            }
+        activity.runOnUiThread(() -> {
+            progressDialog.setTitle(activity.getString(R.string.progress_title_bus_stop_data_download));
+            progressDialog.setMessage(activity.getString(R.string.progress_message_bus_stop_data_download));
         });
         try {
             URL urlConn = new URL(url);

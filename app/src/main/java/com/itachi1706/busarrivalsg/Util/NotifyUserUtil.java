@@ -15,11 +15,8 @@ public class NotifyUserUtil {
 
     public static void showShortDismissSnackbar(View currentLayout, String message){
         Snackbar.make(currentLayout, message, Snackbar.LENGTH_SHORT)
-                .setAction(R.string.snackbar_action_dismiss, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                .setAction(R.string.snackbar_action_dismiss, v -> {
 
-                    }
                 }).show();
     }
 

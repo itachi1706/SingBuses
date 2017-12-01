@@ -60,7 +60,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         buses.setLayoutManager(linearLayoutManager);
         buses.setItemAnimator(new DefaultItemAnimator());
 
-        adapter = new BusServiceRecyclerAdapter(new ArrayList<BusArrivalArrayObject>(), this);
+        adapter = new BusServiceRecyclerAdapter(new ArrayList<>(), this);
         buses.setAdapter(adapter);
 
         swipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_swipe);
@@ -119,20 +119,17 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
                 message = getString(R.string.dialog_message_remove_from_fav, fav.getServiceNo(), fav.getStopID());
             new AlertDialog.Builder(this).setTitle(R.string.dialog_title_remove_from_fav)
                     .setMessage(message)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //Remove from favourites
-                            for (int i = 0; i < all.size(); i++){
-                                BusServices s = all.get(i);
-                                if (s.getStopID().equalsIgnoreCase(fav.getStopID()) && s.getServiceNo().equalsIgnoreCase(fav.getServiceNo())) {
-                                    all.remove(i);
-                                    break;
-                                }
+                    .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                        //Remove from favourites
+                        for (int i = 0; i < all.size(); i++){
+                            BusServices s = all.get(i);
+                            if (s.getStopID().equalsIgnoreCase(fav.getStopID()) && s.getServiceNo().equalsIgnoreCase(fav.getServiceNo())) {
+                                all.remove(i);
+                                break;
                             }
-                            BusStorage.updateBusJSON(sp, all);
-                            Toast.makeText(getApplicationContext(), R.string.toast_message_remove_from_fav, Toast.LENGTH_SHORT).show();
                         }
+                        BusStorage.updateBusJSON(sp, all);
+                        Toast.makeText(getApplicationContext(), R.string.toast_message_remove_from_fav, Toast.LENGTH_SHORT).show();
                     }).setNegativeButton(android.R.string.no, null).show();
         } else {
             if (busStopName != null)
@@ -141,13 +138,10 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
                 message = getString(R.string.dialog_message_add_to_fav, fav.getServiceNo(), fav.getStopID());
             new AlertDialog.Builder(this).setTitle(R.string.dialog_title_add_to_fav)
                     .setMessage(message)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //Remove from favourites
-                            BusStorage.addNewBus(fav, sp);
-                            Toast.makeText(getApplicationContext(), R.string.toast_message_add_to_fav, Toast.LENGTH_SHORT).show();
-                        }
+                    .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                        //Remove from favourites
+                        BusStorage.addNewBus(fav, sp);
+                        Toast.makeText(getApplicationContext(), R.string.toast_message_add_to_fav, Toast.LENGTH_SHORT).show();
                     }).setNegativeButton(android.R.string.no, null).show();
         }
     }
