@@ -294,7 +294,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     private static final int RC_HANDLE_REQUEST_EXTERNAL_STORAGE = 1;
 
     private void requestStoragePermission() {
-        Log.w("Pebble", "Storage permission is not granted. Requesting permission");
+        Log.w(PEBBLE_TAG, "Storage permission is not granted. Requesting permission");
         final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
@@ -330,19 +330,19 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode != RC_HANDLE_REQUEST_EXTERNAL_STORAGE){
-            Log.d("Pebble", "Got unexpected permission result: " + requestCode);
+            Log.d(PEBBLE_TAG, "Got unexpected permission result: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d("Pebble", "Storage permission granted - download pebble file");
+            Log.d(PEBBLE_TAG, "Storage permission granted - download pebble file");
             // we have permission, so create the camerasource
             hasPermissionToInstallPebbleApp();
             return;
         }
 
-        Log.e("Pebble", "Permission not granted: results len = " + grantResults.length +
+        Log.e(PEBBLE_TAG, "Permission not granted: results len = " + grantResults.length +
                 " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
 
         final Activity thisActivity = this;
@@ -359,6 +359,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
     // Pebble Related Code
     private PebbleKit.PebbleDataReceiver pebbleDataReceiver;
+    private final String PEBBLE_TAG = "Pebble";
 
     private void pebbleInit() {
         boolean checkIfPebbleConnected = PebbleKit.isWatchConnected(this);
