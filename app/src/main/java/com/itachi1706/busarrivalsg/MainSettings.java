@@ -14,6 +14,8 @@ import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.util.Date;
 
+import de.psdev.licensesdialog.LicensesDialog;
+
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -52,6 +54,11 @@ public class MainSettings extends AppCompatActivity {
 
             new SettingsInitializer(getActivity(), R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL,
                     getResources().getString(R.string.link_legacy), getResources().getString(R.string.link_updates), true)
+                    .setOpenSourceLicenseInfo(true, preference -> {
+                        new LicensesDialog.Builder(getActivity()).setNotices(R.raw.notices)
+                                .setIncludeOwnLicense(true).build().show();
+                        return false;
+                    })
                     .explodeInfoSettings(this).explodeUpdaterSettings(this);
 
             Preference favJson = findPreference("fav_json");
