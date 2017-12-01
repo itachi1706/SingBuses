@@ -31,6 +31,7 @@ public class DlAndInstallCompanionApp extends AsyncTask<String, Void, Boolean> {
     private Exception except = null;
     private String filePath;
     private boolean useNewPebbleApp = false;
+    private final String FILE_NAME = "SingBuses.pbw";
 
     private ComponentName pebbleO = new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity");
     private ComponentName pebbleT = new ComponentName("com.getpebble.android.basalt", "com.getpebble.android.ui.UpdateActivity");
@@ -64,7 +65,7 @@ public class DlAndInstallCompanionApp extends AsyncTask<String, Void, Boolean> {
                     return false;
                 }
             }
-            File file = new File(folder, "SingBuses.pbw");
+            File file = new File(folder, FILE_NAME);
             FileOutputStream fos = new FileOutputStream(file);
             Log.d("DL", "Connection done, File Obtained");
             Log.d("DL", "Writing to file");
@@ -101,18 +102,19 @@ public class DlAndInstallCompanionApp extends AsyncTask<String, Void, Boolean> {
         }
 
         Intent installCompanionApp = new Intent(Intent.ACTION_VIEW);
-        File file = new File(filePath + "SingBuses.pbw");
+        final String TAG = "PebbleCApp";
+        File file = new File(filePath + FILE_NAME);
         Log.d("DEBUG", "Retrieving from " + file.getAbsolutePath());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Log.i("PebbleCApp", "Post-Nougat: Using new Content URI method");
-            Log.i("PebbleCApp", "Invoking Content Provider " + activity.getApplicationContext().getPackageName() + ".appupdater.provider");
+            Log.i(TAG, "Post-Nougat: Using new Content URI method");
+            Log.i(TAG, "Invoking Content Provider " + activity.getApplicationContext().getPackageName() + ".appupdater.provider");
             Uri contentUri = FileProvider.getUriForFile(activity.getBaseContext(), activity.getApplicationContext().getPackageName()
                     + ".appupdater.provider", file);
             installCompanionApp.setDataAndType(contentUri, "application/octet-stream");
             installCompanionApp.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         } else {
-            Log.i("PebbleCApp", "Pre-Nougat: Fallbacking to old method as they dont support contenturis");
-            installCompanionApp.setDataAndType(Uri.fromFile(new File(filePath + "SingBuses.pbw")), "application/octet-stream");
+            Log.i(TAG, "Pre-Nougat: Fallbacking to old method as they dont support contenturis");
+            installCompanionApp.setDataAndType(Uri.fromFile(file), "application/octet-stream");
         }
         installCompanionApp.setComponent((useNewPebbleApp) ? pebbleT : pebbleO);
         try {
