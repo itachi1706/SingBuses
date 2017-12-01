@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -182,15 +183,25 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, MainSettings.class));
             return true;
-        } else if (id == R.id.view_all_stops){
+        } else if (id == R.id.view_all_stops) {
             startActivity(new Intent(this, ListAllBusStopsActivity.class));
             return true;
-        } else if (id == R.id.action_refresh){
+        } else if (id == R.id.action_refresh) {
             swipeToRefresh.setRefreshing(true);
             updateFavourites();
             return true;
-        } else if (id == R.id.action_install_companion){
-            installPebbleApp();
+        } else if (id == R.id.action_install_companion) {
+            switch (sp.getString("companionDevice", "none")) {
+                case "pebble": installPebbleApp(); break;
+                case "none":
+                    default:
+                        new AlertDialog.Builder(this).setTitle("No Companion Device Configured")
+                            .setMessage("You have not configured a companion device! \n\nYou can do so in the app settings")
+                            .setPositiveButton(android.R.string.ok, null)
+                            .setNeutralButton(R.string.action_settings, (dialog, which) ->
+                                    startActivity(new Intent(getApplicationContext(), MainSettings.class))).show();
+                        break;
+            }
             return true;
         }
 
