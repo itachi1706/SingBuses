@@ -42,3 +42,4 @@ fabric.properties
 
 *.iml
 google-services.json
+app/release/
