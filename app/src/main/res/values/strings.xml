@@ -45,7 +45,7 @@
     <string name="pref_summary_pebble_background_svc">Enables background service so that you do not need to have this app open when you use the pebble application. (Note: This might have an impact on your battery life)</string>
     <string name="database_name_bus_geo">Bus Geographical Database</string>
     <string name="database_name_bus">Bus Database</string>
-    <string name="label_bus_stops_count">Bus Stops Count: %1$s</string>
+    <string name="label_bus_stops_count">Bus Stops Count: %1$d</string>
     <string name="edittext_hint_search_bus_stop">Stop Code/Stop Name/Road Name</string>
     <string name="content_description_wheelchair">Wheelchair Supported Bus</string>
     <string name="service_operational">In Operation</string>

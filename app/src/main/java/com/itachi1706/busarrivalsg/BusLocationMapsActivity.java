@@ -175,12 +175,7 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
 
         new AlertDialog.Builder(this).setTitle(R.string.dialog_title_request_permission_gps)
                 .setMessage(R.string.dialog_message_request_permission_gps_view_map_rationale)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ActivityCompat.requestPermissions(thisActivity, permissions, code);
-                    }
-                }).show();
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(thisActivity, permissions, code)).show();
     }
 
     /**
@@ -223,14 +218,11 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
         final Activity thisActivity = this;
         new AlertDialog.Builder(this).setTitle(R.string.dialog_title_permission_denied)
                 .setMessage(R.string.dialog_message_no_permission_gps).setPositiveButton(android.R.string.ok, null)
-                .setNeutralButton(R.string.dialog_action_neutral_app_settings, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri packageURI = Uri.parse("package:" + thisActivity.getPackageName());
-                        permIntent.setData(packageURI);
-                        startActivity(permIntent);
-                    }
+                .setNeutralButton(R.string.dialog_action_neutral_app_settings, (dialog, which) -> {
+                    Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri packageURI = Uri.parse("package:" + thisActivity.getPackageName());
+                    permIntent.setData(packageURI);
+                    startActivity(permIntent);
                 }).show();
     }
 }

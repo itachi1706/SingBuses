@@ -2,22 +2,30 @@
 
 buildscript {
     repositories {
+        google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-        classpath 'com.google.gms:google-services:3.0.0'
-        classpath 'com.google.firebase:firebase-plugins:1.1.0'
+        classpath 'com.google.gms:google-services:3.1.1'
+        classpath ('com.google.firebase:firebase-plugins:1.1.4') {
+            exclude group: 'com.google.guava', module: 'guava-jdk5'
+        }
     }
 }
 
 allprojects {
     repositories {
+        google()
         jcenter()
         maven { url "https://maven.google.com" } // Alternative URL is 'https://dl.google.com/dl/android/maven2/'
         maven { url "https://oss.sonatype.org/content/groups/public/" }
     }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }

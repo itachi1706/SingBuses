@@ -236,28 +236,20 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 
         AlertDialog alert = new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_remove_from_fav)
                 .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Remove from favourites
-                        for (int i = 0; i < items.size(); i++){
-                            BusServices s = items.get(i);
-                            if (s.getStopID().equalsIgnoreCase(item.getStopID()) && s.getServiceNo().equalsIgnoreCase(item.getServiceNo())) {
-                                items.remove(i);
-                                break;
-                            }
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    //Remove from favourites
+                    for (int i = 0; i < items.size(); i++){
+                        BusServices s = items.get(i);
+                        if (s.getStopID().equalsIgnoreCase(item.getStopID()) && s.getServiceNo().equalsIgnoreCase(item.getServiceNo())) {
+                            items.remove(i);
+                            break;
                         }
-                        BusStorage.updateBusJSON(sp, (ArrayList<BusServices>) items);
-                        notifyItemRemoved(position);
-                        Toast.makeText(activity.getApplicationContext(), R.string.toast_message_remove_from_fav, Toast.LENGTH_SHORT).show();
                     }
+                    BusStorage.updateBusJSON(sp, (ArrayList<BusServices>) items);
+                    notifyItemRemoved(position);
+                    Toast.makeText(activity.getApplicationContext(), R.string.toast_message_remove_from_fav, Toast.LENGTH_SHORT).show();
                 }).setNegativeButton(android.R.string.no, null).create();
-        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                notifyItemChanged(position);
-            }
-        });
+        alert.setOnDismissListener(dialogInterface -> notifyItemChanged(position));
         alert.show();
         return true;
     }
@@ -317,13 +309,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 else
                     message = activity.getString(R.string.snackbar_message_remove_from_fav, item.getServiceNo());
                     Snackbar.make(v, message
-                            , Snackbar.LENGTH_SHORT).setAction("Hide Tips", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            sp.edit().putBoolean("showFavHint", false).apply();
-                        }
-                    }).show();
+                            , Snackbar.LENGTH_SHORT).setAction("Hide Tips", view -> sp.edit().putBoolean("showFavHint", false).apply()).show();
             }
             return false;
         }

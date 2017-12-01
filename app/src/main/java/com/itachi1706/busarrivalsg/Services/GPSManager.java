@@ -165,18 +165,10 @@ public class GPSManager extends Service implements LocationListener {
 
         new AlertDialog.Builder(mContext).setTitle(R.string.dialog_title_gps_disabled)
                 .setMessage(R.string.dialog_message_gps_disabled)
-                .setPositiveButton(R.string.dialog_action_positive_settings, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        mContext.startActivity(intent);
-                    }
-                }).setNegativeButton(R.string.dialog_action_negative_cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        }).show();
+                .setPositiveButton(R.string.dialog_action_positive_settings, (dialog, which) -> {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    mContext.startActivity(intent);
+                }).setNegativeButton(R.string.dialog_action_negative_cancel, (dialog, which) -> dialog.cancel()).show();
     }
 
     /**
