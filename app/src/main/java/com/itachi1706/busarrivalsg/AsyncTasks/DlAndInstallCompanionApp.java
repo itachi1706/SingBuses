@@ -7,6 +7,8 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -26,16 +28,14 @@ import java.net.URL;
 public class DlAndInstallCompanionApp extends AsyncTask<String, Void, Boolean> {
 
     private Activity activity;
-    Exception except = null;
-    private Uri link;
+    private Exception except = null;
     private String filePath;
     private boolean useNewPebbleApp = false;
-    private boolean isPebbleTime = false; // TODO: This is a placeholder for when a Pebble Time Color version appears
 
     private ComponentName pebbleO = new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity");
     private ComponentName pebbleT = new ComponentName("com.getpebble.android.basalt", "com.getpebble.android.ui.UpdateActivity");
 
-    public DlAndInstallCompanionApp(Activity activity, boolean useNewPebbleApp){
+    public DlAndInstallCompanionApp(Activity activity, boolean useNewPebbleApp) {
         this.activity = activity;
         this.useNewPebbleApp = useNewPebbleApp;
     }
@@ -43,7 +43,6 @@ public class DlAndInstallCompanionApp extends AsyncTask<String, Void, Boolean> {
     @Override
     protected Boolean doInBackground(String... urlLink) {
         try {
-            this.link = Uri.parse(urlLink[0]);
             URL url = new URL(urlLink[0]);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setConnectTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
@@ -58,8 +57,8 @@ public class DlAndInstallCompanionApp extends AsyncTask<String, Void, Boolean> {
             Log.d("DL", "File Path: " + filePath);
 
             File folder = new File(filePath);
-            if (!folder.exists()){
-                if (!tryAndCreateFolder(folder)){
+            if (!folder.exists()) {
+                if (!tryAndCreateFolder(folder)) {
                     Log.d("Fail", "Cannot Create Folder. Not Downloading");
                     conn.disconnect();
                     return false;
@@ -91,17 +90,30 @@ public class DlAndInstallCompanionApp extends AsyncTask<String, Void, Boolean> {
     }
 
     @Override
-    protected void onPostExecute(Boolean passed){
-        if (!passed){
-            if (except != null){
+    protected void onPostExecute(Boolean passed) {
+        if (!passed) {
+            if (except != null) {
                 Toast.makeText(activity.getApplicationContext(), "An Error Occurred (" + except.getMessage() + ")", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(activity.getApplicationContext(), "An Error Occured while downloading the latest version of the Pebble App", Toast.LENGTH_SHORT).show();
             }
             return;
         }
+
         Intent installCompanionApp = new Intent(Intent.ACTION_VIEW);
-        installCompanionApp.setDataAndType(Uri.fromFile(new File(filePath + "SingBuses.pbw")), "application/octet-stream");
+        File file = new File(filePath + "SingBuses.pbw");
+        Log.d("DEBUG", "Retrieving from " + file.getAbsolutePath());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Log.i("PebbleCApp", "Post-Nougat: Using new Content URI method");
+            Log.i("PebbleCApp", "Invoking Content Provider " + activity.getApplicationContext().getPackageName() + ".appupdater.provider");
+            Uri contentUri = FileProvider.getUriForFile(activity.getBaseContext(), activity.getApplicationContext().getPackageName()
+                    + ".appupdater.provider", file);
+            installCompanionApp.setDataAndType(contentUri, "application/octet-stream");
+            installCompanionApp.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        } else {
+            Log.i("PebbleCApp", "Pre-Nougat: Fallbacking to old method as they dont support contenturis");
+            installCompanionApp.setDataAndType(Uri.fromFile(new File(filePath + "SingBuses.pbw")), "application/octet-stream");
+        }
         installCompanionApp.setComponent((useNewPebbleApp) ? pebbleT : pebbleO);
         try {
             activity.startActivity(installCompanionApp);
@@ -109,10 +121,9 @@ public class DlAndInstallCompanionApp extends AsyncTask<String, Void, Boolean> {
             String applicationName = (useNewPebbleApp) ? "Pebble Time" : "Pebble";
             new AlertDialog.Builder(activity).setTitle("App Not Installed").setMessage("The " + applicationName + " Application is not installed on your device!").setPositiveButton(android.R.string.ok, null).show();
         }
-
     }
 
-    private boolean tryAndCreateFolder(File folder){
+    private boolean tryAndCreateFolder(File folder) {
         if (!folder.exists() || !folder.isDirectory()) {
             if (folder.isFile()) {
                 //Rename it to something else

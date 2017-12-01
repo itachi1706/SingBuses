@@ -3,7 +3,6 @@ package com.itachi1706.busarrivalsg;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -49,7 +48,7 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_bus_location_map, container, false);
 
-        Button close = (Button) view.findViewById(R.id.close_btn);
+        Button close = view.findViewById(R.id.close_btn);
         close.setOnClickListener(view1 -> dismiss());
 
         SupportMapFragment mapFragment = new SupportMapFragment();

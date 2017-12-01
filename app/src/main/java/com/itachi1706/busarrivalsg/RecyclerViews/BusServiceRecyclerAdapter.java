@@ -196,15 +196,15 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
 
         BusServiceViewHolder(View v){
             super(v);
-            busOperator = (TextView) v.findViewById(R.id.tvBusOperator);
-            busNumber = (TextView) v.findViewById(R.id.tvBusService);
-            busArrivalNow = (Button) v.findViewById(R.id.btnBusArrivalNow);
-            busArrivalNext = (Button) v.findViewById(R.id.btnBusArrivalNext);
-            busArrivalSub = (Button) v.findViewById(R.id.btnBusArrivalSub);
-            operatingStatus = (TextView) v.findViewById(R.id.tvBusStatus);
-            wheelchairNow = (ImageView) v.findViewById(R.id.ivWheelchairNow);
-            wheelchairNext = (ImageView) v.findViewById(R.id.ivWheelchairNext);
-            wheelchairSub = (ImageView) v.findViewById(R.id.ivWheelchairSub);
+            busOperator = v.findViewById(R.id.tvBusOperator);
+            busNumber = v.findViewById(R.id.tvBusService);
+            busArrivalNow = v.findViewById(R.id.btnBusArrivalNow);
+            busArrivalNext = v.findViewById(R.id.btnBusArrivalNext);
+            busArrivalSub = v.findViewById(R.id.btnBusArrivalSub);
+            operatingStatus = v.findViewById(R.id.tvBusStatus);
+            wheelchairNow = v.findViewById(R.id.ivWheelchairNow);
+            wheelchairNext = v.findViewById(R.id.ivWheelchairNext);
+            wheelchairSub = v.findViewById(R.id.ivWheelchairSub);
             wheelchairNow.setVisibility(View.INVISIBLE);
             wheelchairNext.setVisibility(View.INVISIBLE);
             wheelchairSub.setVisibility(View.INVISIBLE);

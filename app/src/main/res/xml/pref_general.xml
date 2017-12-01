@@ -13,7 +13,7 @@
             android:summary="Shows tips for your favourites list when you press and hold a bus service" />
         <SwitchPreference
             android:title="Enable Pebble Background Service"
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="pebbleSvc"
             android:summary="@string/pref_summary_pebble_background_svc" />
         <SwitchPreference

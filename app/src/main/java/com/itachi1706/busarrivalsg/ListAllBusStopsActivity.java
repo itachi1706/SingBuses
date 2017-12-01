@@ -23,8 +23,8 @@ public class ListAllBusStopsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_all_bus_stops);
 
-        count = (TextView) findViewById(R.id.tvCount);
-        busStops = (RecyclerView) findViewById(R.id.rvAllBusStops);
+        count = findViewById(R.id.tvCount);
+        busStops = findViewById(R.id.rvAllBusStops);
         if (busStops != null) busStops.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

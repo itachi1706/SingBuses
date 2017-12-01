@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -80,13 +79,13 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         Fabric.with(this, crashlyticsKit);
         setContentView(R.layout.activity_main_menu_recycler);
 
-        pebbleCard = (CardView) findViewById(R.id.card_view);
-        installPrompt = (TextView) findViewById(R.id.pebbleInstallPrompt);
-        connectionStatus = (TextView) findViewById(R.id.pebbleConnectionStatus);
-        pressedBtn = (TextView) findViewById(R.id.pressedBtn);
-        firmware = (TextView) findViewById(R.id.pebbleFW);
-        fab = (FloatingActionButton) findViewById(R.id.add_fab);
-        favouritesList = (RecyclerView) findViewById(R.id.rvFav);
+        pebbleCard = findViewById(R.id.card_view);
+        installPrompt = findViewById(R.id.pebbleInstallPrompt);
+        connectionStatus = findViewById(R.id.pebbleConnectionStatus);
+        pressedBtn = findViewById(R.id.pressedBtn);
+        firmware = findViewById(R.id.pebbleFW);
+        fab = findViewById(R.id.add_fab);
+        favouritesList = findViewById(R.id.rvFav);
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -98,7 +97,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         favouritesList.setLayoutManager(linearLayoutManager);
         favouritesList.setItemAnimator(new DefaultItemAnimator());
 
-        swipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_favourites);
+        swipeToRefresh = findViewById(R.id.refresh_favourites);
         if (swipeToRefresh != null) {
             swipeToRefresh.setOnRefreshListener(this);
             swipeToRefresh.setColorSchemeResources(
