@@ -13,77 +13,80 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin" >
 
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:layout_gravity="center"
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
             android:layout_width="200dp"
             android:layout_height="100dp"
-            card_view:cardElevation="@dimen/cardview_default_elevation"
-            card_view:cardBackgroundColor="@color/white"
-            android:id="@+id/card_view"
-            android:layout_alignRight="@+id/refresh_favourites"
             android:layout_alignEnd="@+id/refresh_favourites"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/refresh_favourites"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            card_view:cardBackgroundColor="@color/white"
+            card_view:cardElevation="@dimen/cardview_default_elevation">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <ImageView
+                    android:id="@+id/pebbleImg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/pebbleImg"
-                    android:src="@drawable/pebble_steel"
-                    android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/pebble_steel" />
 
                 <TextView
+                    android:id="@+id/pressedBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/pebble_button_debug"
-                    android:id="@+id/pressedBtn"
-                    android:textColor="@color/black"
                     android:layout_alignParentBottom="true"
-                    android:layout_toRightOf="@+id/pebbleImg"
                     android:layout_toEndOf="@+id/pebbleImg"
+                    android:layout_toRightOf="@+id/pebbleImg"
+                    android:text="@string/pebble_button_debug"
+                    android:textColor="@color/black"
                     android:visibility="invisible" />
 
-                <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/pebbleConnectionStatus"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/black"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_toRightOf="@+id/pebbleImg"
-                    android:layout_toEndOf="@+id/pebbleImg" />
-
                 <TextView
+                    android:id="@+id/pebbleConnectionStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="@string/pebble_fw_version"
-                    android:id="@+id/pebbleFW"
-                    android:layout_below="@+id/pebbleConnectionStatus"
-                    android:layout_toRightOf="@+id/pebbleImg"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_toEndOf="@+id/pebbleImg"
+                    android:layout_toRightOf="@+id/pebbleImg"
+                    android:text="@string/hello_world"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/pebbleFW"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="@string/pebble_install_watchapp_hint"
-                    android:id="@+id/pebbleInstallPrompt"
-                    android:textColor="@color/black"
-                    android:layout_alignParentTop="true"
-                    android:layout_toRightOf="@+id/pebbleImg"
+                    android:layout_below="@+id/pebbleConnectionStatus"
                     android:layout_toEndOf="@+id/pebbleImg"
+                    android:layout_toRightOf="@+id/pebbleImg"
+                    android:text="@string/pebble_fw_version"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/pebbleInstallPrompt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/pebbleImg"
+                    android:layout_toRightOf="@+id/pebbleImg"
+                    android:text="@string/pebble_install_watchapp_hint"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/black" />
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>
