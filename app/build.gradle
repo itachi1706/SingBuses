@@ -79,6 +79,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:11.6.0'
     implementation 'com.google.firebase:firebase-crash:11.6.0'
     implementation 'com.google.firebase:firebase-perf:11.6.0'
+    implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
     testImplementation 'junit:junit:4.12'
 }
 
