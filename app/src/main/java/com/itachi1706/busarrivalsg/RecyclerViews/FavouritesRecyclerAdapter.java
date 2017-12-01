@@ -231,7 +231,11 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         else
             message = activity.getString(R.string.dialog_message_remove_from_fav, item.getServiceNo(), item.getStopID());
 
+        // Companion addition
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        switch (sp.getString("companionDevice", "none")) {
+            case "pebble": message += activity.getString(R.string.dialog_message_remove_from_fav_pebble);
+        }
 
         AlertDialog alert = new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_remove_from_fav)
                 .setMessage(message)
