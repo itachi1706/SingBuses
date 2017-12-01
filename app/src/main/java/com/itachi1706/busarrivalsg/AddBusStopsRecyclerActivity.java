@@ -76,10 +76,12 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         textLane = (EditText) findViewById(R.id.inputData);
         TextWatcher inputWatcher = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -101,14 +103,14 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
     private static final int RC_HANDLE_ACCESS_FINE_LOCATION_INIT = 4;
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        if (rc == PackageManager.PERMISSION_GRANTED){
+        if (rc == PackageManager.PERMISSION_GRANTED) {
             //Go ahead and init
             gps = new GPSManager(this);
-            if (!gps.canGetLocation()){
+            if (!gps.canGetLocation()) {
                 gps.showSettingsAlert();
             }
         } else {
@@ -123,9 +125,9 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         });
     }
 
-    private void checkIfYouHaveGpsPermissionForThis(){
+    private void checkIfYouHaveGpsPermissionForThis() {
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        if (rc == PackageManager.PERMISSION_GRANTED){
+        if (rc == PackageManager.PERMISSION_GRANTED) {
             getLocationButtonClicked();
         } else {
             requestGpsPermission(RC_HANDLE_ACCESS_FINE_LOCATION);
@@ -136,7 +138,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         Log.w("GPSManager", "GPS permission is not granted. Requesting permission");
         final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
 
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             ActivityCompat.requestPermissions(this, permissions, code);
             return;
         }
@@ -156,7 +158,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
                 }).show();
     }
 
-    private void getLocationButtonClicked(){
+    private void getLocationButtonClicked() {
         Toast.makeText(getApplicationContext(), R.string.toast_message_retrieving_location, Toast.LENGTH_SHORT).show();
         latitude = gps.getLatitude();
         longitude = gps.getLongitude();
@@ -187,7 +189,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode != RC_HANDLE_ACCESS_FINE_LOCATION && requestCode != RC_HANDLE_ACCESS_FINE_LOCATION_INIT){
+        if (requestCode != RC_HANDLE_ACCESS_FINE_LOCATION && requestCode != RC_HANDLE_ACCESS_FINE_LOCATION_INIT) {
             Log.d("GPSManager", "Got unexpected permission result: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
@@ -195,9 +197,9 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d("GPSManager", "Location permission granted - initialize the gps source");
-            // we have permission, so create the camerasource
+            // we have permission
             if (gps == null) {
-                //noinspection MissingPermission
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return; // Should never happen as it should have been granted
                 gps = new GPSManager(this);
             }
             if (!gps.canGetLocation()){
