@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -39,6 +37,7 @@ import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.appupdater.AppUpdateInitializer;
+import com.itachi1706.appupdater.Util.ConnectivityHelper;
 import com.itachi1706.busarrivalsg.AsyncTasks.DlAndInstallCompanionApp;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesFavouritesRecycler;
@@ -70,8 +69,6 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
     private SharedPreferences sp;
 
-    private FirebaseAnalytics mFirebaseAnalytics;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +85,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         favouritesList = findViewById(R.id.rvFav);
 
         // Obtain the FirebaseAnalytics instance.
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null);
 
         if (favouritesList != null) favouritesList.setHasFixedSize(true);
@@ -299,7 +296,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         //Main Database
         if (!sp.getBoolean("busDBLoaded", false) || busDBUpdate){
             //First Boot, populate database
-            if (!isNetworkAvailable()){
+            if (!ConnectivityHelper.hasInternetConnection(getApplicationContext())) {
                 networkUnavailable(getString(R.string.database_name_bus));
             } else {
                 Log.d("INIT", "Initializing Bus Stop Database");
@@ -330,13 +327,6 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                 .setMessage(getString(R.string.dialog_message_no_internet, reason)).setCancelable(false)
                 .setNeutralButton(R.string.dialog_action_neutral_override, null)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> MainMenuActivity.this.finish()).show();
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override
