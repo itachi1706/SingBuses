@@ -116,6 +116,12 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
                 message = getString(R.string.dialog_message_remove_from_fav_with_stop_name, fav.getServiceNo(), busStopName, fav.getStopID());
             else
                 message = getString(R.string.dialog_message_remove_from_fav, fav.getServiceNo(), fav.getStopID());
+
+            // Companion addition
+            switch (sp.getString("companionDevice", "none")) {
+                case "pebble": message += getString(R.string.dialog_message_remove_from_fav_pebble);
+            }
+
             new AlertDialog.Builder(this).setTitle(R.string.dialog_title_remove_from_fav)
                     .setMessage(message)
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
@@ -135,6 +141,12 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
                 message = getString(R.string.dialog_message_add_to_fav_with_stop_name, fav.getServiceNo(), busStopName, fav.getStopID());
             else
                 message = getString(R.string.dialog_message_add_to_fav, fav.getServiceNo(), fav.getStopID());
+
+            // Companion device addition
+            switch (sp.getString("companionDevice", "none")) {
+                case "pebble": message += getString(R.string.dialog_message_add_to_fav_pebble);
+            }
+
             new AlertDialog.Builder(this).setTitle(R.string.dialog_title_add_to_fav)
                     .setMessage(message)
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
