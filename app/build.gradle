@@ -76,6 +76,8 @@ dependencies {
     implementation 'com.getpebble:pebblekit:3.0.0'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.google.android.gms:play-services-maps:11.6.0'
+    implementation 'com.google.android.gms:play-services-auth:11.6.0'
+    implementation 'com.google.firebase:firebase-auth:11.6.0'
     implementation 'com.google.firebase:firebase-core:11.6.0'
     implementation 'com.google.firebase:firebase-crash:11.6.0'
     implementation 'com.google.firebase:firebase-perf:11.6.0'
