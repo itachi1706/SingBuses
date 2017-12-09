@@ -68,6 +68,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(v -> {
             //Attempts to sign in with Google
+            progress.setVisibility(View.VISIBLE);
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(signInIntent, RC_SIGN_IN);
         });
@@ -84,20 +85,23 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         if (BuildConfig.DEBUG)
             debugAcctBtn.setVisibility(View.VISIBLE);
 
-        debugAcctBtn.setOnClickListener(v -> mAuth.signInWithEmailAndPassword("test@test.com", "test123").addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                // Sign in success, update UI with the signed-in user's information
-                Log.d(TAG, "signInTestEmail:success");
-                FirebaseUser user = mAuth.getCurrentUser();
-                updateUI(user, true);
-            } else {
-                // If sign in fails, display a message to the user.
-                Log.w(TAG, "signInTestEmail:failure", task.getException());
-                Toast.makeText(getApplicationContext(), "Authentication failed.",
-                        Toast.LENGTH_SHORT).show();
-                updateUI(null);
-            }
-        }));
+        debugAcctBtn.setOnClickListener(v -> {
+            progress.setVisibility(View.VISIBLE);
+            mAuth.signInWithEmailAndPassword("test@test.com", "test123").addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInTestEmail:success");
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    updateUI(user, true);
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInTestEmail:failure", task.getException());
+                    Toast.makeText(getApplicationContext(), "Authentication failed.",
+                            Toast.LENGTH_SHORT).show();
+                    updateUI(null);
+                }
+            });
+        });
     }
 
     @Override
