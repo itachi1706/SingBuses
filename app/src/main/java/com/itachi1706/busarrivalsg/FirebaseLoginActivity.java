@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -44,6 +45,9 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firebase_login);
+        if (getSupportActionBar() != null && getSupportActionBar().isShowing()) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         // Set up the login form.
         mAuth = FirebaseAuth.getInstance();
@@ -181,6 +185,21 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         if (mAuth.getCurrentUser() == null)
             new AlertDialog.Builder(this).setTitle("Unable to connect to Google Servers")
                     .setMessage("We are unable to connect to Google Servers to sign you in, therefore this utility cannot be used")
-                    .setCancelable(false).setPositiveButton(android.R.string.ok, (dialog, which) -> finish()).show();
+                    .setCancelable(false).setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                setResult(RESULT_CANCELED);
+                finish();
+            }).show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                setResult(RESULT_CANCELED);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

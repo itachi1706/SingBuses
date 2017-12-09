@@ -92,7 +92,7 @@
                 tools:replace="android:resource" />
         </provider>
 
-        <activity android:name=".FirebaseLoginActivity" />
+        <activity android:name=".FirebaseLoginActivity" android:label="Sign in" />
     </application>
 
 </manifest>
