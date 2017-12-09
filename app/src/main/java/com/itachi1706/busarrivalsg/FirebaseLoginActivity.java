@@ -30,7 +30,8 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
 
     private ProgressBar progress;
     private TextView acctView;
-    private Button signout;
+    private Button signout, debugAcctBtn;
+    private SignInButton mEmailSignInButton;
     private static final String TAG = "FirebaseLogin";
 
     private GoogleApiClient mGoogleApiClient;
@@ -56,7 +57,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         progress.setIndeterminate(true);
         progress.setVisibility(View.GONE);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
-        SignInButton mEmailSignInButton = findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(v -> {
             //Attempts to sign in with Google
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -70,10 +71,12 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
 
-        if (BuildConfig.DEBUG)
-            findViewById(R.id.test_account).setVisibility(View.VISIBLE);
+        debugAcctBtn = findViewById(R.id.test_account);
 
-        findViewById(R.id.test_account).setOnClickListener(v -> mAuth.signInWithEmailAndPassword("test@test.com", "test123").addOnCompleteListener(task -> {
+        if (BuildConfig.DEBUG)
+            debugAcctBtn.setVisibility(View.VISIBLE);
+
+        debugAcctBtn.setOnClickListener(v -> mAuth.signInWithEmailAndPassword("test@test.com", "test123").addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 // Sign in success, update UI with the signed-in user's information
                 Log.d(TAG, "signInTestEmail:success");
@@ -141,19 +144,32 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
     }
 
     private void updateUI(FirebaseUser user) {
+        updateUI(user, false);
+    }
+
+    private void updateUI(FirebaseUser user, boolean returnActivity) {
         progress.setVisibility(View.GONE);
         if (user != null) {
             // There's a user
             Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
             sp.edit().putString("firebase_uid", user.getUid()).apply();
-            acctView.setText("Signed in as " + user.getDisplayName());
-            // TODO: Send back that it works
-            //setResult(RESULT_OK);
-            //finish();
+            acctView.setText("Signed in as " + user.getEmail());
+            if (BuildConfig.DEBUG)
+                debugAcctBtn.setVisibility(View.GONE);
+            mEmailSignInButton.setVisibility(View.GONE);
+            signout.setVisibility(View.VISIBLE);
+            if (returnActivity) {
+                setResult(RESULT_OK);
+                finish();
+            }
         } else {
             Toast.makeText(this, "Currently Logged Out", Toast.LENGTH_SHORT).show();
             if (sp.contains("firebase_uid")) sp.edit().remove("firebase_uid").apply();
             acctView.setText("Not Signed In");
+            if (BuildConfig.DEBUG)
+                debugAcctBtn.setVisibility(View.VISIBLE);
+            mEmailSignInButton.setVisibility(View.VISIBLE);
+            signout.setVisibility(View.GONE);
         }
     }
 
