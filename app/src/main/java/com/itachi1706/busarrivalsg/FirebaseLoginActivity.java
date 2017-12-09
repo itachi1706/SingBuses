@@ -34,6 +34,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
     private Button signout, debugAcctBtn;
     private SignInButton mEmailSignInButton;
     private static final String TAG = "FirebaseLogin";
+    private static final String FIREBASE_UID = "firebase_uid";
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
@@ -88,12 +89,8 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         debugAcctBtn.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
             mAuth.signInWithEmailAndPassword("test@test.com", "test123").addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInTestEmail:success");
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    updateUI(user, true);
-                } else {
+                if (task.isSuccessful()) successfulSignInTask("TestEmail");
+                else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInTestEmail:failure", task.getException());
                     Toast.makeText(getApplicationContext(), "Authentication failed.",
@@ -139,12 +136,8 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithGoogle:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        updateUI(user, true);
-                    } else {
+                    if (task.isSuccessful()) successfulSignInTask("WithGoogle");
+                    else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithGoogle:failure", task.getException());
                         Toast.makeText(getApplicationContext(), "Authentication failed.",
@@ -153,6 +146,13 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
                     }
                     progress.setVisibility(View.GONE);
                 });
+    }
+
+    private void successfulSignInTask(String provider) {
+        // Sign in success, update UI with the signed-in user's information
+        Log.d(TAG, "signIn" + provider + ":success");
+        FirebaseUser user = mAuth.getCurrentUser();
+        updateUI(user, true);
     }
 
     private void updateUI(FirebaseUser user) {
@@ -164,7 +164,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         if (user != null) {
             // There's a user
             Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
-            sp.edit().putString("firebase_uid", user.getUid()).apply();
+            sp.edit().putString(FIREBASE_UID, user.getUid()).apply();
             acctView.setText("Signed in as " + user.getEmail());
             if (BuildConfig.DEBUG)
                 debugAcctBtn.setVisibility(View.GONE);
@@ -172,7 +172,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
             signout.setVisibility(View.VISIBLE);
         } else {
             Toast.makeText(this, "Currently Logged Out", Toast.LENGTH_SHORT).show();
-            if (sp.contains("firebase_uid")) sp.edit().remove("firebase_uid").apply();
+            if (sp.contains(FIREBASE_UID)) sp.edit().remove(FIREBASE_UID).apply();
             acctView.setText("Not Signed In");
             if (BuildConfig.DEBUG)
                 debugAcctBtn.setVisibility(View.VISIBLE);
