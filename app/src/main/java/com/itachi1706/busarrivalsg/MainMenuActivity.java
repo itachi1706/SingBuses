@@ -156,7 +156,6 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                 default: pebbleCard.setVisibility(View.GONE); deinitPebble();  break;
         }
 
-        // TODO: Make this more logical instead of launching an activity
         syncState.setClickable(true);
         syncState.setOnClickListener(v -> {
             // TODO: Start Activity for result
