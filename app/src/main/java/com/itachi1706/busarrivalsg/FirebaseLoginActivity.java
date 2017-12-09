@@ -22,7 +22,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -88,16 +90,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
 
         debugAcctBtn.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
-            mAuth.signInWithEmailAndPassword("test@test.com", "test123").addOnCompleteListener(task -> {
-                if (task.isSuccessful()) successfulSignInTask("TestEmail");
-                else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInTestEmail:failure", task.getException());
-                    Toast.makeText(getApplicationContext(), "Authentication failed.",
-                            Toast.LENGTH_SHORT).show();
-                    updateUI(null);
-                }
-            });
+            mAuth.signInWithEmailAndPassword("test@test.com", "test123").addOnCompleteListener(task -> processSignIn("TestEmail", task));
         });
     }
 
@@ -135,24 +128,23 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) successfulSignInTask("WithGoogle");
-                    else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithGoogle:failure", task.getException());
-                        Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
-                        updateUI(null);
-                    }
-                    progress.setVisibility(View.GONE);
-                });
+                .addOnCompleteListener(this, task -> processSignIn("WithGoogle", task));
     }
 
-    private void successfulSignInTask(String provider) {
-        // Sign in success, update UI with the signed-in user's information
-        Log.d(TAG, "signIn" + provider + ":success");
-        FirebaseUser user = mAuth.getCurrentUser();
-        updateUI(user, true);
+    private void processSignIn(String provider, Task<AuthResult> task) {
+        if (task.isSuccessful()) {
+            // Sign in success, update UI with the signed-in user's information
+            Log.d(TAG, "signIn" + provider + ":success");
+            FirebaseUser user = mAuth.getCurrentUser();
+            updateUI(user, true);
+        } else {
+            // If sign in fails, display a message to the user.
+            Log.w(TAG, "signIn" + provider + ":failure", task.getException());
+            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                    Toast.LENGTH_SHORT).show();
+            updateUI(null);
+        }
+        progress.setVisibility(View.GONE);
     }
 
     private void updateUI(FirebaseUser user) {
