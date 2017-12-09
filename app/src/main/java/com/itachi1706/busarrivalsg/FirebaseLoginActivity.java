@@ -53,6 +53,10 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         mAuth = FirebaseAuth.getInstance();
         acctView = findViewById(R.id.sign_in_as);
         signout = findViewById(R.id.sign_out);
+        if (getIntent().hasExtra("logout") && getIntent().getBooleanExtra("logout", false)) {
+            mAuth.signOut();
+            updateUI(null, true);
+        }
         signout.setOnClickListener(v -> {
             mAuth.signOut();
             updateUI(null);
@@ -85,7 +89,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
                 // Sign in success, update UI with the signed-in user's information
                 Log.d(TAG, "signInTestEmail:success");
                 FirebaseUser user = mAuth.getCurrentUser();
-                updateUI(user);
+                updateUI(user, true);
             } else {
                 // If sign in fails, display a message to the user.
                 Log.w(TAG, "signInTestEmail:failure", task.getException());
@@ -135,7 +139,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithGoogle:success");
                         FirebaseUser user = mAuth.getCurrentUser();
-                        updateUI(user);
+                        updateUI(user, true);
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithGoogle:failure", task.getException());
@@ -162,10 +166,6 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
                 debugAcctBtn.setVisibility(View.GONE);
             mEmailSignInButton.setVisibility(View.GONE);
             signout.setVisibility(View.VISIBLE);
-            if (returnActivity) {
-                setResult(RESULT_OK);
-                finish();
-            }
         } else {
             Toast.makeText(this, "Currently Logged Out", Toast.LENGTH_SHORT).show();
             if (sp.contains("firebase_uid")) sp.edit().remove("firebase_uid").apply();
@@ -174,6 +174,10 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
                 debugAcctBtn.setVisibility(View.VISIBLE);
             mEmailSignInButton.setVisibility(View.VISIBLE);
             signout.setVisibility(View.GONE);
+        }
+        if (returnActivity) {
+            setResult(RESULT_OK);
+            finish();
         }
     }
 
