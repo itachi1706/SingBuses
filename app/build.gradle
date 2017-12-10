@@ -19,7 +19,7 @@ def isTravis = System.getenv("TRAVIS")
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.2'
 
     defaultConfig {
         applicationId "com.itachi1706.busarrivalsg"
@@ -60,6 +60,11 @@ android {
     }
 }
 
+ext {
+    supportLibraryVersion = '27.0.2'
+    playServicesVersion = '11.6.2'
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -69,16 +74,18 @@ dependencies {
         transitive = true
     }
     implementation project(':appupdater')
-    implementation 'com.android.support:design:27.0.1'
-    implementation 'com.android.support:support-v4:27.0.1'
-    implementation 'com.android.support:cardview-v7:27.0.1'
-    implementation 'com.android.support:recyclerview-v7:27.0.1'
+    implementation "com.android.support:design:$supportLibraryVersion"
+    implementation "com.android.support:support-v4:$supportLibraryVersion"
+    implementation "com.android.support:cardview-v7:$supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
     implementation 'com.getpebble:pebblekit:3.0.0'
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'com.google.android.gms:play-services-maps:11.6.0'
-    implementation 'com.google.firebase:firebase-core:11.6.0'
-    implementation 'com.google.firebase:firebase-crash:11.6.0'
-    implementation 'com.google.firebase:firebase-perf:11.6.0'
+    implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
+    implementation "com.google.android.gms:play-services-auth:$playServicesVersion"
+    implementation "com.google.firebase:firebase-auth:$playServicesVersion"
+    implementation "com.google.firebase:firebase-core:$playServicesVersion"
+    implementation "com.google.firebase:firebase-crash:$playServicesVersion"
+    implementation "com.google.firebase:firebase-perf:$playServicesVersion"
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
     testImplementation 'junit:junit:4.12'
 }

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.itachi1706.busarrivalsg"
-    android:installLocation="internalOnly" >
+    android:installLocation="internalOnly">
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Get all the API data duh -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Check if there's internet access -->
@@ -18,19 +18,21 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainMenuActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.shortcuts"
-                android:resource="@xml/static_shortcuts"/>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/static_shortcuts" />
         </activity>
 
         <meta-data
@@ -39,31 +41,26 @@
 
         <activity
             android:name=".ListAllBusStopsActivity"
-            android:label="@string/title_activity_list_all_bus_stops" >
-        </activity>
+            android:label="@string/title_activity_list_all_bus_stops" />
         <activity
             android:name=".AddBusStopsRecyclerActivity"
-            android:label="@string/title_activity_add_bus_stops" >
-        </activity>
+            android:label="@string/title_activity_add_bus_stops" />
         <activity
             android:name=".MainSettings"
-            android:label="@string/title_activity_main_settings" >
-        </activity>
+            android:label="@string/title_activity_main_settings" />
         <activity
             android:name=".BusServicesAtStopRecyclerActivity"
-            android:label="@string/title_activity_bus_services_at_stop" >
-        </activity>
+            android:label="@string/title_activity_bus_services_at_stop" />
 
         <service
             android:name=".Services.PebbleCommunications"
             android:exported="false"
-            tools:ignore="InnerclassSeparator" >
-        </service>
+            tools:ignore="InnerclassSeparator" />
 
         <receiver
             android:name=".CompleteBootReceiver"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -82,8 +79,7 @@
 
         <activity
             android:name=".BusLocationMapsActivity"
-            android:label="@string/title_activity_bus_location_maps" >
-        </activity>
+            android:label="@string/title_activity_bus_location_maps" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -95,6 +91,8 @@
                 android:resource="@xml/companion_app_provider_paths"
                 tools:replace="android:resource" />
         </provider>
+
+        <activity android:name=".FirebaseLoginActivity" android:label="Sign in" />
     </application>
 
 </manifest>

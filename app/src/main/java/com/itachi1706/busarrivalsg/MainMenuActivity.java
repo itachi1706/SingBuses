@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -58,7 +57,7 @@ import io.fabric.sdk.android.Fabric;
 public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     //Android Stuff
-    private TextView connectionStatus, pressedBtn, firmware, installPrompt;
+    private TextView connectionStatus, pressedBtn, firmware, installPrompt, syncState;
     private FloatingActionButton fab;
     private RecyclerView favouritesList;
     private FavouritesRecyclerAdapter adapter;
@@ -81,6 +80,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         firmware = findViewById(R.id.pebbleFW);
         fab = findViewById(R.id.add_fab);
         favouritesList = findViewById(R.id.rvFav);
+        syncState = findViewById(R.id.firebase_sync_status);
 
         // Obtain the FirebaseAnalytics instance.
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -155,6 +155,12 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             case "none":
                 default: pebbleCard.setVisibility(View.GONE); deinitPebble();  break;
         }
+
+        syncState.setClickable(true);
+        syncState.setOnClickListener(v -> {
+            // TODO: Start Activity for result
+            startActivity(new Intent(getApplicationContext(), FirebaseLoginActivity.class));
+        });
     }
 
     @Override
