@@ -11,6 +11,8 @@ import java.util.GregorianCalendar;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg
@@ -36,9 +38,14 @@ public class StaticVariables {
         return !jsonString.startsWith("<!DOCTYPE html>");
     }
 
+    @Deprecated
     public static long parseLTAEstimateArrival(String arrivalString){
+        return parseLTAEstimateArrival(arrivalString, false, null);
+    }
+
+    public static long parseLTAEstimateArrival(String arrivalString, boolean useServerTime, @Nullable String serverTime) {
         if (arrivalString.equalsIgnoreCase("")) return -9999;
-        return parseEstimateArrival(arrivalString);
+        return parseEstimateArrival(arrivalString, useServerTime, serverTime);
     }
 
     public static byte parseWABStatusToPebble(boolean status){
@@ -50,10 +57,22 @@ public class StaticVariables {
         return !(lng == -1000 || lat == -1000) && !(lng == -11 && lat == -11) && !(lat == 0 && lng == 0);
     }
 
-    public static long parseEstimateArrival(String arrivalString){
-        Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());
-        Calendar currentDate = Calendar.getInstance();
-        currentDate.add(Calendar.MONTH, 1);
+    @Deprecated
+    public static long parseEstimateArrival(String arrivalString) {
+        return parseEstimateArrival(arrivalString, false, null);
+    }
+
+    public static long parseEstimateArrival(String arrivalString, boolean useServerTime, @Nullable String serverTime){
+        // TODO: Use server time if needed
+        Calendar currentDate;
+        if (!useServerTime && serverTime != null) {
+            Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());
+            currentDate = Calendar.getInstance();
+            currentDate.add(Calendar.MONTH, 1);
+        } else {
+            currentDate = parseDate(serverTime);
+        }
+
 
         Calendar arrivalDate = parseDate(arrivalString);
 
