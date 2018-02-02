@@ -2,6 +2,7 @@ package com.itachi1706.busarrivalsg.AsyncTasks.Services;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.getpebble.android.kit.PebbleKit;
@@ -22,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 
+import static com.itachi1706.busarrivalsg.Util.StaticVariables.USE_SERVER_TIME;
 import static com.itachi1706.busarrivalsg.Util.StaticVariables.parseEstimateArrival;
 
 /**
@@ -118,6 +120,9 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
             busObj.setTime(System.currentTimeMillis());
             busObj.setObtainedNextData(true);
 
+            // Get servertime
+            boolean serverTime = StaticVariables.useServerTime(PreferenceManager.getDefaultSharedPreferences(context));
+
             //Go through arrayList and update the current one
             for (int i = 0; i < StaticVariables.favouritesList.size(); i++) {
                 BusServices ob = StaticVariables.favouritesList.get(i);
@@ -135,7 +140,7 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
             if (ob.getNextBus().getEstimatedArrival() == null) {
                 nextEst = "-";
             } else {
-                long estNxt = parseEstimateArrival(ob.getNextBus().getEstimatedArrival());
+                long estNxt = parseEstimateArrival(ob.getNextBus().getEstimatedArrival(), serverTime, mainArr.getCurrentTime());
                 if (estNxt <= 0)
                     nextEst = "Arr";
                 else if (estNxt == 1)
@@ -146,7 +151,7 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
             if (ob.getCurrentBus().getEstimatedArrival() == null) {
                 currentEst = "-";
             } else {
-                long estCur = parseEstimateArrival(ob.getCurrentBus().getEstimatedArrival());
+                long estCur = parseEstimateArrival(ob.getCurrentBus().getEstimatedArrival(), serverTime, mainArr.getCurrentTime());
                 if (estCur <= 0)
                     currentEst = "Arr";
                 else if (estCur == 1)

@@ -297,6 +297,8 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             Intent mapsIntent = new Intent(activity, BusLocationMapsActivity.class);
             mapsIntent.putExtra("busCode", stopCode);
             mapsIntent.putExtra("busSvcNo", serviceNo);
+            // TODO: Get STime
+            mapsIntent.putExtra("stime",  busObj.getNextBus().getEstimatedArrival());
 
             // 3 Bus statuses
             mapsIntent.putExtra("lat1", busObj.getNextBus().getLatitude());

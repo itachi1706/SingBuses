@@ -4,8 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -35,7 +37,7 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
     private double busLatitude, busLongitude;
 
     private double lat1, lng1, lat2, lng2, lat3, lng3;
-    private String arr1, arr2, arr3;
+    private String arr1, arr2, arr3, stime;
     private int type1, type2, type3;
     private int state;
 
@@ -60,6 +62,7 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
         arr1 = this.getIntent().getStringExtra("arr1");
         arr2 = this.getIntent().getStringExtra("arr2");
         arr3 = this.getIntent().getStringExtra("arr3");
+        stime = this.getIntent().getStringExtra("stime");
         type1 = this.getIntent().getIntExtra("type1", CommonEnums.UNKNOWN);
         type2 = this.getIntent().getIntExtra("type2", CommonEnums.UNKNOWN);
         type3 = this.getIntent().getIntExtra("type3", CommonEnums.UNKNOWN);
@@ -133,7 +136,8 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
     }
 
     private String processArrival(String estString) {
-        long est = StaticVariables.parseLTAEstimateArrival(estString);
+        boolean useServerTime = StaticVariables.useServerTime(PreferenceManager.getDefaultSharedPreferences(this));
+        long est = StaticVariables.parseLTAEstimateArrival(estString, useServerTime, stime);
         if (est == -9999) return "=";
         else if (est <= 0) return "Arr";
         else if (est == 1) return est + " mins";

@@ -1,5 +1,6 @@
 package com.itachi1706.busarrivalsg.Util;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.getpebble.android.kit.util.PebbleDictionary;
@@ -26,6 +27,8 @@ public class StaticVariables {
 
     public static final int CUR = 0, NEXT = 1, SUB = 2;
 
+    public static final String USE_SERVER_TIME = "useServerTime";
+
     //For Pebble Comm
     public static PebbleDictionary dict1 = null;
     public static PebbleDictionary dict2 = null;
@@ -36,6 +39,10 @@ public class StaticVariables {
 
     public static boolean checkIfYouGotJsonString(String jsonString){
         return !jsonString.startsWith("<!DOCTYPE html>");
+    }
+
+    public static boolean useServerTime(SharedPreferences sp) {
+        return sp.getBoolean(USE_SERVER_TIME, false);
     }
 
     @Deprecated
@@ -63,7 +70,6 @@ public class StaticVariables {
     }
 
     public static long parseEstimateArrival(String arrivalString, boolean useServerTime, @Nullable String serverTime){
-        // TODO: Use server time if needed
         Calendar currentDate;
         if (!useServerTime && serverTime != null) {
             Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());

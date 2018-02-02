@@ -8,6 +8,7 @@ public class BusArrivalMain {
 
     private String BusStopCode;
     private BusArrivalArrayObject[] Services;
+    private String CurrentTime;
 
     public BusArrivalArrayObject[] getServices() {
         return Services;
@@ -15,5 +16,9 @@ public class BusArrivalMain {
 
     public String getBusStopCode() {
         return BusStopCode;
+    }
+
+    public String getCurrentTime() {
+        return CurrentTime;
     }
 }
