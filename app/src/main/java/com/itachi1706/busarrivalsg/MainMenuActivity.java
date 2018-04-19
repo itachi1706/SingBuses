@@ -53,6 +53,8 @@ import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
 
+import static com.itachi1706.busarrivalsg.Util.StaticVariables.USE_SERVER_TIME;
+
 public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     //Android Stuff
@@ -101,7 +103,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                     R.color.refresh_progress_4);
         }
 
-        adapter = new FavouritesRecyclerAdapter(new ArrayList<>(), this);
+        sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        adapter = new FavouritesRecyclerAdapter(new ArrayList<>(), this, sp.getBoolean(USE_SERVER_TIME, false));
         favouritesList.setAdapter(adapter);
 
         ItemTouchHelper moveAdapter = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
@@ -124,8 +127,6 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
         });
         moveAdapter.attachToRecyclerView(favouritesList);
-
-        sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
         Log.d("MainMenu", "Checking for app updates");
         new AppUpdateInitializer(this, sp, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL, true).checkForUpdate(true);
@@ -221,7 +222,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             //Go ahead with loading and getting data
             Log.d("FAVOURITES", "Has Favourites. Processing");
             StaticVariables.favouritesList = BusStorage.getStoredBuses(sp);
-            adapter.updateAdapter(StaticVariables.favouritesList);
+            adapter.updateAdapter(StaticVariables.favouritesList, null);
             adapter.notifyDataSetChanged();
 
             Log.d("FAVOURITES", "Finished Processing, retrieving estimated arrival data now");

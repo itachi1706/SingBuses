@@ -42,6 +42,8 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
     private double lat1, lng1, lat2, lng2, lat3, lng3;
     private String arr1, arr2, arr3;
     private int type1, type2, type3;
+    private boolean sTime;
+    private String curTime;
     private int state;
 
     @Override
@@ -77,6 +79,8 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
         type2 = this.getArguments().getInt("type2", CommonEnums.UNKNOWN);
         type3 = this.getArguments().getInt("type3", CommonEnums.UNKNOWN);
         state = this.getArguments().getInt("state", StaticVariables.CUR);
+        sTime = this.getArguments().getBoolean("useSTime", false);
+        curTime = this.getArguments().getString("sTime", null);
 
         // Obtain the FirebaseAnalytics instance.
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this.getActivity());
@@ -155,7 +159,7 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
     }
 
     private String processArrival(String estString) {
-        long est = StaticVariables.parseLTAEstimateArrival(estString);
+        long est = StaticVariables.parseLTAEstimateArrival(estString, sTime, curTime);
         if (est == -9999) return "=";
         else if (est <= 0) return "Arriving";
         else if (est == 1) return est + " mins";

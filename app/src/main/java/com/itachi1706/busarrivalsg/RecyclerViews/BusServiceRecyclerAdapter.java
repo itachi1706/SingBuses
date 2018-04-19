@@ -44,15 +44,19 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
      */
 
     private List<BusArrivalArrayObject> items;
+    private String currentTime;
+    private boolean serverTime;
     private AppCompatActivity activity;
 
-    public BusServiceRecyclerAdapter(List<BusArrivalArrayObject> objectList, AppCompatActivity activity){
+    public BusServiceRecyclerAdapter(List<BusArrivalArrayObject> objectList, AppCompatActivity activity, boolean useServerTime){
         this.items = objectList;
         this.activity = activity;
+        this.serverTime = useServerTime;
     }
 
-    public void updateAdapter(List<BusArrivalArrayObject> newObjects){
+    public void updateAdapter(List<BusArrivalArrayObject> newObjects, String currentTime){
         this.items = newObjects;
+        this.currentTime = currentTime;
         notifyDataSetChanged();
     }
 
@@ -91,7 +95,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         if (i.getNextBus().getEstimatedArrival() == null){
             notArriving(holder.busArrivalNow, holder.wheelchairNow);
         } else {
-            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus().getEstimatedArrival());
+            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus().getEstimatedArrival(), serverTime, currentTime);
             String arrivalStatusNow;
             if (est == -9999)
                 arrivalStatusNow = "-";
@@ -113,7 +117,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         if (i.getNextBus2().getEstimatedArrival() == null){
             notArriving(holder.busArrivalNext, holder.wheelchairNext);
         } else {
-            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus2().getEstimatedArrival());
+            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus2().getEstimatedArrival(), serverTime, currentTime);
             String arrivalStatusNext;
             if (est == -9999)
                 arrivalStatusNext = "-";
@@ -138,7 +142,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         }
         if (i.getNextBus3().getEstimatedArrival() == null) notArriving(holder.busArrivalSub, holder.wheelchairSub);
         else {
-            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus3().getEstimatedArrival());
+            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus3().getEstimatedArrival(), serverTime, currentTime);
             String arrivalStatusSub;
             if (est == -9999)
                 arrivalStatusSub = "-";
@@ -313,6 +317,8 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             mapsIntent.putExtra("lng3", busObj.getNextBus3().getLongitude());
             mapsIntent.putExtra("arr3", busObj.getNextBus3().getEstimatedArrival());
             mapsIntent.putExtra("type3", busObj.getNextBus3().getTypeInt());
+            mapsIntent.putExtra("useSTime", serverTime);
+            mapsIntent.putExtra("sTime", currentTime);
             mapsIntent.putExtra("state", state);
 
             //Get Bus stop longitude and latitude

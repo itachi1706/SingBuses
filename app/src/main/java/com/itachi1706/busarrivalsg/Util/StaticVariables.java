@@ -71,7 +71,7 @@ public class StaticVariables {
 
     public static long parseEstimateArrival(String arrivalString, boolean useServerTime, @Nullable String serverTime){
         Calendar currentDate;
-        if (!useServerTime && serverTime != null) {
+        if (!useServerTime || serverTime == null) {
             Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());
             currentDate = Calendar.getInstance();
             currentDate.add(Calendar.MONTH, 1);

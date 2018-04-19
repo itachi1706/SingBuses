@@ -168,7 +168,7 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
                 if (ob.getServiceNo().equals(busObj.getServiceNo()) && ob.getStopID().equals(busObj.getStopID())){
                     //Update
                     StaticVariables.favouritesList.set(i, busObj);
-                    adapter.updateAdapter(StaticVariables.favouritesList);
+                    adapter.updateAdapter(StaticVariables.favouritesList, mainArr.getCurrentTime());
                     adapter.notifyDataSetChanged();
                     return;
                 }
