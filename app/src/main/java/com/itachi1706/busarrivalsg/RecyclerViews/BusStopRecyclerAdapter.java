@@ -22,7 +22,6 @@ import com.itachi1706.busarrivalsg.R;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 
 /**
  * Created by Kenneth on 31/10/2015.
@@ -98,13 +97,13 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
             // Add dynamic shortcuts
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
                 ShortcutManager shortcutManager = v.getContext().getSystemService(ShortcutManager.class);
-                Queue<ShortcutInfo> infos = new LinkedList<>(shortcutManager.getDynamicShortcuts());
+                LinkedList<ShortcutInfo> infos = new LinkedList<>(shortcutManager.getDynamicShortcuts());
                 final int shortcutCount = shortcutManager.getMaxShortcutCountPerActivity() - 2;
                 if (infos.size() >= shortcutCount) {
                     Log.i("ShortcutManager", "Dynamic Shortcuts more than " + shortcutCount
                             + ". Removing extras");
                     do {
-                        infos.remove();
+                        infos.removeLast();
                     } while (infos.size() > shortcutCount);
                 }
                 serviceIntent.setAction(Intent.ACTION_VIEW);
@@ -114,7 +113,7 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
                         .setIntent(serviceIntent).build();
 
                 infos.add(newShortcut);
-                shortcutManager.setDynamicShortcuts(new LinkedList<>(infos));
+                shortcutManager.setDynamicShortcuts(infos);
             }
         }
     }
