@@ -16,11 +16,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 import com.itachi1706.busarrivalsg.AsyncTasks.Services.GetFirstFavouriteData;
 import com.itachi1706.busarrivalsg.AsyncTasks.Services.GetRemainingFavouriteData;
 import com.itachi1706.busarrivalsg.BuildConfig;
@@ -55,9 +53,8 @@ public class PebbleCommunications extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, final int startId) {
         super.onStartCommand(intent, flags, startId);
-        if (BuildConfig.DEBUG && FirebaseCrash.isCrashCollectionEnabled()) FirebaseCrash.setCrashCollectionEnabled(false);
-        Crashlytics crashlyticsKit = new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build();
-        Fabric.with(this, crashlyticsKit);
+        Fabric fabric = new Fabric.Builder(this).kits(new Crashlytics()).debuggable(BuildConfig.DEBUG).build();
+        if (!BuildConfig.DEBUG) Fabric.with(fabric);
         Log.i("Pebble Comm", "SYSTEM: Started Pebble Communications Service");
         Log.i("Pebble Comm", "UUID: " + StaticVariables.PEBBLE_APP_UUID.toString());
 

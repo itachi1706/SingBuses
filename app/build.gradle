@@ -1,19 +1,6 @@
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.24.4'
-    }
-}
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'io.fabric'
-
-repositories {
-    maven { url 'https://maven.fabric.io/public' }
-}
 
 def isTravis = System.getenv("TRAVIS")
 
@@ -46,8 +33,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            // Disable Fabric Stuff
-            ext.enableCrashlytics = false
+            // Disable Fabric Stuff (Deprecated, it is now disabled by default and enabled in runtime)
+            //ext.enableCrashlytics = false
         }
     }
     // This enables long timeouts required on slow environments, e.g. Travis
@@ -70,7 +57,7 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true
     }
     implementation project(':appupdater')
@@ -84,7 +71,6 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:$playServicesVersion"
     implementation "com.google.firebase:firebase-auth:$playServicesVersion"
     implementation "com.google.firebase:firebase-core:$playServicesVersion"
-    implementation "com.google.firebase:firebase-crash:$playServicesVersion"
     implementation "com.google.firebase:firebase-perf:$playServicesVersion"
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
     testImplementation 'junit:junit:4.12'
