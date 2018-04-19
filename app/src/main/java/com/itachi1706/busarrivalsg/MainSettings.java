@@ -4,12 +4,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.itachi1706.appupdater.EasterEggResMultiMusicPrefFragment;
 import com.itachi1706.appupdater.SettingsInitializer;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
@@ -45,7 +45,7 @@ public class MainSettings extends AppCompatActivity {
      * activity is showing a two-pane settings UI.
      */
     @SuppressWarnings("ConstantConditions")
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
+    public static class GeneralPreferenceFragment extends EasterEggResMultiMusicPrefFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -56,12 +56,12 @@ public class MainSettings extends AppCompatActivity {
 
             new SettingsInitializer(getActivity(), R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL,
                     getResources().getString(R.string.link_legacy), getResources().getString(R.string.link_updates), true)
-                    .setOpenSourceLicenseInfo(true, preference -> {
-                        new LicensesDialog.Builder(getActivity()).setNotices(R.raw.notices)
-                                .setIncludeOwnLicense(true).build().show();
-                        return false;
-                    })
-                    .explodeInfoSettings(this).explodeUpdaterSettings(this);
+                    .explodeUpdaterSettings(this);
+            super.addEggMethods(true, preference -> {
+                new LicensesDialog.Builder(getActivity()).setNotices(R.raw.notices)
+                        .setIncludeOwnLicense(true).build().show();
+                return false;
+            });
 
             Preference favJson = findPreference("fav_json");
             favJson.setOnPreferenceClickListener(preference -> {
@@ -101,6 +101,30 @@ public class MainSettings extends AppCompatActivity {
                 case "none":
                     default: sharedPreferences.edit().putBoolean("pebbleSvc", false).apply(); break;
             }
+        }
+
+        @Override
+        public int getMusicResource() {
+            if (randomNumberIsEven()) return R.raw.juss;
+            return R.raw.bfltw;
+        }
+
+        @Override
+        public String getStartEggMessage() {
+            if (randomNumberIsEven()) return "~It's time to jump up in the air!~";
+            return "~Just lead the way (and I'll follow you)~";
+        }
+
+        @Override
+        public String getEndEggMessage() {
+            if (randomNumberIsEven()) return "~I'll be your 1-UP girl~";
+            return "~And we'll grab the flag together the fireworks are gonna start~";
+        }
+
+        @Override
+        public String getStopEggButtonText() {
+            if (randomNumberIsEven()) return "1-UP";
+            return "Break Free";
         }
     }
 }
