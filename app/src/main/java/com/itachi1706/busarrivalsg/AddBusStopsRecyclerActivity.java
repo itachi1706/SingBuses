@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -70,6 +72,9 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
         ArrayList<BusStopJSON> results = db.getAllBusStops();
         adapter.updateAdapter(results);
         adapter.notifyDataSetChanged();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            getWindow().getDecorView().setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS);
 
         textLane = findViewById(R.id.inputData);
         TextWatcher inputWatcher = new TextWatcher() {
