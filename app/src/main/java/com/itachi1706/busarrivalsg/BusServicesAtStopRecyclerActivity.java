@@ -34,7 +34,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static com.itachi1706.busarrivalsg.Util.StaticVariables.USE_SERVER_TIME;
+import static com.itachi1706.busarrivalsg.Util.StaticVariables.useServerTime;
 
 public class BusServicesAtStopRecyclerActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, IHandleStuff {
 
@@ -62,7 +62,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         buses.setItemAnimator(new DefaultItemAnimator());
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        adapter = new BusServiceRecyclerAdapter(new ArrayList<>(), this, sp.getBoolean(USE_SERVER_TIME, false));
+        adapter = new BusServiceRecyclerAdapter(new ArrayList<>(), this, useServerTime(sp));
         buses.setAdapter(adapter);
 
         swipeToRefresh = findViewById(R.id.refresh_swipe);

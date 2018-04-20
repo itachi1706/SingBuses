@@ -45,11 +45,6 @@ public class StaticVariables {
         return sp.getBoolean(USE_SERVER_TIME, false);
     }
 
-    @Deprecated
-    public static long parseLTAEstimateArrival(String arrivalString){
-        return parseLTAEstimateArrival(arrivalString, false, null);
-    }
-
     public static long parseLTAEstimateArrival(String arrivalString, boolean useServerTime, @Nullable String serverTime) {
         if (arrivalString.equalsIgnoreCase("")) return -9999;
         return parseEstimateArrival(arrivalString, useServerTime, serverTime);
@@ -62,11 +57,6 @@ public class StaticVariables {
 
     public static boolean checkBusLocationValid(double lat, double lng) {
         return !(lng == -1000 || lat == -1000) && !(lng == -11 && lat == -11) && !(lat == 0 && lng == 0);
-    }
-
-    @Deprecated
-    public static long parseEstimateArrival(String arrivalString) {
-        return parseEstimateArrival(arrivalString, false, null);
     }
 
     public static long parseEstimateArrival(String arrivalString, boolean useServerTime, @Nullable String serverTime){

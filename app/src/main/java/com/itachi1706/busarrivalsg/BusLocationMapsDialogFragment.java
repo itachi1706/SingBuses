@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -33,6 +34,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.Objects.CommonEnums;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
+import static com.itachi1706.busarrivalsg.Util.StaticVariables.useServerTime;
+
 public class BusLocationMapsDialogFragment extends DialogFragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -42,7 +45,6 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
     private double lat1, lng1, lat2, lng2, lat3, lng3;
     private String arr1, arr2, arr3;
     private int type1, type2, type3;
-    private boolean sTime;
     private String curTime;
     private int state;
 
@@ -79,7 +81,6 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
         type2 = this.getArguments().getInt("type2", CommonEnums.UNKNOWN);
         type3 = this.getArguments().getInt("type3", CommonEnums.UNKNOWN);
         state = this.getArguments().getInt("state", StaticVariables.CUR);
-        sTime = this.getArguments().getBoolean("useSTime", false);
         curTime = this.getArguments().getString("sTime", null);
 
         // Obtain the FirebaseAnalytics instance.
@@ -159,7 +160,8 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
     }
 
     private String processArrival(String estString) {
-        long est = StaticVariables.parseLTAEstimateArrival(estString, sTime, curTime);
+        long est = StaticVariables.parseLTAEstimateArrival(estString,
+                useServerTime(PreferenceManager.getDefaultSharedPreferences(getContext())), curTime);
         if (est == -9999) return "=";
         else if (est <= 0) return "Arriving";
         else if (est == 1) return est + " mins";

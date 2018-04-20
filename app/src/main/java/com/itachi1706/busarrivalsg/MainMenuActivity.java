@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
 
-import static com.itachi1706.busarrivalsg.Util.StaticVariables.USE_SERVER_TIME;
+import static com.itachi1706.busarrivalsg.Util.StaticVariables.useServerTime;
 
 public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -104,7 +104,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         }
 
         sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        adapter = new FavouritesRecyclerAdapter(new ArrayList<>(), this, sp.getBoolean(USE_SERVER_TIME, false));
+        adapter = new FavouritesRecyclerAdapter(new ArrayList<>(), this, useServerTime(sp));
         favouritesList.setAdapter(adapter);
 
         ItemTouchHelper moveAdapter = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,

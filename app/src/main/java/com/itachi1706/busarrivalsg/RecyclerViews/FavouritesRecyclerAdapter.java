@@ -54,11 +54,6 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     private boolean serverTime;
     private String currentTime;
 
-    @Deprecated
-    public FavouritesRecyclerAdapter(List<BusServices> objectList, AppCompatActivity activity){
-        this(objectList, activity, false);
-    }
-
     public FavouritesRecyclerAdapter(List<BusServices> objectList, AppCompatActivity activity, boolean useServerTime){
         this.items = objectList;
         this.activity = activity;
@@ -402,7 +397,6 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             mapsIntent.putExtra("type1", busObj.getCurrentBus().getBusType());
             mapsIntent.putExtra("type2", busObj.getNextBus().getBusType());
             mapsIntent.putExtra("type3", busObj.getSubsequentBus().getBusType());
-            mapsIntent.putExtra("useSTime", serverTime);
             mapsIntent.putExtra("sTime", currentTime);
             mapsIntent.putExtra("state", state);
 
