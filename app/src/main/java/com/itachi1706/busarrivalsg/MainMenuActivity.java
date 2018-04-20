@@ -36,6 +36,8 @@ import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.appupdater.AppUpdateInitializer;
+import com.itachi1706.appupdater.Objects.CAAnalytics;
+import com.itachi1706.appupdater.Util.AnalyticsHelper;
 import com.itachi1706.appupdater.Util.ConnectivityHelper;
 import com.itachi1706.busarrivalsg.AsyncTasks.DlAndInstallCompanionApp;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
@@ -85,6 +87,10 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
         // Obtain the FirebaseAnalytics instance.
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        AnalyticsHelper helper = new AnalyticsHelper(this, true);
+        CAAnalytics analytics = helper.getData();
+        if (analytics != null) setAnalyticsData(true, mFirebaseAnalytics, analytics); // Update Firebase User Properties
+        else setAnalyticsData(false, mFirebaseAnalytics, analytics);
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null);
 
         if (favouritesList != null) favouritesList.setHasFixedSize(true);
@@ -169,6 +175,18 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
         // Pebble related code
         deinitPebble();
+    }
+
+    private void setAnalyticsData(boolean enabled, FirebaseAnalytics firebaseAnalytics, CAAnalytics analytics) {
+        firebaseAnalytics.setUserProperty("debug_mode", (enabled) ? analytics.isDebug() + "" : null);
+        firebaseAnalytics.setUserProperty("device_manufacturer", (enabled) ? analytics.getdManufacturer() : null);
+        firebaseAnalytics.setUserProperty("device_codename", (enabled) ? analytics.getdCodename() : null);
+        firebaseAnalytics.setUserProperty("device_fingerprint", (enabled) ? analytics.getdFingerprint() : null);
+        firebaseAnalytics.setUserProperty("device_cpu_abi", (enabled) ? analytics.getdCPU() : null);
+        firebaseAnalytics.setUserProperty("device_tags", (enabled) ? analytics.getdTags() : null);
+        firebaseAnalytics.setUserProperty("app_version_code", (enabled) ? Integer.toString(analytics.getAppVerCode()) : null);
+        firebaseAnalytics.setUserProperty("android_sec_patch", (enabled) ? analytics.getSdkPatch() : null);
+        firebaseAnalytics.setUserProperty("AndroidOS", (enabled) ? Integer.toString(analytics.getSdkver()) : null);
     }
 
     @Override
