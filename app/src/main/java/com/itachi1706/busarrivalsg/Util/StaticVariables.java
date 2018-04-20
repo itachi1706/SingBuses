@@ -1,5 +1,6 @@
 package com.itachi1706.busarrivalsg.Util;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.getpebble.android.kit.util.PebbleDictionary;
@@ -10,6 +11,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -24,6 +27,8 @@ public class StaticVariables {
 
     public static final int CUR = 0, NEXT = 1, SUB = 2;
 
+    public static final String USE_SERVER_TIME = "useServerTime";
+
     //For Pebble Comm
     public static PebbleDictionary dict1 = null;
     public static PebbleDictionary dict2 = null;
@@ -36,9 +41,13 @@ public class StaticVariables {
         return !jsonString.startsWith("<!DOCTYPE html>");
     }
 
-    public static long parseLTAEstimateArrival(String arrivalString){
+    public static boolean useServerTime(SharedPreferences sp) {
+        return sp.getBoolean(USE_SERVER_TIME, false);
+    }
+
+    public static long parseLTAEstimateArrival(String arrivalString, boolean useServerTime, @Nullable String serverTime) {
         if (arrivalString.equalsIgnoreCase("")) return -9999;
-        return parseEstimateArrival(arrivalString);
+        return parseEstimateArrival(arrivalString, useServerTime, serverTime);
     }
 
     public static byte parseWABStatusToPebble(boolean status){
@@ -50,10 +59,16 @@ public class StaticVariables {
         return !(lng == -1000 || lat == -1000) && !(lng == -11 && lat == -11) && !(lat == 0 && lng == 0);
     }
 
-    public static long parseEstimateArrival(String arrivalString){
-        Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());
-        Calendar currentDate = Calendar.getInstance();
-        currentDate.add(Calendar.MONTH, 1);
+    public static long parseEstimateArrival(String arrivalString, boolean useServerTime, @Nullable String serverTime){
+        Calendar currentDate;
+        if (!useServerTime || serverTime == null) {
+            Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis());
+            currentDate = Calendar.getInstance();
+            currentDate.add(Calendar.MONTH, 1);
+        } else {
+            currentDate = parseDate(serverTime);
+        }
+
 
         Calendar arrivalDate = parseDate(arrivalString);
 

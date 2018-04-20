@@ -34,6 +34,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static com.itachi1706.busarrivalsg.Util.StaticVariables.useServerTime;
+
 public class BusServicesAtStopRecyclerActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, IHandleStuff {
 
     RecyclerView buses;
@@ -59,7 +61,8 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         buses.setLayoutManager(linearLayoutManager);
         buses.setItemAnimator(new DefaultItemAnimator());
 
-        adapter = new BusServiceRecyclerAdapter(new ArrayList<>(), this);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        adapter = new BusServiceRecyclerAdapter(new ArrayList<>(), this, useServerTime(sp));
         buses.setAdapter(adapter);
 
         swipeToRefresh = findViewById(R.id.refresh_swipe);
@@ -72,7 +75,6 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
                     R.color.refresh_progress_4);
         }
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         if (sp.getBoolean("showHint", true))
             Toast.makeText(this, R.string.hint_add_bus_to_fav, Toast.LENGTH_SHORT).show();
     }
@@ -292,7 +294,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
             items.add(obj);
         }
 
-        adapter.updateAdapter(items);
+        adapter.updateAdapter(items, mainArr.getCurrentTime());
         adapter.notifyDataSetChanged();
     }
 }

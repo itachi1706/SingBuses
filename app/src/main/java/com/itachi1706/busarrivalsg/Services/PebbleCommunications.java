@@ -220,6 +220,9 @@ public class PebbleCommunications extends Service {
             super(looper);
         }
 
+        // Note: Paring of time is supposed to have an option to use server time, due to this being on a deprecated platform
+        // (Pebble), there is no point in investing in effort to use server time here so I'm just not gonna bother :P
+
         @Override
         public void handleMessage(Message msg) {
             //Do stuff here
@@ -255,7 +258,7 @@ public class PebbleCommunications extends Service {
                 if (obj.getNextBus().getEstimatedArrival() == null) {
                     nextEst = "-";
                 } else {
-                    long estNxt = parseEstimateArrival(obj.getNextBus().getEstimatedArrival());
+                    long estNxt = parseEstimateArrival(obj.getNextBus().getEstimatedArrival(), false, null);
                     if (estNxt <= 0)
                         nextEst = "Arr";
                     else if (estNxt == 1)
@@ -266,7 +269,7 @@ public class PebbleCommunications extends Service {
                 if (obj.getCurrentBus().getEstimatedArrival() == null) {
                     currentEst = "-";
                 } else {
-                    long estCur = parseEstimateArrival(obj.getCurrentBus().getEstimatedArrival());
+                    long estCur = parseEstimateArrival(obj.getCurrentBus().getEstimatedArrival(), false, null);
                     if (estCur <= 0)
                         currentEst = "Arr";
                     else if (estCur == 1)
@@ -317,7 +320,7 @@ public class PebbleCommunications extends Service {
                 if (obj.getNextBus().getEstimatedArrival() == null) {
                     nextEst = "-";
                 } else {
-                    long estNxt = parseEstimateArrival(obj.getNextBus().getEstimatedArrival());
+                    long estNxt = parseEstimateArrival(obj.getNextBus().getEstimatedArrival(), false, null);
                     if (estNxt <= 0)
                         nextEst = "Arr";
                     else if (estNxt == 1)
@@ -328,7 +331,7 @@ public class PebbleCommunications extends Service {
                 if (obj.getCurrentBus().getEstimatedArrival() == null) {
                     currentEst = "-";
                 } else {
-                    long estCur = parseEstimateArrival(obj.getCurrentBus().getEstimatedArrival());
+                    long estCur = parseEstimateArrival(obj.getCurrentBus().getEstimatedArrival(), false, null);
                     if (estCur <= 0)
                         currentEst = "Arr";
                     else if (estCur == 1)

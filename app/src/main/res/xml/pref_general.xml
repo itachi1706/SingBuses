@@ -19,6 +19,11 @@
             android:entries="@array/companion_device"
             android:entryValues="@array/companion_device_entry" />
         <SwitchPreference
+            android:title="Use Server Time"
+            android:defaultValue="false"
+            android:key="useServerTime"
+            android:summary="Enable to use server time instead of device time" />
+        <SwitchPreference
             android:title="Use Map Popup"
             android:defaultValue="true"
             android:key="mapPopup"
