@@ -12,8 +12,8 @@ android {
         applicationId "com.itachi1706.busarrivalsg"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 318
-        versionName "3.1.0"
+        versionCode 320
+        versionName "3.1.1"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resConfigs "en"
