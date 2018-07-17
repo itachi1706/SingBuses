@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
+import com.itachi1706.appupdater.Util.ValidationHelper;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsAPIArray;
 import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsJsonObject;
@@ -51,9 +52,12 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
     @Override
     protected String doInBackground(Location... locate) {
         location = locate[0];
-        String url = "http://api.itachi1706.com/api/nearbyPlaces.php?location=" + location.getLatitude() + "," + location.getLongitude();
+        // Get validation stuff
+        String signature = ValidationHelper.getSignatureForValidation(activity.getApplicationContext());
+        String url = "http://api.itachi1706.com/api/mobile/nearbyPlaces.php?location=" + location.getLatitude() + "," + location.getLongitude();
+        Log.d("CURRENT-LOCATION", url); // Don't print the signature out
+        url += "&sig=" + signature + "&package=" + activity.getApplication().getPackageName();
         String tmp = "";
-        Log.d("CURRENT-LOCATION", url);
         try {
             URL urlConn = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
@@ -93,7 +97,7 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
                 return;
             }
             OnlineGMapsAPIArray array = gson.fromJson(json, OnlineGMapsAPIArray.class);
-            if (!array.getStatus().equalsIgnoreCase("OK")) {
+            if (array.getStatus() == null || !array.getStatus().equalsIgnoreCase("OK")) {
                 Toast.makeText(activity, R.string.toast_message_invalid_request, Toast.LENGTH_SHORT).show();
                 return;
             }
