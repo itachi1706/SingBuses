@@ -68,11 +68,11 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
     implementation 'com.getpebble:pebblekit:3.0.0'
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
-    implementation "com.google.android.gms:play-services-auth:$playServicesVersion"
-    implementation "com.google.firebase:firebase-auth:$playServicesVersion"
-    implementation "com.google.firebase:firebase-core:$playServicesVersion"
-    implementation "com.google.firebase:firebase-perf:$playServicesVersion"
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'com.google.android.gms:play-services-auth:15.0.1'
+    implementation 'com.google.firebase:firebase-auth:16.0.2'
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-perf:16.0.0'
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
     testImplementation 'junit:junit:4.12'
 }
