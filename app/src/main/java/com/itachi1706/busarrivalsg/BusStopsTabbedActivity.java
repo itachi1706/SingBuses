@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.itachi1706.busarrivalsg.Fragments.BusStopNearbyFragment;
 import com.itachi1706.busarrivalsg.Fragments.BusStopSearchFragment;
 import com.itachi1706.busarrivalsg.Services.GPSManager;
 
@@ -68,7 +69,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFrag(new BusStopSearchFragment(), "Search");
-        adapter.addFrag(new BusStopSearchFragment(), "Nearby");
+        adapter.addFrag(new BusStopNearbyFragment(), "Nearby");
 
         viewPager.setAdapter(adapter);
     }
@@ -197,7 +198,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
         location.setLatitude(latitude);
         location.setLongitude(longitude);
 
-        Intent lIntent = new Intent("ReceiveLocationEvent");
+        Intent lIntent = new Intent(BusStopNearbyFragment.RECEIVE_LOCATION_EVENT);
         lIntent.putExtra("lat", latitude);
         lIntent.putExtra("lng", longitude);
         LocalBroadcastManager.getInstance(this).sendBroadcast(lIntent);
