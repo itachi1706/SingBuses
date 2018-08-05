@@ -28,6 +28,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.Fragments.BusStopSearchFragment;
 import com.itachi1706.busarrivalsg.Services.GPSManager;
 
+import java.util.Objects;
+
 public class BusStopsTabbedActivity extends AppCompatActivity {
 
     Toolbar toolbar;
@@ -190,6 +192,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
 
     private void updateList(){
         // TODO: Get location and send location to nearby fragment
+        Objects.requireNonNull(tabLayout.getTabAt(1)).select();
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
