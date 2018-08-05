@@ -4,104 +4,72 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.itachi1706.busarrivalsg.AsyncTasks.PopulateListWithCurrentLocationRecycler;
-import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
-import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
+import com.itachi1706.busarrivalsg.Fragments.BusStopSearchFragment;
 import com.itachi1706.busarrivalsg.Services.GPSManager;
 
-import java.util.ArrayList;
+public class BusStopsTabbedActivity extends AppCompatActivity {
 
-@Deprecated
-public class AddBusStopsRecyclerActivity extends AppCompatActivity {
+    Toolbar toolbar;
+    ViewPager pager;
+    TabLayout tabLayout;
+    SharedPreferences sp;
 
     FloatingActionButton currentLocationGet;
-    RecyclerView result;
-    EditText textLane;
-
+    double longitude, latitude;
     GPSManager gps;
     FirebaseAnalytics mAnalytics;
-
-    double longitude, latitude;
-
-    BusStopRecyclerAdapter adapter;
-
-    private BusStopsDB db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_bus_stops_recycler);
+
+        setContentView(R.layout.activity_add_bus_stop_tabbed);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        pager = findViewById(R.id.main_viewpager);
+        tabLayout = findViewById(R.id.main_tablayout);
+
+        setupViewPager(pager);
+        tabLayout.setupWithViewPager(pager);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
         currentLocationGet = findViewById(R.id.current_location_fab);
-        result = findViewById(R.id.rvNearestBusStops);
-        if (result != null) result.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        result.setLayoutManager(linearLayoutManager);
-        result.setItemAnimator(new DefaultItemAnimator());
         mAnalytics = FirebaseAnalytics.getInstance(this);
-
-        adapter = new BusStopRecyclerAdapter(new ArrayList<>());
-        result.setAdapter(adapter);
-
-        // Populate with blank
-        db = new BusStopsDB(this);
-        ArrayList<BusStopJSON> results = db.getAllBusStops();
-        adapter.updateAdapter(results);
-        adapter.notifyDataSetChanged();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            getWindow().getDecorView().setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS);
-
-        textLane = findViewById(R.id.inputData);
-        TextWatcher inputWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String query = s.toString();
-                Log.d("TextWatcher", "Query searched: " + query);
-                ArrayList<BusStopJSON> results = db.getBusStopsByQuery(query);
-                if (results != null) {
-                    Log.d("TextWatcher", "Finished Search. Size: " + results.size());
-                    adapter.updateAdapter(results);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        };
-        textLane.addTextChangedListener(inputWatcher);
     }
 
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        adapter.addFrag(new BusStopSearchFragment(), "Search");
+        adapter.addFrag(new BusStopSearchFragment(), "Nearby");
+
+        viewPager.setAdapter(adapter);
+    }
 
     private static final int RC_HANDLE_ACCESS_FINE_LOCATION = 2;
     private static final int RC_HANDLE_ACCESS_FINE_LOCATION_INIT = 4;
@@ -110,7 +78,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int rc = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             //Go ahead and init
             gps = new GPSManager(this);
@@ -125,7 +93,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
     }
 
     private void checkIfYouHaveGpsPermissionForThis() {
-        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int rc = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             getLocationButtonClicked();
         } else {
@@ -135,9 +103,9 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
 
     private void requestGpsPermission(final int code) {
         Log.w("GPSManager", "GPS permission is not granted. Requesting permission");
-        final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+        final String[] permissions = new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION};
 
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
             ActivityCompat.requestPermissions(this, permissions, code);
             return;
         }
@@ -180,9 +148,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
      * @see #requestPermissions(String[], int)
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != RC_HANDLE_ACCESS_FINE_LOCATION && requestCode != RC_HANDLE_ACCESS_FINE_LOCATION_INIT) {
             Log.d("GPSManager", "Got unexpected permission result: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -223,11 +189,15 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
     }
 
     private void updateList(){
-        BusStopsDB db = new BusStopsDB(this);
+        // TODO: Get location and send location to nearby fragment
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
-        new PopulateListWithCurrentLocationRecycler(this, db, adapter).execute(location);
+
+        Intent lIntent = new Intent("ReceiveLocationEvent");
+        lIntent.putExtra("lat", latitude);
+        lIntent.putExtra("lng", longitude);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(lIntent);
     }
 
     @Override

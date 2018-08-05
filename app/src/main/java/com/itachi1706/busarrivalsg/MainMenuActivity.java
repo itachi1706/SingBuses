@@ -143,7 +143,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     public void onResume(){
         super.onResume();
 
-        fab.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, AddBusStopsRecyclerActivity.class)));
+        fab.setOnClickListener(v -> startActivity(new Intent(MainMenuActivity.this, BusStopsTabbedActivity.class)));
         fab.setOnLongClickListener(v -> {
             Toast.makeText(MainMenuActivity.this, R.string.fab_hint_main_menu, Toast.LENGTH_SHORT).show();
             return true;
