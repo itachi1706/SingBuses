@@ -29,20 +29,28 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.itachi1706.busarrivalsg.AsyncTasks.PopulateListWithCurrentLocationRecycler;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Kenneth on 5/8/2018.
  * for com.itachi1706.busarrivalsg.Fragments in SingBuses
  */
-public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallback {
+public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     RecyclerView result;
 
@@ -53,6 +61,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
     private BusStopsDB db;
 
     public static final String RECEIVE_LOCATION_EVENT = "ReceiveLocationEvent";
+    public static final String RECEIVE_NEARBY_STOPS_EVENT = "ReceiveNearbyEvent";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -96,16 +105,20 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        if (getContext() != null)
+        if (getContext() != null) {
             LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver, new IntentFilter(RECEIVE_LOCATION_EVENT));
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(nearbyReceiver, new IntentFilter(RECEIVE_NEARBY_STOPS_EVENT));
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mapView.onPause();
-        if (getContext() != null)
+        if (getContext() != null) {
             LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(receiver);
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(nearbyReceiver);
+        }
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -119,6 +132,41 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
         }
     };
 
+    private HashMap<Marker, BusStopJSON> markerMap;
+
+    private BroadcastReceiver nearbyReceiver = new BroadcastReceiver() {
+        @SuppressLint("MissingPermission")
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mMap == null) return; // Don't do anything as no map is initialized
+            // If this is invoked it means that GPS permission is granted so ignore GPS permission
+            if (locationManager == null) checkGpsForCurrentLocation();
+
+            mMap.clear();
+            if (markerMap == null) markerMap = new HashMap<>();
+            markerMap.clear();
+
+            String data = intent.getStringExtra("data");
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<BusStopJSON>>() {}.getType();
+            ArrayList<BusStopJSON> stops = gson.fromJson(data, listType);
+
+            for (BusStopJSON stop : stops) {
+                String[] svcsRaw = stop.getServices().split(",");
+                StringBuilder services = new StringBuilder();
+                for (String svc : svcsRaw) {
+                    services.append(svc.split(":")[0]).append(", ");
+                }
+                markerMap.put(mMap.addMarker(new MarkerOptions().position(new LatLng(stop.getLatitude(), stop.getLongitude()))
+                        .title(stop.getBusStopName() + " (" + stop.getRoad() + ")")
+                        .snippet("Bus Svcs: " + services.toString().replaceAll(", $", ""))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop))), stop);
+            }
+
+            zoomToLocation();
+        }
+    };
+
     private void checkGpsForCurrentLocation() {
         if (getContext() == null) return;
         int rc = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
@@ -128,20 +176,35 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
         }
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d("NearbyFrag", "Google Map Ready");
         mMap = googleMap;
         mMap.setTrafficEnabled(true);
         checkGpsForCurrentLocation();
+        mMap.setOnInfoWindowClickListener(this);
+        UiSettings settings = mMap.getUiSettings();
+        settings.setZoomControlsEnabled(true);
+        settings.setMapToolbarEnabled(false);
 
+        zoomToLocation();
+    }
+
+    private void zoomToLocation() {
         if (locationManager != null) {
             // Assume that location permissions are granted as only then would it be initialized
             // Zoom to current location
-            Location myLoc = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+            @SuppressLint("MissingPermission") Location myLoc = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+            if (myLoc == null) return;
             LatLng myLatLng = new LatLng(myLoc.getLatitude(), myLoc.getLongitude());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 17));
         }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Log.d("NearbyFrag", "Marker Info Clicked (" + marker.getTitle() + ")");
+        BusStopJSON stop = markerMap.get(marker);
+        adapter.handleClick(getContext(), stop);
     }
 }

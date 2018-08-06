@@ -1,5 +1,6 @@
 package com.itachi1706.busarrivalsg.RecyclerViews;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
@@ -64,6 +65,43 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
         return items.size();
     }
 
+    public void handleClick(Context context, BusStopJSON stop) {
+        Log.d("Size", "" + items.size());
+        Intent serviceIntent = new Intent(context, BusServicesAtStopRecyclerActivity.class);
+        serviceIntent.putExtra("stopCode", stop.getCode());
+        serviceIntent.putExtra("stopName", stop.getBusStopName());
+        serviceIntent.putExtra("busServices", stop.getServices());
+        context.startActivity(serviceIntent);
+
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Code: " + stop.getCode());
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "openBusStopDetail");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+        // Add dynamic shortcuts
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
+            LinkedList<ShortcutInfo> infos = new LinkedList<>(shortcutManager.getDynamicShortcuts());
+            final int shortcutCount = shortcutManager.getMaxShortcutCountPerActivity() - 2;
+            if (infos.size() >= shortcutCount) {
+                Log.i("ShortcutManager", "Dynamic Shortcuts more than " + shortcutCount
+                        + ". Removing extras");
+                do {
+                    infos.removeLast();
+                } while (infos.size() > shortcutCount);
+            }
+            serviceIntent.setAction(Intent.ACTION_VIEW);
+            ShortcutInfo newShortcut = new ShortcutInfo.Builder(context, "bus-" + stop.getCode())
+                    .setShortLabel(stop.getBusStopName()).setLongLabel("Launch this bus stop directly")
+                    .setIcon(Icon.createWithResource(context, R.mipmap.ic_launcher_round))
+                    .setIntent(serviceIntent).build();
+
+            infos.add(newShortcut);
+            shortcutManager.setDynamicShortcuts(infos);
+        }
+    }
+
 
     class BusStopViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
@@ -80,41 +118,7 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
         public void onClick(View v) {
             int position = this.getLayoutPosition();
             final BusStopJSON item = items.get(position);
-
-            Log.d("Size", "" + items.size());
-            Intent serviceIntent = new Intent(v.getContext(), BusServicesAtStopRecyclerActivity.class);
-            serviceIntent.putExtra("stopCode", item.getCode());
-            serviceIntent.putExtra("stopName", item.getBusStopName());
-            serviceIntent.putExtra("busServices", item.getServices());
-            v.getContext().startActivity(serviceIntent);
-
-            FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(v.getContext());
-            Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Code: " + item.getCode());
-            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "openBusStopDetail");
-            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
-            // Add dynamic shortcuts
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                ShortcutManager shortcutManager = v.getContext().getSystemService(ShortcutManager.class);
-                LinkedList<ShortcutInfo> infos = new LinkedList<>(shortcutManager.getDynamicShortcuts());
-                final int shortcutCount = shortcutManager.getMaxShortcutCountPerActivity() - 2;
-                if (infos.size() >= shortcutCount) {
-                    Log.i("ShortcutManager", "Dynamic Shortcuts more than " + shortcutCount
-                            + ". Removing extras");
-                    do {
-                        infos.removeLast();
-                    } while (infos.size() > shortcutCount);
-                }
-                serviceIntent.setAction(Intent.ACTION_VIEW);
-                ShortcutInfo newShortcut = new ShortcutInfo.Builder(v.getContext(), "bus-" + item.getCode())
-                        .setShortLabel(item.getBusStopName()).setLongLabel("Launch this bus stop directly")
-                        .setIcon(Icon.createWithResource(v.getContext(), R.mipmap.ic_launcher_round))
-                        .setIntent(serviceIntent).build();
-
-                infos.add(newShortcut);
-                shortcutManager.setDynamicShortcuts(infos);
-            }
+            handleClick(v.getContext(), item);
         }
     }
 }

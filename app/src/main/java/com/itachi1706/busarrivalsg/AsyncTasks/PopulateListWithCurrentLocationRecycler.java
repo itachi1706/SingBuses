@@ -1,17 +1,21 @@
 package com.itachi1706.busarrivalsg.AsyncTasks;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.itachi1706.appupdater.Util.ValidationHelper;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
+import com.itachi1706.busarrivalsg.Fragments.BusStopNearbyFragment;
 import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsAPIArray;
 import com.itachi1706.busarrivalsg.GsonObjects.GooglePlaces.OnlineGMapsJsonObject;
 import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
@@ -23,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -165,6 +170,10 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
                 stop.setHasDistance(true);
 
                 stops.add(stop);
+                Intent sendForMapParsingIntent = new Intent(BusStopNearbyFragment.RECEIVE_NEARBY_STOPS_EVENT);
+                Type listType = new TypeToken<ArrayList<BusStopJSON>>() {}.getType();
+                sendForMapParsingIntent.putExtra("data", gson.toJson(stops, listType));
+                LocalBroadcastManager.getInstance(activity).sendBroadcast(sendForMapParsingIntent);
                 adapter.updateAdapter(stops);
                 adapter.notifyDataSetChanged();
             }
