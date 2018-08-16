@@ -74,7 +74,8 @@ public class GetBusServicesHandler extends AsyncTask<String, Void, String> {
             } else {
                 Toast.makeText(activity, exception.getMessage(), Toast.LENGTH_SHORT).show();
             }
-            dialog.dismiss();
+            if (activity != null && !(activity.isFinishing() || activity.isChangingConfigurations()))
+                dialog.dismiss();
         } else {
             //Go parse it
             Message msg = Message.obtain();
