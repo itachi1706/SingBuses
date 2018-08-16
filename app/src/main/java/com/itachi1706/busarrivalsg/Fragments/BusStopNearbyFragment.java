@@ -206,11 +206,12 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
         zoomToLocation();
     }
 
+    @SuppressLint("MissingPermission")
     private void zoomToLocation() {
         if (locationManager != null) {
             // Assume that location permissions are granted as only then would it be initialized
             // Zoom to current location
-            @SuppressLint("MissingPermission") Location myLoc = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+            Location myLoc = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
             if (myLoc == null) return;
             LatLng myLatLng = new LatLng(myLoc.getLatitude(), myLoc.getLongitude());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 17));

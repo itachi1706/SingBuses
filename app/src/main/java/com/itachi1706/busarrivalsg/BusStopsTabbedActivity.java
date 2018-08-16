@@ -81,19 +81,18 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-
-        int rc = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
-        if (rc == PackageManager.PERMISSION_GRANTED) {
-            //Go ahead and init
-            gps = new GPSManager(this);
-            if (!gps.canGetLocation()) {
-                gps.showSettingsAlert();
-            }
-        } else {
-            requestGpsPermission(RC_HANDLE_ACCESS_FINE_LOCATION_INIT);
-        }
-
+        initLocationManager();
         currentLocationGet.setOnClickListener(v -> checkIfYouHaveGpsPermissionForThis());
+    }
+
+    private void initLocationManager() {
+        if (gps == null) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return; // Should never happen as it should have been granted
+            gps = new GPSManager(this);
+        }
+        if (!gps.canGetLocation()){
+            gps.showSettingsAlert();
+        }
     }
 
     private void checkIfYouHaveGpsPermissionForThis() {
@@ -126,6 +125,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
 
     private void getLocationButtonClicked() {
         Toast.makeText(getApplicationContext(), R.string.toast_message_retrieving_location, Toast.LENGTH_SHORT).show();
+
         latitude = gps.getLatitude();
         longitude = gps.getLongitude();
         Bundle bundle = new Bundle();
@@ -162,13 +162,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d("GPSManager", "Location permission granted - initialize the gps source");
             // we have permission
-            if (gps == null) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return; // Should never happen as it should have been granted
-                gps = new GPSManager(this);
-            }
-            if (!gps.canGetLocation()){
-                gps.showSettingsAlert();
-            }
+            initLocationManager();
 
             if (requestCode == RC_HANDLE_ACCESS_FINE_LOCATION){
                 getLocationButtonClicked();
@@ -193,7 +187,6 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
     }
 
     private void updateList(){
-        // TODO: Get location and send location to nearby fragment
         Objects.requireNonNull(tabLayout.getTabAt(1)).select();
         Location location = new Location("");
         location.setLatitude(latitude);
@@ -211,7 +204,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         Log.i("IMM", "Attempting to hide keyboard");
 
-        if(imm.isActive() || imm.isAcceptingText()) { // verify if the soft keyboard is open
+        if(imm != null && getCurrentFocus() != null && (imm.isActive() || imm.isAcceptingText())) { // verify if the soft keyboard is open
             Log.i("IMM", "Hiding Keyboard");
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
