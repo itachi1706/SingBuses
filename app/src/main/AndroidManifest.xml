@@ -23,8 +23,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="UnusedAttribute">
         <activity
             android:name=".MainMenuActivity"
             android:label="@string/app_name">
@@ -100,6 +102,9 @@
         <activity android:name=".BusStopsTabbedActivity"
             android:label="@string/title_activity_add_bus_stops"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <!-- Required because FOR SOME REASON Google Maps is using the deprecated Apache HTTP? WTF Google? -->
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
     </application>
 
 </manifest>
