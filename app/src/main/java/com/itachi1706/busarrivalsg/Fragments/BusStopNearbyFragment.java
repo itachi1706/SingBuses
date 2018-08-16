@@ -65,6 +65,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
     private GoogleMap mMap;
     private LocationManager locationManager;
     private BusStopsDB db;
+    private static final String TAG = "NearbyFrag";
 
     public static final String RECEIVE_LOCATION_EVENT = "ReceiveLocationEvent";
     public static final String RECEIVE_NEARBY_STOPS_EVENT = "ReceiveNearbyEvent";
@@ -74,7 +75,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
         View v  = inflater.inflate(R.layout.fragment_bus_stops_nearby, container, false);
 
         if (getActivity() == null) {
-            Log.e("NearbyFrag", "No activity found");
+            Log.e(TAG, "No activity found");
             return v;
         }
 
@@ -133,7 +134,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
             Location location = new Location("");
             location.setLatitude(intent.getDoubleExtra("lat", 0));
             location.setLongitude(intent.getDoubleExtra("lng", 0));
-            BusStopsDB db = new BusStopsDB(getContext());
+            if (db == null) db = new BusStopsDB(getContext());
             new PopulateListWithCurrentLocationRecycler(getActivity(), db, adapter).execute(location);
         }
     };
@@ -194,7 +195,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d("NearbyFrag", "Google Map Ready");
+        Log.d(TAG, "Google Map Ready");
         mMap = googleMap;
         mMap.setTrafficEnabled(true);
         checkGpsForCurrentLocation();
@@ -220,7 +221,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Log.d("NearbyFrag", "Marker Info Clicked (" + marker.getTitle() + ")");
+        Log.d(TAG, "Marker Info Clicked (" + marker.getTitle() + ")");
         BusStopJSON stop = markerMap.get(marker);
         adapter.handleClick(getContext(), stop);
     }
