@@ -4,103 +4,76 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.itachi1706.busarrivalsg.AsyncTasks.PopulateListWithCurrentLocationRecycler;
-import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
-import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
+import com.itachi1706.busarrivalsg.Fragments.BusStopNearbyFragment;
+import com.itachi1706.busarrivalsg.Fragments.BusStopSearchFragment;
 import com.itachi1706.busarrivalsg.Services.GPSManager;
 
-import java.util.ArrayList;
+import java.util.Objects;
 
-public class AddBusStopsRecyclerActivity extends AppCompatActivity {
+public class BusStopsTabbedActivity extends AppCompatActivity {
+
+    Toolbar toolbar;
+    ViewPager pager;
+    TabLayout tabLayout;
+    SharedPreferences sp;
 
     FloatingActionButton currentLocationGet;
-    RecyclerView result;
-    EditText textLane;
-
+    double longitude, latitude;
     GPSManager gps;
     FirebaseAnalytics mAnalytics;
-
-    double longitude, latitude;
-
-    BusStopRecyclerAdapter adapter;
-
-    private BusStopsDB db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_bus_stops_recycler);
+
+        setContentView(R.layout.activity_add_bus_stop_tabbed);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        pager = findViewById(R.id.main_viewpager);
+        tabLayout = findViewById(R.id.main_tablayout);
+
+        setupViewPager(pager);
+        tabLayout.setupWithViewPager(pager);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
         currentLocationGet = findViewById(R.id.current_location_fab);
-        result = findViewById(R.id.rvNearestBusStops);
-        if (result != null) result.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        result.setLayoutManager(linearLayoutManager);
-        result.setItemAnimator(new DefaultItemAnimator());
         mAnalytics = FirebaseAnalytics.getInstance(this);
-
-        adapter = new BusStopRecyclerAdapter(new ArrayList<>());
-        result.setAdapter(adapter);
-
-        // Populate with blank
-        db = new BusStopsDB(this);
-        ArrayList<BusStopJSON> results = db.getAllBusStops();
-        adapter.updateAdapter(results);
-        adapter.notifyDataSetChanged();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            getWindow().getDecorView().setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS);
-
-        textLane = findViewById(R.id.inputData);
-        TextWatcher inputWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String query = s.toString();
-                Log.d("TextWatcher", "Query searched: " + query);
-                ArrayList<BusStopJSON> results = db.getBusStopsByQuery(query);
-                if (results != null) {
-                    Log.d("TextWatcher", "Finished Search. Size: " + results.size());
-                    adapter.updateAdapter(results);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        };
-        textLane.addTextChangedListener(inputWatcher);
     }
 
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        adapter.addFrag(new BusStopSearchFragment(), "Search");
+        adapter.addFrag(new BusStopNearbyFragment(), "Nearby");
+
+        viewPager.setAdapter(adapter);
+    }
 
     private static final int RC_HANDLE_ACCESS_FINE_LOCATION = 2;
     private static final int RC_HANDLE_ACCESS_FINE_LOCATION_INIT = 4;
@@ -108,23 +81,22 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-
-        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        if (rc == PackageManager.PERMISSION_GRANTED) {
-            //Go ahead and init
-            gps = new GPSManager(this);
-            if (!gps.canGetLocation()) {
-                gps.showSettingsAlert();
-            }
-        } else {
-            requestGpsPermission(RC_HANDLE_ACCESS_FINE_LOCATION_INIT);
-        }
-
+        initLocationManager();
         currentLocationGet.setOnClickListener(v -> checkIfYouHaveGpsPermissionForThis());
     }
 
+    private void initLocationManager() {
+        if (gps == null) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return; // Should never happen as it should have been granted
+            gps = new GPSManager(this);
+        }
+        if (!gps.canGetLocation()){
+            gps.showSettingsAlert();
+        }
+    }
+
     private void checkIfYouHaveGpsPermissionForThis() {
-        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int rc = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             getLocationButtonClicked();
         } else {
@@ -133,10 +105,10 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
     }
 
     private void requestGpsPermission(final int code) {
-        Log.w("GPSManager", "GPS permission is not granted. Requesting permission");
-        final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+        Log.w(GPSManager.TAG, "GPS permission is not granted. Requesting permission");
+        final String[] permissions = new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION};
 
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
             ActivityCompat.requestPermissions(this, permissions, code);
             return;
         }
@@ -153,6 +125,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
 
     private void getLocationButtonClicked() {
         Toast.makeText(getApplicationContext(), R.string.toast_message_retrieving_location, Toast.LENGTH_SHORT).show();
+
         latitude = gps.getLatitude();
         longitude = gps.getLongitude();
         Bundle bundle = new Bundle();
@@ -179,25 +152,17 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
      * @see #requestPermissions(String[], int)
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != RC_HANDLE_ACCESS_FINE_LOCATION && requestCode != RC_HANDLE_ACCESS_FINE_LOCATION_INIT) {
-            Log.d("GPSManager", "Got unexpected permission result: " + requestCode);
+            Log.d(GPSManager.TAG, "Got unexpected permission result: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d("GPSManager", "Location permission granted - initialize the gps source");
+            Log.d(GPSManager.TAG, "Location permission granted - initialize the gps source");
             // we have permission
-            if (gps == null) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return; // Should never happen as it should have been granted
-                gps = new GPSManager(this);
-            }
-            if (!gps.canGetLocation()){
-                gps.showSettingsAlert();
-            }
+            initLocationManager();
 
             if (requestCode == RC_HANDLE_ACCESS_FINE_LOCATION){
                 getLocationButtonClicked();
@@ -205,7 +170,7 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
             return;
         }
 
-        Log.e("GPSManager", "Permission not granted: results len = " + grantResults.length +
+        Log.e(GPSManager.TAG, "Permission not granted: results len = " + grantResults.length +
                 " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
         final Activity thisActivity = this;
 
@@ -222,11 +187,27 @@ public class AddBusStopsRecyclerActivity extends AppCompatActivity {
     }
 
     private void updateList(){
-        BusStopsDB db = new BusStopsDB(this);
+        Objects.requireNonNull(tabLayout.getTabAt(1)).select();
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
-        new PopulateListWithCurrentLocationRecycler(this, db, adapter).execute(location);
+
+        hideSoftKeyBoard();
+
+        Intent lIntent = new Intent(BusStopNearbyFragment.RECEIVE_LOCATION_EVENT);
+        lIntent.putExtra("lat", latitude);
+        lIntent.putExtra("lng", longitude);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(lIntent);
+    }
+
+    private void hideSoftKeyBoard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        Log.i("IMM", "Attempting to hide keyboard");
+
+        if(imm != null && getCurrentFocus() != null && (imm.isActive() || imm.isAcceptingText())) { // verify if the soft keyboard is open
+            Log.i("IMM", "Hiding Keyboard");
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
     @Override

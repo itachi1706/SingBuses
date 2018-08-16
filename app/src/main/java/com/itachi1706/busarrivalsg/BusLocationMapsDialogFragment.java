@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.Objects.CommonEnums;
+import com.itachi1706.busarrivalsg.Services.GPSManager;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import static com.itachi1706.busarrivalsg.Util.StaticVariables.useServerTime;
@@ -190,7 +191,7 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
     }
 
     private void requestGpsPermission(final int code) {
-        Log.w("GPSManager", "GPS permission is not granted. Requesting permission");
+        Log.w(GPSManager.TAG, "GPS permission is not granted. Requesting permission");
         final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -226,13 +227,13 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode != RC_HANDLE_ACCESS_FINE_LOCATION) {
-            Log.d("GPSManager", "Got unexpected permission result: " + requestCode);
+            Log.d(GPSManager.TAG, "Got unexpected permission result: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d("GPSManager", "Location permission granted - enabling my location");
+            Log.d(GPSManager.TAG, "Location permission granted - enabling my location");
             // we have permission, so create the camerasource
             if (ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mMap.setMyLocationEnabled(true);
@@ -240,7 +241,7 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
             return;
         }
 
-        Log.e("GPSManager", "Permission not granted: results len = " + grantResults.length +
+        Log.e(GPSManager.TAG, "Permission not granted: results len = " + grantResults.length +
                 " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
         final Activity thisActivity = this.getActivity();
         new AlertDialog.Builder(this.getActivity()).setTitle(R.string.dialog_title_permission_denied)

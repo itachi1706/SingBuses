@@ -25,6 +25,7 @@ import com.itachi1706.busarrivalsg.R;
 public class GPSManager extends Service implements LocationListener {
 
     private final Context mContext;
+    public static final String TAG = "GPSManager";
 
     // flag for GPS status
     boolean isGPSEnabled = false;
@@ -158,7 +159,7 @@ public class GPSManager extends Service implements LocationListener {
      */
     public void showSettingsAlert(){
         if (mContext == null) {
-            Log.e("GPSManager", "Invalid Context");
+            Log.e(GPSManager.TAG, "Invalid Context");
             return;
         }
 

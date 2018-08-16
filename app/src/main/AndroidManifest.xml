@@ -15,7 +15,9 @@
     <!-- For getting your current location pre-GPS (so that you don't need GPS to run) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
+    <meta-data
+        android:name="firebase_crashlytics_collection_enabled"
+        android:value="false" />
 
     <application
         android:allowBackup="true"
@@ -44,9 +46,6 @@
         <activity
             android:name=".ListAllBusStopsActivity"
             android:label="@string/title_activity_list_all_bus_stops" />
-        <activity
-            android:name=".AddBusStopsRecyclerActivity"
-            android:label="@string/title_activity_add_bus_stops" />
         <activity
             android:name=".MainSettings"
             android:label="@string/title_activity_main_settings" />
@@ -94,7 +93,13 @@
                 tools:replace="android:resource" />
         </provider>
 
-        <activity android:name=".FirebaseLoginActivity" android:label="Sign in" />
+        <activity
+            android:name=".FirebaseLoginActivity"
+            android:label="Sign in" />
+
+        <activity android:name=".BusStopsTabbedActivity"
+            android:label="@string/title_activity_add_bus_stops"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

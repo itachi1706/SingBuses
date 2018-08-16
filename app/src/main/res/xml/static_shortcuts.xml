@@ -16,6 +16,6 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="com.itachi1706.busarrivalsg"
-            android:targetClass="com.itachi1706.busarrivalsg.AddBusStopsRecyclerActivity" />
+            android:targetClass="com.itachi1706.busarrivalsg.BusStopsTabbedActivity" />
     </shortcut>
 </shortcuts>
