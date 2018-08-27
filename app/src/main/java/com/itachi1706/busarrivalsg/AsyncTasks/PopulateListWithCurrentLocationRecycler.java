@@ -1,5 +1,6 @@
 package com.itachi1706.busarrivalsg.AsyncTasks;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,23 +37,23 @@ import java.util.ArrayList;
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.AsyncTasks
  */
-public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location, Void, String> {
+public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location, Void, Integer> {
 
-    private WeakReference<Context> contextRef;
+    private WeakReference<Activity> contextRef;
     private BusStopsDB db;
     private BusStopRecyclerAdapter adapter;
     private Exception except;
 
-    public PopulateListWithCurrentLocationRecycler(Context context, BusStopsDB db, BusStopRecyclerAdapter adapter) {
+    public PopulateListWithCurrentLocationRecycler(Activity context, BusStopsDB db, BusStopRecyclerAdapter adapter) {
         this.contextRef = new WeakReference<>(context);
         this.db = db;
         this.adapter = adapter;
     }
 
     @Override
-    protected String doInBackground(Location... locate) {
+    protected Integer doInBackground(Location... locate) {
         Location location = locate[0];
-        Context context = contextRef.get();
+        Activity context = contextRef.get();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         int limit = Integer.parseInt(sp.getString("nearbyStopsCount", "20"));
         // Get validation stuff
@@ -79,42 +80,47 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
             tmp = str.toString();
         } catch (IOException e) {
             except = e;
+            return 1;
         }
-        return tmp;
+
+
+        // Do the processing here
+        //TODO: Switch onPostExecute to Void
+        Gson gson = new Gson();
+        Log.d("CURRENT-LOCATION", tmp);
+        if (!StaticVariables.checkIfYouGotJsonString(tmp)) {
+            except = new Exception(context.getResources().getString(R.string.toast_message_invalid_json));
+            return 2;
+        }
+        Distance distArray = gson.fromJson(tmp, Distance.class);
+        Distance.DistanceItem[] results = distArray.getResults();
+        ArrayList<BusStopJSON> stops = new ArrayList<>();
+        assert results != null;
+        for (Distance.DistanceItem map : results) {
+            float distance = map.getDist();
+            BusStopJSON stop = db.getBusStopByBusStopCode(map.getBusStopCode());
+            stop.setDistance(distance);
+
+            stops.add(stop);
+        }
+        Intent sendForMapParsingIntent = new Intent(BusStopNearbyFragment.RECEIVE_NEARBY_STOPS_EVENT);
+        Type listType = new TypeToken<ArrayList<BusStopJSON>>() {}.getType();
+        sendForMapParsingIntent.putExtra("data", gson.toJson(stops, listType));
+        context.runOnUiThread(() -> {
+            LocalBroadcastManager.getInstance(context).sendBroadcast(sendForMapParsingIntent);
+            adapter.updateAdapter(stops);
+            adapter.notifyDataSetChanged();
+        });
+        return 0;
     }
 
-    protected void onPostExecute(String json) {
+    protected void onPostExecute(Integer errorCode) {
         Context context = contextRef.get();
-        if (except != null) {
+        if (except != null && errorCode != 0) {
             if (except instanceof SocketTimeoutException) {
                 Toast.makeText(context, R.string.toast_message_timeout_distance_api, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, except.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            //Go parse it
-            Gson gson = new Gson();
-            Log.d("CURRENT-LOCATION", json);
-            if (!StaticVariables.checkIfYouGotJsonString(json)) {
-                //Invalid JSON string
-                Toast.makeText(context, R.string.toast_message_invalid_json, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Distance distArray = gson.fromJson(json, Distance.class);
-            Distance.DistanceItem[] results = distArray.getResults();
-            ArrayList<BusStopJSON> stops = new ArrayList<>();
-            for (Distance.DistanceItem map : results) {
-                float distance = map.getDist();
-                BusStopJSON stop = db.getBusStopByBusStopCode(map.getBusStopCode());
-                stop.setDistance(distance);
-
-                stops.add(stop);
-                Intent sendForMapParsingIntent = new Intent(BusStopNearbyFragment.RECEIVE_NEARBY_STOPS_EVENT);
-                Type listType = new TypeToken<ArrayList<BusStopJSON>>() {}.getType();
-                sendForMapParsingIntent.putExtra("data", gson.toJson(stops, listType));
-                LocalBroadcastManager.getInstance(context).sendBroadcast(sendForMapParsingIntent);
-                adapter.updateAdapter(stops);
-                adapter.notifyDataSetChanged();
             }
         }
     }
