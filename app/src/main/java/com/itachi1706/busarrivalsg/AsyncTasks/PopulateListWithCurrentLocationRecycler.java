@@ -2,8 +2,10 @@ package com.itachi1706.busarrivalsg.AsyncTasks;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -51,9 +53,11 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
     protected String doInBackground(Location... locate) {
         Location location = locate[0];
         Context context = contextRef.get();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        int limit = Integer.parseInt(sp.getString("nearbyStopsCount", "20"));
         // Get validation stuff
         String signature = ValidationHelper.getSignatureForValidation(context);
-        String url = "http://api.itachi1706.com/api/mobile/nearestBusStop.php?location=" + location.getLatitude() + "," + location.getLongitude();
+        String url = "http://api.itachi1706.com/api/mobile/nearestBusStop.php?location=" + location.getLatitude() + "," + location.getLongitude() + "&limit=" + limit;
         Log.d("CURRENT-LOCATION", url); // Don't print the signature out
         url += "&sig=" + signature + "&package=" + context.getPackageName();
         String tmp = "";
