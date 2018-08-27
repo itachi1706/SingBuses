@@ -1,6 +1,6 @@
 package com.itachi1706.busarrivalsg.gsonObjects.sgLTA;
 
-import com.itachi1706.busarrivalsg.objects.CommonEnums;
+import com.itachi1706.busarrivalsg.Util.BusesUtil;
 
 /**
  * Created by Kenneth on 18/6/2015
@@ -25,13 +25,7 @@ public class BusArrivalArrayObjectEstimate {
     }
 
     public int getLoadInt() {
-        if (Load == null) return CommonEnums.UNKNOWN;
-        switch (Load){
-            case "SEA": return CommonEnums.BUS_SEATS_AVAIL;
-            case "SDA": return CommonEnums.BUS_STANDING_AVAIL;
-            case "LSD": return CommonEnums.BUS_LIMITED_SEATS;
-            default: return CommonEnums.UNKNOWN;
-        }
+        return BusesUtil.INSTANCE.getLoad(Load);
     }
 
     public String getEstimatedArrival() {
@@ -97,11 +91,6 @@ public class BusArrivalArrayObjectEstimate {
     }
 
     public int getTypeInt() {
-        switch (Type) {
-            case "SD": return CommonEnums.BUS_SINGLE_DECK;
-            case "DD": return CommonEnums.BUS_DOUBLE_DECK;
-            case "BD": return CommonEnums.BUS_BENDY;
-            default: return CommonEnums.UNKNOWN;
-        }
+        return BusesUtil.INSTANCE.getType(Type);
     }
 }

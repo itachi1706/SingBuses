@@ -1,5 +1,7 @@
 package com.itachi1706.busarrivalsg.objects
 
+import com.itachi1706.busarrivalsg.Util.BusesUtil
+
 /**
  * Created by Kenneth on 17/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg
@@ -30,20 +32,10 @@ class BusStatus {
     }
 
     fun setLoad(load: String) {
-        when (load) {
-            "SEA" -> this.load = CommonEnums.BUS_SEATS_AVAIL
-            "SDA" -> this.load = CommonEnums.BUS_STANDING_AVAIL
-            "LSD" -> this.load = CommonEnums.BUS_LIMITED_SEATS
-            else -> this.load = CommonEnums.UNKNOWN
-        }
+        this.load = BusesUtil.getLoad(load)
     }
 
     fun setBusType(busType: String) {
-        when (busType) {
-            "SD" -> this.busType = CommonEnums.BUS_SINGLE_DECK
-            "DD" -> this.busType = CommonEnums.BUS_DOUBLE_DECK
-            "BD" -> this.busType = CommonEnums.BUS_BENDY
-            else -> this.busType = CommonEnums.UNKNOWN
-        }
+        this.busType = BusesUtil.getType(busType)
     }
 }

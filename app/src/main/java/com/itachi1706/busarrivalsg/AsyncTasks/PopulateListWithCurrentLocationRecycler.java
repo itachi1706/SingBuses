@@ -83,9 +83,7 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
             return 1;
         }
 
-
         // Do the processing here
-        //TODO: Switch onPostExecute to Void
         Gson gson = new Gson();
         Log.d("CURRENT-LOCATION", tmp);
         if (!StaticVariables.checkIfYouGotJsonString(tmp)) {
