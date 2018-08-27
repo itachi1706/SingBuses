@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
  * Created by Kenneth on 18/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.GsonObjects
  */
+@Deprecated
 public class OnlineGMapsJsonObject {
     private String id, name, place_id, reference, scope, vicinity;
     private JsonArray types;
