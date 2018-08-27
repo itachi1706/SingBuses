@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.gsonObjects.offline.BusArrayJSON;
 import com.itachi1706.busarrivalsg.gsonObjects.offline.BusJSON;
-import com.itachi1706.busarrivalsg.Objects.BusServices;
+import com.itachi1706.busarrivalsg.objects.BusServices;
 
 import org.json.JSONArray;
 import org.json.JSONException;

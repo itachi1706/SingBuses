@@ -22,8 +22,8 @@ import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObjectEstimate;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
-import com.itachi1706.busarrivalsg.Objects.BusServices;
-import com.itachi1706.busarrivalsg.Objects.CommonEnums;
+import com.itachi1706.busarrivalsg.objects.BusServices;
+import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 

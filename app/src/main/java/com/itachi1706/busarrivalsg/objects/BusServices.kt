@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.Objects
+package com.itachi1706.busarrivalsg.objects
 
 /**
  * Created by Kenneth on 17/6/2015

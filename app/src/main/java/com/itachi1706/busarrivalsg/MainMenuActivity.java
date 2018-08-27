@@ -43,7 +43,7 @@ import com.itachi1706.busarrivalsg.AsyncTasks.DlAndInstallCompanionApp;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesFavouritesRecycler;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.Objects.BusServices;
+import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.Services.PebbleCommunications;

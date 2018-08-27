@@ -22,7 +22,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.AsyncTasks.Services.GetFirstFavouriteData;
 import com.itachi1706.busarrivalsg.AsyncTasks.Services.GetRemainingFavouriteData;
 import com.itachi1706.busarrivalsg.BuildConfig;
-import com.itachi1706.busarrivalsg.Objects.BusServices;
+import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.Util.PebbleEnum;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 

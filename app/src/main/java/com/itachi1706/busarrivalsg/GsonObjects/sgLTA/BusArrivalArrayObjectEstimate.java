@@ -1,6 +1,6 @@
 package com.itachi1706.busarrivalsg.gsonObjects.sgLTA;
 
-import com.itachi1706.busarrivalsg.Objects.CommonEnums;
+import com.itachi1706.busarrivalsg.objects.CommonEnums;
 
 /**
  * Created by Kenneth on 18/6/2015

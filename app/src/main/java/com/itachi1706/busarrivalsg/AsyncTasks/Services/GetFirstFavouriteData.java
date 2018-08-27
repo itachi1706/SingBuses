@@ -10,8 +10,8 @@ import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
-import com.itachi1706.busarrivalsg.Objects.BusServices;
-import com.itachi1706.busarrivalsg.Objects.BusStatus;
+import com.itachi1706.busarrivalsg.objects.BusServices;
+import com.itachi1706.busarrivalsg.objects.BusStatus;
 import com.itachi1706.busarrivalsg.Util.PebbleEnum;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
