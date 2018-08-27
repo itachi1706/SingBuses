@@ -1,6 +1,6 @@
 package com.itachi1706.busarrivalsg.AsyncTasks;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
@@ -35,27 +36,26 @@ import java.util.ArrayList;
  */
 public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location, Void, String> {
 
-    private Activity activity;
+    private WeakReference<Context> contextRef;
     private BusStopsDB db;
     private BusStopRecyclerAdapter adapter;
     private Exception except;
 
-    private Location location;
-
-    public PopulateListWithCurrentLocationRecycler(Activity activity, BusStopsDB db, BusStopRecyclerAdapter adapter) {
-        this.activity = activity;
+    public PopulateListWithCurrentLocationRecycler(Context context, BusStopsDB db, BusStopRecyclerAdapter adapter) {
+        this.contextRef = new WeakReference<>(context);
         this.db = db;
         this.adapter = adapter;
     }
 
     @Override
     protected String doInBackground(Location... locate) {
-        location = locate[0];
+        Location location = locate[0];
+        Context context = contextRef.get();
         // Get validation stuff
-        String signature = ValidationHelper.getSignatureForValidation(activity.getApplicationContext());
+        String signature = ValidationHelper.getSignatureForValidation(context);
         String url = "http://api.itachi1706.com/api/mobile/nearestBusStop.php?location=" + location.getLatitude() + "," + location.getLongitude();
         Log.d("CURRENT-LOCATION", url); // Don't print the signature out
-        url += "&sig=" + signature + "&package=" + activity.getApplication().getPackageName();
+        url += "&sig=" + signature + "&package=" + context.getPackageName();
         String tmp = "";
         try {
             URL urlConn = new URL(url);
@@ -80,11 +80,12 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
     }
 
     protected void onPostExecute(String json) {
+        Context context = contextRef.get();
         if (except != null) {
             if (except instanceof SocketTimeoutException) {
-                Toast.makeText(activity, R.string.toast_message_timeout_distance_api, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.toast_message_timeout_distance_api, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(activity, except.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, except.getMessage(), Toast.LENGTH_SHORT).show();
             }
         } else {
             //Go parse it
@@ -92,7 +93,7 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
             Log.d("CURRENT-LOCATION", json);
             if (!StaticVariables.checkIfYouGotJsonString(json)) {
                 //Invalid JSON string
-                Toast.makeText(activity, R.string.toast_message_invalid_json, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.toast_message_invalid_json, Toast.LENGTH_SHORT).show();
                 return;
             }
             Distance distArray = gson.fromJson(json, Distance.class);
@@ -107,7 +108,7 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
                 Intent sendForMapParsingIntent = new Intent(BusStopNearbyFragment.RECEIVE_NEARBY_STOPS_EVENT);
                 Type listType = new TypeToken<ArrayList<BusStopJSON>>() {}.getType();
                 sendForMapParsingIntent.putExtra("data", gson.toJson(stops, listType));
-                LocalBroadcastManager.getInstance(activity).sendBroadcast(sendForMapParsingIntent);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(sendForMapParsingIntent);
                 adapter.updateAdapter(stops);
                 adapter.notifyDataSetChanged();
             }

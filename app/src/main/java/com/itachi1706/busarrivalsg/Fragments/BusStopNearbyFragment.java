@@ -135,7 +135,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
             location.setLatitude(intent.getDoubleExtra("lat", 0));
             location.setLongitude(intent.getDoubleExtra("lng", 0));
             if (db == null) db = new BusStopsDB(getContext());
-            new PopulateListWithCurrentLocationRecycler(getActivity(), db, adapter).execute(location);
+            new PopulateListWithCurrentLocationRecycler(getContext(), db, adapter).execute(location);
         }
     };
 
