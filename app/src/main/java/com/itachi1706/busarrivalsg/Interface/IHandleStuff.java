@@ -1,6 +1,6 @@
 package com.itachi1706.busarrivalsg.Interface;
 
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 
 /**

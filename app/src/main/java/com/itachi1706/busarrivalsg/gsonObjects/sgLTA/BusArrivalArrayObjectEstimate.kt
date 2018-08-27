@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.GsonObjects.LTA
+package com.itachi1706.busarrivalsg.gsonObjects.sgLTA
 
 import com.itachi1706.busarrivalsg.Objects.CommonEnums
 

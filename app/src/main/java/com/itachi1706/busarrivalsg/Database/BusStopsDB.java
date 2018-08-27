@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.itachi1706.busarrivalsg.BuildConfig;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 
 import java.io.File;
 import java.util.ArrayList;

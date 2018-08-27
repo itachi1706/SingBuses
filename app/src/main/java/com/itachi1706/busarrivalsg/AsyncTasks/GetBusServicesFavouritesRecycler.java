@@ -6,8 +6,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalMain;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.Objects.BusServices;
 import com.itachi1706.busarrivalsg.Objects.BusStatus;
 import com.itachi1706.busarrivalsg.R;
