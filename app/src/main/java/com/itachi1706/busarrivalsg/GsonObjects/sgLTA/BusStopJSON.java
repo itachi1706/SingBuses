@@ -13,23 +13,25 @@ public class BusStopJSON {
     private boolean hasDistance = false;
     private float distance;
 
-    public String getCode() {
+
+
+    public String getBusStopCode() {
         return BusStopCode;
     }
 
-    public String getRoad() {
+    public String getRoadName() {
         return RoadName;
     }
 
-    public String getBusStopName() {
+    public String getDescription() {
         return Description;
     }
 
-    public void setCode(String code) {
+    public void setBusStopCode(String code) {
         BusStopCode = code;
     }
 
-    public void setRoad(String road) {
+    public void setRoadName(String road) {
         RoadName = road;
     }
 

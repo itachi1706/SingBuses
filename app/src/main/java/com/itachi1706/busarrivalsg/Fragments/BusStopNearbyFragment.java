@@ -170,7 +170,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
                     services.append(svc.split(":")[0]).append(", ");
                 }
                 markerMap.put(mMap.addMarker(new MarkerOptions().position(new LatLng(stop.getLatitude(), stop.getLongitude()))
-                        .title(stop.getBusStopName() + " (" + stop.getRoad() + ")")
+                        .title(stop.getDescription() + " (" + stop.getRoadName() + ")")
                         .snippet("Bus Svcs: " + services.toString().replaceAll(", $", ""))
                         .icon(vectorToBitmap(R.drawable.red_circle))), stop);
             }
