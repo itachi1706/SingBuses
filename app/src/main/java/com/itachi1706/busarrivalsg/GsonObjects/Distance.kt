@@ -15,7 +15,7 @@ class Distance {
     }
 
     inner class DistanceItem {
-        var busStopCode: String? = null
+        var BusStopCode: String? = null
         val Latitude: Double = 0.toDouble()
         val Longitude: Double = 0.toDouble()
         val dist: Float = 0.toFloat()
