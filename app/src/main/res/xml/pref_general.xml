@@ -18,6 +18,12 @@
             android:summary="%s"
             android:entries="@array/companion_device"
             android:entryValues="@array/companion_device_entry" />
+        <EditTextPreference
+            android:title="Number of nearby bus stops shown (Default 20)"
+            android:summary="%s"
+            android:defaultValue="20"
+            android:inputType="number"
+            android:key="nearbyStopsCount" />
         <SwitchPreference
             android:title="Use Server Time"
             android:defaultValue="false"

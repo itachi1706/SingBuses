@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 
 import java.util.ArrayList;

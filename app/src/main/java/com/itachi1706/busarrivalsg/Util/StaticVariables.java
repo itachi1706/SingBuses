@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.getpebble.android.kit.util.PebbleDictionary;
-import com.itachi1706.busarrivalsg.Objects.BusServices;
+import com.itachi1706.busarrivalsg.objects.BusServices;
 
 import java.util.ArrayList;
 import java.util.Calendar;

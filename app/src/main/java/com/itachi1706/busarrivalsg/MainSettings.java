@@ -2,6 +2,7 @@ package com.itachi1706.busarrivalsg;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
@@ -81,6 +82,13 @@ public class MainSettings extends AppCompatActivity {
                 getFragmentManager().beginTransaction()
                         .replace(android.R.id.content, new GeneralPreferenceFragment())
                         .commit();
+                return true;
+            });
+
+            Preference nearbyStopsCount = findPreference("nearbyStopsCount");
+            nearbyStopsCount.setSummary(((EditTextPreference)nearbyStopsCount).getText());
+            nearbyStopsCount.setOnPreferenceChangeListener((preference, newValue) -> {
+                preference.setSummary(String.valueOf(newValue));
                 return true;
             });
         }

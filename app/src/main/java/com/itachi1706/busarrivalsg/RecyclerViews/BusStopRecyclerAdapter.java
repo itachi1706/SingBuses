@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.R;
 
 import java.util.LinkedList;
@@ -56,8 +56,8 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
     public void onBindViewHolder(BusStopViewHolder holder, int position) {
         BusStopJSON i = items.get(position);
 
-        holder.stopName.setText(i.getBusStopName());
-        holder.desc.setText((!i.isHasDistance()) ? i.getRoad() + " (" + i.getCode() + ")" : String.format(Locale.getDefault(), "%s (%s) [%.2fm]",i.getRoad(), i.getCode(), i.getDistance()));
+        holder.stopName.setText(i.getDescription());
+        holder.desc.setText((!i.isHasDistance()) ? i.getRoadName() + " (" + i.getBusStopCode() + ")" : String.format(Locale.getDefault(), "%s (%s) [%.2fm]",i.getRoadName(), i.getBusStopCode(), i.getDistance()));
     }
 
     @Override
@@ -68,14 +68,14 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
     public void handleClick(Context context, BusStopJSON stop) {
         Log.d("Size", "" + items.size());
         Intent serviceIntent = new Intent(context, BusServicesAtStopRecyclerActivity.class);
-        serviceIntent.putExtra("stopCode", stop.getCode());
-        serviceIntent.putExtra("stopName", stop.getBusStopName());
+        serviceIntent.putExtra("stopCode", stop.getBusStopCode());
+        serviceIntent.putExtra("stopName", stop.getDescription());
         serviceIntent.putExtra("busServices", stop.getServices());
         context.startActivity(serviceIntent);
 
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Code: " + stop.getCode());
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Code: " + stop.getBusStopCode());
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "openBusStopDetail");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
@@ -92,8 +92,8 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
                 } while (infos.size() > shortcutCount);
             }
             serviceIntent.setAction(Intent.ACTION_VIEW);
-            ShortcutInfo newShortcut = new ShortcutInfo.Builder(context, "bus-" + stop.getCode())
-                    .setShortLabel(stop.getBusStopName()).setLongLabel("Launch this bus stop directly")
+            ShortcutInfo newShortcut = new ShortcutInfo.Builder(context, "bus-" + stop.getBusStopCode())
+                    .setShortLabel(stop.getDescription()).setLongLabel("Launch this bus stop directly")
                     .setIcon(Icon.createWithResource(context, R.mipmap.ic_launcher_round))
                     .setIntent(serviceIntent).build();
 

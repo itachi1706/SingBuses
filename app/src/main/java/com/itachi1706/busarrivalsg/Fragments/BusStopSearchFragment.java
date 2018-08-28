@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 

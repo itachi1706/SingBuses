@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.itachi1706.busarrivalsg.BuildConfig;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -70,10 +70,10 @@ public class BusStopsDB extends SQLiteOpenHelper {
         db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement(sql);
         for (BusStopJSON busStop : busStops) {
-            if (BuildConfig.DEBUG) Log.d("DEBUG-BusStops", "Processing Bus Stop: " + busStop.getCode());
-            stmt.bindString(1, busStop.getCode());
-            stmt.bindString(2, busStop.getRoad());
-            stmt.bindString(3, busStop.getBusStopName());
+            if (BuildConfig.DEBUG) Log.d("DEBUG-BusStops", "Processing Bus Stop: " + busStop.getBusStopCode());
+            stmt.bindString(1, busStop.getBusStopCode());
+            stmt.bindString(2, busStop.getRoadName());
+            stmt.bindString(3, busStop.getDescription());
             stmt.bindDouble(4, busStop.getLatitude());
             stmt.bindDouble(5, busStop.getLongitude());
             stmt.bindString(6, busStop.getServices());
@@ -96,8 +96,8 @@ public class BusStopsDB extends SQLiteOpenHelper {
 
     private BusStopJSON getBusStopJsonObject(Cursor cursor) {
         BusStopJSON bs = new BusStopJSON();
-        bs.setCode(cursor.getString(1));
-        bs.setRoad(cursor.getString(2));
+        bs.setBusStopCode(cursor.getString(1));
+        bs.setRoadName(cursor.getString(2));
         bs.setDescription(cursor.getString(3));
         bs.setLatitude(cursor.getDouble(4));
         bs.setLongitude(cursor.getDouble(5));

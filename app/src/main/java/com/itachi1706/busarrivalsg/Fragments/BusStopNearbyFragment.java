@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -44,7 +45,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.itachi1706.busarrivalsg.AsyncTasks.PopulateListWithCurrentLocationRecycler;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 
@@ -135,9 +136,13 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
             location.setLatitude(intent.getDoubleExtra("lat", 0));
             location.setLongitude(intent.getDoubleExtra("lng", 0));
             if (db == null) db = new BusStopsDB(getContext());
-            new PopulateListWithCurrentLocationRecycler(getActivity(), db, adapter).execute(location);
+
+            if (nearbyTask == null || nearbyTask.getStatus().equals(AsyncTask.Status.FINISHED))
+                nearbyTask = new PopulateListWithCurrentLocationRecycler(getActivity(), db, adapter).execute(location);
         }
     };
+
+    private static AsyncTask<Location, Void, Integer> nearbyTask = null;
 
     private HashMap<Marker, BusStopJSON> markerMap;
 
@@ -165,7 +170,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
                     services.append(svc.split(":")[0]).append(", ");
                 }
                 markerMap.put(mMap.addMarker(new MarkerOptions().position(new LatLng(stop.getLatitude(), stop.getLongitude()))
-                        .title(stop.getBusStopName() + " (" + stop.getRoad() + ")")
+                        .title(stop.getDescription() + " (" + stop.getRoadName() + ")")
                         .snippet("Bus Svcs: " + services.toString().replaceAll(", $", ""))
                         .icon(vectorToBitmap(R.drawable.red_circle))), stop);
             }

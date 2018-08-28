@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,11 +20,11 @@ import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObject;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusArrivalArrayObjectEstimate;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
-import com.itachi1706.busarrivalsg.Objects.BusServices;
-import com.itachi1706.busarrivalsg.Objects.CommonEnums;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObjectEstimate;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.objects.BusServices;
+import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
@@ -60,15 +61,16 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public BusServiceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BusServiceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View busServiceView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recyclerview_bus_numbers, parent, false);
         return new BusServiceViewHolder(busServiceView);
     }
 
     @Override
-    public void onBindViewHolder(BusServiceViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BusServiceViewHolder holder, int position) {
         BusArrivalArrayObject i = items.get(position);
 
         holder.busOperator.setText(i.getOperator());
@@ -90,6 +92,10 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         }
         holder.operatingStatus.setText(activity.getString(R.string.service_operational));
         holder.operatingStatus.setTextColor(Color.GREEN);
+
+        assert i.getNextBus() != null;
+        assert i.getNextBus2() != null;
+        assert i.getNextBus3() != null;
 
         //Current Bus
         if (i.getNextBus().getEstimatedArrival() == null){
@@ -179,7 +185,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     }
 
     private void applyColorLoad(TextView view, BusArrivalArrayObjectEstimate obj){
-        if (view.getText().toString().equalsIgnoreCase("") || obj.getLoad() == null || view.getText().toString().equalsIgnoreCase("-")) {
+        if (view.getText().toString().equalsIgnoreCase("") || view.getText().toString().equalsIgnoreCase("-")) {
             view.setTextColor(Color.GRAY);
             return;
         }
@@ -261,9 +267,10 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             BusArrivalArrayObjectEstimate status = (state == CUR) ? busObj.getNextBus() :
                     (state == NEXT) ? busObj.getNextBus2() : busObj.getNextBus3();
             this.busObj = busObj;
+            assert status != null;
             this.state = state;
-            this.longitude = status.getLongitude();
-            this.latitude = status.getLatitude();
+            this.longitude = status.getLongitudeD();
+            this.latitude = status.getLatitudeD();
             this.stopCode = busStopCode.trim();
             this.serviceNo = svcNo.trim();
         }
@@ -301,6 +308,10 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             Intent mapsIntent = new Intent(activity, BusLocationMapsActivity.class);
             mapsIntent.putExtra("busCode", stopCode);
             mapsIntent.putExtra("busSvcNo", serviceNo);
+            assert busObj != null;
+            assert busObj.getNextBus() != null;
+            assert busObj.getNextBus2() != null;
+            assert busObj.getNextBus3() != null;
 
             // 3 Bus statuses
             mapsIntent.putExtra("lat1", busObj.getNextBus().getLatitude());

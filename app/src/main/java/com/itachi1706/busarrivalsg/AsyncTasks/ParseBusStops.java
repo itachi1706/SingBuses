@@ -8,8 +8,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSON;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSONArray;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSONArray;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.Timings;
 

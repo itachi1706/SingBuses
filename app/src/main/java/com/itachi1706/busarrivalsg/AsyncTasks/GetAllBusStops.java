@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.GsonObjects.LTA.BusStopJSONArray;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSONArray;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
