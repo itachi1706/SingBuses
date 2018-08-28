@@ -16,6 +16,7 @@
     <color name="transparent">#00000000</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="appcompat_bg_color">#80323232</color>
 
     <!-- General Colors -->
     <!-- RED -->

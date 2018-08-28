@@ -3,6 +3,9 @@ package com.itachi1706.busarrivalsg;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,10 +14,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -43,12 +48,12 @@ import com.itachi1706.busarrivalsg.AsyncTasks.DlAndInstallCompanionApp;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesFavouritesRecycler;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.Services.PebbleCommunications;
 import com.itachi1706.busarrivalsg.Util.PebbleEnum;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.objects.BusServices;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -137,6 +142,9 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         Log.d("MainMenu", "Checking for app updates");
         new AppUpdateInitializer(this, sp, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL, true).checkForUpdate(true);
         Log.d("MainMenu", "onCreate complete");
+
+        // Create the Firebase Notification Channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) createFirebaseNotifChannel();
     }
 
     @Override
@@ -448,5 +456,21 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         new AlertDialog.Builder(this).setTitle("Which OS to install App to").setMessage("Based on your pebble device, " +
                 "where should we launch the install request to?\n\nPebble Time: Select Pebble Time\n" +
                 "Pebble with Time OS: Select Pebble Time\nPebble with 2.0 OS: Select Pebble").setPositiveButton("Pebble Time", (dialog, which) -> new DlAndInstallCompanionApp(activity, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getString(R.string.link_pebble_app))).setNegativeButton("Pebble", (dialog, which) -> new DlAndInstallCompanionApp(activity, false).execute(getString(R.string.link_pebble_app))).setNeutralButton(android.R.string.cancel, null).show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createFirebaseNotifChannel() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (notificationManager == null) return;
+        NotificationChannel notificationChannel = new NotificationChannel("firebase-msg", "Server Alerts (FB)", NotificationManager.IMPORTANCE_LOW);
+        notificationChannel.enableLights(true);
+        notificationChannel.setLightColor(Color.RED);
+        notificationChannel.enableVibration(true);
+        notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+        notificationChannel.setGroup("server-msg");
+
+        NotificationChannelGroup notificationChannelGroup = new NotificationChannelGroup("server-msg", "Server Messages");
+        notificationManager.createNotificationChannelGroup(notificationChannelGroup);
+        notificationManager.createNotificationChannel(notificationChannel);
     }
 }

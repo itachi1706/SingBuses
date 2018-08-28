@@ -15,10 +15,6 @@
     <!-- For getting your current location pre-GPS (so that you don't need GPS to run) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <meta-data
-        android:name="firebase_crashlytics_collection_enabled"
-        android:value="false" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -80,6 +76,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
+
         <activity
             android:name=".BusLocationMapsActivity"
             android:label="@string/title_activity_bus_location_maps" />
@@ -105,6 +105,18 @@
 
         <!-- Required because FOR SOME REASON Google Maps is using the deprecated Apache HTTP? WTF Google? -->
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
+        <!-- Used for Firebase Cloud Messaging -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/notification_icon" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/accent" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="firebase-msg"/>
+
     </application>
 
 </manifest>
