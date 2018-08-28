@@ -261,9 +261,10 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             BusArrivalArrayObjectEstimate status = (state == CUR) ? busObj.getNextBus() :
                     (state == NEXT) ? busObj.getNextBus2() : busObj.getNextBus3();
             this.busObj = busObj;
+            assert status != null;
             this.state = state;
-            this.longitude = status.getLongitude();
-            this.latitude = status.getLatitude();
+            this.longitude = status.getLongitudeD();
+            this.latitude = status.getLatitudeD();
             this.stopCode = busStopCode.trim();
             this.serviceNo = svcNo.trim();
         }
@@ -301,6 +302,10 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             Intent mapsIntent = new Intent(activity, BusLocationMapsActivity.class);
             mapsIntent.putExtra("busCode", stopCode);
             mapsIntent.putExtra("busSvcNo", serviceNo);
+            assert busObj != null;
+            assert busObj.getNextBus() != null;
+            assert busObj.getNextBus2() != null;
+            assert busObj.getNextBus3() != null;
 
             // 3 Bus statuses
             mapsIntent.putExtra("lat1", busObj.getNextBus().getLatitude());

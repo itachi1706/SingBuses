@@ -112,6 +112,9 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
             }
             //Assuming One
             BusArrivalArrayObject item = array[0];
+            assert item.getNextBus() != null;
+            assert item.getNextBus2() != null;
+            assert item.getNextBus3() != null;
 
             BusStatus nextBus = new BusStatus();
             nextBus.setEstimatedArrival(item.getNextBus().getEstimatedArrival());
@@ -126,16 +129,16 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
             //New API changes (12 November 2016 and 30 July 2017)
 
             //First add the required stuff to the other 2
-            nextBus.setVisitNumber(item.getNextBus().getVisitNumber());
-            nextBus.setLatitude(item.getNextBus().getLatitude());
-            nextBus.setLongitude(item.getNextBus().getLongitude());
+            nextBus.setVisitNumber(item.getNextBus().getVisitNumberD());
+            nextBus.setLatitude(item.getNextBus().getLatitudeD());
+            nextBus.setLongitude(item.getNextBus().getLongitudeD());
             nextBus.setBusType(item.getNextBus().getType());
             nextBus.setTerminatingID(item.getNextBus().getDestinationCode());
             nextBus.setOriginatingID(item.getNextBus().getOriginCode());
 
-            subsequentBus.setVisitNumber(item.getNextBus2().getVisitNumber());
-            subsequentBus.setLatitude(item.getNextBus2().getLatitude());
-            subsequentBus.setLongitude(item.getNextBus2().getLongitude());
+            subsequentBus.setVisitNumber(item.getNextBus2().getVisitNumberD());
+            subsequentBus.setLatitude(item.getNextBus2().getLatitudeD());
+            subsequentBus.setLongitude(item.getNextBus2().getLongitudeD());
             subsequentBus.setBusType(item.getNextBus2().getType());
             subsequentBus.setTerminatingID(item.getNextBus2().getDestinationCode());
             subsequentBus.setOriginatingID(item.getNextBus2().getOriginCode());
@@ -145,9 +148,9 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
             subsequent2Bus.setEstimatedArrival(item.getNextBus3().getEstimatedArrival());
             subsequent2Bus.setIsWheelChairAccessible(item.getNextBus3().getFeature());
             subsequent2Bus.setLoad(item.getNextBus3().getLoad());
-            subsequent2Bus.setVisitNumber(item.getNextBus3().getVisitNumber());
-            subsequent2Bus.setLatitude(item.getNextBus3().getLatitude());
-            subsequent2Bus.setLongitude(item.getNextBus3().getLongitude());
+            subsequent2Bus.setVisitNumber(item.getNextBus3().getVisitNumberD());
+            subsequent2Bus.setLatitude(item.getNextBus3().getLatitudeD());
+            subsequent2Bus.setLongitude(item.getNextBus3().getLongitudeD());
             subsequent2Bus.setBusType(item.getNextBus3().getType());
             subsequent2Bus.setTerminatingID(item.getNextBus3().getDestinationCode());
             subsequent2Bus.setOriginatingID(item.getNextBus3().getOriginCode());
