@@ -2,7 +2,7 @@ package com.itachi1706.busarrivalsg.gsonObjects
 
 /**
  * Created by Kenneth on 27/8/2018.
- * for com.itachi1706.busarrivalsg.GsonObjects in SingBuses
+ * for com.itachi1706.busarrivalsg.gsonObjects in SingBuses
  */
 class Distance {
 
