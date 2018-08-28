@@ -212,15 +212,31 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
         zoomToLocation();
     }
 
+    private boolean isAnimating = false;
+
     @SuppressLint("MissingPermission")
     private void zoomToLocation() {
-        if (locationManager != null) {
+        if (locationManager != null && !isAnimating) {
             // Assume that location permissions are granted as only then would it be initialized
             // Zoom to current location
+            isAnimating = true;
             Location myLoc = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
             if (myLoc == null) return;
             LatLng myLatLng = new LatLng(myLoc.getLatitude(), myLoc.getLongitude());
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 17));
+            Log.d("NearbyFrag", "animateCamera:onStart");
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 17), new GoogleMap.CancelableCallback() {
+                @Override
+                public void onFinish() {
+                    Log.d("NearbyFrag", "animateCamera:onFinish");
+                    isAnimating = false;
+                }
+
+                @Override
+                public void onCancel() {
+                    Log.d("NearbyFrag", "animateCamera:onCancel");
+                    isAnimating = false;
+                }
+            });
         }
     }
 

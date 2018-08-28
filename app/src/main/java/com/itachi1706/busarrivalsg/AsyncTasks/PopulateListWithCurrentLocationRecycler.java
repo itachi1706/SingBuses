@@ -61,7 +61,7 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
         String url = "http://api.itachi1706.com/api/mobile/nearestBusStop.php?location=" + location.getLatitude() + "," + location.getLongitude() + "&limit=" + limit;
         Log.d("CURRENT-LOCATION", url); // Don't print the signature out
         url += "&sig=" + signature + "&package=" + context.getPackageName();
-        String tmp = "";
+        String tmp;
         try {
             URL urlConn = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
@@ -115,6 +115,7 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
     protected void onPostExecute(Integer errorCode) {
         Context context = contextRef.get();
         if (except != null && errorCode != 0) {
+            Log.e("CURRENT-LOCATION", "Exception occurred (" + except.getMessage() + ")");
             if (except instanceof SocketTimeoutException) {
                 Toast.makeText(context, R.string.toast_message_timeout_distance_api, Toast.LENGTH_SHORT).show();
             } else {
