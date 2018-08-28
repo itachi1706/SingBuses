@@ -50,6 +50,13 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
     private int state;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme_AlertDialog);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_bus_location_map, container, false);
 
