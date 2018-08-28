@@ -6,14 +6,14 @@ package com.itachi1706.busarrivalsg.objects
  */
 class BusServices {
 
-    var serviceNo: String? = null
-    var operator: String? = null
-    var stopID: String? = null
+    var serviceNo: String = ""
+    var operator: String = ""
+    var stopID: String = ""
     var currentBus: BusStatus? = null
     var nextBus: BusStatus? = null
     var isObtainedNextData: Boolean = false
     var time: Long = 0
-    var stopName: String? = null
+    var stopName: String = ""
 
     var isSvcStatus: Boolean = false
 

@@ -28,39 +28,39 @@ class BusArrivalArrayObjectEstimate {
 
     val latitudeD: Double
         get() {
-            try {
-                return java.lang.Double.parseDouble(Latitude)
+            return try {
+                java.lang.Double.parseDouble(Latitude)
             } catch (e: NumberFormatException) {
-                return -11.0
+                -11.0
             }
 
         }
 
     val longitudeD: Double
         get() {
-            try {
-                return java.lang.Double.parseDouble(Longitude)
+            return try {
+                java.lang.Double.parseDouble(Longitude)
             } catch (e: NumberFormatException) {
-                return -11.0
+                -11.0
             }
 
         }
 
     val visitNumberD: Int
         get() {
-            try {
-                return Integer.parseInt(VisitNumber)
+            return try {
+                Integer.parseInt(VisitNumber)
             } catch (e: NumberFormatException) {
-                return 0
+                0
             }
 
         }
 
     val isWheelchairAccessible: Boolean
-        get() = Feature != null && Feature.contains("WAB")
+        get() = Feature.contains("WAB")
 
     val typeInt: Int
-        get() = BusesUtil.getType(Type!!)
+        get() = BusesUtil.getType(Type)
 
     fun hasLatitude(): Boolean {
         return Latitude.isNotEmpty()

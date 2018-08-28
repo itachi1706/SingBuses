@@ -7,14 +7,14 @@ package com.itachi1706.busarrivalsg.gsonObjects.sgLTA
  * for SingBuses in package com.itachi1706.busarrivalsg.GsonObjects.LTA
  */
 class BusArrivalArrayObject {
-    val ServiceNo: String? = null
-    val Operator: String? = null
+    val ServiceNo: String = ""
+    val Operator: String = ""
     val NextBus: BusArrivalArrayObjectEstimate? = null
 
     // Implemented as of 30 July 2017
     val NextBus2: BusArrivalArrayObjectEstimate? = null
     val NextBus3: BusArrivalArrayObjectEstimate? = null
 
-    var stopCode: String? = null
+    var stopCode: String = ""
     var isSvcStatus: Boolean = false
 }

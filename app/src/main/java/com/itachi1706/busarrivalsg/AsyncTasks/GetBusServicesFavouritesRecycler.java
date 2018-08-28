@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.Objects;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -182,6 +183,6 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
 
     private boolean checkServiceOperational(BusStatus one, BusStatus two, BusStatus three) {
         return !(one.getEstimatedArrival() == null && two.getEstimatedArrival() == null && three.getEstimatedArrival() == null)
-                && !(one.getEstimatedArrival().isEmpty() && two.getEstimatedArrival().isEmpty() && three.getEstimatedArrival().isEmpty());
+                && !(Objects.requireNonNull(one.getEstimatedArrival()).isEmpty() && two.getEstimatedArrival().isEmpty() && three.getEstimatedArrival().isEmpty());
     }
 }
