@@ -56,6 +56,10 @@
             android:exported="false"
             tools:ignore="InnerclassSeparator" />
 
+        <service android:name=".Services.LocManager"
+            android:exported="false"
+            tools:ignore="InnerclassSeparator" />
+
         <receiver
             android:name=".CompleteBootReceiver"
             android:enabled="true"

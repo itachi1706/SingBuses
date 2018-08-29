@@ -22,17 +22,16 @@ import com.itachi1706.busarrivalsg.R;
  * for SingBuses in package com.itachi1706.busarrivalsg.Services
  */
 @SuppressWarnings("ResourceType")
-public class GPSManager extends Service implements LocationListener {
+public class LocManager extends Service implements LocationListener {
 
     private final Context mContext;
-    public static final String TAG = "GPSManager";
+    public static final String TAG = "LocManager";
 
     // flag for GPS status
     boolean isGPSEnabled = false;
 
     // flag for network status
     boolean isNetworkEnabled = false;
-
     boolean canGetLocation = false;
 
     Location location; // location
@@ -43,13 +42,19 @@ public class GPSManager extends Service implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60; // 1 minute
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 30; // 30 seconds
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
+    @SuppressWarnings("unused")
+    public LocManager() {
+        // Default Constructor (UNUSED)
+        this.mContext = getApplicationContext();
+    }
+
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    public GPSManager(Context context) {
+    public LocManager(Context context) {
         this.mContext = context;
         getLocation();
     }
@@ -61,20 +66,20 @@ public class GPSManager extends Service implements LocationListener {
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     public Location getLocation() {
         try {
-            locationManager = (LocationManager) mContext
-                    .getSystemService(LOCATION_SERVICE);
+            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+            if (locationManager == null) {
+                Log.e(TAG, "There are no location service on device");
+            }
 
             // getting GPS status
-            isGPSEnabled = locationManager
-                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
+            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
             // getting network status
-            isNetworkEnabled = locationManager
-                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             if (!isGPSEnabled && !isNetworkEnabled) {
-                // no network provider is enabled
-                Log.e("GPS-MANAGER", "No provider enabled");
+                // no netAwork provider is enabled
+                Log.e(TAG, "No provider enabled");
             } else {
                 this.canGetLocation = true;
                 // First get location from Network Provider
@@ -83,7 +88,7 @@ public class GPSManager extends Service implements LocationListener {
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    Log.d("GPS-MANAGER", "Network");
+                    Log.d(TAG, "Network");
                     if (locationManager != null) {
                         location = locationManager
                                 .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -95,19 +100,23 @@ public class GPSManager extends Service implements LocationListener {
                 }
                 // if GPS Enabled get lat/long using GPS Services
                 if (isGPSEnabled) {
-                    if (location == null) {
-                        locationManager.requestLocationUpdates(
-                                LocationManager.GPS_PROVIDER,
-                                MIN_TIME_BW_UPDATES,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                        Log.d("GPS-MANAGER", "GPS Enabled");
-                        if (locationManager != null) {
-                            location = locationManager
-                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                            if (location != null) {
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
-                            }
+                    locationManager.requestLocationUpdates(
+                            LocationManager.GPS_PROVIDER,
+                            MIN_TIME_BW_UPDATES,
+                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                    Log.d(TAG, "GPS Enabled");
+                    if (locationManager != null) {
+                        Location gpslocation = locationManager
+                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if (location == null) location = gpslocation;
+                        else {
+                            // Check time and get the later one as it will be more accurate
+                            if (gpslocation.getTime() > location.getTime())
+                                location = gpslocation;
+                        }
+                        if (location != null) {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
                         }
                     }
                 }
@@ -159,7 +168,7 @@ public class GPSManager extends Service implements LocationListener {
      */
     public void showSettingsAlert(){
         if (mContext == null) {
-            Log.e(GPSManager.TAG, "Invalid Context");
+            Log.e(TAG, "Invalid Context");
             return;
         }
 
@@ -177,7 +186,7 @@ public class GPSManager extends Service implements LocationListener {
      * */
     public void stopUsingGPS(){
         if(locationManager != null){
-            locationManager.removeUpdates(GPSManager.this);
+            locationManager.removeUpdates(LocManager.this);
         }
     }
 

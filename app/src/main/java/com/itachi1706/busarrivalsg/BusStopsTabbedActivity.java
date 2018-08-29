@@ -28,7 +28,7 @@ import android.widget.Toast;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.Fragments.BusStopNearbyFragment;
 import com.itachi1706.busarrivalsg.Fragments.BusStopSearchFragment;
-import com.itachi1706.busarrivalsg.Services.GPSManager;
+import com.itachi1706.busarrivalsg.Services.LocManager;
 
 import java.util.Objects;
 
@@ -41,7 +41,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
 
     FloatingActionButton currentLocationGet;
     double longitude, latitude;
-    GPSManager gps;
+    LocManager gps;
     FirebaseAnalytics mAnalytics;
 
     @Override
@@ -88,7 +88,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
     private void initLocationManager() {
         if (gps == null) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return; // Should never happen as it should have been granted
-            gps = new GPSManager(this);
+            gps = new LocManager(this);
         }
         if (!gps.canGetLocation()){
             gps.showSettingsAlert();
@@ -105,7 +105,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
     }
 
     private void requestGpsPermission(final int code) {
-        Log.w(GPSManager.TAG, "GPS permission is not granted. Requesting permission");
+        Log.w(LocManager.TAG, "GPS permission is not granted. Requesting permission");
         final String[] permissions = new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION};
 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -154,13 +154,13 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != RC_HANDLE_ACCESS_FINE_LOCATION && requestCode != RC_HANDLE_ACCESS_FINE_LOCATION_INIT) {
-            Log.d(GPSManager.TAG, "Got unexpected permission result: " + requestCode);
+            Log.d(LocManager.TAG, "Got unexpected permission result: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(GPSManager.TAG, "Location permission granted - initialize the gps source");
+            Log.d(LocManager.TAG, "Location permission granted - initialize the gps source");
             // we have permission
             initLocationManager();
 
@@ -170,7 +170,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
             return;
         }
 
-        Log.e(GPSManager.TAG, "Permission not granted: results len = " + grantResults.length +
+        Log.e(LocManager.TAG, "Permission not granted: results len = " + grantResults.length +
                 " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
         final Activity thisActivity = this;
 
