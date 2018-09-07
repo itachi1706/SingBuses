@@ -38,7 +38,7 @@ import java.util.List;
 
 public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
-    Switch campusRed, campusBlue, campusRider, campusWeekend;
+    Switch campusRed, campusBlue, campusRider, campusWeekend, traffic;
     MapView mapView;
     private GoogleMap mMap;
 
@@ -56,9 +56,13 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         campusBlue = findViewById(R.id.ntu_clb_switch);
         campusRider = findViewById(R.id.ntu_cr_switch);
         campusWeekend = findViewById(R.id.ntu_crw_switch);
+        traffic = findViewById(R.id.ntu_traffic_switch);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
         Log.i(TAG, "Creating Map");
+
+        trafficEnabled = traffic.isChecked();
+        traffic.setOnCheckedChangeListener((buttonView, isChecked) -> trafficEnabled = isChecked);
     }
 
     @Override
@@ -77,11 +81,13 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
+    private boolean trafficEnabled = false;
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady()");
         mMap = googleMap;
-        mMap.setTrafficEnabled(true);
+        mMap.setTrafficEnabled(trafficEnabled);
         checkIfYouHaveGpsPermissionForThis();
         mMap.setOnInfoWindowClickListener(this);
         UiSettings settings = mMap.getUiSettings();
@@ -165,27 +171,28 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             if (busObj.getRoutes() != null) {
                 List<LatLng> mapToDraw = new ArrayList<>();
                 for (NTUBus.Route r : busObj.getRoutes()) {
+                    mapToDraw.clear();
                     if (r.getRoute().getCenter().length > 0)
                         centerOn = r.getRoute().getCenter()[0];
                    for (NTUBus.MapNodes node : r.getRoute().getNodes()) {
-                        mapToDraw.add(new LatLng(node.getLat(), node.getLon()));
+                        //mapToDraw.add(new LatLng(node.getLat(), node.getLon()));
                         if (node.getPoints().length > 0) {
                             for (NTUBus.MapPoints p : node.getPoints()) {
                                 mapToDraw.add(new LatLng(p.getLat(), p.getLon()));
                             }
                         }
                    }
+
+                    // Draw on Map Object
+                    PolylineOptions polylineOptions = new PolylineOptions();
+                    polylineOptions.addAll(mapToDraw);
+                    polylineOptions.width(10);
+                    // Set Colors
+                    polylineOptions.color(getRouteColor(r.getId()));
+                    mMap.addPolyline(polylineOptions);
+
+                    Log.i(TAG, "Generated " + r.getRoutename());
                 }
-
-                // Draw on Map Object
-                PolylineOptions polylineOptions = new PolylineOptions();
-                polylineOptions.addAll(mapToDraw);
-                polylineOptions.width(10);
-                polylineOptions.color(Color.RED);
-                mMap.addPolyline(polylineOptions);
-
-                Log.i(TAG, "Generated CL-R route");
-
             }
 
             if (centerOn != null) {
@@ -194,4 +201,11 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         }
     };
+
+    private int getRouteColor(int id) {
+        switch (id) {
+            case 44478: return Color.RED;
+            default: return Color.BLACK;
+        }
+    }
 }
