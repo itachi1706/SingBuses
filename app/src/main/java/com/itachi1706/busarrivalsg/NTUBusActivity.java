@@ -3,12 +3,19 @@ package com.itachi1706.busarrivalsg;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Switch;
@@ -18,8 +25,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
+import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUData;
+import com.itachi1706.busarrivalsg.GsonObjects.ntubuses.NTUBus;
 import com.itachi1706.busarrivalsg.Services.LocManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
@@ -27,6 +42,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     MapView mapView;
     private GoogleMap mMap;
     private LocationManager locationManager;
+
+    public static final String RECEIVE_NTU_DATA_EVENT = "RecieveNTUDataEvent";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +60,20 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RECEIVE_NTU_DATA_EVENT));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setTrafficEnabled(true);
@@ -51,6 +82,9 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         UiSettings settings = mMap.getUiSettings();
         settings.setZoomControlsEnabled(true);
         settings.setMapToolbarEnabled(false);
+
+        // TODO: Test
+        new GetNTUData(this, false).execute("red");
     }
 
 
@@ -108,4 +142,44 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     public void onInfoWindowClick(Marker marker) {
         // TODO: Click Info Window when created
     }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO: Parse to Gson and handle the plotting (do in main thread first, we might do in async in the future
+            // TODO: Support multiple routes (Now only supports 1 color, which will confuse people)
+            String data = intent.getStringExtra("data");
+            if (data == null) return;
+            Gson gson = new Gson();
+            NTUBus busObj = gson.fromJson(data, NTUBus.class);
+            if (busObj.getRoutes().length <= 0) return;
+
+            @Nullable NTUBus.MapPoints centerOn = null;
+            if (busObj.getRoutes() != null) {
+                List<LatLng> mapToDraw = new ArrayList<>();
+                for (NTUBus.Route r : busObj.getRoutes()) {
+                    if (r.getRoute().getCenter().length > 0)
+                        centerOn = r.getRoute().getCenter()[0];
+                   for (NTUBus.MapNodes node : r.getRoute().getNodes()) {
+                        mapToDraw.add(new LatLng(node.getLat(), node.getLon()));
+                        if (node.getPoints().length > 0) {
+                            for (NTUBus.MapPoints p : node.getPoints()) {
+                                mapToDraw.add(new LatLng(p.getLat(), p.getLon()));
+                            }
+                        }
+                   }
+                }
+
+                // Draw on Map Object
+                PolylineOptions polylineOptions = new PolylineOptions();
+                polylineOptions.addAll(mapToDraw);
+                polylineOptions.width(10);
+                polylineOptions.color(Color.RED);
+                mMap.addPolyline(polylineOptions);
+
+                Log.i("NTUBus", "Generated CL-R route");
+
+            }
+        }
+    };
 }
