@@ -11,6 +11,6 @@
         android:orderInCategory="3" app:showAsAction="never" />
 
     <!-- TODO: REMOVE when test finish -->
-    <item android:id="@+id/beta_test" android:title="Testing"
-        app:showAsAction="never"/>
+    <item android:id="@+id/beta_test" android:title="NTU Buses (BETA)" android:orderInCategory="2"
+        app:showAsAction="ifRoom" android:icon="@drawable/ic_ntu_coa_bw"/>
 </menu>
