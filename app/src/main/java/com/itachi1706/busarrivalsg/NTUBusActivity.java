@@ -27,6 +27,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUData;
@@ -66,6 +67,11 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             trafficEnabled = isChecked;
             mMap.setTrafficEnabled(trafficEnabled);
         });
+
+        campusRed.setOnCheckedChangeListener((buttonView, isChecked) -> getData());
+        campusBlue.setOnCheckedChangeListener((buttonView, isChecked) -> getData());
+        campusRider.setOnCheckedChangeListener((buttonView, isChecked) -> getData());
+        campusWeekend.setOnCheckedChangeListener((buttonView, isChecked) -> getData());
     }
 
     @Override
@@ -85,6 +91,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private boolean trafficEnabled = false;
+    private boolean mapReady = false;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -96,6 +103,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         UiSettings settings = mMap.getUiSettings();
         settings.setZoomControlsEnabled(true);
         settings.setMapToolbarEnabled(false);
+        mapReady = true;
 
         Log.d(TAG, "Map Created");
 
@@ -106,8 +114,21 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         campusBlue.setEnabled(true);
         traffic.setEnabled(true);
 
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom( new LatLng(1.3478184567642855,103.68342014685716), 15.4f)); // Hardcode center of school
         // TODO: Test
-        new GetNTUData(this, false).execute("red");
+        getData();
+    }
+
+    private void getData() {
+        List<String> get = new ArrayList<>();
+        if (campusRider.isChecked()) get.add("green");
+        if (campusRed.isChecked()) get.add("red");
+        if (campusBlue.isChecked()) get.add("blue");
+        if (campusWeekend.isChecked()) get.add("brown");
+
+        if (get.isEmpty() || !mapReady) return;
+        // TODO: Only true in update if only updating bus locations
+        new GetNTUData(this, false).execute(get.toArray(new String[get.size()]));
     }
 
 
@@ -166,16 +187,24 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         // TODO: Click Info Window when created
     }
 
+    private static List<Polyline> polylines;
+
+    // Draw the route first
+    // TODO: Show bus stops and buses
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // TODO: Parse to Gson and handle the plotting (do in main thread first, we might do in async in the future
-            // TODO: Support multiple routes (Now only supports 1 color, which will confuse people)
+            // TODO: Parse to Gson and handle the plotting (do in main thread first, we might do in async in the future)
             String data = intent.getStringExtra("data");
             if (data == null) return;
             Gson gson = new Gson();
             NTUBus busObj = gson.fromJson(data, NTUBus.class);
             if (busObj.getRoutes().length <= 0) return;
+
+            if (polylines == null) polylines = new ArrayList<>();
+            for (Polyline p : polylines) {
+                p.remove();
+            }
 
             @Nullable NTUBus.MapPoints centerOn = null;
             if (busObj.getRoutes() != null) {
@@ -199,22 +228,25 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                     polylineOptions.width(10);
                     // Set Colors
                     polylineOptions.color(getRouteColor(r.getId()));
-                    mMap.addPolyline(polylineOptions);
+                    polylines.add(mMap.addPolyline(polylineOptions));
 
                     Log.i(TAG, "Generated " + r.getRoutename());
                 }
             }
 
-            if (centerOn != null) {
-                LatLng myLatLng = new LatLng(centerOn.getLat(), centerOn.getLon());
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15.4f));
-            }
+            LatLng myLatLng;
+            if (centerOn != null) myLatLng = new LatLng(centerOn.getLat(), centerOn.getLon());
+            else myLatLng = new LatLng(1.3478184567642855,103.68342014685716); // Hardcode center of school
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15.4f));
         }
     };
 
     private int getRouteColor(int id) {
         switch (id) {
             case 44478: return Color.RED;
+            case 44479: return Color.BLUE;
+            case 44480: return Color.GREEN;
+            case 44481: return Color.parseColor("#964B00");
             default: return Color.BLACK;
         }
     }
