@@ -232,6 +232,9 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                         break;
                 }
                 return true;
+            case R.id.beta_test:
+                // TODO: Remove when unneeded
+                startActivity(new Intent(this, NTUBusActivity.class));
             default:
                 return super.onOptionsItemSelected(item);
         }
