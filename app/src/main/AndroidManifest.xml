@@ -55,8 +55,8 @@
             android:name=".Services.PebbleCommunications"
             android:exported="false"
             tools:ignore="InnerclassSeparator" />
-
-        <service android:name=".Services.LocManager"
+        <service
+            android:name=".Services.LocManager"
             android:exported="false"
             tools:ignore="InnerclassSeparator" />
 
@@ -79,7 +79,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
             android:value="false" />
@@ -102,13 +101,15 @@
         <activity
             android:name=".FirebaseLoginActivity"
             android:label="Sign in" />
-
-        <activity android:name=".BusStopsTabbedActivity"
+        <activity
+            android:name=".BusStopsTabbedActivity"
             android:label="@string/title_activity_add_bus_stops"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- Required because FOR SOME REASON Google Maps is using the deprecated Apache HTTP? WTF Google? -->
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
         <!-- Used for Firebase Cloud Messaging -->
         <meta-data
@@ -119,8 +120,9 @@
             android:resource="@color/accent" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="firebase-msg"/>
+            android:value="firebase-msg" />
 
+        <activity android:name=".NTUBusActivity"></activity>
     </application>
 
 </manifest>
