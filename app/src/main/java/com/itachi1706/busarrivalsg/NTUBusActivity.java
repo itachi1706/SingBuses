@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +20,7 @@ import android.util.Log;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -41,7 +41,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     Switch campusRed, campusBlue, campusRider, campusWeekend;
     MapView mapView;
     private GoogleMap mMap;
-    private LocationManager locationManager;
+
+    private static final String TAG = "NTUBus";
 
     public static final String RECEIVE_NTU_DATA_EVENT = "RecieveNTUDataEvent";
 
@@ -57,12 +58,14 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         campusWeekend = findViewById(R.id.ntu_crw_switch);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+        Log.i(TAG, "Creating Map");
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+        mapView.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RECEIVE_NTU_DATA_EVENT));
     }
 
@@ -70,11 +73,13 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     public void onPause() {
         super.onPause();
 
+        mapView.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "onMapReady()");
         mMap = googleMap;
         mMap.setTrafficEnabled(true);
         checkIfYouHaveGpsPermissionForThis();
@@ -82,6 +87,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         UiSettings settings = mMap.getUiSettings();
         settings.setZoomControlsEnabled(true);
         settings.setMapToolbarEnabled(false);
+
+        Log.d(TAG, "Map Created");
 
         // TODO: Test
         new GetNTUData(this, false).execute("red");
@@ -177,8 +184,13 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                 polylineOptions.color(Color.RED);
                 mMap.addPolyline(polylineOptions);
 
-                Log.i("NTUBus", "Generated CL-R route");
+                Log.i(TAG, "Generated CL-R route");
 
+            }
+
+            if (centerOn != null) {
+                LatLng myLatLng = new LatLng(centerOn.getLat(), centerOn.getLon());
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
             }
         }
     };
