@@ -62,7 +62,10 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         Log.i(TAG, "Creating Map");
 
         trafficEnabled = traffic.isChecked();
-        traffic.setOnCheckedChangeListener((buttonView, isChecked) -> trafficEnabled = isChecked);
+        traffic.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            trafficEnabled = isChecked;
+            mMap.setTrafficEnabled(trafficEnabled);
+        });
     }
 
     @Override
@@ -95,6 +98,13 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         settings.setMapToolbarEnabled(false);
 
         Log.d(TAG, "Map Created");
+
+        // Enable all toggles
+        campusWeekend.setEnabled(true);
+        campusRider.setEnabled(true);
+        campusRed.setEnabled(true);
+        campusBlue.setEnabled(true);
+        traffic.setEnabled(true);
 
         // TODO: Test
         new GetNTUData(this, false).execute("red");
@@ -197,7 +207,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
             if (centerOn != null) {
                 LatLng myLatLng = new LatLng(centerOn.getLat(), centerOn.getLon());
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15.4f));
             }
         }
     };

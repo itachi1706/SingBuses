@@ -122,7 +122,8 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="firebase-msg" />
 
-        <activity android:name=".NTUBusActivity"></activity>
+        <activity android:name=".NTUBusActivity"
+            android:label="NTU Buses"/>
     </application>
 
 </manifest>

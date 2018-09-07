@@ -25,6 +25,7 @@
             android:layout_height="wrap_content">
             <Switch
                 android:id="@+id/ntu_clr_switch"
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -40,6 +41,7 @@
             android:layout_height="wrap_content">
             <Switch
                 android:id="@+id/ntu_clb_switch"
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -55,6 +57,7 @@
             android:layout_height="wrap_content">
             <Switch
                 android:id="@+id/ntu_cr_switch"
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -70,6 +73,7 @@
             android:layout_height="wrap_content">
             <Switch
                 android:id="@+id/ntu_crw_switch"
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -85,6 +89,7 @@
             android:layout_height="wrap_content">
             <Switch
                 android:id="@+id/ntu_traffic_switch"
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
