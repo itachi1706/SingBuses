@@ -148,8 +148,21 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         if (campusBlue.isChecked()) get.add("blue");
         if (campusWeekend.isChecked()) get.add("brown");
 
-        if (get.isEmpty() || !mapReady) return;
+        if (!mapReady) return;
+        if (get.isEmpty()) {
+            if (polylines != null && !polylines.isEmpty()) {
+                for (Polyline p : polylines) {
+                    p.remove();
+                }
+                polylines.clear();
+            }
+            return;
+        }
         // TODO: Only true in update if only updating bus locations
+        campusRed.setEnabled(false);
+        campusBlue.setEnabled(false);
+        campusRider.setEnabled(false);
+        campusWeekend.setEnabled(false);
         new GetNTUData(this, false).execute(get.toArray(new String[get.size()]));
     }
 
@@ -262,6 +275,11 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                     }
                 }
             }
+
+            campusWeekend.setEnabled(true);
+            campusRider.setEnabled(true);
+            campusRed.setEnabled(true);
+            campusBlue.setEnabled(true);
 
             LatLng myLatLng;
             if (centerOn != null) myLatLng = new LatLng(centerOn.getLat(), centerOn.getLon());
