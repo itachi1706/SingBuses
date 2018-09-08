@@ -11,6 +11,18 @@ public class NTUBus {
         return routes;
     }
 
+    private double convertStringToDouble(String s) {
+        return Double.parseDouble(s);
+    }
+
+    private long convertStringToLong(String s) {
+        return Long.parseLong(s);
+    }
+
+    private float convertLocationString(String lonOrlat) {
+        return Float.parseFloat(lonOrlat);
+    }
+
     public class Route {
 
         private MapRouting route = null;
@@ -48,8 +60,130 @@ public class NTUBus {
     }
 
     public class Vehicles {
-        private String nullable;
-        // TODO: Populate this
+        private String device_ts, lat, lon, registration_code, speed, ts, license_no;
+        private int bearing, routevariant_id, vehicle_id;
+        private VehiclePosition position;
+        private VehicleStats stats;
+
+        public String getDevice_ts() {
+            return device_ts;
+        }
+
+        public String getLat() {
+            return lat;
+        }
+
+        public String getLon() {
+            return lon;
+        }
+
+        public String getRegistration_code() {
+            return registration_code;
+        }
+
+        public String getSpeed() {
+            return speed;
+        }
+
+        public String getTs() {
+            return ts;
+        }
+
+        public String getLicense_no() {
+            return license_no;
+        }
+
+        public int getBearing() {
+            return bearing;
+        }
+
+        public int getRoutevariant_id() {
+            return routevariant_id;
+        }
+
+        public int getVehicle_id() {
+            return vehicle_id;
+        }
+
+        public VehiclePosition getPosition() {
+            return position;
+        }
+
+        public VehicleStats getStats() {
+            return stats;
+        }
+    }
+
+    public class VehiclePosition {
+        private int bearing, speed;
+        private long device_ts, ts;
+        private String lat, lon;
+
+        public int getBearing() {
+            return bearing;
+        }
+
+        public int getSpeed() {
+            return speed;
+        }
+
+        public long getDevice_ts() {
+            return device_ts;
+        }
+
+        public long getTs() {
+            return ts;
+        }
+
+        public String getLat() {
+            return lat;
+        }
+
+        public String getLon() {
+            return lon;
+        }
+    }
+
+    public class VehicleStats {
+        private String avg_speed, cumm_speed_10, cumm_speed_2, lat, lon;
+        private int bearing, speed;
+        private long device_ts, ts;
+
+        public String getAvg_speed() {
+            return avg_speed;
+        }
+
+        public String getCumm_speed_10() {
+            return cumm_speed_10;
+        }
+
+        public String getCumm_speed_2() {
+            return cumm_speed_2;
+        }
+
+        public String getLat() {
+            return lat;
+        }
+
+        public String getLon() {
+            return lon;
+        }
+
+        public int getBearing() {
+            return bearing;
+        }
+
+        public int getSpeed() {
+            return speed;
+        }
+
+        public long getDevice_ts() {
+            return device_ts;
+        }
+
+        public long getTs() {
+            return ts;
+        }
     }
 
     public class MapRouting {
