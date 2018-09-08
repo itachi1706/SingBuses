@@ -33,7 +33,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUData;
-import com.itachi1706.busarrivalsg.GsonObjects.ntubuses.NTUBus;
+import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 import com.itachi1706.busarrivalsg.Services.LocManager;
 
 import java.util.ArrayList;
@@ -221,6 +221,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             if (data == null) return;
             Gson gson = new Gson();
             NTUBus busObj = gson.fromJson(data, NTUBus.class);
+            if (busObj == null) return;
+            assert busObj.getRoutes() != null;
             if (busObj.getRoutes().length <= 0) return;
 
             if (polylines == null) polylines = new ArrayList<>();
@@ -232,27 +234,32 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             if (busObj.getRoutes() != null) {
                 List<LatLng> mapToDraw = new ArrayList<>();
                 for (NTUBus.Route r : busObj.getRoutes()) {
-                    mapToDraw.clear();
-                    if (r.getRoute().getCenter().length > 0)
-                        centerOn = r.getRoute().getCenter()[0];
-                   for (NTUBus.MapNodes node : r.getRoute().getNodes()) {
-                        //mapToDraw.add(new LatLng(node.getLat(), node.getLon()));
-                        if (node.getPoints().length > 0) {
-                            for (NTUBus.MapPoints p : node.getPoints()) {
-                                mapToDraw.add(new LatLng(p.getLat(), p.getLon()));
+                    if (r.getRoute() != null) {
+                        mapToDraw.clear();
+                        assert r.getRoute().getCenter() != null;
+                        assert r.getRoute().getNodes() != null;
+                        if (r.getRoute().getCenter().length > 0)
+                            centerOn = r.getRoute().getCenter()[0];
+                        for (NTUBus.MapNodes node : r.getRoute().getNodes()) {
+                            //mapToDraw.add(new LatLng(node.getLat(), node.getLon()));
+                            assert node.getPoints() != null;
+                            if (node.getPoints().length > 0) {
+                                for (NTUBus.MapPoints p : node.getPoints()) {
+                                    mapToDraw.add(new LatLng(p.getLat(), p.getLon()));
+                                }
                             }
                         }
-                   }
 
-                    // Draw on Map Object
-                    PolylineOptions polylineOptions = new PolylineOptions();
-                    polylineOptions.addAll(mapToDraw);
-                    polylineOptions.width(10);
-                    // Set Colors
-                    polylineOptions.color(getRouteColor(r.getId()));
-                    polylines.add(mMap.addPolyline(polylineOptions));
+                        // Draw on Map Object
+                        PolylineOptions polylineOptions = new PolylineOptions();
+                        polylineOptions.addAll(mapToDraw);
+                        polylineOptions.width(10);
+                        // Set Colors
+                        polylineOptions.color(getRouteColor(r.getId()));
+                        polylines.add(mMap.addPolyline(polylineOptions));
 
-                    Log.i(TAG, "Generated " + r.getRoutename());
+                        Log.i(TAG, "Generated " + r.getRoutename());
+                    }
                 }
             }
 
