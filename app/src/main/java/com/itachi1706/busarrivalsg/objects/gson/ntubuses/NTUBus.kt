@@ -9,18 +9,6 @@ package com.itachi1706.busarrivalsg.objects.gson.ntubuses
 class NTUBus {
     val routes: Array<Route>? = null
 
-    private fun convertStringToDouble(s: String): Double {
-        return java.lang.Double.parseDouble(s)
-    }
-
-    private fun convertStringToLong(s: String): Long {
-        return java.lang.Long.parseLong(s)
-    }
-
-    private fun convertLocationString(lonOrlat: String): Float {
-        return java.lang.Float.parseFloat(lonOrlat)
-    }
-
     inner class Route {
 
         val route: MapRouting? = null
@@ -46,14 +34,14 @@ class NTUBus {
         val position: VehiclePosition? = null
         val stats: VehicleStats? = null
 
-        fun getLatVal(): Double {
-            if (lat != null) return convertStringToDouble(lat)
-            return 0.0
+        fun getLatVal(): Float {
+            if (lat != null) return lat.toFloat()
+            return 0f
         }
 
-        fun getLonVal(): Double {
-            if (lon != null) return convertStringToDouble(lon)
-            return 0.0
+        fun getLonVal(): Float {
+            if (lon != null) return lon.toFloat()
+            return 0f
         }
     }
 
