@@ -314,16 +314,16 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             assert busObj.getNextBus3() != null;
 
             // 3 Bus statuses
-            mapsIntent.putExtra("lat1", busObj.getNextBus().getLatitude());
-            mapsIntent.putExtra("lng1", busObj.getNextBus().getLongitude());
+            mapsIntent.putExtra("lat1", busObj.getNextBus().getLatitudeD());
+            mapsIntent.putExtra("lng1", busObj.getNextBus().getLongitudeD());
             mapsIntent.putExtra("arr1", busObj.getNextBus().getEstimatedArrival());
             mapsIntent.putExtra("type1", busObj.getNextBus().getTypeInt());
-            mapsIntent.putExtra("lat2", busObj.getNextBus2().getLatitude());
-            mapsIntent.putExtra("lng2", busObj.getNextBus2().getLongitude());
+            mapsIntent.putExtra("lat2", busObj.getNextBus2().getLatitudeD());
+            mapsIntent.putExtra("lng2", busObj.getNextBus2().getLongitudeD());
             mapsIntent.putExtra("arr2", busObj.getNextBus2().getEstimatedArrival());
             mapsIntent.putExtra("type2", busObj.getNextBus2().getTypeInt());
-            mapsIntent.putExtra("lat3", busObj.getNextBus3().getLatitude());
-            mapsIntent.putExtra("lng3", busObj.getNextBus3().getLongitude());
+            mapsIntent.putExtra("lat3", busObj.getNextBus3().getLatitudeD());
+            mapsIntent.putExtra("lng3", busObj.getNextBus3().getLongitudeD());
             mapsIntent.putExtra("arr3", busObj.getNextBus3().getEstimatedArrival());
             mapsIntent.putExtra("type3", busObj.getNextBus3().getTypeInt());
             mapsIntent.putExtra("sTime", currentTime);
