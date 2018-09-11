@@ -29,12 +29,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUData;
-import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 import com.itachi1706.busarrivalsg.Services.LocManager;
+import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,12 +149,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
         if (!mapReady) return;
         if (get.isEmpty()) {
-            if (polylines != null && !polylines.isEmpty()) {
-                for (Polyline p : polylines) {
-                    p.remove();
-                }
-                polylines.clear();
-            }
+            mMap.clear();
             return;
         }
         // TODO: Only true in update if only updating bus locations
@@ -222,8 +216,6 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         // TODO: Click Info Window when created
     }
 
-    private static List<Polyline> polylines;
-
     // Draw the route first
     // TODO: Show bus stops and buses
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -238,10 +230,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             assert busObj.getRoutes() != null;
             if (busObj.getRoutes().length <= 0) return;
 
-            if (polylines == null) polylines = new ArrayList<>();
-            for (Polyline p : polylines) {
-                p.remove();
-            }
+            mMap.clear();
 
             @Nullable NTUBus.MapPoints centerOn = null;
             if (busObj.getRoutes() != null) {
@@ -269,7 +258,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                         polylineOptions.width(10);
                         // Set Colors
                         polylineOptions.color(getRouteColor(r.getId()));
-                        polylines.add(mMap.addPolyline(polylineOptions));
+                        mMap.addPolyline(polylineOptions);
 
                         Log.i(TAG, "Generated " + r.getRoutename());
                     }
