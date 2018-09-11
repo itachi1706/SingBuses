@@ -27,12 +27,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUData;
 import com.itachi1706.busarrivalsg.Services.LocManager;
+import com.itachi1706.busarrivalsg.Util.BusesUtil;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 
 import java.util.ArrayList;
@@ -244,6 +247,13 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                             centerOn = r.getRoute().getCenter()[0];
                         for (NTUBus.MapNodes node : r.getRoute().getNodes()) {
                             //mapToDraw.add(new LatLng(node.getLat(), node.getLon()));
+                            if (node.is_stop_point()) {
+                                BitmapDescriptor stop = BusesUtil.INSTANCE.vectorToBitmap(R.drawable.ic_circle, getResources(), getRouteColor(r.getId()));
+                                mMap.addMarker(new MarkerOptions().position(new LatLng(node.getLat(), node.getLon()))
+                                        .title(node.getName())
+                                        .snippet("Next Stop: " + node.getShort_direction())
+                                        .icon(stop));
+                            }
                             assert node.getPoints() != null;
                             if (node.getPoints().length > 0) {
                                 for (NTUBus.MapPoints p : node.getPoints()) {

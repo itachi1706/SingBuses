@@ -80,7 +80,7 @@ class NTUBus {
         val lon: Float = 0.toFloat()
         val name: String? = null
         val short_direction: String? = null
-        val isIs_stop_point: Boolean = false
+        val is_stop_point: Boolean = false
         val points: Array<MapPoints>? = null
     }
 

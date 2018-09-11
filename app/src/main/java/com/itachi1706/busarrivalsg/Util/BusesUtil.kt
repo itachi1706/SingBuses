@@ -55,9 +55,10 @@ object BusesUtil {
                 vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
+        if (color != null) {
+            vectorDrawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+        }
         vectorDrawable.draw(canvas)
-        if (color != null)
-            vectorDrawable.setColorFilter(color, PorterDuff.Mode.ADD)
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 }
