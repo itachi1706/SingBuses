@@ -45,6 +45,16 @@ class NTUBus {
         val vehicle_id: Int = 0
         val position: VehiclePosition? = null
         val stats: VehicleStats? = null
+
+        fun getLatVal(): Double {
+            if (lat != null) return convertStringToDouble(lat)
+            return 0.0
+        }
+
+        fun getLonVal(): Double {
+            if (lon != null) return convertStringToDouble(lon)
+            return 0.0
+        }
     }
 
     inner class VehiclePosition {

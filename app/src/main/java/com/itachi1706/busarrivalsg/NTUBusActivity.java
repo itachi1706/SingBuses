@@ -245,10 +245,9 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                         assert r.getRoute().getNodes() != null;
                         if (r.getRoute().getCenter().length > 0)
                             centerOn = r.getRoute().getCenter()[0];
+                        BitmapDescriptor stop = BusesUtil.INSTANCE.vectorToBitmap(R.drawable.ic_circle, getResources(), getRouteColor(r.getId()));
                         for (NTUBus.MapNodes node : r.getRoute().getNodes()) {
-                            //mapToDraw.add(new LatLng(node.getLat(), node.getLon()));
                             if (node.is_stop_point()) {
-                                BitmapDescriptor stop = BusesUtil.INSTANCE.vectorToBitmap(R.drawable.ic_circle, getResources(), getRouteColor(r.getId()));
                                 mMap.addMarker(new MarkerOptions().position(new LatLng(node.getLat(), node.getLon()))
                                         .title(node.getName())
                                         .snippet("Next Stop: " + node.getShort_direction())
@@ -259,6 +258,17 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                                 for (NTUBus.MapPoints p : node.getPoints()) {
                                     mapToDraw.add(new LatLng(p.getLat(), p.getLon()));
                                 }
+                            }
+                        }
+
+                        // Check for bus objects
+                        // TODO: Dynamically update bus location (maybe every 10 seconds)
+                        if (r.getVehicles() != null && r.getVehicles().length > 0) {
+                            BitmapDescriptor bus = BusesUtil.INSTANCE.vectorToBitmap(R.drawable.ic_bus, getResources(), getRouteColor(r.getId()));
+                            for (NTUBus.Vehicles v : r.getVehicles()) {
+                                mMap.addMarker(new MarkerOptions().position(new LatLng(v.getLatVal(), v.getLonVal()))
+                                        .title(v.getLicense_no()).snippet("Speed: " + v.getSpeed() + " km/h | Bearing: " + v.getBearing())
+                                        .icon(bus));
                             }
                         }
 
