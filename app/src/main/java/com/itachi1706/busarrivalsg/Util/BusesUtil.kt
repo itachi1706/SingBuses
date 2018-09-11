@@ -1,5 +1,14 @@
 package com.itachi1706.busarrivalsg.Util
 
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.PorterDuff
+import android.support.annotation.ColorInt
+import android.support.annotation.DrawableRes
+import android.support.v4.content.res.ResourcesCompat
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.itachi1706.busarrivalsg.objects.CommonEnums
 
 /**
@@ -34,5 +43,21 @@ object BusesUtil {
             CommonEnums.BUS_BENDY -> "Bendy"
             else -> "Unknown"
         }
+    }
+
+    fun vectorToBitmap(@DrawableRes id: Int, resource: Resources): BitmapDescriptor {
+        return vectorToBitmap(id, resource, null)
+    }
+
+    fun vectorToBitmap(@DrawableRes id: Int, resource: Resources, @ColorInt color: Int?): BitmapDescriptor {
+        val vectorDrawable = ResourcesCompat.getDrawable(resource, id, null)
+        val bitmap = Bitmap.createBitmap(vectorDrawable!!.intrinsicWidth,
+                vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
+        vectorDrawable.draw(canvas)
+        if (color != null)
+            vectorDrawable.setColorFilter(color, PorterDuff.Mode.ADD)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 }
