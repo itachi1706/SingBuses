@@ -11,6 +11,8 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.itachi1706.busarrivalsg.objects.CommonEnums
 
+
+
 /**
  * Created by Kenneth on 28/8/2018.
  * for com.itachi1706.busarrivalsg.Util in SingBuses
@@ -45,11 +47,15 @@ object BusesUtil {
         }
     }
 
-    fun vectorToBitmap(@DrawableRes id: Int, resource: Resources): BitmapDescriptor {
-        return vectorToBitmap(id, resource, null)
+    fun vectorToBitmapDescriptor(@DrawableRes id: Int, resource: Resources): BitmapDescriptor {
+        return vectorToBitmapDescriptor(id, resource, null)
     }
 
-    fun vectorToBitmap(@DrawableRes id: Int, resource: Resources, @ColorInt color: Int?): BitmapDescriptor {
+    fun vectorToBitmapDescriptor(@DrawableRes id: Int, resource: Resources, @ColorInt color: Int?): BitmapDescriptor {
+        return BitmapDescriptorFactory.fromBitmap(vectorToBitmap(id, resource, color))
+    }
+
+    fun vectorToBitmap(@DrawableRes id: Int, resource: Resources, @ColorInt color: Int?): Bitmap {
         val vectorDrawable = ResourcesCompat.getDrawable(resource, id, null)
         val bitmap = Bitmap.createBitmap(vectorDrawable!!.intrinsicWidth,
                 vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
@@ -59,6 +65,6 @@ object BusesUtil {
             vectorDrawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         }
         vectorDrawable.draw(canvas)
-        return BitmapDescriptorFactory.fromBitmap(bitmap)
+        return bitmap
     }
 }

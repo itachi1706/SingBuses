@@ -245,7 +245,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                         assert r.getRoute().getNodes() != null;
                         if (r.getRoute().getCenter().length > 0)
                             centerOn = r.getRoute().getCenter()[0];
-                        BitmapDescriptor stop = BusesUtil.INSTANCE.vectorToBitmap(R.drawable.ic_circle, getResources(), getRouteColor(r.getId()));
+                        BitmapDescriptor stop = BusesUtil.INSTANCE.vectorToBitmapDescriptor(R.drawable.ic_circle, getResources(), getRouteColor(r.getId()));
                         for (NTUBus.MapNodes node : r.getRoute().getNodes()) {
                             if (node.is_stop_point()) {
                                 mMap.addMarker(new MarkerOptions().position(new LatLng(node.getLat(), node.getLon()))
@@ -264,8 +264,13 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                         // Check for bus objects
                         // TODO: Dynamically update bus location (maybe every 10 seconds)
                         if (r.getVehicles() != null && r.getVehicles().length > 0) {
-                            BitmapDescriptor bus = BusesUtil.INSTANCE.vectorToBitmap(R.drawable.ic_bus, getResources(), getRouteColor(r.getId()));
+                            BitmapDescriptor bus = BusesUtil.INSTANCE.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(r.getId()));
                             for (NTUBus.Vehicles v : r.getVehicles()) {
+                                // TODO: Find a way to do the bearing lol
+                                /*Bitmap arrow = BusesUtil.INSTANCE.vectorToBitmap(R.drawable.ic_chevron, getResources(), getRouteColor(r.getId()));
+                                Matrix matrix = new Matrix();
+                                matrix.setRotate(v.getBearing());
+                                arrow = Bitmap.createBitmap(arrow, 0, 0, arrow.getWidth(), arrow.getHeight(), matrix, true);*/
                                 mMap.addMarker(new MarkerOptions().position(new LatLng(v.getLatVal(), v.getLonVal()))
                                         .title(v.getLicense_no()).snippet("Speed: " + v.getSpeed() + " km/h | Bearing: " + v.getBearing())
                                         .icon(bus));
