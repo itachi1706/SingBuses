@@ -18,5 +18,5 @@ class BusStopJSON {
     var Longitude: Double = 0.toDouble()
 
     var isHasDistance = false
-    var distance: Float = 0.toFloat()
+    var distance: Float = 0.toFloat() // in Meters
 }

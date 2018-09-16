@@ -97,7 +97,7 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
         for (Distance.DistanceItem map : results) {
             float distance = map.getDist();
             BusStopJSON stop = db.getBusStopByBusStopCode(map.getBusStopCode());
-            stop.setDistance(distance);
+            stop.setDistance(distance * 1000); // Distance in KM, set to M
             stop.setHasDistance(true);
 
             stops.add(stop);
