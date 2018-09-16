@@ -1,20 +1,30 @@
 package com.itachi1706.busarrivalsg;
 
+import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.itachi1706.appupdater.EasterEggResMultiMusicPrefFragment;
 import com.itachi1706.appupdater.SettingsInitializer;
+import com.itachi1706.appupdater.Util.DeprecationHelper;
+import com.itachi1706.busarrivalsg.Services.LocManager;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
 
 import java.util.Date;
+import java.util.Locale;
 
 import de.psdev.licensesdialog.LicensesDialog;
 
@@ -91,6 +101,8 @@ public class MainSettings extends AppCompatActivity {
                 preference.setSummary(String.valueOf(newValue));
                 return true;
             });
+
+            findPreference("location_value").setOnPreferenceClickListener(preference -> processAdvDevSettingLocation());
         }
 
         private void updateSummaryDBBus(Preference timeDBUpdateBus, long dbBus){
@@ -133,6 +145,44 @@ public class MainSettings extends AppCompatActivity {
         public String getStopEggButtonText() {
             if (randomNumberIsEven()) return "1-UP";
             return "Break Free";
+        }
+
+        private boolean processAdvDevSettingLocation() {
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                new AlertDialog.Builder(getActivity()).setTitle("Location Permission not granted")
+                        .setMessage("Location permission is not granted. Enable from the App Settings page or by scanning for nearby bus stops")
+                        .setNeutralButton(R.string.dialog_action_neutral_app_settings, (dialog, which) -> {
+                            Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri packageURI = Uri.parse("package:" + getActivity().getPackageName());
+                            permIntent.setData(packageURI);
+                            startActivity(permIntent);
+                        }).setPositiveButton(R.string.dialog_action_positive_close, null).show();
+                return true;
+            }
+
+            LocManager gpsManager = new LocManager(getActivity());
+            gpsManager.getLocation();
+            Location gps = gpsManager.getGpsLoc();
+            Location net = gpsManager.getNetLoc();
+            StringBuilder message = new StringBuilder();
+            if (gps != null) {
+                message.append("<b>GPS Data</b><br>");
+                message.append(String.format(Locale.getDefault(), "Latitude: %f <br>Longitude: %f <br>", gps.getLatitude(), gps.getLongitude()));
+                message.append(String.format(Locale.getDefault(), "Altitude: %f <br>Accuracy: %f <br>", gps.getAltitude(), gps.getAccuracy()));
+                message.append(String.format(Locale.getDefault(), "Bearing: %f <br>Speed: %f <br>", gps.getBearing(), gps.getSpeed()));
+                message.append(String.format(Locale.getDefault(), "Time: %d <br><br><br>", gps.getTime()));
+            }
+            if (net != null) {
+                message.append("<b>Mobile Network Data</b><br>");
+                message.append(String.format(Locale.getDefault(), "Latitude: %f <br>Longitude: %f <br>", net.getLatitude(), net.getLongitude()));
+                message.append(String.format(Locale.getDefault(), "Altitude: %f <br>Accuracy: %f <br>", net.getAltitude(), net.getAccuracy()));
+                message.append(String.format(Locale.getDefault(), "Bearing: %f <br>Speed: %f <br>", net.getBearing(), net.getSpeed()));
+                message.append(String.format(Locale.getDefault(), "Time: %d", net.getTime()));
+            }
+            new AlertDialog.Builder(getActivity()).setTitle("Location Data")
+                    .setMessage(DeprecationHelper.Html.fromHtml(message.toString()))
+                    .setPositiveButton(R.string.dialog_action_positive_close, null).show();
+            return true;
         }
     }
 }
