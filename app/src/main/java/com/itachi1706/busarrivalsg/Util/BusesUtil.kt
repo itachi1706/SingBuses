@@ -26,4 +26,13 @@ object BusesUtil {
             else -> CommonEnums.UNKNOWN
         }
     }
+
+    fun getType(type: Int): String {
+        return when (type) {
+            CommonEnums.BUS_SINGLE_DECK -> "Normal"
+            CommonEnums.BUS_DOUBLE_DECK -> "Double"
+            CommonEnums.BUS_BENDY -> "Bendy"
+            else -> "Unknown"
+        }
+    }
 }

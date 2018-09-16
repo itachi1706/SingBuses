@@ -20,6 +20,7 @@ import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
+import com.itachi1706.busarrivalsg.Util.BusesUtil;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObjectEstimate;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
@@ -85,9 +86,9 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         if (!i.isSvcStatus()) {
             holder.operatingStatus.setText(activity.getString(R.string.service_not_operational));
             holder.operatingStatus.setTextColor(Color.RED);
-            notArriving(holder.busArrivalNow, holder.wheelchairNow);
-            notArriving(holder.busArrivalNext, holder.wheelchairNext);
-            notArriving(holder.busArrivalSub, holder.wheelchairSub);
+            notArriving(holder.busArrivalNow, holder.wheelchairNow, holder.busTypeNow);
+            notArriving(holder.busArrivalNext, holder.wheelchairNext, holder.busTypeNext);
+            notArriving(holder.busArrivalSub, holder.wheelchairSub, holder.busTypeSub);
             return;
         }
         holder.operatingStatus.setText(activity.getString(R.string.service_operational));
@@ -99,7 +100,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
 
         //Current Bus
         if (i.getNextBus().getEstimatedArrival() == null){
-            notArriving(holder.busArrivalNow, holder.wheelchairNow);
+            notArriving(holder.busArrivalNow, holder.wheelchairNow, holder.busTypeNow);
         } else {
             long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus().getEstimatedArrival(), serverTime, currentTime);
             String arrivalStatusNow;
@@ -116,12 +117,17 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
             if (i.getNextBus().isWheelchairAccessible())
                 holder.wheelchairNow.setVisibility(View.VISIBLE);
+            holder.busTypeNow.setVisibility(View.INVISIBLE);
+            if (!arrivalStatusNow.equalsIgnoreCase("-")) {
+                holder.busTypeNow.setText(BusesUtil.INSTANCE.getType(i.getNextBus().getTypeInt()));
+                holder.busTypeNow.setVisibility(View.VISIBLE);
+            }
             holder.busArrivalNow.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), CUR));
         }
 
         //2nd bus (Next bus)
         if (i.getNextBus2().getEstimatedArrival() == null){
-            notArriving(holder.busArrivalNext, holder.wheelchairNext);
+            notArriving(holder.busArrivalNext, holder.wheelchairNext, holder.busTypeNext);
         } else {
             long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus2().getEstimatedArrival(), serverTime, currentTime);
             String arrivalStatusNext;
@@ -138,6 +144,11 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
             if (i.getNextBus2().isWheelchairAccessible())
                 holder.wheelchairNext.setVisibility(View.VISIBLE);
+            holder.busTypeNext.setVisibility(View.INVISIBLE);
+            if (!arrivalStatusNext.equalsIgnoreCase("-")) {
+                holder.busTypeNext.setText(BusesUtil.INSTANCE.getType(i.getNextBus2().getTypeInt()));
+                holder.busTypeNext.setVisibility(View.VISIBLE);
+            }
             holder.busArrivalNext.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), NEXT));
         }
 
@@ -146,7 +157,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             comingSoon(holder.busArrivalSub);
             return;
         }
-        if (i.getNextBus3().getEstimatedArrival() == null) notArriving(holder.busArrivalSub, holder.wheelchairSub);
+        if (i.getNextBus3().getEstimatedArrival() == null) notArriving(holder.busArrivalSub, holder.wheelchairSub, holder.busTypeSub);
         else {
             long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus3().getEstimatedArrival(), serverTime, currentTime);
             String arrivalStatusSub;
@@ -163,6 +174,11 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
             if (i.getNextBus3().isWheelchairAccessible())
                 holder.wheelchairSub.setVisibility(View.VISIBLE);
+            holder.busTypeSub.setVisibility(View.INVISIBLE);
+            if (!arrivalStatusSub.equalsIgnoreCase("-")) {
+                holder.busTypeSub.setText(BusesUtil.INSTANCE.getType(i.getNextBus3().getTypeInt()));
+                holder.busTypeSub.setVisibility(View.VISIBLE);
+            }
             holder.busArrivalSub.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), SUB));
         }
     }
@@ -172,10 +188,11 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         view.setTextColor(Color.GRAY);
     }
 
-    private void notArriving(TextView view, ImageView wheelchair){
+    private void notArriving(TextView view, ImageView wheelchair, TextView busType){
         view.setText("-");
         view.setTextColor(Color.GRAY);
         wheelchair.setVisibility(View.INVISIBLE);
+        busType.setVisibility(View.INVISIBLE);
         view.setOnClickListener(new UnavailableButton());
     }
 
@@ -201,6 +218,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     class BusServiceViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
         TextView busOperator, busNumber, operatingStatus;
+        TextView busTypeNow, busTypeNext, busTypeSub;
         Button busArrivalNow, busArrivalNext, busArrivalSub;
         ImageView wheelchairNow, wheelchairNext, wheelchairSub;
 
@@ -215,9 +233,15 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             wheelchairNow = v.findViewById(R.id.ivWheelchairNow);
             wheelchairNext = v.findViewById(R.id.ivWheelchairNext);
             wheelchairSub = v.findViewById(R.id.ivWheelchairSub);
+            busTypeNow = v.findViewById(R.id.tvBusTypeNow);
+            busTypeNext = v.findViewById(R.id.tvBusTypeNext);
+            busTypeSub = v.findViewById(R.id.tvBusTypeSub);
             wheelchairNow.setVisibility(View.INVISIBLE);
             wheelchairNext.setVisibility(View.INVISIBLE);
             wheelchairSub.setVisibility(View.INVISIBLE);
+            busTypeNow.setVisibility(View.INVISIBLE);
+            busTypeNext.setVisibility(View.INVISIBLE);
+            busTypeSub.setVisibility(View.INVISIBLE);
             v.setOnLongClickListener(this);
             busArrivalNext.setOnLongClickListener(this);
             busArrivalNow.setOnLongClickListener(this);
