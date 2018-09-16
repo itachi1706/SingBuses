@@ -96,6 +96,7 @@ public class LocManager extends Service implements LocationListener {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
                         }
+                        netLoc = location;
                     }
                 }
                 // if GPS Enabled get lat/long using GPS Services
@@ -114,6 +115,7 @@ public class LocManager extends Service implements LocationListener {
                             if (gpslocation.getTime() > location.getTime())
                                 location = gpslocation;
                         }
+                        gpsLoc = gpslocation;
                         if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
@@ -215,5 +217,17 @@ public class LocManager extends Service implements LocationListener {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    private Location gpsLoc = null, netLoc = null; // For dev debug settings
+
+    @Nullable
+    public Location getGpsLoc() {
+        return gpsLoc;
+    }
+
+    @Nullable
+    public Location getNetLoc() {
+        return netLoc;
     }
 }

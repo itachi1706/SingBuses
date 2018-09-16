@@ -3,10 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeightLarge"
+    android:layout_height="88dp"
     android:padding="2dip"
     android:background="?android:selectableItemBackground">
-
 
     <TextView
         android:layout_width="wrap_content"
@@ -123,4 +122,34 @@
         android:layout_alignTop="@+id/ivWheelchairNext"
         android:layout_alignRight="@+id/btnBusArrivalNow"
         android:layout_alignEnd="@+id/btnBusArrivalNow" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBusService"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/tvBusTypeNow"
+        android:layout_toStartOf="@+id/ivWheelchairNow"
+        android:layout_toLeftOf="@+id/ivWheelchairNow"
+        android:text="@string/label_bus_type_placeholder" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBusService"
+        android:id="@+id/tvBusTypeNext"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_toStartOf="@+id/ivWheelchairNext"
+        android:layout_toLeftOf="@+id/ivWheelchairNext"
+        android:text="@string/label_bus_type_placeholder" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBusService"
+        android:id="@+id/tvBusTypeSub"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_toStartOf="@+id/ivWheelchairSub"
+        android:layout_toLeftOf="@+id/ivWheelchairSub"
+        android:text="@string/label_bus_type_placeholder" />
 </RelativeLayout>

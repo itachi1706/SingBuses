@@ -87,10 +87,11 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
 
     private void initLocationManager() {
         if (gps == null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return; // Should never happen as it should have been granted
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                return; // Should never happen as it should have been granted
             gps = new LocManager(this);
         }
-        if (!gps.canGetLocation()){
+        if (!gps.canGetLocation()) {
             gps.showSettingsAlert();
         }
     }
@@ -126,6 +127,8 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
     private void getLocationButtonClicked() {
         Toast.makeText(getApplicationContext(), R.string.toast_message_retrieving_location, Toast.LENGTH_SHORT).show();
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            gps.getLocation();
         latitude = gps.getLatitude();
         longitude = gps.getLongitude();
         Bundle bundle = new Bundle();

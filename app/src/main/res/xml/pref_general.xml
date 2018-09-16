@@ -48,6 +48,7 @@
 
     <PreferenceCategory android:title="Developer Settings (Advanced)">
         <Preference android:title="Favourites JSON" android:key="fav_json" android:summary="View JSON String for your favourites" />
+        <Preference android:title="Location Values" android:key="location_value" android:summary="View Location Values detected by app" />
     </PreferenceCategory>
 
 </PreferenceScreen>
