@@ -167,22 +167,23 @@ public class MainSettings extends AppCompatActivity {
             StringBuilder message = new StringBuilder();
             if (gps != null) {
                 message.append("<b>GPS Data</b><br>");
-                message.append(String.format(Locale.getDefault(), "Latitude: %f <br>Longitude: %f <br>", gps.getLatitude(), gps.getLongitude()));
-                message.append(String.format(Locale.getDefault(), "Altitude: %f <br>Accuracy: %f <br>", gps.getAltitude(), gps.getAccuracy()));
-                message.append(String.format(Locale.getDefault(), "Bearing: %f <br>Speed: %f <br>", gps.getBearing(), gps.getSpeed()));
-                message.append(String.format(Locale.getDefault(), "Time: %d <br><br><br>", gps.getTime()));
+                message.append(getLocationRawStringData(gps)).append("<br><br><br>");
             }
             if (net != null) {
                 message.append("<b>Mobile Network Data</b><br>");
-                message.append(String.format(Locale.getDefault(), "Latitude: %f <br>Longitude: %f <br>", net.getLatitude(), net.getLongitude()));
-                message.append(String.format(Locale.getDefault(), "Altitude: %f <br>Accuracy: %f <br>", net.getAltitude(), net.getAccuracy()));
-                message.append(String.format(Locale.getDefault(), "Bearing: %f <br>Speed: %f <br>", net.getBearing(), net.getSpeed()));
-                message.append(String.format(Locale.getDefault(), "Time: %d", net.getTime()));
+                message.append(getLocationRawStringData(net));
             }
             new AlertDialog.Builder(getActivity()).setTitle("Location Data")
                     .setMessage(DeprecationHelper.Html.fromHtml(message.toString()))
                     .setPositiveButton(R.string.dialog_action_positive_close, null).show();
             return true;
+        }
+
+        private String getLocationRawStringData(Location loc) {
+            return String.format(Locale.getDefault(), "Latitude: %f <br>Longitude: %f <br>", loc.getLatitude(), loc.getLongitude()) +
+                    String.format(Locale.getDefault(), "Altitude: %f <br>Accuracy: %f <br>", loc.getAltitude(), loc.getAccuracy()) +
+                    String.format(Locale.getDefault(), "Bearing: %f <br>Speed: %f <br>", loc.getBearing(), loc.getSpeed()) +
+                    String.format(Locale.getDefault(), "Time: %d <br>Provider: %s", loc.getTime(), loc.getProvider());
         }
     }
 }
