@@ -175,10 +175,12 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             return;
         }
         // TODO: Only true in update if only updating bus locations
-        campusRed.setEnabled(false);
-        campusBlue.setEnabled(false);
-        campusRider.setEnabled(false);
-        campusWeekend.setEnabled(false);
+        if (!refresh) {
+            campusRed.setEnabled(false);
+            campusBlue.setEnabled(false);
+            campusRider.setEnabled(false);
+            campusWeekend.setEnabled(false);
+        }
         new GetNTUData(this, refresh).execute(get.toArray(new String[get.size()]));
     }
 
