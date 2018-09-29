@@ -10,12 +10,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +34,13 @@ import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
@@ -138,8 +139,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         campusBlue.setEnabled(true);
         traffic.setEnabled(true);
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom( new LatLng(1.3478184567642855,103.68342014685716), 15.4f)); // Hardcode center of school
-        // TODO: Test
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(1.3478184567642855, 103.68342014685716), 15.4f)); // Hardcode center of school
         getData();
     }
 
@@ -203,7 +203,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d(LocManager.TAG, "Location permission granted - enabling my location");
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mMap.setMyLocationEnabled(true);
             }
             return;
@@ -219,6 +219,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         // TODO: Click Info Window when created
     }
 
+    private ArrayList<Marker> busMarkers = new ArrayList<>();
+
     // Draw the route first
     // TODO: Show bus stops and buses
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -226,6 +228,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         public void onReceive(Context context, Intent intent) {
             // TODO: Parse to Gson and handle the plotting (do in main thread first, we might do in async in the future)
             String data = intent.getStringExtra("data");
+            int update = intent.getIntExtra("update", 0);
             if (data == null) return;
             Gson gson = new Gson();
             NTUBus busObj = gson.fromJson(data, NTUBus.class);
@@ -233,59 +236,62 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             assert busObj.getRoutes() != null;
             if (busObj.getRoutes().length <= 0) return;
 
-            mMap.clear();
-
             @Nullable NTUBus.MapPoints centerOn = null;
-            if (busObj.getRoutes() != null) {
-                List<LatLng> mapToDraw = new ArrayList<>();
-                for (NTUBus.Route r : busObj.getRoutes()) {
-                    if (r.getRoute() != null) {
-                        mapToDraw.clear();
-                        assert r.getRoute().getCenter() != null;
-                        assert r.getRoute().getNodes() != null;
-                        if (r.getRoute().getCenter().length > 0)
-                            centerOn = r.getRoute().getCenter()[0];
-                        BitmapDescriptor stop = BusesUtil.INSTANCE.vectorToBitmapDescriptor(R.drawable.ic_circle, getResources(), getRouteColor(r.getId()));
-                        for (NTUBus.MapNodes node : r.getRoute().getNodes()) {
-                            if (node.is_stop_point()) {
-                                mMap.addMarker(new MarkerOptions().position(new LatLng(node.getLat(), node.getLon()))
-                                        .title(node.getName())
-                                        .snippet("Next Stop: " + node.getShort_direction())
-                                        .icon(stop));
-                            }
-                            assert node.getPoints() != null;
-                            if (node.getPoints().length > 0) {
-                                for (NTUBus.MapPoints p : node.getPoints()) {
-                                    mapToDraw.add(new LatLng(p.getLat(), p.getLon()));
+            if (update == 0) {
+                mMap.clear();
+                busMarkers.clear();
+
+                if (busObj.getRoutes() != null) {
+                    List<LatLng> mapToDraw = new ArrayList<>();
+                    for (NTUBus.Route r : busObj.getRoutes()) {
+                        if (r.getRoute() != null) {
+                            mapToDraw.clear();
+                            assert r.getRoute().getCenter() != null;
+                            assert r.getRoute().getNodes() != null;
+                            if (r.getRoute().getCenter().length > 0)
+                                centerOn = r.getRoute().getCenter()[0];
+                            BitmapDescriptor stop = BusesUtil.INSTANCE.vectorToBitmapDescriptor(R.drawable.ic_circle, getResources(), getRouteColor(r.getId()));
+                            for (NTUBus.MapNodes node : r.getRoute().getNodes()) {
+                                if (node.is_stop_point()) {
+                                    mMap.addMarker(new MarkerOptions().position(new LatLng(node.getLat(), node.getLon()))
+                                            .title(node.getName())
+                                            .snippet("Next Stop: " + node.getShort_direction())
+                                            .icon(stop));
+                                }
+                                assert node.getPoints() != null;
+                                if (node.getPoints().length > 0) {
+                                    for (NTUBus.MapPoints p : node.getPoints()) {
+                                        mapToDraw.add(new LatLng(p.getLat(), p.getLon()));
+                                    }
                                 }
                             }
+
+                            // Check for bus objects
+                            // TODO: Dynamically update bus location (maybe every 10 seconds)
+                            busMarkers.addAll(addBusesIntoRoute(r));
+
+                            // Draw on Map Object
+                            PolylineOptions polylineOptions = new PolylineOptions();
+                            polylineOptions.addAll(mapToDraw);
+                            polylineOptions.width(10);
+                            // Set Colors
+                            polylineOptions.color(getRouteColor(r.getId()));
+                            mMap.addPolyline(polylineOptions);
+
+                            Log.i(TAG, "Generated " + r.getRoutename());
                         }
+                    }
+                }
 
-                        // Check for bus objects
-                        // TODO: Dynamically update bus location (maybe every 10 seconds)
-                        if (r.getVehicles() != null && r.getVehicles().length > 0) {
-                            BitmapDescriptor bus = BusesUtil.INSTANCE.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(r.getId()));
-                            for (NTUBus.Vehicles v : r.getVehicles()) {
-                                // TODO: Find a way to do the bearing lol
-                                /*Bitmap arrow = BusesUtil.INSTANCE.vectorToBitmap(R.drawable.ic_chevron, getResources(), getRouteColor(r.getId()));
-                                Matrix matrix = new Matrix();
-                                matrix.setRotate(v.getBearing());
-                                arrow = Bitmap.createBitmap(arrow, 0, 0, arrow.getWidth(), arrow.getHeight(), matrix, true);*/
-                                mMap.addMarker(new MarkerOptions().position(new LatLng(v.getLatVal(), v.getLonVal()))
-                                        .title(v.getLicense_no()).snippet("Speed: " + v.getSpeed() + " km/h | Bearing: " + v.getBearing())
-                                        .icon(bus));
-                            }
-                        }
-
-                        // Draw on Map Object
-                        PolylineOptions polylineOptions = new PolylineOptions();
-                        polylineOptions.addAll(mapToDraw);
-                        polylineOptions.width(10);
-                        // Set Colors
-                        polylineOptions.color(getRouteColor(r.getId()));
-                        mMap.addPolyline(polylineOptions);
-
-                        Log.i(TAG, "Generated " + r.getRoutename());
+            } else {
+                // Only update buses
+                for (Marker m : busMarkers) {
+                    m.remove();
+                }
+                busMarkers.clear();
+                if (busObj.getRoutes() != null) {
+                    for (NTUBus.Route r : busObj.getRoutes()) {
+                        busMarkers.addAll(addBusesIntoRoute(r));
                     }
                 }
             }
@@ -297,10 +303,30 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
             LatLng myLatLng;
             if (centerOn != null) myLatLng = new LatLng(centerOn.getLat(), centerOn.getLon());
-            else myLatLng = new LatLng(1.3478184567642855,103.68342014685716); // Hardcode center of school
+            else
+                myLatLng = new LatLng(1.3478184567642855, 103.68342014685716); // Hardcode center of school
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15.4f));
         }
     };
+
+    private List<Marker> addBusesIntoRoute(NTUBus.Route r) {
+        List<Marker> markers = new ArrayList<>();
+        // TODO: Dynamically update bus location (maybe every 10 seconds)
+        if (r.getVehicles() != null && r.getVehicles().length > 0) {
+            BitmapDescriptor bus = BusesUtil.INSTANCE.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(r.getId()));
+            for (NTUBus.Vehicles v : r.getVehicles()) {
+                // TODO: Find a way to do the bearing lol
+                                /*Bitmap arrow = BusesUtil.INSTANCE.vectorToBitmap(R.drawable.ic_chevron, getResources(), getRouteColor(r.getId()));
+                                Matrix matrix = new Matrix();
+                                matrix.setRotate(v.getBearing());
+                                arrow = Bitmap.createBitmap(arrow, 0, 0, arrow.getWidth(), arrow.getHeight(), matrix, true);*/
+                markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(v.getLatVal(), v.getLonVal()))
+                        .title(v.getLicense_no()).snippet("Speed: " + v.getSpeed() + " km/h | Bearing: " + v.getBearing())
+                        .icon(bus)));
+            }
+        }
+        return markers;
+    }
 
     private int getRouteColor(int id) {
         switch (id) {
