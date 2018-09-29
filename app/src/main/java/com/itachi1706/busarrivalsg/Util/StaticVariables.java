@@ -6,9 +6,13 @@ import android.util.Log;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -97,6 +101,11 @@ public class StaticVariables {
         int sec = Integer.parseInt(trueTimeSplit[2]);
 
         return new GregorianCalendar(year, month, dates, hr, min, sec);
+    }
+
+    public static String convertDateToString(Date date) {
+        DateFormat df = new SimpleDateFormat("EE dd MMM yyyy HH:mm:ss zz", Locale.US);
+        return df.format(date);
     }
 
     // HANDLER MESSAGES

@@ -14,6 +14,8 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -35,9 +37,11 @@ import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUData;
 import com.itachi1706.busarrivalsg.Services.LocManager;
 import com.itachi1706.busarrivalsg.Util.BusesUtil;
+import com.itachi1706.busarrivalsg.Util.StaticVariables;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -148,6 +152,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                 finish();
                 return true;
             case R.id.refresh:
+                Log.i("NTUBus", "Manually refreshing bus data at " + StaticVariables.convertDateToString(new Date(System.currentTimeMillis())));
                 getData(true);
                 return true;
             default:
@@ -180,6 +185,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         traffic.setEnabled(true);
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(1.3478184567642855, 103.68342014685716), 15.4f)); // Hardcode center of school
+        refreshHandler = new Handler();
         getData(false);
     }
 
@@ -195,7 +201,6 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             mMap.clear();
             return;
         }
-        // TODO: Only true in update if only updating bus locations
         if (!refresh) {
             campusRed.setEnabled(false);
             campusBlue.setEnabled(false);
@@ -203,6 +208,12 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             campusWeekend.setEnabled(false);
         }
         new GetNTUData(this, refresh).execute(get.toArray(new String[get.size()]));
+        // TODO: Let user change delay in settings
+        if (!refreshHandler.hasMessages(3000)) {
+            Message ref = Message.obtain(refreshHandler, refreshTask);
+            ref.what = 3000;
+            refreshHandler.sendMessageDelayed(ref, 10000); // 10 seconds auto-refresh if theres routes selected
+        }
     }
 
 
@@ -263,8 +274,13 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private ArrayList<Marker> busMarkers = new ArrayList<>();
 
+    private Handler refreshHandler;
+    private Runnable refreshTask = () -> {
+        Log.i("NTUBus", "Auto-refreshing bus data at " + StaticVariables.convertDateToString(new Date(System.currentTimeMillis())));
+        getData(true);
+    };
+
     // Draw the route first
-    // TODO: Show bus stops and buses
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -309,7 +325,6 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                             }
 
                             // Check for bus objects
-                            // TODO: Dynamically update bus location (maybe every 10 seconds)
                             busMarkers.addAll(addBusesIntoRoute(r));
 
                             // Draw on Map Object
@@ -354,7 +369,6 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private List<Marker> addBusesIntoRoute(NTUBus.Route r) {
         List<Marker> markers = new ArrayList<>();
-        // TODO: Dynamically update bus location (maybe every 10 seconds)
         if (r.getVehicles() != null && r.getVehicles().length > 0) {
             BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(r.getId()));
             for (NTUBus.Vehicles v : r.getVehicles()) {
