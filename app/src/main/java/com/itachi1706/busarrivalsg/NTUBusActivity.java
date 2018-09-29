@@ -86,10 +86,10 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             mMap.setTrafficEnabled(trafficEnabled);
         });
 
-        campusRed.setOnCheckedChangeListener((buttonView, isChecked) -> getData());
-        campusBlue.setOnCheckedChangeListener((buttonView, isChecked) -> getData());
-        campusRider.setOnCheckedChangeListener((buttonView, isChecked) -> getData());
-        campusWeekend.setOnCheckedChangeListener((buttonView, isChecked) -> getData());
+        campusRed.setOnCheckedChangeListener((buttonView, isChecked) -> getData(false));
+        campusBlue.setOnCheckedChangeListener((buttonView, isChecked) -> getData(false));
+        campusRider.setOnCheckedChangeListener((buttonView, isChecked) -> getData(false));
+        campusWeekend.setOnCheckedChangeListener((buttonView, isChecked) -> getData(false));
     }
 
     @Override
@@ -127,7 +127,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                 finish();
                 return true;
             case R.id.refresh:
-                Toast.makeText(this, "Unimplemented", Toast.LENGTH_LONG).show();
+                getData(true);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -159,10 +159,10 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         traffic.setEnabled(true);
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(1.3478184567642855, 103.68342014685716), 15.4f)); // Hardcode center of school
-        getData();
+        getData(false);
     }
 
-    private void getData() {
+    private void getData(boolean refresh) {
         List<String> get = new ArrayList<>();
         if (campusRider.isChecked()) get.add("green");
         if (campusRed.isChecked()) get.add("red");
@@ -179,7 +179,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         campusBlue.setEnabled(false);
         campusRider.setEnabled(false);
         campusWeekend.setEnabled(false);
-        new GetNTUData(this, false).execute(get.toArray(new String[get.size()]));
+        new GetNTUData(this, refresh).execute(get.toArray(new String[get.size()]));
     }
 
 
@@ -313,6 +313,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                         busMarkers.addAll(addBusesIntoRoute(r));
                     }
                 }
+                Toast.makeText(context, "Refreshed", Toast.LENGTH_SHORT).show(); // TODO: Test code
             }
 
             campusWeekend.setEnabled(true);
