@@ -18,4 +18,17 @@
             android:targetPackage="com.itachi1706.busarrivalsg"
             android:targetClass="com.itachi1706.busarrivalsg.BusStopsTabbedActivity" />
     </shortcut>
+    <shortcut
+        android:shortcutId="ntubus"
+        android:enabled="true"
+        android:icon="@drawable/ic_ntu_coa"
+        android:shortcutShortLabel="@string/static_ntu_label"
+        android:shortcutLongLabel="@string/static_ntu_long_label"
+        android:shortcutDisabledMessage="@string/static_ntu_disabled_label"
+        tools:ignore="UnusedAttribute">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.itachi1706.busarrivalsg"
+            android:targetClass="com.itachi1706.busarrivalsg.NTUBusActivity" />
+    </shortcut>
 </shortcuts>
