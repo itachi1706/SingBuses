@@ -8,7 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -52,10 +55,20 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
     public static final String RECEIVE_NTU_DATA_EVENT = "RecieveNTUDataEvent";
 
+    private BusesUtil busesUtil = BusesUtil.INSTANCE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ntubus);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            Bitmap home = busesUtil.vectorToBitmap(R.drawable.ic_ntu_coa, getResources(), null);
+            Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(home, (int) busesUtil.pxFromDp(26, getResources()),
+                    (int) busesUtil.pxFromDp(32, getResources()), true));
+            getSupportActionBar().setHomeAsUpIndicator(d);
+        }
 
         mapView = findViewById(R.id.mapView);
         campusRed = findViewById(R.id.ntu_clr_switch);
@@ -109,6 +122,12 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         switch (id) {
             case R.id.action_settings:
                 startActivity(new Intent(this, MainSettings.class));
+                return true;
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.refresh:
+                Toast.makeText(this, "Unimplemented", Toast.LENGTH_LONG).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -250,7 +269,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                             assert r.getRoute().getNodes() != null;
                             if (r.getRoute().getCenter().length > 0)
                                 centerOn = r.getRoute().getCenter()[0];
-                            BitmapDescriptor stop = BusesUtil.INSTANCE.vectorToBitmapDescriptor(R.drawable.ic_circle, getResources(), getRouteColor(r.getId()));
+                            BitmapDescriptor stop = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_circle, getResources(), getRouteColor(r.getId()));
                             for (NTUBus.MapNodes node : r.getRoute().getNodes()) {
                                 if (node.is_stop_point()) {
                                     mMap.addMarker(new MarkerOptions().position(new LatLng(node.getLat(), node.getLon()))
@@ -313,10 +332,10 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         List<Marker> markers = new ArrayList<>();
         // TODO: Dynamically update bus location (maybe every 10 seconds)
         if (r.getVehicles() != null && r.getVehicles().length > 0) {
-            BitmapDescriptor bus = BusesUtil.INSTANCE.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(r.getId()));
+            BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(r.getId()));
             for (NTUBus.Vehicles v : r.getVehicles()) {
                 // TODO: Find a way to do the bearing lol
-                                /*Bitmap arrow = BusesUtil.INSTANCE.vectorToBitmap(R.drawable.ic_chevron, getResources(), getRouteColor(r.getId()));
+                                /*Bitmap arrow = busesUtil.vectorToBitmap(R.drawable.ic_chevron, getResources(), getRouteColor(r.getId()));
                                 Matrix matrix = new Matrix();
                                 matrix.setRotate(v.getBearing());
                                 arrow = Bitmap.createBitmap(arrow, 0, 0, arrow.getWidth(), arrow.getHeight(), matrix, true);*/

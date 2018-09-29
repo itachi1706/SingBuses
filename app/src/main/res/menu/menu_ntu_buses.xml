@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.itachi1706.busarrivalsg.AddBusStops">
-    <item android:icon="@drawable/ic_ntu_coa" android:title="NTU"
+    <item android:id="@+id/refresh" android:icon="@drawable/ic_refresh" android:title="Refresh"
         android:enabled="false" app:showAsAction="ifRoom" />
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />

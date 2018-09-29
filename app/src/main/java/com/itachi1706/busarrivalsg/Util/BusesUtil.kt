@@ -67,4 +67,8 @@ object BusesUtil {
         vectorDrawable.draw(canvas)
         return bitmap
     }
+
+    fun pxFromDp(dp: Float, resource: Resources): Float {
+        return dp * resource.displayMetrics.density
+    }
 }
