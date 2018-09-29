@@ -294,11 +294,11 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             assert busObj.getRoutes() != null;
             if (busObj.getRoutes().length <= 0) return;
 
-            @Nullable NTUBus.MapPoints centerOn = null;
             if (update == 0) {
                 mMap.clear();
                 busMarkers.clear();
 
+                @Nullable NTUBus.MapPoints centerOn = null;
                 if (busObj.getRoutes() != null) {
                     List<LatLng> mapToDraw = new ArrayList<>();
                     for (NTUBus.Route r : busObj.getRoutes()) {
@@ -340,6 +340,11 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                     }
                 }
 
+                LatLng myLatLng;
+                if (centerOn != null) myLatLng = new LatLng(centerOn.getLat(), centerOn.getLon());
+                else
+                    myLatLng = new LatLng(1.3478184567642855, 103.68342014685716); // Hardcode center of school
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15.4f));
             } else {
                 // Only update buses
                 for (Marker m : busMarkers) {
@@ -358,12 +363,6 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             campusRider.setEnabled(true);
             campusRed.setEnabled(true);
             campusBlue.setEnabled(true);
-
-            LatLng myLatLng;
-            if (centerOn != null) myLatLng = new LatLng(centerOn.getLat(), centerOn.getLon());
-            else
-                myLatLng = new LatLng(1.3478184567642855, 103.68342014685716); // Hardcode center of school
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15.4f));
         }
     };
 
