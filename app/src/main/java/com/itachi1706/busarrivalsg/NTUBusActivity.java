@@ -7,12 +7,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -86,10 +88,29 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             mMap.setTrafficEnabled(trafficEnabled);
         });
 
-        campusRed.setOnCheckedChangeListener((buttonView, isChecked) -> getData(false));
-        campusBlue.setOnCheckedChangeListener((buttonView, isChecked) -> getData(false));
-        campusRider.setOnCheckedChangeListener((buttonView, isChecked) -> getData(false));
-        campusWeekend.setOnCheckedChangeListener((buttonView, isChecked) -> getData(false));
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        // Manually set checked state
+        campusRed.setChecked(sp.getBoolean("ntu_bus_red", false));
+        campusBlue.setChecked(sp.getBoolean("ntu_bus_blue", false));
+        campusRider.setChecked(sp.getBoolean("ntu_bus_green", false));
+        campusWeekend.setChecked(sp.getBoolean("ntu_bus_brown", false));
+
+        campusRed.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            sp.edit().putBoolean("ntu_bus_red", isChecked).apply();
+            getData(false);
+        });
+        campusBlue.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            sp.edit().putBoolean("ntu_bus_blue", isChecked).apply();
+            getData(false);
+        });
+        campusRider.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            sp.edit().putBoolean("ntu_bus_green", isChecked).apply();
+            getData(false);
+        });
+        campusWeekend.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            sp.edit().putBoolean("ntu_bus_brown", isChecked).apply();
+            getData(false);
+        });
     }
 
     @Override
