@@ -158,7 +158,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                 finish();
                 return true;
             case R.id.refresh:
-                Log.i("NTUBus", "Manually refreshing bus data at " + StaticVariables.convertDateToString(new Date(System.currentTimeMillis())));
+                Log.i(TAG, "Manually refreshing bus data at " + StaticVariables.convertDateToString(new Date(System.currentTimeMillis())));
                 getData(true);
                 return true;
             default:
@@ -281,7 +281,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private Handler refreshHandler;
     private Runnable refreshTask = () -> {
-        Log.i("NTUBus", "Auto-refreshing bus data at " + StaticVariables.convertDateToString(new Date(System.currentTimeMillis())));
+        Log.i(TAG, "Auto-refreshing bus data at " + StaticVariables.convertDateToString(new Date(System.currentTimeMillis())));
         getData(true);
     };
 

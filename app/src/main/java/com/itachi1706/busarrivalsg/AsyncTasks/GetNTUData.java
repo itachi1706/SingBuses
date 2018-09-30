@@ -31,6 +31,7 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
     private WeakReference<Activity> activityRef;
     private Exception except;
     private int update;
+    private static final String TAG = "NTUData";
 
     public GetNTUData(Activity activity, boolean update) {
         this.activityRef = new WeakReference<>(activity);
@@ -50,7 +51,7 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
         }
         Activity mActivity = activityRef.get();
         String url = "http://api.itachi1706.com/api/ntubus.php?route=" + routeString.toString() + "&update=" + update;
-        Log.d("NTUData", url);
+        Log.d(TAG, url);
         String tmp;
         try {
             long start = System.currentTimeMillis();
@@ -69,13 +70,13 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
             }
             in.close();
             tmp = str.toString();
-            Log.i("NTUData", "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
+            Log.i(TAG, "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
         } catch (IOException e) {
             except = e;
             return 1;
         }
 
-        Log.d("NTUData", tmp);
+        Log.d(TAG, tmp);
         if (!StaticVariables.checkIfYouGotJsonString(tmp)) {
             except = new Exception(mActivity.getResources().getString(R.string.toast_message_invalid_json));
             return 2;
@@ -91,7 +92,7 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
     protected void onPostExecute(Integer errorCode) {
         Context context = activityRef.get();
         if (except != null && errorCode != 0) {
-            Log.e("NTUData", "Exception occurred (" + except.getMessage() + ")");
+            Log.e(TAG, "Exception occurred (" + except.getMessage() + ")");
             if (except instanceof SocketTimeoutException) {
                 Toast.makeText(context, "NTU API did not respond after the period of time", Toast.LENGTH_SHORT).show();
             } else {
