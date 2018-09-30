@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUData;
 import com.itachi1706.busarrivalsg.Services.LocManager;
 import com.itachi1706.busarrivalsg.Util.BusesUtil;
@@ -291,7 +292,13 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             int update = intent.getIntExtra("update", 0);
             if (data == null) return;
             Gson gson = new Gson();
-            NTUBus busObj = gson.fromJson(data, NTUBus.class);
+            NTUBus busObj;
+            try {
+                busObj = gson.fromJson(data, NTUBus.class);
+            } catch (JsonSyntaxException e) {
+                Toast.makeText(context, "An error occurred. Please try again later", Toast.LENGTH_LONG).show();
+                return;
+            }
             if (busObj == null) return;
             assert busObj.getRoutes() != null;
             if (busObj.getRoutes().length <= 0) return;
