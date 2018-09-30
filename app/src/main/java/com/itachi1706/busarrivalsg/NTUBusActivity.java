@@ -389,11 +389,16 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                 matrix.setRotate(v.getBearing());
                 arrow = Bitmap.createBitmap(arrow, 0, 0, arrow.getWidth(), arrow.getHeight(), matrix, true);*/
                 markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(v.getLatVal(), v.getLonVal()))
-                        .title(v.getLicense_no()).snippet("Speed: " + v.getSpeed() + " km/h | Bearing: " + v.getBearing())
+                        .title(v.getLicense_no()).snippet("Speed: " + v.getSpeed() + " km/h | Bearing: " + v.getBearing() + " (" + getBDirection(v.getBearing()) + ")")
                         .icon(bus)));
             }
         }
         return markers;
+    }
+
+    private String getBDirection(int bearing) {
+        String directions[] = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
+        return directions[ (int)Math.round((  ((double) Math.abs(bearing) % 360) / 45)) % 8 ];
     }
 
     private int getRouteColor(int id) {
