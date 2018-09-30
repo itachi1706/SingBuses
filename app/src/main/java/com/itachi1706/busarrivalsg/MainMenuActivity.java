@@ -232,9 +232,9 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                         break;
                 }
                 return true;
-            case R.id.beta_test:
-                // TODO: Remove when unneeded
+            case R.id.ntu_tracker:
                 startActivity(new Intent(this, NTUBusActivity.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

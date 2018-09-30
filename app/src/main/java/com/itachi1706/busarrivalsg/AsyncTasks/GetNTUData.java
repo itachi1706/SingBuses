@@ -53,6 +53,7 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
         Log.d("NTUData", url);
         String tmp;
         try {
+            long start = System.currentTimeMillis();
             URL urlConn = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
             conn.setConnectTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
@@ -68,6 +69,7 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
             }
             in.close();
             tmp = str.toString();
+            Log.i("NTUData", "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
         } catch (IOException e) {
             except = e;
             return 1;
@@ -79,7 +81,6 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
             return 2;
         }
 
-        // TODO: Do the processing here
         Intent sendForMapParsingIntent = new Intent(NTUBusActivity.RECEIVE_NTU_DATA_EVENT);
         sendForMapParsingIntent.putExtra("data", tmp);
         sendForMapParsingIntent.putExtra("update", update);

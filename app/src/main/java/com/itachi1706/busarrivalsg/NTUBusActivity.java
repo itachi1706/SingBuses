@@ -207,7 +207,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             campusRider.setEnabled(false);
             campusWeekend.setEnabled(false);
         }
-        new GetNTUData(this, refresh).execute(get.toArray(new String[get.size()]));
+        new GetNTUData(this, refresh).execute(get.toArray(new String[0]));
         // TODO: Let user change delay in settings
         if (!refreshHandler.hasMessages(3000)) {
             Message ref = Message.obtain(refreshHandler, refreshTask);
@@ -224,16 +224,16 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         if (rc == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
-            requestGpsPermission(RC_HANDLE_ACCESS_FINE_LOCATION);
+            requestGpsPermission();
         }
     }
 
-    private void requestGpsPermission(final int code) {
+    private void requestGpsPermission() {
         Log.w(LocManager.TAG, "GPS permission is not granted. Requesting permission");
         final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            ActivityCompat.requestPermissions(this, permissions, code);
+            ActivityCompat.requestPermissions(this, permissions, NTUBusActivity.RC_HANDLE_ACCESS_FINE_LOCATION);
             return;
         }
 
@@ -241,7 +241,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
         new AlertDialog.Builder(this).setTitle(R.string.dialog_title_request_permission_gps)
                 .setMessage(R.string.dialog_message_request_permission_gps_view_map_rationale)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(thisActivity, permissions, code)).show();
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(thisActivity, permissions, NTUBusActivity.RC_HANDLE_ACCESS_FINE_LOCATION)).show();
     }
 
     @Override
@@ -280,11 +280,13 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         getData(true);
     };
 
-    // Draw the route first
+    /**
+     * Parsing and processing the data received from the API call
+     * Might also make it in a async task in the future
+     */
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // TODO: Parse to Gson and handle the plotting (do in main thread first, we might do in async in the future)
             String data = intent.getStringExtra("data");
             int update = intent.getIntExtra("update", 0);
             if (data == null) return;
@@ -356,7 +358,6 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                         busMarkers.addAll(addBusesIntoRoute(r));
                     }
                 }
-                Toast.makeText(context, "Refreshed", Toast.LENGTH_SHORT).show(); // TODO: Test code
             }
 
             campusWeekend.setEnabled(true);
@@ -372,10 +373,10 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(r.getId()));
             for (NTUBus.Vehicles v : r.getVehicles()) {
                 // TODO: Find a way to do the bearing lol
-                                /*Bitmap arrow = busesUtil.vectorToBitmap(R.drawable.ic_chevron, getResources(), getRouteColor(r.getId()));
-                                Matrix matrix = new Matrix();
-                                matrix.setRotate(v.getBearing());
-                                arrow = Bitmap.createBitmap(arrow, 0, 0, arrow.getWidth(), arrow.getHeight(), matrix, true);*/
+                /*Bitmap arrow = busesUtil.vectorToBitmap(R.drawable.ic_chevron, getResources(), getRouteColor(r.getId()));
+                Matrix matrix = new Matrix();
+                matrix.setRotate(v.getBearing());
+                arrow = Bitmap.createBitmap(arrow, 0, 0, arrow.getWidth(), arrow.getHeight(), matrix, true);*/
                 markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(v.getLatVal(), v.getLonVal()))
                         .title(v.getLicense_no()).snippet("Speed: " + v.getSpeed() + " km/h | Bearing: " + v.getBearing())
                         .icon(bus)));
