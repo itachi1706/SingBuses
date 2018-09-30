@@ -102,6 +102,15 @@ public class MainSettings extends AppCompatActivity {
                 return true;
             });
 
+            EditTextPreference shuttleRefreshRate = (EditTextPreference) findPreference("ntushuttlerefrate");
+            shuttleRefreshRate.setSummary(shuttleRefreshRate.getText());
+            shuttleRefreshRate.setDialogTitle("NTU Shuttle Tracker Auto-Refresh");
+            shuttleRefreshRate.setDialogMessage("Tweaks the auto refresh rate (in seconds) of the NTU Shuttle Bus Tracking\nMinimum time is 5 seconds");
+            shuttleRefreshRate.setOnPreferenceChangeListener((preference, newValue) -> {
+                preference.setSummary(String.valueOf(newValue));
+                return true;
+            });
+
             findPreference("location_value").setOnPreferenceClickListener(preference -> processAdvDevSettingLocation());
         }
 
