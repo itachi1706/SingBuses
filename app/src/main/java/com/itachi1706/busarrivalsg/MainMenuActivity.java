@@ -175,6 +175,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             // TODO: Start Activity for result
             startActivity(new Intent(getApplicationContext(), FirebaseLoginActivity.class));
         });
+
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -201,6 +203,16 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (!sp.getBoolean("showntushuttle", false))
+            menu.findItem(R.id.ntu_tracker).setVisible(false);
+        else menu.findItem(R.id.ntu_tracker).setVisible(true);
+
         return true;
     }
 
