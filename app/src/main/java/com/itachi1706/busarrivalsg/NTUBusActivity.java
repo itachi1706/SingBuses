@@ -63,6 +63,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     public static final String RECEIVE_NTU_DATA_EVENT = "RecieveNTUDataEvent";
 
     private BusesUtil busesUtil = BusesUtil.INSTANCE;
+    private int autoRefreshDelay = -1;
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +95,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             mMap.setTrafficEnabled(trafficEnabled);
         });
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
         // Manually set checked state
         campusRed.setChecked(sp.getBoolean("ntu_bus_red", false));
         campusBlue.setChecked(sp.getBoolean("ntu_bus_blue", false));
@@ -124,6 +126,9 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
         mapView.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RECEIVE_NTU_DATA_EVENT));
+
+        autoRefreshDelay = Integer.parseInt(sp.getString("ntushuttlerefrate", "10"));
+        if (autoRefreshDelay < 5) autoRefreshDelay = 5;
     }
 
     @Override
@@ -209,11 +214,10 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             campusWeekend.setEnabled(false);
         }
         new GetNTUData(this, refresh).execute(get.toArray(new String[0]));
-        // TODO: Let user change delay in settings
         if (!refreshHandler.hasMessages(3000)) {
             Message ref = Message.obtain(refreshHandler, refreshTask);
             ref.what = 3000;
-            refreshHandler.sendMessageDelayed(ref, 10000); // 10 seconds auto-refresh if theres routes selected
+            refreshHandler.sendMessageDelayed(ref, autoRefreshDelay * 1000);
         }
     }
 
