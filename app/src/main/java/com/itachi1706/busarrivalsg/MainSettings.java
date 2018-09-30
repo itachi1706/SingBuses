@@ -12,9 +12,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.itachi1706.appupdater.EasterEggResMultiMusicPrefFragment;
@@ -26,6 +23,9 @@ import com.itachi1706.busarrivalsg.Util.StaticVariables;
 import java.util.Date;
 import java.util.Locale;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import de.psdev.licensesdialog.LicensesDialog;
 
 
@@ -102,6 +102,15 @@ public class MainSettings extends AppCompatActivity {
                 return true;
             });
 
+            EditTextPreference shuttleRefreshRate = (EditTextPreference) findPreference("ntushuttlerefrate");
+            shuttleRefreshRate.setSummary(getResources().getQuantityString(R.plurals.seconds_count, Integer.parseInt(shuttleRefreshRate.getText()), Integer.parseInt(shuttleRefreshRate.getText())));
+            shuttleRefreshRate.setDialogTitle("NTU Shuttle Tracker Auto-Refresh");
+            shuttleRefreshRate.setDialogMessage("Tweaks the auto refresh rate (in seconds) of the NTU Shuttle Bus Tracking\nMinimum time is 5 seconds");
+            shuttleRefreshRate.setOnPreferenceChangeListener((preference, newValue) -> {
+                preference.setSummary(getResources().getQuantityString(R.plurals.seconds_count, Integer.parseInt(String.valueOf(newValue)), Integer.parseInt(String.valueOf(newValue))));
+                return true;
+            });
+
             findPreference("location_value").setOnPreferenceClickListener(preference -> processAdvDevSettingLocation());
         }
 
@@ -111,7 +120,7 @@ public class MainSettings extends AppCompatActivity {
                 return;
             }
             Date date = new Date(dbBus);
-            timeDBUpdateBus.setSummary(date.toString());
+            timeDBUpdateBus.setSummary(StaticVariables.convertDateToString(date));
         }
 
         // Handling of all companion devices starts here

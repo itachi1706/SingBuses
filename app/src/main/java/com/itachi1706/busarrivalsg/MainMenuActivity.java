@@ -18,17 +18,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.core.app.ActivityCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -123,7 +123,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
             @Override
             public boolean onMove(RecyclerView recyclerView,
-                                           RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                                  RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 final int fromPos = viewHolder.getAdapterPosition();
                 final int toPos = target.getAdapterPosition();
                 // move item in `fromPos` to `toPos` in adapter.
@@ -175,6 +175,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             // TODO: Start Activity for result
             startActivity(new Intent(getApplicationContext(), FirebaseLoginActivity.class));
         });
+
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -205,39 +207,49 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (!sp.getBoolean("showntushuttle", false))
+            menu.findItem(R.id.ntu_tracker).setVisible(false);
+        else menu.findItem(R.id.ntu_tracker).setVisible(true);
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, MainSettings.class));
-            return true;
-        } else if (id == R.id.view_all_stops) {
-            startActivity(new Intent(this, ListAllBusStopsActivity.class));
-            return true;
-        } else if (id == R.id.action_refresh) {
-            swipeToRefresh.setRefreshing(true);
-            updateFavourites();
-            return true;
-        } else if (id == R.id.action_install_companion) {
-            switch (sp.getString("companionDevice", "none")) {
-                case "pebble": installPebbleApp(); break;
-                case "none":
+        switch (id) {
+            case R.id.action_settings:
+                startActivity(new Intent(this, MainSettings.class));
+                return true;
+            case R.id.view_all_stops:
+                startActivity(new Intent(this, ListAllBusStopsActivity.class));
+                return true;
+            case R.id.action_refresh:
+                swipeToRefresh.setRefreshing(true);
+                updateFavourites();
+                return true;
+            case R.id.action_install_companion:
+                switch (sp.getString("companionDevice", "none")) {
+                    case "pebble": installPebbleApp(); break;
+                    case "none":
                     default:
                         new AlertDialog.Builder(this).setTitle("No Companion Device Configured")
-                            .setMessage("You have not configured a companion device! \n\nYou can do so in the app settings")
-                            .setPositiveButton(android.R.string.ok, null)
-                            .setNeutralButton(R.string.action_settings, (dialog, which) ->
-                                    startActivity(new Intent(getApplicationContext(), MainSettings.class))).show();
+                                .setMessage("You have not configured a companion device! \n\nYou can do so in the app settings")
+                                .setPositiveButton(android.R.string.ok, null)
+                                .setNeutralButton(R.string.action_settings, (dialog, which) ->
+                                        startActivity(new Intent(getApplicationContext(), MainSettings.class))).show();
                         break;
-            }
-            return true;
+                }
+                return true;
+            case R.id.ntu_tracker:
+                startActivity(new Intent(this, NTUBusActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void updateFavourites(){

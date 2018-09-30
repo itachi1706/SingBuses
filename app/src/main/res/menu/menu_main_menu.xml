@@ -9,4 +9,6 @@
         android:orderInCategory="1" android:icon="@drawable/ic_refresh" app:showAsAction="ifRoom" />
     <item android:id="@+id/action_install_companion" android:title="@string/action_install_pebble_app"
         android:orderInCategory="3" app:showAsAction="never" />
+    <item android:id="@+id/ntu_tracker" android:title="NTU Buses (BETA)" android:orderInCategory="2"
+        app:showAsAction="ifRoom" android:icon="@drawable/ic_ntu_coa_bw"/>
 </menu>

@@ -147,4 +147,7 @@
     <string name="static_search_label">Search for Bus Stop</string>
     <string name="static_search_long_label">Enter the search page directly</string>
     <string name="static_search_disabled_label">The Search Bus Stop shortcut is disabled</string>
+    <string name="static_ntu_label">View NTU Shuttle Buses</string>
+    <string name="static_ntu_long_label">Enter the NTU Shuttle Buses Tracker directly</string>
+    <string name="static_ntu_disabled_label">The NTU Shuttle Buses Tracker is disabled, enable it in settings</string>
 </resources>
