@@ -94,7 +94,7 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
         if (except != null && errorCode != 0) {
             Log.e(TAG, "Exception occurred (" + except.getMessage() + ")");
             if (except instanceof SocketTimeoutException) {
-                Toast.makeText(context, "NTU API did not respond after the period of time", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "NTU API did not respond in a timely manner", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, except.getMessage(), Toast.LENGTH_SHORT).show();
             }

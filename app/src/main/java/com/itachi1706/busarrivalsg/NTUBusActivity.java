@@ -129,6 +129,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
         autoRefreshDelay = Integer.parseInt(sp.getString("ntushuttlerefrate", "10"));
         if (autoRefreshDelay < 5) autoRefreshDelay = 5;
+        shouldAutoRefresh = true;
     }
 
     @Override
@@ -136,6 +137,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         super.onPause();
 
         mapView.onPause();
+        shouldAutoRefresh = false;
+        refreshHandler.removeMessages(REFRESH_TASK);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
@@ -214,9 +217,9 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             campusWeekend.setEnabled(false);
         }
         new GetNTUData(this, refresh).execute(get.toArray(new String[0]));
-        if (!refreshHandler.hasMessages(3000)) {
+        if (!refreshHandler.hasMessages(REFRESH_TASK) && shouldAutoRefresh) {
             Message ref = Message.obtain(refreshHandler, refreshTask);
-            ref.what = 3000;
+            ref.what = REFRESH_TASK;
             refreshHandler.sendMessageDelayed(ref, autoRefreshDelay * 1000);
         }
     }
@@ -280,6 +283,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     private ArrayList<Marker> busMarkers = new ArrayList<>();
 
     private Handler refreshHandler;
+    private boolean shouldAutoRefresh = false;
+    public static final int REFRESH_TASK = 3000;
     private Runnable refreshTask = () -> {
         Log.i(TAG, "Auto-refreshing bus data at " + StaticVariables.convertDateToString(new Date(System.currentTimeMillis())));
         getData(true);
