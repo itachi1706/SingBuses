@@ -173,6 +173,32 @@ public class BusStopsDB extends SQLiteOpenHelper {
     }
 
     /**
+     * Returns a list of Bus Stop Object based on Service No
+     * @param svcNo Service No
+     * @param company Bus Service Company
+     * @return Bus Stop Object ArrayList
+     */
+    public ArrayList<BusStopJSON> getBusStopsBySvcNo(String svcNo, String company){
+        String concat = "%" + svcNo + ":" + company + "%";
+        concat = DatabaseUtils.sqlEscapeString(concat);
+        String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_SERVICES + " LIKE " + concat + ";";
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<BusStopJSON> result = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.getCount() == 0)
+            return null;
+        if (cursor.moveToFirst()){
+            do {
+                result.add(getBusStopJsonObject(cursor));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return result;
+    }
+
+    /**
      * Returns a bus stop object that is found
      * @param lng Longitude
      * @param lat Latitude

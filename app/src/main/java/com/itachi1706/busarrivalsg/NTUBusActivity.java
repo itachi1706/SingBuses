@@ -36,9 +36,15 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUData;
+import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUPublicBusData;
 import com.itachi1706.busarrivalsg.Services.LocManager;
 import com.itachi1706.busarrivalsg.Util.BusesUtil;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObjectEstimate;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 
 import java.util.ArrayList;
@@ -48,6 +54,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -61,6 +68,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     private static final String TAG = "NTUBus";
 
     public static final String RECEIVE_NTU_DATA_EVENT = "RecieveNTUDataEvent";
+    public static final String RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT = "RecieveNTUBDataEvent";
 
     private BusesUtil busesUtil = BusesUtil.INSTANCE;
     private int autoRefreshDelay = -1;
@@ -217,6 +225,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             campusWeekend.setEnabled(false);
         }
         new GetNTUData(this, refresh).execute(get.toArray(new String[0]));
+        new GetNTUPublicBusData(this, refresh).execute(); // TODO: Put this behind a toggle as well
         if (!refreshHandler.hasMessages(REFRESH_TASK) && shouldAutoRefresh) {
             Message ref = Message.obtain(refreshHandler, refreshTask);
             ref.what = REFRESH_TASK;
@@ -281,6 +290,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private ArrayList<Marker> busMarkers = new ArrayList<>();
+    private ArrayList<Marker> publicBusMarkers = new ArrayList<>();
 
     private Handler refreshHandler;
     private boolean shouldAutoRefresh = false;
@@ -412,7 +422,100 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             case 44479: return Color.BLUE;
             case 44480: return Color.GREEN;
             case 44481: return Color.parseColor("#964B00");
+            case 199179: return Color.parseColor("#800080"); // SBST
             default: return Color.BLACK;
+        }
+    }
+
+    /**
+     * Parsing and processing the data received for public API calls
+     */
+    private BroadcastReceiver publicBusReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String data = intent.getStringExtra("data");
+            boolean update = intent.getBooleanExtra("update", false);
+            boolean clear = intent.getBooleanExtra("clear", false);
+            if (clear) {
+                for (Marker m : busMarkers) {
+                    m.remove();
+                }
+                busMarkers.clear();
+                Log.i(TAG, "Cleared all public bus markers");
+                return;
+            }
+            if (data == null) return;
+            Gson gson = new Gson();
+            if (update) {
+                // TODO: Info card window do something
+                BusStopJSON[] tmpJSON;
+                try {
+                    tmpJSON = gson.fromJson(data, BusStopJSON[].class);
+                }catch (JsonSyntaxException e) {
+                    Toast.makeText(context, "An error occurred parsing public bus stops. Please try again later", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                // Convert to something workable and unique
+                ArrayMap<String, BusStopJSON> busStops = new ArrayMap<>();
+                for (BusStopJSON j : tmpJSON) {
+                    busStops.put(j.getBusStopCode(), j);
+                }
+                BitmapDescriptor stop = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_circle, getResources(), getRouteColor(199179));
+                for (ArrayMap.Entry<String, BusStopJSON> entry : busStops.entrySet()) {
+                    BusStopJSON node = entry.getValue();
+                    String svcWork = node.getServices();
+                    String[] svces = svcWork.split(",");
+                    StringBuilder s = new StringBuilder();
+                    for (String s1 : svces) {
+                        String[] svcTmp = s1.split(":");
+                        s.append(svcTmp[0]).append(", ");
+                    }
+                    String services = s.toString();
+                    services = services.replaceAll(", $", "");
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(node.getLatitude(), node.getLongitude()))
+                            .title(node.getDescription() + " (" + node.getRoadName() + ")")
+                            .snippet("SBS Services: " + services)
+                            .icon(stop));
+                    Log.i(TAG, "Generated Public Bus Stops");
+                }
+            } else {
+                BusArrivalMain busObjs;
+                try {
+                    busObjs = gson.fromJson(data, BusArrivalMain.class);
+                } catch (JsonSyntaxException e) {
+                    Toast.makeText(context, "An error occurred parsing public buses. Please try again later", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (busObjs == null || busObjs.getServices() == null) return;
+                if (busObjs.getServices().length <= 0) return;
+
+                BusArrivalArrayObject o = busObjs.getServices()[0];
+                BusArrivalArrayObjectEstimate e1 = o.getNextBus();
+                addPublicBuses(e1, o);
+                BusArrivalArrayObjectEstimate e2 = o.getNextBus2();
+                addPublicBuses(e2, o);
+                BusArrivalArrayObjectEstimate e3 = o.getNextBus3();
+                addPublicBuses(e3, o);
+            }
+        }
+    };
+
+    private String getLoadString(int load) {
+        switch (load){
+            case CommonEnums.BUS_SEATS_AVAIL: return "Seats Available";
+            case CommonEnums.BUS_STANDING_AVAIL: return "Standing Spots Available";
+            case CommonEnums.BUS_LIMITED_SEATS: return "Limited Seats";
+            default: return "Unknown";
+        }
+    }
+
+    private void addPublicBuses(BusArrivalArrayObjectEstimate e1, BusArrivalArrayObject o) {
+        if (e1 != null && e1.getEstimatedArrival() != null) {
+            String load = getLoadString(e1.getLoadInt());
+            BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(199179));
+            busMarkers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(e1.getLatitudeD(), e1.getLongitudeD()))
+                    .title(o.getServiceNo() + " (" + o.getOperator() + ")").snippet(load + " (" + BusesUtil.INSTANCE.getType(e1.getTypeInt()) + ")")
+                    .icon(bus)));
         }
     }
 }
