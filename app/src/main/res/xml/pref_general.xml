@@ -39,6 +39,11 @@
             android:defaultValue="false"
             android:key="showntushuttle"
             android:summary="Enables NTU Shuttle Bus Tracking Page" />
+        <SwitchPreference
+            android:title="Show NTU SBS Stops"
+            android:defaultValue="true"
+            android:key="showntusbsstops"
+            android:summary="Check to show the stops that SBS bus services stops at NTU" />
         <EditTextPreference
             android:title="NTU Shuttle auto-refresh (Min 5 secs)"
             android:summary="%s"

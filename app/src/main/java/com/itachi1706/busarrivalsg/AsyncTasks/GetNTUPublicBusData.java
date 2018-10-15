@@ -3,7 +3,9 @@ package com.itachi1706.busarrivalsg.AsyncTasks;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -96,7 +98,8 @@ public class GetNTUPublicBusData extends AsyncTask<Void, Void, Integer> {
             sendForMapParsingIntent.putExtra("update", true);
             mActivity.runOnUiThread(() -> LocalBroadcastManager.getInstance(mActivity).sendBroadcast(sendForMapParsingIntent));
         }
-        if (!update) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        if (!update && sp.getBoolean("showntusbsstops", true)) {
             // We will send data related to stops as well
             BusStopsDB db = new BusStopsDB(mActivity);
             ArrayList<BusStopJSON> jsons = new ArrayList<>();
