@@ -55,13 +55,6 @@ public class GetNTUPublicBusData extends AsyncTask<Void, Void, Integer> {
         urls.add("http://api.itachi1706.com/api/busarrival.php?BusStopCode=27199&ServiceNo=199&api=2");
         urls.add("http://api.itachi1706.com/api/busarrival.php?BusStopCode=27261&ServiceNo=179&api=2");
         urls.add("http://api.itachi1706.com/api/busarrival.php?BusStopCode=27261&ServiceNo=179A&api=2");
-        // Send intent to clear bus data
-        Intent clearMapIntent = new Intent(NTUBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT);
-        clearMapIntent.putExtra("data", "");
-        clearMapIntent.putExtra("update", true);
-        clearMapIntent.putExtra("clear", true);
-        mActivity.runOnUiThread(() -> LocalBroadcastManager.getInstance(mActivity).sendBroadcast(clearMapIntent));
-
         for (String url : urls) {
             Log.d(TAG, url);
             String tmp;

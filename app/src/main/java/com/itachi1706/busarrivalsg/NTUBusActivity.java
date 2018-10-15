@@ -49,6 +49,7 @@ import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -445,15 +446,6 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         public void onReceive(Context context, Intent intent) {
             String data = intent.getStringExtra("data");
             boolean update = intent.getBooleanExtra("update", false);
-            boolean clear = intent.getBooleanExtra("clear", false);
-            if (clear) {
-                for (Marker m : busMarkers) {
-                    m.remove();
-                }
-                busMarkers.clear();
-                Log.i(TAG, "Cleared all public bus markers");
-                return;
-            }
             if (data == null) return;
             Gson gson = new Gson();
             if (!update) {
@@ -500,6 +492,16 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                 if (busObjs.getServices().length <= 0) return;
 
                 BusArrivalArrayObject o = busObjs.getServices()[0];
+                // Remove bus markers for this specific service
+                Iterator<Marker> iter = busMarkers.iterator();
+                while (iter.hasNext()) {
+                    Marker m = iter.next();
+
+                    if (m.getTitle().equals(o.getServiceNo() + " (" + o.getOperator() + ")")) {
+                        m.remove();
+                        iter.remove();
+                    }
+                }
                 BusArrivalArrayObjectEstimate e1 = o.getNextBus();
                 addPublicBuses(e1, o);
                 BusArrivalArrayObjectEstimate e2 = o.getNextBus2();
