@@ -54,11 +54,11 @@ public class GetNTUPublicBusData extends AsyncTask<Void, Void, Integer> {
         urls.add("http://api.itachi1706.com/api/busarrival.php?BusStopCode=27261&ServiceNo=179&api=2");
         urls.add("http://api.itachi1706.com/api/busarrival.php?BusStopCode=27261&ServiceNo=179A&api=2");
         // Send intent to clear bus data
-        Intent sendForMapParsingIntent = new Intent(NTUBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT);
-        sendForMapParsingIntent.putExtra("data", "");
-        sendForMapParsingIntent.putExtra("update", false);
-        sendForMapParsingIntent.putExtra("clear", true);
-        mActivity.runOnUiThread(() -> LocalBroadcastManager.getInstance(mActivity).sendBroadcast(sendForMapParsingIntent));
+        Intent clearMapIntent = new Intent(NTUBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT);
+        clearMapIntent.putExtra("data", "");
+        clearMapIntent.putExtra("update", false);
+        clearMapIntent.putExtra("clear", true);
+        mActivity.runOnUiThread(() -> LocalBroadcastManager.getInstance(mActivity).sendBroadcast(clearMapIntent));
 
         for (String url : urls) {
             Log.d(TAG, url);
@@ -91,9 +91,9 @@ public class GetNTUPublicBusData extends AsyncTask<Void, Void, Integer> {
                 return 2;
             }
 
-            Intent sendClearMapIntent = new Intent(NTUBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT);
-            sendClearMapIntent.putExtra("data", tmp);
-            sendClearMapIntent.putExtra("update", false);
+            Intent sendForMapParsingIntent = new Intent(NTUBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT);
+            sendForMapParsingIntent.putExtra("data", tmp);
+            sendForMapParsingIntent.putExtra("update", false);
             mActivity.runOnUiThread(() -> LocalBroadcastManager.getInstance(mActivity).sendBroadcast(sendForMapParsingIntent));
         }
         if (update) {

@@ -134,6 +134,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
         mapView.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RECEIVE_NTU_DATA_EVENT));
+        LocalBroadcastManager.getInstance(this).registerReceiver(publicBusReceiver, new IntentFilter(RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT));
 
         autoRefreshDelay = Integer.parseInt(sp.getString("ntushuttlerefrate", "10"));
         if (autoRefreshDelay < 5) autoRefreshDelay = 5;
@@ -148,6 +149,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         shouldAutoRefresh = false;
         refreshHandler.removeMessages(REFRESH_TASK);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(publicBusReceiver);
     }
 
     @Override
@@ -474,7 +476,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                     services = services.replaceAll(", $", "");
                     mMap.addMarker(new MarkerOptions().position(new LatLng(node.getLatitude(), node.getLongitude()))
                             .title(node.getDescription() + " (" + node.getRoadName() + ")")
-                            .snippet("SBS Services: " + services)
+                            .snippet("Bus Svcs: " + services)
                             .icon(stop));
                     Log.i(TAG, "Generated Public Bus Stops");
                 }
@@ -496,6 +498,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                 addPublicBuses(e2, o);
                 BusArrivalArrayObjectEstimate e3 = o.getNextBus3();
                 addPublicBuses(e3, o);
+                Log.i(TAG, "Displaying Public Bus Locations");
             }
         }
     };
