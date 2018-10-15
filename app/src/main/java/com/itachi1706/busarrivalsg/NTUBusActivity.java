@@ -448,7 +448,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             }
             if (data == null) return;
             Gson gson = new Gson();
-            if (update) {
+            if (!update) {
                 // TODO: Info card window do something
                 BusStopJSON[] tmpJSON;
                 try {

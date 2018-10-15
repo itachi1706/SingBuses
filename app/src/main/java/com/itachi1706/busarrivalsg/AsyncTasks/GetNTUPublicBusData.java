@@ -56,7 +56,7 @@ public class GetNTUPublicBusData extends AsyncTask<Void, Void, Integer> {
         // Send intent to clear bus data
         Intent clearMapIntent = new Intent(NTUBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT);
         clearMapIntent.putExtra("data", "");
-        clearMapIntent.putExtra("update", false);
+        clearMapIntent.putExtra("update", true);
         clearMapIntent.putExtra("clear", true);
         mActivity.runOnUiThread(() -> LocalBroadcastManager.getInstance(mActivity).sendBroadcast(clearMapIntent));
 
@@ -93,10 +93,10 @@ public class GetNTUPublicBusData extends AsyncTask<Void, Void, Integer> {
 
             Intent sendForMapParsingIntent = new Intent(NTUBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT);
             sendForMapParsingIntent.putExtra("data", tmp);
-            sendForMapParsingIntent.putExtra("update", false);
+            sendForMapParsingIntent.putExtra("update", true);
             mActivity.runOnUiThread(() -> LocalBroadcastManager.getInstance(mActivity).sendBroadcast(sendForMapParsingIntent));
         }
-        if (update) {
+        if (!update) {
             // We will send data related to stops as well
             BusStopsDB db = new BusStopsDB(mActivity);
             ArrayList<BusStopJSON> jsons = new ArrayList<>();
@@ -109,7 +109,7 @@ public class GetNTUPublicBusData extends AsyncTask<Void, Void, Integer> {
             String js = gson.toJson(stops, BusStopJSON[].class);
             Intent sendForParseIntent = new Intent(NTUBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT);
             sendForParseIntent.putExtra("data", js);
-            sendForParseIntent.putExtra("update", true);
+            sendForParseIntent.putExtra("update", false);
             mActivity.runOnUiThread(() -> LocalBroadcastManager.getInstance(mActivity).sendBroadcast(sendForParseIntent));
         }
         return 0;
