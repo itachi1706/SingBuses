@@ -61,7 +61,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
-    Switch campusRed, campusBlue, campusRider, campusWeekend, traffic;
+    Switch campusRed, campusBlue, campusRider, campusWeekend, traffic, sbs;
     MapView mapView;
     private GoogleMap mMap;
 
@@ -92,6 +92,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         campusBlue = findViewById(R.id.ntu_clb_switch);
         campusRider = findViewById(R.id.ntu_cr_switch);
         campusWeekend = findViewById(R.id.ntu_crw_switch);
+        sbs = findViewById(R.id.ntu_sbs_switch);
         traffic = findViewById(R.id.ntu_traffic_switch);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
@@ -109,6 +110,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         campusBlue.setChecked(sp.getBoolean("ntu_bus_blue", false));
         campusRider.setChecked(sp.getBoolean("ntu_bus_green", false));
         campusWeekend.setChecked(sp.getBoolean("ntu_bus_brown", false));
+        sbs.setChecked(sp.getBoolean("ntu_bus_sbs", false));
 
         campusRed.setOnCheckedChangeListener((buttonView, isChecked) -> {
             sp.edit().putBoolean("ntu_bus_red", isChecked).apply();
@@ -124,6 +126,10 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         });
         campusWeekend.setOnCheckedChangeListener((buttonView, isChecked) -> {
             sp.edit().putBoolean("ntu_bus_brown", isChecked).apply();
+            getData(false);
+        });
+        sbs.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            sp.edit().putBoolean("ntu_bus_sbs", isChecked).apply();
             getData(false);
         });
     }
@@ -218,6 +224,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         if (!mapReady) return;
         if (get.isEmpty()) {
             mMap.clear();
+            if (sbs.isChecked()) new GetNTUPublicBusData(this, false).execute(); // Do not need to autorefresh every few seconds as it doesnt update fast anyway
             return;
         }
         if (!refresh) {
@@ -227,7 +234,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             campusWeekend.setEnabled(false);
         }
         new GetNTUData(this, refresh).execute(get.toArray(new String[0]));
-        new GetNTUPublicBusData(this, refresh).execute(); // TODO: Put this behind a toggle as well
+        if (sbs.isChecked())
+            new GetNTUPublicBusData(this, refresh).execute();
         if (!refreshHandler.hasMessages(REFRESH_TASK) && shouldAutoRefresh) {
             Message ref = Message.obtain(refreshHandler, refreshTask);
             ref.what = REFRESH_TASK;
