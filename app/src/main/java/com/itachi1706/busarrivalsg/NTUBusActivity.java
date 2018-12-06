@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -234,9 +235,11 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             campusRider.setEnabled(false);
             campusWeekend.setEnabled(false);
         }
-        new GetNTUData(this, refresh).execute(get.toArray(new String[0]));
+        if (runningBus == null || runningBus.getStatus().equals(AsyncTask.Status.FINISHED) || runningBus.isCancelled())
+            runningBus = new GetNTUData(this, refresh).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, get.toArray(new String[0]));
         if (sbs.isChecked())
-            new GetNTUPublicBusData(this, refresh).execute();
+            if (runningPBus == null || runningPBus.getStatus().equals(AsyncTask.Status.FINISHED) || runningPBus.isCancelled())
+                runningPBus = new GetNTUPublicBusData(this, refresh).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         if (!refreshHandler.hasMessages(REFRESH_TASK) && shouldAutoRefresh) {
             Message ref = Message.obtain(refreshHandler, refreshTask);
             ref.what = REFRESH_TASK;
@@ -303,6 +306,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     private ArrayList<Marker> busMarkers = new ArrayList<>();
     private ArrayList<Marker> publicBusMarkers = new ArrayList<>();
 
+    private AsyncTask runningBus = null, runningPBus = null;
+
     private Handler refreshHandler;
     private boolean shouldAutoRefresh = false;
     public static final int REFRESH_TASK = 3000;
@@ -335,6 +340,16 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
             if (update == 0) {
                 mMap.clear();
+                // Readd public bus markers if any
+                if (publicBusMarkers.size() > 0) {
+                    List<Marker> tmp = new ArrayList<>();
+                    BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(199179));
+                    for (Marker m : publicBusMarkers) {
+                        tmp.add(mMap.addMarker(new MarkerOptions().position(m.getPosition()).title(m.getTitle()).snippet(m.getSnippet()).icon(bus)));
+                    }
+                    publicBusMarkers.clear();
+                    publicBusMarkers.addAll(tmp);
+                }
                 busMarkers.clear();
 
                 @Nullable NTUBus.MapPoints centerOn = null;
@@ -481,34 +496,37 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                     Log.i(TAG, "Generated Public Bus Stops");
                 }
             } else {
-                BusArrivalMain busObjs;
+                BusArrivalMain[] busObjsArr;
                 try {
-                    busObjs = gson.fromJson(data, BusArrivalMain.class);
+                    busObjsArr = gson.fromJson(data, BusArrivalMain[].class);
                 } catch (JsonSyntaxException e) {
                     Toast.makeText(context, "An error occurred parsing public buses. Please try again later", Toast.LENGTH_LONG).show();
                     return;
                 }
-                if (busObjs == null || busObjs.getServices() == null) return;
-                if (busObjs.getServices().length <= 0) return;
 
-                BusArrivalArrayObject o = busObjs.getServices()[0];
-                // Remove bus markers for this specific service
-                Iterator<Marker> iter = busMarkers.iterator();
-                while (iter.hasNext()) {
-                    Marker m = iter.next();
+                for (BusArrivalMain busObjs : busObjsArr) {
+                    if (busObjs == null || busObjs.getServices() == null) continue;
+                    if (busObjs.getServices().length <= 0) continue;
 
-                    if (m.getTitle().equals(o.getServiceNo() + " (" + o.getOperator() + ")")) {
-                        m.remove();
-                        iter.remove();
+                    BusArrivalArrayObject o = busObjs.getServices()[0];
+                    // Remove bus markers for this specific service
+                    Iterator<Marker> iter = publicBusMarkers.iterator();
+                    while (iter.hasNext()) {
+                        Marker m = iter.next();
+
+                        if (m.getTitle().equals(o.getServiceNo() + " (" + o.getOperator() + ")")) {
+                            m.remove();
+                            iter.remove();
+                        }
                     }
+                    BusArrivalArrayObjectEstimate e1 = o.getNextBus();
+                    addPublicBuses(e1, o);
+                    BusArrivalArrayObjectEstimate e2 = o.getNextBus2();
+                    addPublicBuses(e2, o);
+                    BusArrivalArrayObjectEstimate e3 = o.getNextBus3();
+                    addPublicBuses(e3, o);
+                    Log.i(TAG, "Displaying Public Bus Locations for " + o.getServiceNo());
                 }
-                BusArrivalArrayObjectEstimate e1 = o.getNextBus();
-                addPublicBuses(e1, o);
-                BusArrivalArrayObjectEstimate e2 = o.getNextBus2();
-                addPublicBuses(e2, o);
-                BusArrivalArrayObjectEstimate e3 = o.getNextBus3();
-                addPublicBuses(e3, o);
-                Log.i(TAG, "Displaying Public Bus Locations");
             }
         }
     };
@@ -526,7 +544,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         if (e1 != null && e1.getEstimatedArrival() != null) {
             String load = getLoadString(e1.getLoadInt());
             BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(199179));
-            busMarkers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(e1.getLatitudeD(), e1.getLongitudeD()))
+            publicBusMarkers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(e1.getLatitudeD(), e1.getLongitudeD()))
                     .title(o.getServiceNo() + " (" + o.getOperator() + ")").snippet(load + " (" + BusesUtil.INSTANCE.getType(e1.getTypeInt()) + ")")
                     .icon(bus)));
         }

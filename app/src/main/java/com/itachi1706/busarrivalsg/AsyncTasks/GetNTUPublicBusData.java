@@ -50,47 +50,43 @@ public class GetNTUPublicBusData extends AsyncTask<Void, Void, Integer> {
     @Override
     protected Integer doInBackground(Void... params) {
         Activity mActivity = activityRef.get();
-        ArrayList<String> urls = new ArrayList<>();
+        String url = "http://api.itachi1706.com/api/busarrival.php?CSV=27199:199;27261:179;27261:179A&api=2";
 
-        urls.add("http://api.itachi1706.com/api/busarrival.php?BusStopCode=27199&ServiceNo=199&api=2");
-        urls.add("http://api.itachi1706.com/api/busarrival.php?BusStopCode=27261&ServiceNo=179&api=2");
-        urls.add("http://api.itachi1706.com/api/busarrival.php?BusStopCode=27261&ServiceNo=179A&api=2");
-        for (String url : urls) {
-            Log.d(TAG, url);
-            String tmp;
-            try {
-                long start = System.currentTimeMillis();
-                URL urlConn = new URL(url);
-                HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
-                conn.setConnectTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
-                conn.setReadTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
-                InputStream in = conn.getInputStream();
+        Log.d(TAG, url);
+        String tmp;
+        try {
+            long start = System.currentTimeMillis();
+            URL urlConn = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
+            conn.setConnectTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
+            conn.setReadTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
+            InputStream in = conn.getInputStream();
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                StringBuilder str = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    str.append(line);
-                }
-                in.close();
-                tmp = str.toString();
-                Log.i(TAG, "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
-            } catch (IOException e) {
-                except = e;
-                return 1;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder str = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                str.append(line);
             }
-
-            Log.d(TAG, tmp);
-            if (!StaticVariables.checkIfYouGotJsonString(tmp)) {
-                except = new Exception(mActivity.getResources().getString(R.string.toast_message_invalid_json));
-                return 2;
-            }
-
-            Intent sendForMapParsingIntent = new Intent(NTUBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT);
-            sendForMapParsingIntent.putExtra("data", tmp);
-            sendForMapParsingIntent.putExtra("update", true);
-            mActivity.runOnUiThread(() -> LocalBroadcastManager.getInstance(mActivity).sendBroadcast(sendForMapParsingIntent));
+            in.close();
+            tmp = str.toString();
+            Log.i(TAG, "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
+        } catch (IOException e) {
+            except = e;
+            return 1;
         }
+
+        Log.d(TAG, tmp);
+        if (!StaticVariables.checkIfYouGotJsonString(tmp)) {
+            except = new Exception(mActivity.getResources().getString(R.string.toast_message_invalid_json));
+            return 2;
+        }
+
+        Intent sendForMapParsingIntent = new Intent(NTUBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT);
+        sendForMapParsingIntent.putExtra("data", tmp);
+        sendForMapParsingIntent.putExtra("update", true);
+        mActivity.runOnUiThread(() -> LocalBroadcastManager.getInstance(mActivity).sendBroadcast(sendForMapParsingIntent));
+
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
         if (!update && sp.getBoolean("showntusbsstops", true)) {
             // We will send data related to stops as well
