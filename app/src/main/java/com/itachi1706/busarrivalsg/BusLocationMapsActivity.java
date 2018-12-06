@@ -9,10 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,9 +21,14 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.Services.LocManager;
+import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 @Deprecated
 public class BusLocationMapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -104,19 +105,19 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
         LatLngBounds.Builder b = new LatLngBounds.Builder();
 
         // Add 3 buses location
-        if (StaticVariables.checkBusLocationValid(lat1, lng1)) {
+        if (StaticVariables.INSTANCE.checkBusLocationValid(lat1, lng1)) {
             m1 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, lng1)).title("Location of Bus 1")
                     .snippet("ETA: " + processArrival(arr1) + " (" + processType(type1) + ")")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
             b.include(m1.getPosition());
         }
-        if (StaticVariables.checkBusLocationValid(lat2, lng2)) {
+        if (StaticVariables.INSTANCE.checkBusLocationValid(lat2, lng2)) {
             m2 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat2, lng2)).title("Location of Bus 2")
                     .snippet("ETA: " + processArrival(arr2) + " (" + processType(type2) + ")")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
             if (state == StaticVariables.NEXT || state == StaticVariables.SUB) b.include(m2.getPosition());
         }
-        if (StaticVariables.checkBusLocationValid(lat3, lng3)) {
+        if (StaticVariables.INSTANCE.checkBusLocationValid(lat3, lng3)) {
             m3 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat3, lng3)).title("Location of Bus 3")
                     .snippet("ETA: " + processArrival(arr3) + " (" + processType(type3) + ")")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
@@ -136,8 +137,8 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
     }
 
     private String processArrival(String estString) {
-        long est = StaticVariables.parseLTAEstimateArrival(estString,
-                StaticVariables.useServerTime(PreferenceManager.getDefaultSharedPreferences(this)), stime);
+        long est = StaticVariables.INSTANCE.parseLTAEstimateArrival(estString,
+                StaticVariables.INSTANCE.useServerTime(PreferenceManager.getDefaultSharedPreferences(this)), stime);
         if (est == -9999) return "=";
         else if (est <= 0) return "Arr";
         else if (est == 1) return est + " mins";

@@ -40,8 +40,8 @@ public class GetRemainingFavouriteData extends AsyncTask<BusServices, Void, Stri
         try {
             URL urlConn = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
-            conn.setConnectTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
-            conn.setReadTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
+            conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
+            conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
             InputStream in = conn.getInputStream();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -70,7 +70,7 @@ public class GetRemainingFavouriteData extends AsyncTask<BusServices, Void, Stri
         } else {
             //Go parse it
             Gson gson = new Gson();
-            if (!StaticVariables.checkIfYouGotJsonString(json)){
+            if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(json)){
                 //Invalid string, retrying
                 Log.e("PebbleComm Fav", "Invalid JSON String, Retrying");
                 new GetRemainingFavouriteData().executeOnExecutor(THREAD_POOL_EXECUTOR, busObj);
@@ -110,11 +110,11 @@ public class GetRemainingFavouriteData extends AsyncTask<BusServices, Void, Stri
             busObj.setObtainedNextData(true);
 
             //Go through arrayList and update the current one
-            for (int i = 0; i < StaticVariables.favouritesList.size(); i++){
-                BusServices ob = StaticVariables.favouritesList.get(i);
+            for (int i = 0; i < StaticVariables.INSTANCE.getFavouritesList().size(); i++){
+                BusServices ob = StaticVariables.INSTANCE.getFavouritesList().get(i);
                 if (ob.getServiceNo().equals(busObj.getServiceNo()) && ob.getStopID().equals(busObj.getStopID())){
                     //Update
-                    StaticVariables.favouritesList.set(i, busObj);
+                    StaticVariables.INSTANCE.getFavouritesList().set(i, busObj);
                     return;
                 }
             }

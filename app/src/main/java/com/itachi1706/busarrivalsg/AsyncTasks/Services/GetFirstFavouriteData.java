@@ -23,8 +23,6 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 
-import static com.itachi1706.busarrivalsg.util.StaticVariables.parseEstimateArrival;
-
 /**
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.AsyncTasks
@@ -50,8 +48,8 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
         try {
             URL urlConn = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
-            conn.setConnectTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
-            conn.setReadTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
+            conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
+            conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
             InputStream in = conn.getInputStream();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -80,7 +78,7 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
         } else {
             //Go parse it
             Gson gson = new Gson();
-            if (!StaticVariables.checkIfYouGotJsonString(json)) {
+            if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(json)) {
                 //Invalid string, retrying
                 Log.e("PebbleComm First Fav", "Invalid JSON String, Retrying");
                 new GetFirstFavouriteData(context).executeOnExecutor(THREAD_POOL_EXECUTOR, busObj);
@@ -120,26 +118,26 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
             busObj.setObtainedNextData(true);
 
             // Get servertime
-            boolean serverTime = StaticVariables.useServerTime(PreferenceManager.getDefaultSharedPreferences(context));
+            boolean serverTime = StaticVariables.INSTANCE.useServerTime(PreferenceManager.getDefaultSharedPreferences(context));
 
             //Go through arrayList and update the current one
-            for (int i = 0; i < StaticVariables.favouritesList.size(); i++) {
-                BusServices ob = StaticVariables.favouritesList.get(i);
+            for (int i = 0; i < StaticVariables.INSTANCE.getFavouritesList().size(); i++) {
+                BusServices ob = StaticVariables.INSTANCE.getFavouritesList().get(i);
                 if (ob.getServiceNo().equals(busObj.getServiceNo()) && ob.getStopID().equals(busObj.getStopID())) {
                     //Update
-                    StaticVariables.favouritesList.set(i, busObj);
+                    StaticVariables.INSTANCE.getFavouritesList().set(i, busObj);
                     break;
                 }
             }
 
             //Get First Object and parse it
-            BusServices ob = StaticVariables.favouritesList.get(0);
+            BusServices ob = StaticVariables.INSTANCE.getFavouritesList().get(0);
             String currentEst;
             String nextEst;
             if (ob.getNextBus().getEstimatedArrival() == null) {
                 nextEst = "-";
             } else {
-                long estNxt = parseEstimateArrival(ob.getNextBus().getEstimatedArrival(), serverTime, mainArr.getCurrentTime());
+                long estNxt = StaticVariables.INSTANCE.parseEstimateArrival(ob.getNextBus().getEstimatedArrival(), serverTime, mainArr.getCurrentTime());
                 if (estNxt <= 0)
                     nextEst = "Arr";
                 else if (estNxt == 1)
@@ -150,7 +148,7 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
             if (ob.getCurrentBus().getEstimatedArrival() == null) {
                 currentEst = "-";
             } else {
-                long estCur = parseEstimateArrival(ob.getCurrentBus().getEstimatedArrival(), serverTime, mainArr.getCurrentTime());
+                long estCur = StaticVariables.INSTANCE.parseEstimateArrival(ob.getCurrentBus().getEstimatedArrival(), serverTime, mainArr.getCurrentTime());
                 if (estCur <= 0)
                     currentEst = "Arr";
                 else if (estCur == 1)
@@ -172,7 +170,7 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
                 dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, ob.getStopName().trim());
             dict2.addString(PebbleEnum.MESSAGE_BUS_SERVICE, ob.getServiceNo().trim());
             dict2.addString(PebbleEnum.MESSAGE_ROAD_CODE, ob.getStopID().trim());
-            dict2.addInt16(PebbleEnum.MESSAGE_MAX_FAV, (short) StaticVariables.favouritesList.size());
+            dict2.addInt16(PebbleEnum.MESSAGE_MAX_FAV, (short) StaticVariables.INSTANCE.getFavouritesList().size());
             dict2.addInt16(PebbleEnum.MESSAGE_CURRENT_FAV, (short) 1);
             dict3.addString(PebbleEnum.ESTIMATE_ARR_CURRENT_DATA, currentEst.trim());
             dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, (short) ob.getCurrentBus().getLoad());
@@ -180,14 +178,14 @@ public class GetFirstFavouriteData extends AsyncTask<BusServices, Void, String> 
             dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, (short) ob.getNextBus().getLoad());
 
             //Send WAB status
-            dict2.addInt8(PebbleEnum.MESSAGE_WAB_CURRENT, StaticVariables.parseWABStatusToPebble(ob.getCurrentBus().isWheelChairAccessible()));
-            dict2.addInt8(PebbleEnum.MESSAGE_WAB_NEXT, StaticVariables.parseWABStatusToPebble(ob.getNextBus().isWheelChairAccessible()));
+            dict2.addInt8(PebbleEnum.MESSAGE_WAB_CURRENT, StaticVariables.INSTANCE.parseWABStatusToPebble(ob.getCurrentBus().isWheelChairAccessible()));
+            dict2.addInt8(PebbleEnum.MESSAGE_WAB_NEXT, StaticVariables.INSTANCE.parseWABStatusToPebble(ob.getNextBus().isWheelChairAccessible()));
 
             Log.i("PebbleComm First Fav", "Sending to Pebble...");
-            PebbleKit.sendDataToPebbleWithTransactionId(context, StaticVariables.PEBBLE_APP_UUID, dict1, 1);
-            StaticVariables.dict1 = dict1;
-            StaticVariables.dict2 = dict2;
-            StaticVariables.dict3 = dict3;
+            PebbleKit.sendDataToPebbleWithTransactionId(context, StaticVariables.INSTANCE.getPEBBLE_APP_UUID(), dict1, 1);
+            StaticVariables.INSTANCE.setDict1(dict1);
+            StaticVariables.INSTANCE.setDict2(dict2);
+            StaticVariables.INSTANCE.setDict3(dict3);
         }
     }
 }

@@ -46,8 +46,8 @@ public class DlAndInstallCompanionApp extends AsyncTask<String, Void, Boolean> {
         try {
             URL url = new URL(urlLink[0]);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
-            conn.setReadTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
+            conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
+            conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
             conn.setRequestMethod("GET");
             conn.connect();
             Log.d("DL", "Starting Download");

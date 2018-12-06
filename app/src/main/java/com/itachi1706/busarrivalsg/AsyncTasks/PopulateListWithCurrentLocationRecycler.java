@@ -65,8 +65,8 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
         try {
             URL urlConn = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
-            conn.setConnectTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
-            conn.setReadTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
+            conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
+            conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
             InputStream in = conn.getInputStream();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -86,7 +86,7 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
         // Do the processing here
         Gson gson = new Gson();
         Log.d("CURRENT-LOCATION", tmp);
-        if (!StaticVariables.checkIfYouGotJsonString(tmp)) {
+        if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
             except = new Exception(context.getResources().getString(R.string.toast_message_invalid_json));
             return 2;
         }

@@ -73,8 +73,8 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
             long start = System.currentTimeMillis();
             URL urlConn = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
-            conn.setConnectTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
-            conn.setReadTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
+            conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
+            conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
             InputStream in = conn.getInputStream();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -93,7 +93,7 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
         }
 
         Log.d(TAG, tmp);
-        if (!StaticVariables.checkIfYouGotJsonString(tmp)) {
+        if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
             except = new Exception(mActivity.getResources().getString(R.string.toast_message_invalid_json));
             return 2;
         }

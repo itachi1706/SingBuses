@@ -28,8 +28,6 @@ import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import io.fabric.sdk.android.Fabric;
 
-import static com.itachi1706.busarrivalsg.util.StaticVariables.parseEstimateArrival;
-
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -56,28 +54,28 @@ public class PebbleCommunications extends Service {
         Fabric fabric = new Fabric.Builder(this).kits(new Crashlytics()).debuggable(BuildConfig.DEBUG).build();
         if (!BuildConfig.DEBUG) Fabric.with(fabric);
         Log.i("Pebble Comm", "SYSTEM: Started Pebble Communications Service");
-        Log.i("Pebble Comm", "UUID: " + StaticVariables.PEBBLE_APP_UUID.toString());
+        Log.i("Pebble Comm", "UUID: " + StaticVariables.INSTANCE.getPEBBLE_APP_UUID().toString());
 
         unregisterPebbleReceivers();
         Log.i("Pebble Comm", "Unregistered. Now reregistering receivers");
 
 
-        mNack = new PebbleKit.PebbleNackReceiver(StaticVariables.PEBBLE_APP_UUID) {
+        mNack = new PebbleKit.PebbleNackReceiver(StaticVariables.INSTANCE.getPEBBLE_APP_UUID()) {
             @Override
             public void receiveNack(Context context, int transactionId) {
                 Log.e("Pebble Comm", "Message failed to send to Pebble");
                 switch (transactionId){
                     case 1:
-                        if (StaticVariables.dict1 != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict1, 1);
+                        if (StaticVariables.INSTANCE.getDict1() != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.INSTANCE.getPEBBLE_APP_UUID(), StaticVariables.INSTANCE.getDict1(), 1);
                         break;
                     case 2:
-                        if (StaticVariables.dict2 != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict2, 2);
+                        if (StaticVariables.INSTANCE.getDict2() != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.INSTANCE.getPEBBLE_APP_UUID(), StaticVariables.INSTANCE.getDict2(), 2);
                         break;
                     case 3:
-                        if (StaticVariables.dict3 != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict3, 3);
+                        if (StaticVariables.INSTANCE.getDict3() != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.INSTANCE.getPEBBLE_APP_UUID(), StaticVariables.INSTANCE.getDict3(), 3);
                         break;
                     case 4:
-                        if (StaticVariables.dict4 != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict4, 4);
+                        if (StaticVariables.INSTANCE.getDict4() != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.INSTANCE.getPEBBLE_APP_UUID(), StaticVariables.INSTANCE.getDict4(), 4);
                         break;
                 }
             }
@@ -85,7 +83,7 @@ public class PebbleCommunications extends Service {
         PebbleKit.registerReceivedNackHandler(getApplicationContext(), mNack);
         Log.i("Pebble Comm", "Registered Nack Reciver");
 
-        mAck = new PebbleKit.PebbleAckReceiver(StaticVariables.PEBBLE_APP_UUID) {
+        mAck = new PebbleKit.PebbleAckReceiver(StaticVariables.INSTANCE.getPEBBLE_APP_UUID()) {
             @Override
             public void receiveAck(Context context, int transactionId) {
                 Log.i("Pebble Comm", "Sent message successfully to Pebble");
@@ -93,18 +91,18 @@ public class PebbleCommunications extends Service {
                 //After sending is successfully, null the dictionary
                 switch (transactionId){
                     case 1: //send 2
-                        StaticVariables.dict1 = null;
-                        if (StaticVariables.dict2 != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict2, 2);
+                        StaticVariables.INSTANCE.setDict1(null);
+                        if (StaticVariables.INSTANCE.getDict2() != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.INSTANCE.getPEBBLE_APP_UUID(), StaticVariables.INSTANCE.getDict2(), 2);
                         break;
                     case 2: //send 3
-                        StaticVariables.dict2 = null;
-                        if (StaticVariables.dict3 != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict3, 3);
+                        StaticVariables.INSTANCE.setDict2(null);
+                        if (StaticVariables.INSTANCE.getDict3() != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.INSTANCE.getPEBBLE_APP_UUID(), StaticVariables.INSTANCE.getDict3(), 3);
                         break;
                     case 3: //send 4
-                        StaticVariables.dict3 = null;
-                        if (StaticVariables.dict4 != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, StaticVariables.dict4, 4);
+                        StaticVariables.INSTANCE.setDict3(null);
+                        if (StaticVariables.INSTANCE.getDict4() != null) PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.INSTANCE.getPEBBLE_APP_UUID(), StaticVariables.INSTANCE.getDict4(), 4);
                         break;
-                    case 4: StaticVariables.dict4 = null; break;
+                    case 4: StaticVariables.INSTANCE.setDict4(null); break;
                 }
             }
         };
@@ -112,7 +110,7 @@ public class PebbleCommunications extends Service {
         Log.i("Pebble Comm", "Registered Ack Receiver");
 
         //Handle Data Receiver
-        mReceiver = new PebbleKit.PebbleDataReceiver(StaticVariables.PEBBLE_APP_UUID) {
+        mReceiver = new PebbleKit.PebbleDataReceiver(StaticVariables.INSTANCE.getPEBBLE_APP_UUID()) {
             @Override
             public void receiveData(Context context, int i, PebbleDictionary pebbleDictionary) {
                 Log.i("Pebble Comm", "Received Message from Pebble");
@@ -247,9 +245,9 @@ public class PebbleCommunications extends Service {
         }
 
         private void nextHandler(int page) {
-            if (page != StaticVariables.favouritesList.size()) {
+            if (page != StaticVariables.INSTANCE.getFavouritesList().size()) {
                 //Get Next
-                BusServices obj = StaticVariables.favouritesList.get(page);
+                BusServices obj = StaticVariables.INSTANCE.getFavouritesList().get(page);
 
                 if (!obj.isObtainedNextData()) return;
 
@@ -258,7 +256,7 @@ public class PebbleCommunications extends Service {
                 if (obj.getNextBus().getEstimatedArrival() == null) {
                     nextEst = "-";
                 } else {
-                    long estNxt = parseEstimateArrival(obj.getNextBus().getEstimatedArrival(), false, null);
+                    long estNxt = StaticVariables.INSTANCE.parseEstimateArrival(obj.getNextBus().getEstimatedArrival(), false, null);
                     if (estNxt <= 0)
                         nextEst = "Arr";
                     else if (estNxt == 1)
@@ -269,7 +267,7 @@ public class PebbleCommunications extends Service {
                 if (obj.getCurrentBus().getEstimatedArrival() == null) {
                     currentEst = "-";
                 } else {
-                    long estCur = parseEstimateArrival(obj.getCurrentBus().getEstimatedArrival(), false, null);
+                    long estCur = StaticVariables.INSTANCE.parseEstimateArrival(obj.getCurrentBus().getEstimatedArrival(), false, null);
                     if (estCur <= 0)
                         currentEst = "Arr";
                     else if (estCur == 1)
@@ -290,7 +288,7 @@ public class PebbleCommunications extends Service {
                     dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, obj.getStopName().trim());
                 dict2.addString(PebbleEnum.MESSAGE_BUS_SERVICE, obj.getServiceNo().trim());
                 dict2.addString(PebbleEnum.MESSAGE_ROAD_CODE, obj.getStopID().trim());
-                dict2.addInt16(PebbleEnum.MESSAGE_MAX_FAV, (short) StaticVariables.favouritesList.size());
+                dict2.addInt16(PebbleEnum.MESSAGE_MAX_FAV, (short) StaticVariables.INSTANCE.getFavouritesList().size());
                 dict2.addInt16(PebbleEnum.MESSAGE_CURRENT_FAV, (short) (page + 1));
                 dict3.addString(PebbleEnum.ESTIMATE_ARR_CURRENT_DATA, currentEst.trim());
                 dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, (short) obj.getCurrentBus().getLoad());
@@ -298,20 +296,20 @@ public class PebbleCommunications extends Service {
                 dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, (short) obj.getNextBus().getLoad());
 
                 //Send WAB status
-                dict2.addInt8(PebbleEnum.MESSAGE_WAB_CURRENT, StaticVariables.parseWABStatusToPebble(obj.getCurrentBus().isWheelChairAccessible()));
-                dict2.addInt8(PebbleEnum.MESSAGE_WAB_NEXT, StaticVariables.parseWABStatusToPebble(obj.getNextBus().isWheelChairAccessible()));
+                dict2.addInt8(PebbleEnum.MESSAGE_WAB_CURRENT, StaticVariables.INSTANCE.parseWABStatusToPebble(obj.getCurrentBus().isWheelChairAccessible()));
+                dict2.addInt8(PebbleEnum.MESSAGE_WAB_NEXT, StaticVariables.INSTANCE.parseWABStatusToPebble(obj.getNextBus().isWheelChairAccessible()));
 
-                PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, dict1, 1);
-                StaticVariables.dict1 = dict1;
-                StaticVariables.dict2 = dict2;
-                StaticVariables.dict3 = dict3;
+                PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.INSTANCE.getPEBBLE_APP_UUID(), dict1, 1);
+                StaticVariables.INSTANCE.setDict1(dict1);
+                StaticVariables.INSTANCE.setDict2(dict2);
+                StaticVariables.INSTANCE.setDict3(dict3);
             }
         }
 
         private void prevHandler(int page) {
             if (page > 1) {
                 //Get Previous
-                BusServices obj = StaticVariables.favouritesList.get(page - 2);
+                BusServices obj = StaticVariables.INSTANCE.getFavouritesList().get(page - 2);
 
                 if (!obj.isObtainedNextData()) return;
 
@@ -320,7 +318,7 @@ public class PebbleCommunications extends Service {
                 if (obj.getNextBus().getEstimatedArrival() == null) {
                     nextEst = "-";
                 } else {
-                    long estNxt = parseEstimateArrival(obj.getNextBus().getEstimatedArrival(), false, null);
+                    long estNxt = StaticVariables.INSTANCE.parseEstimateArrival(obj.getNextBus().getEstimatedArrival(), false, null);
                     if (estNxt <= 0)
                         nextEst = "Arr";
                     else if (estNxt == 1)
@@ -331,7 +329,7 @@ public class PebbleCommunications extends Service {
                 if (obj.getCurrentBus().getEstimatedArrival() == null) {
                     currentEst = "-";
                 } else {
-                    long estCur = parseEstimateArrival(obj.getCurrentBus().getEstimatedArrival(), false, null);
+                    long estCur = StaticVariables.INSTANCE.parseEstimateArrival(obj.getCurrentBus().getEstimatedArrival(), false, null);
                     if (estCur <= 0)
                         currentEst = "Arr";
                     else if (estCur == 1)
@@ -353,7 +351,7 @@ public class PebbleCommunications extends Service {
                     dict1.addString(PebbleEnum.MESSAGE_ROAD_NAME, obj.getStopName().trim());
                 dict2.addString(PebbleEnum.MESSAGE_BUS_SERVICE, obj.getServiceNo().trim());
                 dict2.addString(PebbleEnum.MESSAGE_ROAD_CODE, obj.getStopID().trim());
-                dict2.addInt16(PebbleEnum.MESSAGE_MAX_FAV, (short) StaticVariables.favouritesList.size());
+                dict2.addInt16(PebbleEnum.MESSAGE_MAX_FAV, (short) StaticVariables.INSTANCE.getFavouritesList().size());
                 dict2.addInt16(PebbleEnum.MESSAGE_CURRENT_FAV, (short) (page - 1));
                 dict3.addString(PebbleEnum.ESTIMATE_ARR_CURRENT_DATA, currentEst.trim());
                 dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_CURRENT_DATA, (short) obj.getCurrentBus().getLoad());
@@ -361,13 +359,13 @@ public class PebbleCommunications extends Service {
                 dict3.addInt16(PebbleEnum.ESTIMATE_LOAD_NEXT_DATA, (short) obj.getNextBus().getLoad());
 
                 //Send WAB status
-                dict2.addInt8(PebbleEnum.MESSAGE_WAB_CURRENT, StaticVariables.parseWABStatusToPebble(obj.getCurrentBus().isWheelChairAccessible()));
-                dict2.addInt8(PebbleEnum.MESSAGE_WAB_NEXT, StaticVariables.parseWABStatusToPebble(obj.getNextBus().isWheelChairAccessible()));
+                dict2.addInt8(PebbleEnum.MESSAGE_WAB_CURRENT, StaticVariables.INSTANCE.parseWABStatusToPebble(obj.getCurrentBus().isWheelChairAccessible()));
+                dict2.addInt8(PebbleEnum.MESSAGE_WAB_NEXT, StaticVariables.INSTANCE.parseWABStatusToPebble(obj.getNextBus().isWheelChairAccessible()));
 
-                PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, dict1, 1);
-                StaticVariables.dict1 = dict1;
-                StaticVariables.dict2 = dict2;
-                StaticVariables.dict3 = dict3;
+                PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.INSTANCE.getPEBBLE_APP_UUID(), dict1, 1);
+                StaticVariables.INSTANCE.setDict1(dict1);
+                StaticVariables.INSTANCE.setDict2(dict2);
+                StaticVariables.INSTANCE.setDict3(dict3);
             }
         }
 
@@ -380,16 +378,16 @@ public class PebbleCommunications extends Service {
             if (BusStorage.hasFavourites(sp)) {
                 //Go ahead with loading and getting data
                 Log.d("FAVOURITES", "Has Favourites. Processing");
-                StaticVariables.favouritesList = BusStorage.getStoredBuses(sp);
+                StaticVariables.INSTANCE.setFavouritesList(BusStorage.getStoredBuses(sp));
 
                 Log.d("FAVOURITES", "Finished Processing, retrieving estimated arrival data now");
-                if (StaticVariables.favouritesList.size() > 0) {
+                if (StaticVariables.INSTANCE.getFavouritesList().size() > 0) {
                     //Process first one
-                    new GetFirstFavouriteData(getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StaticVariables.favouritesList.get(0));
+                    new GetFirstFavouriteData(getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StaticVariables.INSTANCE.getFavouritesList().get(0));
                 }
 
                 boolean first = true;
-                for (BusServices s : StaticVariables.favouritesList) {
+                for (BusServices s : StaticVariables.INSTANCE.getFavouritesList()) {
                     if (first) {
                         first = false;
                         continue;
@@ -401,8 +399,8 @@ public class PebbleCommunications extends Service {
             } else {
                 PebbleDictionary dict = new PebbleDictionary();
                 dict.addInt32(PebbleEnum.ERROR_NO_DATA, 1);
-                StaticVariables.dict1 = dict;
-                PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.PEBBLE_APP_UUID, dict, 1);
+                StaticVariables.INSTANCE.setDict1(dict);
+                PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), StaticVariables.INSTANCE.getPEBBLE_APP_UUID(), dict, 1);
             }
         }
     }

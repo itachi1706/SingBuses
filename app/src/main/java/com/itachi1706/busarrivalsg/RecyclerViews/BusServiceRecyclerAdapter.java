@@ -4,9 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,20 +17,20 @@ import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.util.BusesUtil;
+import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObjectEstimate;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.CommonEnums;
-import com.itachi1706.busarrivalsg.R;
+import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.util.List;
 
-import static com.itachi1706.busarrivalsg.util.StaticVariables.CUR;
-import static com.itachi1706.busarrivalsg.util.StaticVariables.NEXT;
-import static com.itachi1706.busarrivalsg.util.StaticVariables.SUB;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Kenneth on 31/10/2015.
@@ -102,7 +99,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         if (i.getNextBus().getEstimatedArrival() == null){
             notArriving(holder.busArrivalNow, holder.wheelchairNow, holder.busTypeNow);
         } else {
-            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus().getEstimatedArrival(), serverTime, currentTime);
+            long est = StaticVariables.INSTANCE.parseLTAEstimateArrival(i.getNextBus().getEstimatedArrival(), serverTime, currentTime);
             String arrivalStatusNow;
             if (est == -9999)
                 arrivalStatusNow = "-";
@@ -122,14 +119,14 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 holder.busTypeNow.setText(BusesUtil.INSTANCE.getType(i.getNextBus().getTypeInt()));
                 holder.busTypeNow.setVisibility(View.VISIBLE);
             }
-            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), CUR));
+            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), StaticVariables.CUR));
         }
 
         //2nd bus (Next bus)
         if (i.getNextBus2().getEstimatedArrival() == null){
             notArriving(holder.busArrivalNext, holder.wheelchairNext, holder.busTypeNext);
         } else {
-            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus2().getEstimatedArrival(), serverTime, currentTime);
+            long est = StaticVariables.INSTANCE.parseLTAEstimateArrival(i.getNextBus2().getEstimatedArrival(), serverTime, currentTime);
             String arrivalStatusNext;
             if (est == -9999)
                 arrivalStatusNext = "-";
@@ -149,7 +146,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 holder.busTypeNext.setText(BusesUtil.INSTANCE.getType(i.getNextBus2().getTypeInt()));
                 holder.busTypeNext.setVisibility(View.VISIBLE);
             }
-            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), NEXT));
+            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), StaticVariables.NEXT));
         }
 
         //3rd bus (Subsequent Bus)
@@ -159,7 +156,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         }
         if (i.getNextBus3().getEstimatedArrival() == null) notArriving(holder.busArrivalSub, holder.wheelchairSub, holder.busTypeSub);
         else {
-            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus3().getEstimatedArrival(), serverTime, currentTime);
+            long est = StaticVariables.INSTANCE.parseLTAEstimateArrival(i.getNextBus3().getEstimatedArrival(), serverTime, currentTime);
             String arrivalStatusSub;
             if (est == -9999)
                 arrivalStatusSub = "-";
@@ -179,7 +176,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 holder.busTypeSub.setText(BusesUtil.INSTANCE.getType(i.getNextBus3().getTypeInt()));
                 holder.busTypeSub.setVisibility(View.VISIBLE);
             }
-            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), SUB));
+            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i, i.getStopCode(), i.getServiceNo(), StaticVariables.SUB));
         }
     }
 
@@ -288,8 +285,8 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         private int state;
 
         ArrivalButton(BusArrivalArrayObject busObj, String busStopCode, String svcNo, int state) {
-            BusArrivalArrayObjectEstimate status = (state == CUR) ? busObj.getNextBus() :
-                    (state == NEXT) ? busObj.getNextBus2() : busObj.getNextBus3();
+            BusArrivalArrayObjectEstimate status = (state == StaticVariables.CUR) ? busObj.getNextBus() :
+                    (state == StaticVariables.NEXT) ? busObj.getNextBus2() : busObj.getNextBus3();
             this.busObj = busObj;
             assert status != null;
             this.state = state;

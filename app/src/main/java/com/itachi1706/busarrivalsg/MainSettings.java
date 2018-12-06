@@ -120,7 +120,7 @@ public class MainSettings extends AppCompatActivity {
                 return;
             }
             Date date = new Date(dbBus);
-            timeDBUpdateBus.setSummary(StaticVariables.convertDateToString(date));
+            timeDBUpdateBus.setSummary(StaticVariables.INSTANCE.convertDateToString(date));
         }
 
         // Handling of all companion devices starts here

@@ -18,17 +18,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.core.app.ActivityCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +28,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.appupdater.AppUpdateInitializer;
 import com.itachi1706.appupdater.Objects.CAAnalytics;
@@ -51,16 +41,24 @@ import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.Services.PebbleCommunications;
+import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.util.PebbleEnum;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
-import com.itachi1706.busarrivalsg.objects.BusServices;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.fabric.sdk.android.Fabric;
-
-import static com.itachi1706.busarrivalsg.util.StaticVariables.useServerTime;
 
 public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -100,7 +98,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
         if (favouritesList != null) favouritesList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         favouritesList.setLayoutManager(linearLayoutManager);
         favouritesList.setItemAnimator(new DefaultItemAnimator());
 
@@ -115,7 +113,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         }
 
         sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        adapter = new FavouritesRecyclerAdapter(new ArrayList<>(), this, useServerTime(sp));
+        adapter = new FavouritesRecyclerAdapter(new ArrayList<>(), this, StaticVariables.INSTANCE.useServerTime(sp));
         favouritesList.setAdapter(adapter);
 
         ItemTouchHelper moveAdapter = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
@@ -259,12 +257,12 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         if (BusStorage.hasFavourites(sp)) {
             //Go ahead with loading and getting data
             Log.d("FAVOURITES", "Has Favourites. Processing");
-            StaticVariables.favouritesList = BusStorage.getStoredBuses(sp);
-            adapter.updateAdapter(StaticVariables.favouritesList, null);
+            StaticVariables.INSTANCE.setFavouritesList(BusStorage.getStoredBuses(sp));
+            adapter.updateAdapter(StaticVariables.INSTANCE.getFavouritesList(), null);
             adapter.notifyDataSetChanged();
 
             Log.d("FAVOURITES", "Finished Processing, retrieving estimated arrival data now");
-            new GetBusServicesFavouritesRecycler(this, adapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StaticVariables.favouritesList.toArray(new BusServices[0]));
+            new GetBusServicesFavouritesRecycler(this, adapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StaticVariables.INSTANCE.getFavouritesList().toArray(new BusServices[0]));
             Log.d("FAVOURITES", "Finished casting AsyncTasks to retrieve estimated arrival data");
         }
 
@@ -412,7 +410,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             connectionStatus.setText(R.string.pebble_connected);
             connectionStatus.setTextColor(Color.GREEN);
             firmware.setText(getString(R.string.pebble_firmware_version, info.getTag()));
-            pebbleDataReceiver = new PebbleKit.PebbleDataReceiver(StaticVariables.PEBBLE_APP_UUID) {
+            pebbleDataReceiver = new PebbleKit.PebbleDataReceiver(StaticVariables.INSTANCE.getPEBBLE_APP_UUID()) {
                 @Override
                 public void receiveData(Context context, int i, PebbleDictionary pebbleDictionary) {
                     PebbleKit.sendAckToPebble(getApplicationContext(), i);

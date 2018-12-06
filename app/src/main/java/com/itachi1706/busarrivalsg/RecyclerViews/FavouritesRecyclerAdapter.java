@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,26 +16,26 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.material.snackbar.Snackbar;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.util.BusesUtil;
+import com.itachi1706.busarrivalsg.R;
+import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.BusStatus;
 import com.itachi1706.busarrivalsg.objects.CommonEnums;
-import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.Services.BusStorage;
+import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.itachi1706.busarrivalsg.util.StaticVariables.CUR;
-import static com.itachi1706.busarrivalsg.util.StaticVariables.NEXT;
-import static com.itachi1706.busarrivalsg.util.StaticVariables.SUB;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Kenneth on 31/10/2015.
@@ -127,7 +124,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         //Current Bus
         if (i.getCurrentBus().getEstimatedArrival() == null) notArriving(holder.busArrivalNow, holder.wheelchairNow, holder.busTypeNow);
         else {
-            long est = StaticVariables.parseLTAEstimateArrival(i.getCurrentBus().getEstimatedArrival(), serverTime, currentTime);
+            long est = StaticVariables.INSTANCE.parseLTAEstimateArrival(i.getCurrentBus().getEstimatedArrival(), serverTime, currentTime);
             String arrivalStatusNow;
             if (est == -9999)
                 arrivalStatusNow = "-";
@@ -147,13 +144,13 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 holder.busTypeNow.setText(BusesUtil.INSTANCE.getType(i.getCurrentBus().getBusType()));
                 holder.busTypeNow.setVisibility(View.VISIBLE);
             }
-            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i, i.getStopID(), i.getServiceNo(), CUR));
+            holder.busArrivalNow.setOnClickListener(new ArrivalButton(i, i.getStopID(), i.getServiceNo(), StaticVariables.CUR));
         }
 
         //2nd Bus (Next Bus)
         if (i.getNextBus().getEstimatedArrival() == null) notArriving(holder.busArrivalNext, holder.wheelchairNext, holder.busTypeNext);
         else {
-            long est = StaticVariables.parseLTAEstimateArrival(i.getNextBus().getEstimatedArrival(), serverTime, currentTime);
+            long est = StaticVariables.INSTANCE.parseLTAEstimateArrival(i.getNextBus().getEstimatedArrival(), serverTime, currentTime);
             String arrivalStatusNext;
             if (est == -9999)
                 arrivalStatusNext = "-";
@@ -173,7 +170,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 holder.busTypeNext.setText(BusesUtil.INSTANCE.getType(i.getNextBus().getBusType()));
                 holder.busTypeNext.setVisibility(View.VISIBLE);
             }
-            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i, i.getStopID(), i.getServiceNo(), NEXT));
+            holder.busArrivalNext.setOnClickListener(new ArrivalButton(i, i.getStopID(), i.getServiceNo(), StaticVariables.NEXT));
         }
 
         //3rd bus (Subsequent Bus)
@@ -183,7 +180,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         }
         if (i.getSubsequentBus().getEstimatedArrival() == null) notArriving(holder.busArrivalSub, holder.wheelchairSub, holder.busTypeSub);
         else {
-            long est = StaticVariables.parseLTAEstimateArrival(i.getSubsequentBus().getEstimatedArrival(), serverTime, currentTime);
+            long est = StaticVariables.INSTANCE.parseLTAEstimateArrival(i.getSubsequentBus().getEstimatedArrival(), serverTime, currentTime);
             String arrivalStatusSub;
             if (est == -9999)
                 arrivalStatusSub = "-";
@@ -203,7 +200,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 holder.busTypeSub.setText(BusesUtil.INSTANCE.getType(i.getSubsequentBus().getBusType()));
                 holder.busTypeSub.setVisibility(View.VISIBLE);
             }
-            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i, i.getStopID(), i.getServiceNo(), SUB));
+            holder.busArrivalSub.setOnClickListener(new ArrivalButton(i, i.getStopID(), i.getServiceNo(), StaticVariables.SUB));
         }
 
     }
@@ -364,8 +361,8 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         private int state;
 
         ArrivalButton(BusServices busObj, String busStopCode, String svcNo, int state) {
-            BusStatus status = (state == CUR) ? busObj.getCurrentBus() :
-                    (state == NEXT) ? busObj.getNextBus() : busObj.getSubsequentBus();
+            BusStatus status = (state == StaticVariables.CUR) ? busObj.getCurrentBus() :
+                    (state == StaticVariables.NEXT) ? busObj.getNextBus() : busObj.getSubsequentBus();
             this.state = state;
             this.busObj = busObj;
             this.longitude = status.getLongitude();

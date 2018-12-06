@@ -51,8 +51,8 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
         try {
             URL urlConn = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
-            conn.setConnectTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
-            conn.setReadTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
+            conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
+            conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
             InputStream in = conn.getInputStream();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -81,7 +81,7 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
         } else {
             //Go parse it
             Gson gson = new Gson();
-            if (!StaticVariables.checkIfYouGotJsonString(json)){
+            if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(json)){
                 //Invalid string, retrying
                 Toast.makeText(activity, R.string.toast_message_invalid_json_retry, Toast.LENGTH_SHORT).show();
                 new GetAllBusStops(progressDialog, db, activity, sp).execute();

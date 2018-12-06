@@ -58,8 +58,8 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
         try {
             URL urlConn = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
-            conn.setConnectTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
-            conn.setReadTimeout(StaticVariables.HTTP_QUERY_TIMEOUT);
+            conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
+            conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
             InputStream in = conn.getInputStream();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -88,7 +88,7 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
         } else {
             //Go parse it
             Gson gson = new Gson();
-            if (!StaticVariables.checkIfYouGotJsonString(json)){
+            if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(json)){
                 //Invalid string, retrying
                 Toast.makeText(activity, R.string.toast_message_invalid_json_retry, Toast.LENGTH_SHORT).show();
                 new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObjArr);
@@ -181,12 +181,12 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
                 busObj.setObtainedNextData(true);
 
                 //Go through arrayList and update the current one
-                for (int i = 0; i < StaticVariables.favouritesList.size(); i++) {
-                    BusServices ob = StaticVariables.favouritesList.get(i);
+                for (int i = 0; i < StaticVariables.INSTANCE.getFavouritesList().size(); i++) {
+                    BusServices ob = StaticVariables.INSTANCE.getFavouritesList().get(i);
                     if (ob.getServiceNo().equals(busObj.getServiceNo()) && ob.getStopID().equals(busObj.getStopID())) {
                         //Update
-                        StaticVariables.favouritesList.set(i, busObj);
-                        adapter.updateAdapter(StaticVariables.favouritesList, mainArr.getCurrentTime());
+                        StaticVariables.INSTANCE.getFavouritesList().set(i, busObj);
+                        adapter.updateAdapter(StaticVariables.INSTANCE.getFavouritesList(), mainArr.getCurrentTime());
                         adapter.notifyDataSetChanged();
                         break;
                     }

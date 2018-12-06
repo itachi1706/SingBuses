@@ -8,12 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import androidx.collection.ArrayMap;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,19 +16,24 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesHandler;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.Interface.IHandleStuff;
-import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusServiceRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
+import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static com.itachi1706.busarrivalsg.util.StaticVariables.useServerTime;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.collection.ArrayMap;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class BusServicesAtStopRecyclerActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, IHandleStuff {
 
@@ -57,12 +56,12 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         buses = findViewById(R.id.rvBusService);
         if (buses != null) buses.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         buses.setLayoutManager(linearLayoutManager);
         buses.setItemAnimator(new DefaultItemAnimator());
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        adapter = new BusServiceRecyclerAdapter(new ArrayList<>(), this, useServerTime(sp));
+        adapter = new BusServiceRecyclerAdapter(new ArrayList<>(), this, StaticVariables.INSTANCE.useServerTime(sp));
         buses.setAdapter(adapter);
 
         swipeToRefresh = findViewById(R.id.refresh_swipe);
@@ -235,9 +234,8 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
 
             super.handleMessage(msg);
 
-            switch (msg.what){
-                case StaticVariables.BUS_SERVICE_JSON_RETRIEVED:
-                    String json = (String) msg.getData().get("jsonString");
+            switch (msg.what) {
+                case StaticVariables.BUS_SERVICE_JSON_RETRIEVED: String json = (String) msg.getData().get("jsonString");
                     activity.processMessage(json);
                     break;
             }
@@ -246,7 +244,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
 
     private void processMessage(String json){
         Gson gson = new Gson();
-        if (!StaticVariables.checkIfYouGotJsonString(json)){
+        if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(json)){
             //Invalid string, retrying
             Toast.makeText(this, R.string.toast_message_invalid_json_string, Toast.LENGTH_SHORT).show();
             return;
