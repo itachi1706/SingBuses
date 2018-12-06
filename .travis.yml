@@ -52,7 +52,14 @@ after_success:
 - mv ./app/build/outputs/apk/debug/app-debug.apk ./app/build/outputs/apk/debug/SingBuses-debug.apk
 - ls ./app/build/outputs/apk/
 - ls ./app/build/outputs/apk/debug/
-after_failure: "cat $TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
+- wget $DISCORD_URL
+- chmod +x send.sh
+- ./send.sh success $WEBHOOK_URL
+after_failure:
+- cat $TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml
+- wget $DISCORD_URL
+- chmod +x send.sh
+- ./send.sh failure $WEBHOOK_URL
 deploy:
   provider: releases
   api_key: "$OAUTH_KEY"
