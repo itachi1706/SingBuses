@@ -12,8 +12,8 @@ import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.BusStatus;
-import com.itachi1706.busarrivalsg.Util.PebbleEnum;
-import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.util.PebbleEnum;
+import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 
-import static com.itachi1706.busarrivalsg.Util.StaticVariables.parseEstimateArrival;
+import static com.itachi1706.busarrivalsg.util.StaticVariables.parseEstimateArrival;
 
 /**
  * Created by Kenneth on 20/6/2015

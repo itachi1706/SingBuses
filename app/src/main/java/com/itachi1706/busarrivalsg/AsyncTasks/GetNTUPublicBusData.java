@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.NTUBusActivity;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 
 import java.io.BufferedReader;

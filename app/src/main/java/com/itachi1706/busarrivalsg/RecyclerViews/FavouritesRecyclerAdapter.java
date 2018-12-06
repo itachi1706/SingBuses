@@ -23,22 +23,22 @@ import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.Util.BusesUtil;
+import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.BusStatus;
 import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
-import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.itachi1706.busarrivalsg.Util.StaticVariables.CUR;
-import static com.itachi1706.busarrivalsg.Util.StaticVariables.NEXT;
-import static com.itachi1706.busarrivalsg.Util.StaticVariables.SUB;
+import static com.itachi1706.busarrivalsg.util.StaticVariables.CUR;
+import static com.itachi1706.busarrivalsg.util.StaticVariables.NEXT;
+import static com.itachi1706.busarrivalsg.util.StaticVariables.SUB;
 
 /**
  * Created by Kenneth on 31/10/2015.

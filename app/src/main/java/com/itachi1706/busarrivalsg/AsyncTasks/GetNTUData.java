@@ -10,8 +10,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.NTUBusActivity;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.Util.NTURouteCacher;
-import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.util.NTURouteCacher;
+import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 
 import java.io.BufferedReader;

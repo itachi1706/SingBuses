@@ -40,7 +40,7 @@ import com.itachi1706.busarrivalsg.AsyncTasks.PopulateListWithCurrentLocationRec
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
-import com.itachi1706.busarrivalsg.Util.BusesUtil;
+import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 
 import java.lang.reflect.Type;

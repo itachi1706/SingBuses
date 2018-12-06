@@ -23,12 +23,12 @@ import com.itachi1706.busarrivalsg.AsyncTasks.Services.GetFirstFavouriteData;
 import com.itachi1706.busarrivalsg.AsyncTasks.Services.GetRemainingFavouriteData;
 import com.itachi1706.busarrivalsg.BuildConfig;
 import com.itachi1706.busarrivalsg.objects.BusServices;
-import com.itachi1706.busarrivalsg.Util.PebbleEnum;
-import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.util.PebbleEnum;
+import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import io.fabric.sdk.android.Fabric;
 
-import static com.itachi1706.busarrivalsg.Util.StaticVariables.parseEstimateArrival;
+import static com.itachi1706.busarrivalsg.util.StaticVariables.parseEstimateArrival;
 
 
 /**

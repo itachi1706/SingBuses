@@ -51,8 +51,8 @@ import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.Services.PebbleCommunications;
-import com.itachi1706.busarrivalsg.Util.PebbleEnum;
-import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.util.PebbleEnum;
+import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
 
-import static com.itachi1706.busarrivalsg.Util.StaticVariables.useServerTime;
+import static com.itachi1706.busarrivalsg.util.StaticVariables.useServerTime;
 
 public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 

@@ -2,7 +2,7 @@
 
 package com.itachi1706.busarrivalsg.gsonObjects.sgLTA
 
-import com.itachi1706.busarrivalsg.Util.BusesUtil
+import com.itachi1706.busarrivalsg.util.BusesUtil
 
 /**
  * Created by Kenneth on 18/6/2015

@@ -18,7 +18,7 @@ import com.itachi1706.appupdater.EasterEggResMultiMusicPrefFragment;
 import com.itachi1706.appupdater.SettingsInitializer;
 import com.itachi1706.appupdater.Util.DeprecationHelper;
 import com.itachi1706.busarrivalsg.Services.LocManager;
-import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.util.Date;
 import java.util.Locale;
