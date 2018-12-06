@@ -41,7 +41,7 @@ public class NTURouteCacher {
         return new File(mContext.getCacheDir(), "ntu");
     }
 
-    private boolean hasCachedFile(String routeCode) {
+    public boolean hasCachedFile(String routeCode) {
         // Check for cached file as well as if it has expired or not
         File f = getFileObject(routeCode);
         if (!f.exists()) return false;
@@ -96,6 +96,7 @@ public class NTURouteCacher {
             Log.e(TAG, "Cannot parse file, assuming corrupted");
             return null;
         }
+        Log.i(TAG, "Loaded " + routeCode + " from cache");
         return sb.toString();
     }
 
@@ -127,6 +128,7 @@ public class NTURouteCacher {
             Log.e(TAG, "IO Exception writing cache, assuming write fail");
             return false;
         }
+        Log.i(TAG, "Wrote " + routeCode + " to cache");
         return true;
     }
 
@@ -138,5 +140,15 @@ public class NTURouteCacher {
     private String getStringFromRoute(NTUBus.MapRouting routes) {
         Gson gson = new Gson();
         return gson.toJson(routes);
+    }
+
+    public String getRouteCode(int routeId) {
+        switch (routeId) {
+            case 44478: return "red";
+            case 44479: return "blue";
+            case 44480: return "green";
+            case 44481: return "brown";
+            default: return "red";
+        }
     }
 }
