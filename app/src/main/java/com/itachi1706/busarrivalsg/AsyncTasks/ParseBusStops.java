@@ -11,7 +11,7 @@ import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSONArray;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.Util.Timings;
+import com.itachi1706.busarrivalsg.util.Timings;
 
 /**
  * Created by Kenneth on 20/6/2015

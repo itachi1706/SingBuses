@@ -12,7 +12,7 @@ import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.BusStatus;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
-import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.io.BufferedReader;
 import java.io.IOException;

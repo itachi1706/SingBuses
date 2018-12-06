@@ -1,6 +1,6 @@
 package com.itachi1706.busarrivalsg.objects
 
-import com.itachi1706.busarrivalsg.Util.BusesUtil
+import com.itachi1706.busarrivalsg.util.BusesUtil
 
 /**
  * Created by Kenneth on 17/6/2015

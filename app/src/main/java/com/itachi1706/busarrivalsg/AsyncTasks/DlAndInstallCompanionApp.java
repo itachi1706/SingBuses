@@ -12,7 +12,7 @@ import androidx.core.content.FileProvider;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.io.File;
 import java.io.FileOutputStream;

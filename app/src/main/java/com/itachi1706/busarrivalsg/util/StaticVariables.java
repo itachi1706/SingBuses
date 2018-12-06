@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.Util;
+package com.itachi1706.busarrivalsg.util;
 
 import android.content.SharedPreferences;
 import android.util.Log;

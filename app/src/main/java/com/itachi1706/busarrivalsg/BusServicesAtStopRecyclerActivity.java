@@ -28,13 +28,13 @@ import com.itachi1706.busarrivalsg.Interface.IHandleStuff;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusServiceRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
-import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static com.itachi1706.busarrivalsg.Util.StaticVariables.useServerTime;
+import static com.itachi1706.busarrivalsg.util.StaticVariables.useServerTime;
 
 public class BusServicesAtStopRecyclerActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, IHandleStuff {
 

@@ -33,9 +33,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.Services.LocManager;
-import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.util.StaticVariables;
 
-import static com.itachi1706.busarrivalsg.Util.StaticVariables.useServerTime;
+import static com.itachi1706.busarrivalsg.util.StaticVariables.useServerTime;
 
 public class BusLocationMapsDialogFragment extends DialogFragment implements OnMapReadyCallback {
 

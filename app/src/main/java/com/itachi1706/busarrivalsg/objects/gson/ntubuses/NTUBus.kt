@@ -11,7 +11,7 @@ class NTUBus {
 
     inner class Route {
 
-        val route: MapRouting? = null
+        var route: MapRouting? = null
         val vehicles: Array<Vehicles>? = null
         val name: String? = null
         val routename: String? = null
