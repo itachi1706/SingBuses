@@ -22,7 +22,7 @@ import androidx.annotation.Nullable;
  * Created by Kenneth on 6/12/2018.
  * for com.itachi1706.busarrivalsg.Util in SingBuses
  */
-@SuppressWarnings("ResultOfMethodCallIgnored")
+@SuppressWarnings({"ResultOfMethodCallIgnored", "UnusedReturnValue"})
 public class NTURouteCacher {
 
     private Context mContext;
@@ -108,11 +108,9 @@ public class NTURouteCacher {
 
     private boolean writeCachedRoute(String routeCode, String routeData) {
         File f = getFileObject(routeCode);
-        if (f.exists()) {
-            if (!f.delete()) {
-                Log.e(TAG, "Unable to remove old cache. Not proceeding");
-                return false;
-            }
+        if (f.exists() && !f.delete()) {
+            Log.e(TAG, "Unable to remove old cache. Not proceeding");
+            return false;
         }
 
         try {
