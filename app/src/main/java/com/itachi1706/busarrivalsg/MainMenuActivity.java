@@ -264,9 +264,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             adapter.notifyDataSetChanged();
 
             Log.d("FAVOURITES", "Finished Processing, retrieving estimated arrival data now");
-            for (BusServices s : StaticVariables.favouritesList) {
-                new GetBusServicesFavouritesRecycler(this, adapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, s);
-            }
+            new GetBusServicesFavouritesRecycler(this, adapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StaticVariables.favouritesList.toArray(new BusServices[0]));
             Log.d("FAVOURITES", "Finished casting AsyncTasks to retrieve estimated arrival data");
         }
 
