@@ -340,6 +340,16 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
             if (update == 0) {
                 mMap.clear();
+                // Readd public bus markers if any
+                if (publicBusMarkers.size() > 0) {
+                    List<Marker> tmp = new ArrayList<>();
+                    BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(199179));
+                    for (Marker m : publicBusMarkers) {
+                        tmp.add(mMap.addMarker(new MarkerOptions().position(m.getPosition()).title(m.getTitle()).snippet(m.getSnippet()).icon(bus)));
+                    }
+                    publicBusMarkers.clear();
+                    publicBusMarkers.addAll(tmp);
+                }
                 busMarkers.clear();
 
                 @Nullable NTUBus.MapPoints centerOn = null;
@@ -500,7 +510,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
                     BusArrivalArrayObject o = busObjs.getServices()[0];
                     // Remove bus markers for this specific service
-                    Iterator<Marker> iter = busMarkers.iterator();
+                    Iterator<Marker> iter = publicBusMarkers.iterator();
                     while (iter.hasNext()) {
                         Marker m = iter.next();
 
@@ -534,7 +544,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         if (e1 != null && e1.getEstimatedArrival() != null) {
             String load = getLoadString(e1.getLoadInt());
             BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(199179));
-            busMarkers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(e1.getLatitudeD(), e1.getLongitudeD()))
+            publicBusMarkers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(e1.getLatitudeD(), e1.getLongitudeD()))
                     .title(o.getServiceNo() + " (" + o.getOperator() + ")").snippet(load + " (" + BusesUtil.INSTANCE.getType(e1.getTypeInt()) + ")")
                     .icon(bus)));
         }
