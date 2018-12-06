@@ -7,9 +7,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.NTUBusActivity;
 import com.itachi1706.busarrivalsg.R;
+import com.itachi1706.busarrivalsg.Util.NTURouteCacher;
 import com.itachi1706.busarrivalsg.Util.StaticVariables;
+import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,6 +53,19 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
             routeString = new StringBuilder(routeString.toString().replaceAll(",$", ""));
         }
         Activity mActivity = activityRef.get();
+        boolean fakeUpdate = false;
+        NTURouteCacher cacheHelper = new NTURouteCacher(mActivity);
+        if (update != 1) {
+            // Check for cache. if 1 is not cached all are not
+            fakeUpdate = true;
+            update = 1;
+            for (String r : routes) {
+                if (!cacheHelper.hasCachedFile(r)) {
+                    fakeUpdate = false;
+                    update = 0;
+                }
+            }
+        }
         String url = "http://api.itachi1706.com/api/ntubus.php?route=" + routeString.toString() + "&update=" + update;
         Log.d(TAG, url);
         String tmp;
@@ -80,6 +96,26 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
         if (!StaticVariables.checkIfYouGotJsonString(tmp)) {
             except = new Exception(mActivity.getResources().getString(R.string.toast_message_invalid_json));
             return 2;
+        }
+
+        Gson gson = new Gson();
+        NTUBus b = gson.fromJson(tmp, NTUBus.class);
+        if (b.getRoutes() != null) {
+            for (NTUBus.Route r : b.getRoutes()) {
+                if (fakeUpdate) {
+                    // Get route from cache
+                    NTUBus.MapRouting route = cacheHelper.getRouteFromString(cacheHelper.getCachedRoute(cacheHelper.getRouteCode(r.getId())));
+                    r.setRoute(route);
+                } else if (update != 1) {
+                    // Write route to cache
+                    cacheHelper.writeCachedRoute(cacheHelper.getRouteCode(r.getId()), r.getRoute());
+                }
+            }
+        }
+        if (fakeUpdate) {
+            // Write back to tmp
+            tmp = gson.toJson(b);
+            update = 0;
         }
 
         Intent sendForMapParsingIntent = new Intent(NTUBusActivity.RECEIVE_NTU_DATA_EVENT);

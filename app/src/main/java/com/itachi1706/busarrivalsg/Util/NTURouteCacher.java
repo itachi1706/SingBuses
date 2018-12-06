@@ -30,11 +30,12 @@ public class NTURouteCacher {
 
     public NTURouteCacher(Context context) {
         this.mContext = context;
+        init();
     }
 
     private void init() {
         File directory = getDirectory();
-        if (!directory.exists() || (directory.exists() && directory.isFile() && directory.delete())) directory.mkdir();
+        if (!directory.exists() || (directory.exists() && directory.isFile() && directory.delete())) directory.mkdirs();
     }
 
     private File getDirectory() {
@@ -115,7 +116,6 @@ public class NTURouteCacher {
         }
 
         try {
-            f.createNewFile();
             FileOutputStream fos = new FileOutputStream(f);
             fos.write(routeData.getBytes());
             fos.close();
