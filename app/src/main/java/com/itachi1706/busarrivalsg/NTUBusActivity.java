@@ -236,10 +236,10 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             campusWeekend.setEnabled(false);
         }
         if (runningBus == null || runningBus.getStatus().equals(AsyncTask.Status.FINISHED) || runningBus.isCancelled())
-            runningBus = new GetNTUData(this, refresh).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, get.toArray(new String[0]));
+            runningBus = new GetNTUData(this, refresh).execute(get.toArray(new String[0]));
         if (sbs.isChecked())
             if (runningPBus == null || runningPBus.getStatus().equals(AsyncTask.Status.FINISHED) || runningPBus.isCancelled())
-                runningPBus = new GetNTUPublicBusData(this, refresh).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                runningPBus = new GetNTUPublicBusData(this, refresh).execute();
         if (!refreshHandler.hasMessages(REFRESH_TASK) && shouldAutoRefresh) {
             Message ref = Message.obtain(refreshHandler, refreshTask);
             ref.what = REFRESH_TASK;
