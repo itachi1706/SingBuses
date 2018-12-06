@@ -41,6 +41,8 @@
             android:name="io.fabric.ApiKey"
             android:value="4a76e5bed29f3c6bc0d8e90c16212c07cb8efbc0" />
 
+        <meta-data android:name="android.allow_multiple_resumed_activities" android:value="true" />
+
         <activity
             android:name=".ListAllBusStopsActivity"
             android:label="@string/title_activity_list_all_bus_stops" />
