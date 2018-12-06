@@ -481,34 +481,37 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                     Log.i(TAG, "Generated Public Bus Stops");
                 }
             } else {
-                BusArrivalMain busObjs;
+                BusArrivalMain[] busObjsArr;
                 try {
-                    busObjs = gson.fromJson(data, BusArrivalMain.class);
+                    busObjsArr = gson.fromJson(data, BusArrivalMain[].class);
                 } catch (JsonSyntaxException e) {
                     Toast.makeText(context, "An error occurred parsing public buses. Please try again later", Toast.LENGTH_LONG).show();
                     return;
                 }
-                if (busObjs == null || busObjs.getServices() == null) return;
-                if (busObjs.getServices().length <= 0) return;
 
-                BusArrivalArrayObject o = busObjs.getServices()[0];
-                // Remove bus markers for this specific service
-                Iterator<Marker> iter = busMarkers.iterator();
-                while (iter.hasNext()) {
-                    Marker m = iter.next();
+                for (BusArrivalMain busObjs : busObjsArr) {
+                    if (busObjs == null || busObjs.getServices() == null) continue;
+                    if (busObjs.getServices().length <= 0) continue;
 
-                    if (m.getTitle().equals(o.getServiceNo() + " (" + o.getOperator() + ")")) {
-                        m.remove();
-                        iter.remove();
+                    BusArrivalArrayObject o = busObjs.getServices()[0];
+                    // Remove bus markers for this specific service
+                    Iterator<Marker> iter = busMarkers.iterator();
+                    while (iter.hasNext()) {
+                        Marker m = iter.next();
+
+                        if (m.getTitle().equals(o.getServiceNo() + " (" + o.getOperator() + ")")) {
+                            m.remove();
+                            iter.remove();
+                        }
                     }
+                    BusArrivalArrayObjectEstimate e1 = o.getNextBus();
+                    addPublicBuses(e1, o);
+                    BusArrivalArrayObjectEstimate e2 = o.getNextBus2();
+                    addPublicBuses(e2, o);
+                    BusArrivalArrayObjectEstimate e3 = o.getNextBus3();
+                    addPublicBuses(e3, o);
+                    Log.i(TAG, "Displaying Public Bus Locations for " + o.getServiceNo());
                 }
-                BusArrivalArrayObjectEstimate e1 = o.getNextBus();
-                addPublicBuses(e1, o);
-                BusArrivalArrayObjectEstimate e2 = o.getNextBus2();
-                addPublicBuses(e2, o);
-                BusArrivalArrayObjectEstimate e3 = o.getNextBus3();
-                addPublicBuses(e3, o);
-                Log.i(TAG, "Displaying Public Bus Locations");
             }
         }
     };
