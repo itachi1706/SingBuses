@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -234,9 +235,11 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             campusRider.setEnabled(false);
             campusWeekend.setEnabled(false);
         }
-        new GetNTUData(this, refresh).execute(get.toArray(new String[0]));
+        if (runningBus == null || runningBus.getStatus().equals(AsyncTask.Status.FINISHED) || runningBus.isCancelled())
+            runningBus = new GetNTUData(this, refresh).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, get.toArray(new String[0]));
         if (sbs.isChecked())
-            new GetNTUPublicBusData(this, refresh).execute();
+            if (runningPBus == null || runningPBus.getStatus().equals(AsyncTask.Status.FINISHED) || runningPBus.isCancelled())
+                runningPBus = new GetNTUPublicBusData(this, refresh).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         if (!refreshHandler.hasMessages(REFRESH_TASK) && shouldAutoRefresh) {
             Message ref = Message.obtain(refreshHandler, refreshTask);
             ref.what = REFRESH_TASK;
@@ -302,6 +305,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private ArrayList<Marker> busMarkers = new ArrayList<>();
     private ArrayList<Marker> publicBusMarkers = new ArrayList<>();
+
+    private AsyncTask runningBus = null, runningPBus = null;
 
     private Handler refreshHandler;
     private boolean shouldAutoRefresh = false;
