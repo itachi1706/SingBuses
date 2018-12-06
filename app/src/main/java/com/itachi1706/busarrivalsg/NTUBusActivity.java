@@ -236,10 +236,10 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             campusWeekend.setEnabled(false);
         }
         if (runningBus == null || runningBus.getStatus().equals(AsyncTask.Status.FINISHED) || runningBus.isCancelled())
-            runningBus = new GetNTUData(this, refresh).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, get.toArray(new String[0]));
+            runningBus = new GetNTUData(this, refresh).execute(get.toArray(new String[0]));
         if (sbs.isChecked())
             if (runningPBus == null || runningPBus.getStatus().equals(AsyncTask.Status.FINISHED) || runningPBus.isCancelled())
-                runningPBus = new GetNTUPublicBusData(this, refresh).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                runningPBus = new GetNTUPublicBusData(this, refresh).execute();
         if (!refreshHandler.hasMessages(REFRESH_TASK) && shouldAutoRefresh) {
             Message ref = Message.obtain(refreshHandler, refreshTask);
             ref.what = REFRESH_TASK;
@@ -300,7 +300,20 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        // TODO: Click Info Window when created
+        if (marker.getTag() == null) return;
+        Object type = marker.getTag();
+        Log.d("NTU-BUS-MAP", "Indo clicked of " + type.getClass().toString());
+        if (type instanceof BusStopJSON) {
+            BusStopJSON json = (BusStopJSON) type;
+            json.getBusStopCode();
+            json.getDescription();
+
+            Intent pBusIntent = new Intent(this, BusServicesAtStopRecyclerActivity.class);
+            pBusIntent.putExtra("stopCode", json.getBusStopCode());
+            if (json.getDescription() != null) pBusIntent.putExtra("stopName", json.getDescription());
+            startActivity(pBusIntent);
+        }
+
     }
 
     private ArrayList<Marker> busMarkers = new ArrayList<>();
@@ -464,7 +477,6 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             if (data == null) return;
             Gson gson = new Gson();
             if (!update) {
-                // TODO: Info card window do something
                 BusStopJSON[] tmpJSON;
                 try {
                     tmpJSON = gson.fromJson(data, BusStopJSON[].class);
@@ -492,7 +504,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                     mMap.addMarker(new MarkerOptions().position(new LatLng(node.getLatitude(), node.getLongitude()))
                             .title(node.getDescription() + " (" + node.getRoadName() + ")")
                             .snippet("Bus Svcs: " + services)
-                            .icon(stop));
+                            .icon(stop)).setTag(node);
                     Log.i(TAG, "Generated Public Bus Stops");
                 }
             } else {
