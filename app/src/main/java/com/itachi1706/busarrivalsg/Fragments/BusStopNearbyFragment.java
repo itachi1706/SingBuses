@@ -77,7 +77,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
         result = v.findViewById(R.id.rvNearestBusStops);
         if (result != null) result.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         result.setLayoutManager(linearLayoutManager);
         result.setItemAnimator(new DefaultItemAnimator());
 
@@ -166,7 +166,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
                 markerMap.put(mMap.addMarker(new MarkerOptions().position(new LatLng(stop.getLatitude(), stop.getLongitude()))
                         .title(stop.getDescription() + " (" + stop.getRoadName() + ")")
                         .snippet("Bus Svcs: " + services.toString().replaceAll(", $", ""))
-                        .icon(BusesUtil.INSTANCE.vectorToBitmapDescriptor(R.drawable.red_circle, getResources()))), stop);
+                        .icon(BusesUtil.INSTANCE.vectorToBitmapDescriptor(R.drawable.red_circle, getContext()))), stop);
             }
 
             zoomToLocation();

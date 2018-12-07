@@ -83,7 +83,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            Bitmap home = busesUtil.vectorToBitmap(R.drawable.ic_ntu_coa, getResources(), null);
+            Bitmap home = busesUtil.vectorToBitmap(R.drawable.ic_ntu_coa, this, null);
             Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(home, (int) busesUtil.pxFromDp(26, getResources()),
                     (int) busesUtil.pxFromDp(32, getResources()), true));
             getSupportActionBar().setHomeAsUpIndicator(d);
@@ -356,7 +356,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                 // Readd public bus markers if any
                 if (publicBusMarkers.size() > 0) {
                     List<Marker> tmp = new ArrayList<>();
-                    BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(199179));
+                    BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, context, getRouteColor(199179));
                     for (Marker m : publicBusMarkers) {
                         tmp.add(mMap.addMarker(new MarkerOptions().position(m.getPosition()).title(m.getTitle()).snippet(m.getSnippet()).icon(bus)));
                     }
@@ -375,7 +375,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                             assert r.getRoute().getNodes() != null;
                             if (r.getRoute().getCenter().length > 0)
                                 centerOn = r.getRoute().getCenter()[0];
-                            BitmapDescriptor stop = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_circle, getResources(), getRouteColor(r.getId()));
+                            BitmapDescriptor stop = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_circle, context, getRouteColor(r.getId()));
                             for (NTUBus.MapNodes node : r.getRoute().getNodes()) {
                                 if (node.is_stop_point()) {
                                     mMap.addMarker(new MarkerOptions().position(new LatLng(node.getLat(), node.getLon()))
@@ -435,7 +435,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     private List<Marker> addBusesIntoRoute(NTUBus.Route r) {
         List<Marker> markers = new ArrayList<>();
         if (r.getVehicles() != null && r.getVehicles().length > 0) {
-            BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(r.getId()));
+            BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, this, getRouteColor(r.getId()));
             for (NTUBus.Vehicles v : r.getVehicles()) {
                 // TODO: Find a way to do the bearing lol
                 /*Bitmap arrow = busesUtil.vectorToBitmap(R.drawable.ic_chevron, getResources(), getRouteColor(r.getId()));
@@ -489,7 +489,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                 for (BusStopJSON j : tmpJSON) {
                     busStops.put(j.getBusStopCode(), j);
                 }
-                BitmapDescriptor stop = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_circle, getResources(), getRouteColor(199179));
+                BitmapDescriptor stop = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_circle, context, getRouteColor(199179));
                 for (ArrayMap.Entry<String, BusStopJSON> entry : busStops.entrySet()) {
                     BusStopJSON node = entry.getValue();
                     String svcWork = node.getServices();
@@ -555,7 +555,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     private void addPublicBuses(BusArrivalArrayObjectEstimate e1, BusArrivalArrayObject o) {
         if (e1 != null && e1.getEstimatedArrival() != null) {
             String load = getLoadString(e1.getLoadInt());
-            BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, getResources(), getRouteColor(199179));
+            BitmapDescriptor bus = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_bus, this, getRouteColor(199179));
             publicBusMarkers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(e1.getLatitudeD(), e1.getLongitudeD()))
                     .title(o.getServiceNo() + " (" + o.getOperator() + ")").snippet(load + " (" + BusesUtil.INSTANCE.getType(e1.getTypeInt()) + ")")
                     .icon(bus)));

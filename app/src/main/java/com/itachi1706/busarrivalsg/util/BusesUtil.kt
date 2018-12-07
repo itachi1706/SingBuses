@@ -1,12 +1,13 @@
 package com.itachi1706.busarrivalsg.util
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.PorterDuff
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import androidx.core.content.res.ResourcesCompat
+import androidx.appcompat.content.res.AppCompatResources
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.itachi1706.busarrivalsg.objects.CommonEnums
@@ -47,16 +48,16 @@ object BusesUtil {
         }
     }
 
-    fun vectorToBitmapDescriptor(@DrawableRes id: Int, resource: Resources): BitmapDescriptor {
-        return vectorToBitmapDescriptor(id, resource, null)
+    fun vectorToBitmapDescriptor(@DrawableRes id: Int, mContext: Context): BitmapDescriptor {
+        return vectorToBitmapDescriptor(id, mContext, null)
     }
 
-    fun vectorToBitmapDescriptor(@DrawableRes id: Int, resource: Resources, @ColorInt color: Int?): BitmapDescriptor {
-        return BitmapDescriptorFactory.fromBitmap(vectorToBitmap(id, resource, color))
+    fun vectorToBitmapDescriptor(@DrawableRes id: Int, mContext: Context, @ColorInt color: Int?): BitmapDescriptor {
+        return BitmapDescriptorFactory.fromBitmap(vectorToBitmap(id, mContext, color))
     }
 
-    fun vectorToBitmap(@DrawableRes id: Int, resource: Resources, @ColorInt color: Int?): Bitmap {
-        val vectorDrawable = ResourcesCompat.getDrawable(resource, id, null)
+    fun vectorToBitmap(@DrawableRes id: Int, mContext: Context, @ColorInt color: Int?): Bitmap {
+        val vectorDrawable = AppCompatResources.getDrawable(mContext, id)
         val bitmap = Bitmap.createBitmap(vectorDrawable!!.intrinsicWidth,
                 vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
