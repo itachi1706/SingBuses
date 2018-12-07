@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,10 +15,10 @@ import com.google.gson.reflect.TypeToken;
 import com.itachi1706.appupdater.Util.ValidationHelper;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.Fragments.BusStopNearbyFragment;
-import com.itachi1706.busarrivalsg.gsonObjects.Distance;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
+import com.itachi1706.busarrivalsg.gsonObjects.Distance;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.io.BufferedReader;
@@ -32,6 +31,8 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -91,6 +92,10 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
             return 2;
         }
         Distance distArray = gson.fromJson(tmp, Distance.class);
+        if (distArray == null || distArray.getResults() == null) {
+            except = new Exception("Invalid Distance retrieved from API. Please try again later");
+            return 3;
+        }
         Distance.DistanceItem[] results = distArray.getResults();
         ArrayList<BusStopJSON> stops = new ArrayList<>();
         assert results != null;
