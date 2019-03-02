@@ -1,6 +1,7 @@
 package com.itachi1706.busarrivalsg;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
@@ -91,8 +92,9 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         // Obtain the FirebaseAnalytics instance.
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         AnalyticsHelper helper = new AnalyticsHelper(this, true);
-        CAAnalytics analytics = helper.getData();
-        if (analytics != null) setAnalyticsData(true, mFirebaseAnalytics, analytics); // Update Firebase User Properties
+        @SuppressLint("WrongThread") CAAnalytics analytics = helper.getData();
+        if (analytics != null)
+            setAnalyticsData(true, mFirebaseAnalytics, analytics); // Update Firebase User Properties
         else setAnalyticsData(false, mFirebaseAnalytics, analytics);
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null);
 
@@ -113,6 +115,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         }
 
         sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        sp.edit().putBoolean("cepas_dark_theme", true).apply();
         adapter = new FavouritesRecyclerAdapter(new ArrayList<>(), this, StaticVariables.INSTANCE.useServerTime(sp));
         favouritesList.setAdapter(adapter);
 
@@ -244,6 +247,9 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                 return true;
             case R.id.ntu_tracker:
                 startActivity(new Intent(this, NTUBusActivity.class));
+                return true;
+            case R.id.scan_cepas:
+                startActivity(new Intent(this, CEPASScanActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
