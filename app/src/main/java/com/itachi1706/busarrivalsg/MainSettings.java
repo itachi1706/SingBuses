@@ -19,6 +19,7 @@ import com.itachi1706.appupdater.SettingsInitializer;
 import com.itachi1706.appupdater.Util.DeprecationHelper;
 import com.itachi1706.busarrivalsg.Services.LocManager;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.cepaslib.SettingsHandler;
 
 import java.util.Date;
 import java.util.Locale;
@@ -64,6 +65,8 @@ public class MainSettings extends AppCompatActivity {
 
             final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
             handleCompanions(sp);
+
+            new SettingsHandler(getActivity()).initSettings(this);
 
             new SettingsInitializer(getActivity(), R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL,
                     getResources().getString(R.string.link_legacy), getResources().getString(R.string.link_updates), true)

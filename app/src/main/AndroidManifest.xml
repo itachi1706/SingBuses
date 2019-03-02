@@ -8,10 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Check if there's internet access -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Allows write to SD root -->
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- Receives the intent when boot completes -->
-
-
     <!-- For getting your current location pre-GPS (so that you don't need GPS to run) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -40,8 +37,9 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4a76e5bed29f3c6bc0d8e90c16212c07cb8efbc0" />
-
-        <meta-data android:name="android.allow_multiple_resumed_activities" android:value="true" />
+        <meta-data
+            android:name="android.allow_multiple_resumed_activities"
+            android:value="true" />
 
         <activity
             android:name=".ListAllBusStopsActivity"
@@ -106,14 +104,10 @@
         <activity
             android:name=".BusStopsTabbedActivity"
             android:label="@string/title_activity_add_bus_stops"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <!-- Required because FOR SOME REASON Google Maps is using the deprecated Apache HTTP? WTF Google? -->
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- Required because FOR SOME REASON Google Maps is using the deprecated Apache HTTP? WTF Google? -->
         <uses-library
             android:name="org.apache.http.legacy"
-            android:required="false" />
-
-        <!-- Used for Firebase Cloud Messaging -->
+            android:required="false" /> <!-- Used for Firebase Cloud Messaging -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/notification_icon" />
@@ -124,8 +118,25 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="firebase-msg" />
 
-        <activity android:name=".NTUBusActivity"
-            android:label="NTU Buses"/>
+        <activity
+            android:name=".NTUBusActivity"
+            android:label="NTU Buses" />
+
+        <activity android:name=".CEPASScanActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="Scan EZLink Card"
+            android:screenOrientation="sensorPortrait"
+            tools:ignore="AppLinkUrlError">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.dir/${applicationId}.card" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

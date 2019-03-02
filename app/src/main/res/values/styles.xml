@@ -6,6 +6,11 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="TransportIcons">@array/TransportIcons</item>
+        <item name="ListHeaderTextColor">@android:color/background_dark</item>
+        <item name="LockImage">@drawable/locked</item>
+        <item name="DrawableClosedIndicator">@drawable/expander_close_holo_light</item>
+        <item name="DrawableOpenIndicator">@drawable/expander_open_holo_light</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
