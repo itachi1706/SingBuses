@@ -41,6 +41,7 @@ android {
         debug {
             // Disable Fabric Stuff (Deprecated, it is now disabled by default and enabled in runtime)
             //ext.enableCrashlytics = false
+            multiDexEnabled true
         }
     }
     // This enables long timeouts required on slow environments, e.g. Travis
@@ -55,6 +56,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.multidex:multidex:2.0.1'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
