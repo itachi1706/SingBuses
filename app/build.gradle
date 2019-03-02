@@ -77,6 +77,7 @@ dependencies {
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     testImplementation 'junit:junit:4.12'
+    implementation project(':cepaslib')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
