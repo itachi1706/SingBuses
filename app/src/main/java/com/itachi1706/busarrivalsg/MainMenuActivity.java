@@ -115,6 +115,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         }
 
         sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        sp.edit().putBoolean("cepas_dark_theme", true).apply();
         adapter = new FavouritesRecyclerAdapter(new ArrayList<>(), this, StaticVariables.INSTANCE.useServerTime(sp));
         favouritesList.setAdapter(adapter);
 
