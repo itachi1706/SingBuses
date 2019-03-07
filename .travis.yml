@@ -21,7 +21,7 @@ env:
   - ADB_INSTALL_TIMEOUT=20
   - ANDROID_TARGET=android-23
   - ANDROID_TAG=google_apis
-  - DISCORD_URL=https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+  - DISCORD_URL=https://raw.githubusercontent.com/itachi1706/travis-ci-discord-webhook/master/send.sh
 android:
   components:
   - tools
