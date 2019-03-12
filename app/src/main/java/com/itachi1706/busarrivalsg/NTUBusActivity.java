@@ -331,27 +331,36 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
             // Craft timings screen
             StringBuilder sb = new StringBuilder();
+            ArrayMap<Integer, String> tmgs = new ArrayMap<>();
             if (t.getForecast() == null || t.getForecast().length <= 0) sb.append("No Timings found");
-            else {
-                for (NTUBusTimings.Forecast f : t.getForecast()) {
-                    assert f.getRoute() != null;
-                    double sec = f.getForecast_seconds();
-                    String timeString;
-                    if (sec > 60) {
-                        // Call in minutes
-                        int min = (int) (sec / 60);
-                        timeString = min + ((min > 1) ? " mins" : " min");
-                    } else {
-                        int seci = (int) sec;
-                        timeString = seci + ((seci > 1) ? " secs" : " sec");
-                    }
+            for (NTUBusTimings.Forecast f : t.getForecast()) {
+                assert f.getRoute() != null;
+                double sec = f.getForecast_seconds();
+                String timeString = getRouteColorHtml(f.getRv_id(), f.getRoute().getShort_name()) + ":\t";
+                if (tmgs.containsKey(f.getRv_id()))
+                    timeString = tmgs.get(f.getRv_id());
+                if (sec > 60) {
+                    // Call in minutes
+                    int min = (int) (sec / 60);
+                    timeString += min + ((min > 1) ? " mins" : " min");
+                } else if (sec <= 0) {
+                    timeString += "Arriving";
+                } else {
+                    int seci = (int) sec;
+                    timeString += seci + ((seci > 1) ? " secs" : " sec");
+                }
+                timeString += ", ";
+                tmgs.put(f.getRv_id(), timeString);
+            }
 
-                    String route = f.getRoute().getShort_name();
-                    sb.append(getRouteColorHtml(f.getRv_id(), route)).append(":\t").append(timeString).append("\n");
+            if (tmgs.size() > 0) {
+                for (ArrayMap.Entry<Integer, String> pair : tmgs.entrySet()) {
+                    String ts = pair.getValue().replaceAll(", $", "");
+                    sb.append(ts).append("\n");
                 }
             }
 
-            String parsedString = sb.toString().replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;").replace("\n", "<br/>");
+            String parsedString = sb.toString().replace("\t", "&nbsp;&nbsp;").replace("\n", "<br/>");
 
             runOnUiThread(() -> {
                 // Update basically everything as well
