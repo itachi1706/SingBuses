@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.itachi1706.appupdater.Util.DeprecationHelper;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUData;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUPublicBusData;
 import com.itachi1706.busarrivalsg.Services.LocManager;
@@ -346,15 +347,17 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                     }
 
                     String route = f.getRoute().getShort_name();
-                    sb.append(route).append(":\t").append(timeString).append("\n");
+                    sb.append(getRouteColorHtml(f.getRv_id(), route)).append(":\t").append(timeString).append("\n");
                 }
             }
+
+            String parsedString = sb.toString().replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;").replace("\n", "<br/>");
 
             runOnUiThread(() -> {
                 // Update basically everything as well
                 title.setText(t.getName());
                 subtext.setText(subtext.getText().toString() + "\nParsed Stop ID: " + t.getId());
-                result.setText(sb.toString());
+                result.setText(DeprecationHelper.Html.fromHtml(parsedString));
                 pb.setVisibility(View.GONE);
                 result.setVisibility(View.VISIBLE);
             });
@@ -609,6 +612,17 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             case 44481: return Color.parseColor("#964B00");
             case 199179: return Color.parseColor("#800080"); // SBST
             default: return Color.BLACK;
+        }
+    }
+
+    private String getRouteColorHtml(int id, String data) {
+        switch (id) {
+            case 44478: return "<font color=\"red\">" + data + "</font>";
+            case 44479: return "<font color=\"blue\">" + data + "</font>";
+            case 44480: return "<font color=\"#006400\">" + data + "</font>";
+            case 44481: return "<font color=\"#964B00\">" + data + "</font>";
+            case 199179: return "<font color=\"#800080\">" + data + "</font>"; // SBST
+            default: return "<font color=\"black\">" + data + "</font>";
         }
     }
 
