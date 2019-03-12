@@ -26,6 +26,16 @@ class NTURouteCacher(private val mContext: Context) {
         if (!directory.exists() || directory.exists() && directory.isFile && directory.delete()) directory.mkdirs()
     }
 
+    fun clearAllCachedFile() {
+        val routes = intArrayOf(44478, 44479, 44480, 44481)
+
+        for (r in routes) {
+            val f = getFileObject(r.toString())
+            if (f.exists()) f.delete()
+            Log.i(TAG, "Cleared cache file for Route " + r)
+        }
+    }
+
     fun hasCachedFile(routeCode: String): Boolean {
         // Check for cached file as well as if it has expired or not
         val f = getFileObject(routeCode)

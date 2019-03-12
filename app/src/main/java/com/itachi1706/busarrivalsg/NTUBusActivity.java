@@ -53,6 +53,7 @@ import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBusTimings;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
+import com.itachi1706.busarrivalsg.util.NTURouteCacher;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.io.BufferedReader;
@@ -272,7 +273,16 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         } else {
             NTUBus.MapNodes n = (NTUBus.MapNodes) marker.getTag();
             sub.setText(marker.getSnippet() + "\nCurrent Stop ID: " + n.getId());
-            new QueryStopAsyncTask(result, inProgress, main, sub).execute(n.getId());
+            if (n.getId() == 0) {
+                // This is an error so we tell the user to clear cache if automatic clearing fails
+                new NTURouteCacher(this).clearAllCachedFile();
+                result.setText("An error has occurred. We have cleared your cache files. Please reopen the application and try again." +
+                        "\n\nIf it still fails, try clearing the application cache.\n" +
+                        "You can do so by going to your Phone Settings -> Applications -> Bus Arrivals @ SG -> Storage -> Clear Cache\n" +
+                        "Reopen the application afterwards and timing data should appear");
+                result.setVisibility(View.VISIBLE);
+                inProgress.setVisibility(View.GONE);
+            } else new QueryStopAsyncTask(result, inProgress, main, sub).execute(n.getId());
         }
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
@@ -315,14 +325,24 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                 tmp = str.toString();
                 Log.i(TAG, "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
             } catch (IOException e) {
-                Toast.makeText(getApplicationContext(), "IOException occurred", Toast.LENGTH_LONG).show();
+                runOnUiThread(() -> {
+                    // Update error
+                    result.setText("An I/O Exception has occurred. Please try again later\n\n" + e.getLocalizedMessage());
+                    pb.setVisibility(View.GONE);
+                    result.setVisibility(View.VISIBLE);
+                });
                 e.printStackTrace();
                 return null;
             }
 
             if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
                 Log.e("NTUBusTimings", "Error JSON: " + tmp);
-                Toast.makeText(getApplicationContext(), "Invalid Call, Please try again later", Toast.LENGTH_LONG).show();
+                runOnUiThread(() -> {
+                    // Update error
+                    result.setText("An error has occurred retrieving data from the API. Please try again later");
+                    pb.setVisibility(View.GONE);
+                    result.setVisibility(View.VISIBLE);
+                });
                 return null;
             }
 
@@ -333,30 +353,32 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             StringBuilder sb = new StringBuilder();
             ArrayMap<Integer, String> tmgs = new ArrayMap<>();
             if (t.getForecast() == null || t.getForecast().length <= 0) sb.append("No Timings found");
-            for (NTUBusTimings.Forecast f : t.getForecast()) {
-                assert f.getRoute() != null;
-                double sec = f.getForecast_seconds();
-                String timeString = getRouteColorHtml(f.getRv_id(), f.getRoute().getShort_name()) + ":\t";
-                if (tmgs.containsKey(f.getRv_id()))
-                    timeString = tmgs.get(f.getRv_id());
-                if (sec > 60) {
-                    // Call in minutes
-                    int min = (int) (sec / 60);
-                    timeString += min + ((min > 1) ? " mins" : " min");
-                } else if (sec <= 0) {
-                    timeString += "Arriving";
-                } else {
-                    int seci = (int) sec;
-                    timeString += seci + ((seci > 1) ? " secs" : " sec");
+            else {
+                for (NTUBusTimings.Forecast f : t.getForecast()) {
+                    assert f.getRoute() != null;
+                    double sec = f.getForecast_seconds();
+                    String timeString = getRouteColorHtml(f.getRv_id(), f.getRoute().getShort_name()) + ":\t";
+                    if (tmgs.containsKey(f.getRv_id()))
+                        timeString = tmgs.get(f.getRv_id());
+                    if (sec > 60) {
+                        // Call in minutes
+                        int min = (int) (sec / 60);
+                        timeString += min + ((min > 1) ? " mins" : " min");
+                    } else if (sec <= 0) {
+                        timeString += "Arriving";
+                    } else {
+                        int seci = (int) sec;
+                        timeString += seci + ((seci > 1) ? " secs" : " sec");
+                    }
+                    timeString += ", ";
+                    tmgs.put(f.getRv_id(), timeString);
                 }
-                timeString += ", ";
-                tmgs.put(f.getRv_id(), timeString);
-            }
 
-            if (tmgs.size() > 0) {
-                for (ArrayMap.Entry<Integer, String> pair : tmgs.entrySet()) {
-                    String ts = pair.getValue().replaceAll(", $", "");
-                    sb.append(ts).append("\n");
+                if (tmgs.size() > 0) {
+                    for (ArrayMap.Entry<Integer, String> pair : tmgs.entrySet()) {
+                        String ts = pair.getValue().replaceAll(", $", "");
+                        sb.append(ts).append("\n");
+                    }
                 }
             }
 
