@@ -1,6 +1,7 @@
 package com.itachi1706.busarrivalsg;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -21,7 +22,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,20 +38,28 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUData;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUPublicBusData;
 import com.itachi1706.busarrivalsg.Services.LocManager;
-import com.itachi1706.busarrivalsg.util.BusesUtil;
-import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObjectEstimate;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
+import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBusTimings;
+import com.itachi1706.busarrivalsg.util.BusesUtil;
+import com.itachi1706.busarrivalsg.util.StaticVariables;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -76,10 +88,13 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     private int autoRefreshDelay = -1;
     private SharedPreferences sp;
 
+    private BottomSheetBehavior bottomSheetBehavior;
+    private View bottomSheet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ntubus);
+        setContentView(R.layout.activity_ntubus_with_sheet);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -96,6 +111,15 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         campusWeekend = findViewById(R.id.ntu_crw_switch);
         sbs = findViewById(R.id.ntu_sbs_switch);
         traffic = findViewById(R.id.ntu_traffic_switch);
+
+        // Init Bottom Sheet
+        bottomSheet = findViewById(R.id.bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setPeekHeight(200);
+        bottomSheetBehavior.setHideable(true);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        // Init Map
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
         Log.i(TAG, "Creating Map");
@@ -214,6 +238,114 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(1.3478184567642855, 103.68342014685716), 15.4f)); // Hardcode center of school
         refreshHandler = new Handler();
         getData(false);
+
+        // Bottom Sheet handler
+        mMap.setOnMapClickListener(latLng -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
+        mMap.setOnMarkerClickListener(marker -> {
+            updateBottomSheetIfAny(marker);
+            return true;
+        });
+    }
+
+    private void updateBottomSheetIfAny(Marker marker) {
+        marker.showInfoWindow();
+        if (!marker.getSnippet().startsWith("Next Stop: ")) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN); // Make sure its gone
+            return; // Don't do anything as it is not stop markers
+        }
+
+        TextView main = bottomSheet.findViewById(R.id.detail_name);
+        TextView sub = bottomSheet.findViewById(R.id.detail_subtext);
+        ProgressBar inProgress = bottomSheet.findViewById(R.id.progress_loading);
+        TextView result = bottomSheet.findViewById(R.id.timings);
+        sub.setText(marker.getSnippet());
+        main.setText(marker.getTitle());
+        inProgress.setVisibility(View.VISIBLE);
+        if (marker.getTag() == null || !(marker.getTag() instanceof NTUBus.MapNodes)) {
+            // Nothing alr
+            result.setText("No Timings Data Found\nDebug Error: Invalid Tag");
+            inProgress.setVisibility(View.GONE);
+        } else {
+            NTUBus.MapNodes n = (NTUBus.MapNodes) marker.getTag();
+            sub.setText(marker.getSnippet() + "\nCurrent Stop ID: " + n.getId());
+            new QueryStopAsyncTask(result, inProgress, main, sub).execute(n.getId());
+        }
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class QueryStopAsyncTask extends AsyncTask<Integer, Void, Void> {
+
+        private TextView result, title, subtext;
+        private ProgressBar pb;
+
+        QueryStopAsyncTask(TextView result, ProgressBar pb, TextView title, TextView subtext) {
+            this.result = result;
+            this.pb = pb;
+            this.title = title;
+            this.subtext = subtext;
+        }
+
+        @Override
+        protected Void doInBackground(Integer... stopIds) {
+            int stopId = stopIds[0];
+            String url = "http://api.itachi1706.com/api/ntubus.php?busarrival=true&stopid=" + stopId;
+            Log.d(TAG, url);
+            String tmp;
+            try {
+                long start = System.currentTimeMillis();
+                URL urlConn = new URL(url);
+                HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
+                conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
+                conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
+                InputStream in = conn.getInputStream();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                StringBuilder str = new StringBuilder();
+                String line;
+                while((line = reader.readLine()) != null)
+                {
+                    str.append(line);
+                }
+                in.close();
+                tmp = str.toString();
+                Log.i(TAG, "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
+            } catch (IOException e) {
+                Toast.makeText(getApplicationContext(), "IOException occurred", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+                return null;
+            }
+
+            if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
+                Log.e("NTUBusTimings", "Error JSON: " + tmp);
+                Toast.makeText(getApplicationContext(), "Invalid Call, Please try again later", Toast.LENGTH_LONG).show();
+                return null;
+            }
+
+            Gson gson = new Gson();
+            NTUBusTimings t = gson.fromJson(tmp, NTUBusTimings.class);
+
+            // Craft timings screen
+            StringBuilder sb = new StringBuilder();
+            if (t.getForecast() == null || t.getForecast().length <= 0) sb.append("No Timings found");
+            else {
+                for (NTUBusTimings.Forecast f : t.getForecast()) {
+                    assert f.getRoute() != null;
+                    double sec = f.getForecast_seconds();
+                    String route = f.getRoute().getShort_name();
+                    sb.append(route).append(":\t").append(sec).append("\n");
+                }
+            }
+
+            runOnUiThread(() -> {
+                // Update basically everything as well
+                title.setText(t.getName());
+                subtext.setText(subtext.getText().toString() + "\nParsed Stop ID: " + t.getId());
+                result.setText(sb.toString());
+                pb.setVisibility(View.GONE);
+            });
+            return null;
+        }
     }
 
     private void getData(boolean refresh) {
@@ -381,7 +513,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                                     mMap.addMarker(new MarkerOptions().position(new LatLng(node.getLat(), node.getLon()))
                                             .title(node.getName())
                                             .snippet("Next Stop: " + node.getShort_direction())
-                                            .icon(stop));
+                                            .icon(stop)).setTag(node);
                                 }
                                 assert node.getPoints() != null;
                                 if (node.getPoints().length > 0) {
