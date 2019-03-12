@@ -12,7 +12,7 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:background="@android:color/white"
         android:clipToPadding="true"
@@ -52,7 +52,7 @@
                 android:layout_marginTop="10dp"
                 android:textStyle="bold"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:text="Next Bus Timings"/>
+                android:text="Next Bus Timings (Est)"/>
 
             <ProgressBar
                 android:layout_width="match_parent"
@@ -69,6 +69,11 @@
                 android:layout_marginRight="25dp"
                 android:textColor="@color/black"
                 android:text="Some text here"/>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="25dp" />
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

@@ -261,9 +261,11 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         sub.setText(marker.getSnippet());
         main.setText(marker.getTitle());
         inProgress.setVisibility(View.VISIBLE);
+        result.setVisibility(View.GONE);
         if (marker.getTag() == null || !(marker.getTag() instanceof NTUBus.MapNodes)) {
             // Nothing alr
             result.setText("No Timings Data Found\nDebug Error: Invalid Tag");
+            result.setVisibility(View.VISIBLE);
             inProgress.setVisibility(View.GONE);
         } else {
             NTUBus.MapNodes n = (NTUBus.MapNodes) marker.getTag();
@@ -332,8 +334,18 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                 for (NTUBusTimings.Forecast f : t.getForecast()) {
                     assert f.getRoute() != null;
                     double sec = f.getForecast_seconds();
+                    String timeString;
+                    if (sec > 60) {
+                        // Call in minutes
+                        int min = (int) (sec / 60);
+                        timeString = min + ((min > 1) ? " mins" : " min");
+                    } else {
+                        int seci = (int) sec;
+                        timeString = seci + ((seci > 1) ? " secs" : " sec");
+                    }
+
                     String route = f.getRoute().getShort_name();
-                    sb.append(route).append(":\t").append(sec).append("\n");
+                    sb.append(route).append(":\t").append(timeString).append("\n");
                 }
             }
 
@@ -343,6 +355,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                 subtext.setText(subtext.getText().toString() + "\nParsed Stop ID: " + t.getId());
                 result.setText(sb.toString());
                 pb.setVisibility(View.GONE);
+                result.setVisibility(View.VISIBLE);
             });
             return null;
         }
