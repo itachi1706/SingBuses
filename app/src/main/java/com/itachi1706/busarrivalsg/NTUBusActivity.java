@@ -241,6 +241,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
         // Bottom Sheet handler
         mMap.setOnMapClickListener(latLng -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
+        mMap.setOnInfoWindowClickListener(this::updateBottomSheetIfAny);
         mMap.setOnMarkerClickListener(marker -> {
             updateBottomSheetIfAny(marker);
             return true;
