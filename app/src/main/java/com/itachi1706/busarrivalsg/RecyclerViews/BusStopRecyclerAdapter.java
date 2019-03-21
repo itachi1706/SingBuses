@@ -93,7 +93,7 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
             }
             serviceIntent.setAction(Intent.ACTION_VIEW);
             ShortcutInfo newShortcut = new ShortcutInfo.Builder(context, "bus-" + stop.getBusStopCode())
-                    .setShortLabel(stop.getDescription()).setLongLabel("Launch this bus stop directly")
+                    .setShortLabel(stop.getDescription()).setLongLabel(stop.getDescription())
                     .setIcon(Icon.createWithResource(context, R.mipmap.ic_launcher_round))
                     .setIntent(serviceIntent).build();
 
