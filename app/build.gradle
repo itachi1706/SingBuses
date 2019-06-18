@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId "com.itachi1706.busarrivalsg"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 477
         versionName "4.3.1"
@@ -72,12 +72,12 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
-    implementation 'com.google.firebase:firebase-auth:16.2.0'
-    implementation 'com.google.firebase:firebase-core:16.0.7'
-    implementation 'com.google.firebase:firebase-perf:16.2.4'
-    implementation 'com.google.firebase:firebase-messaging:17.4.0'
-    implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+    implementation 'com.google.firebase:firebase-auth:17.0.0'
+    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-perf:17.0.2'
+    implementation 'com.google.firebase:firebase-messaging:18.0.0'
+    implementation 'de.psdev.licensesdialog:licensesdialog:2.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
     testImplementation 'junit:junit:4.12'
     implementation project(':cepaslib')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

@@ -14,6 +14,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.R;
@@ -22,8 +24,6 @@ import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Kenneth on 31/10/2015.
