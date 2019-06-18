@@ -14,6 +14,10 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.itachi1706.appupdater.EasterEggResMultiMusicPrefFragment;
 import com.itachi1706.appupdater.SettingsInitializer;
 import com.itachi1706.appupdater.Util.DeprecationHelper;
@@ -24,9 +28,6 @@ import com.itachi1706.cepaslib.SettingsHandler;
 import java.util.Date;
 import java.util.Locale;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import de.psdev.licensesdialog.LicensesDialog;
 
 
@@ -68,9 +69,8 @@ public class MainSettings extends AppCompatActivity {
 
             new SettingsHandler(getActivity()).initSettings(this);
 
-            new SettingsInitializer(getActivity(), R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL,
-                    getResources().getString(R.string.link_legacy), getResources().getString(R.string.link_updates), true)
-                    .explodeUpdaterSettings(this);
+            new SettingsInitializer().setFullscreen(true).explodeUpdaterSettings(getActivity(), R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL,
+                    getResources().getString(R.string.link_legacy), getResources().getString(R.string.link_updates), this);
             super.addEggMethods(true, preference -> {
                 new LicensesDialog.Builder(getActivity()).setNotices(R.raw.notices)
                         .setIncludeOwnLicense(true).build().show();
