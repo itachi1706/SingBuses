@@ -26,6 +26,17 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.crashlytics.android.Crashlytics;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
@@ -49,16 +60,6 @@ import com.itachi1706.busarrivalsg.util.StaticVariables;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.fabric.sdk.android.Fabric;
 
 public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
@@ -141,7 +142,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         moveAdapter.attachToRecyclerView(favouritesList);
 
         Log.d("MainMenu", "Checking for app updates");
-        new AppUpdateInitializer(this, sp, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL, true).checkForUpdate(true);
+        new AppUpdateInitializer(this, sp, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL, true).setOnlyOnWifiCheck(true).checkForUpdate();
         Log.d("MainMenu", "onCreate complete");
 
         // Create the Firebase Notification Channel

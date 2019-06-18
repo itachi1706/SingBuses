@@ -6,7 +6,7 @@
         android:enabled="true"
         android:icon="@mipmap/ic_launcher_round"
         android:shortcutShortLabel="@string/static_search_label"
-        android:shortcutLongLabel="@string/static_search_long_label"
+        android:shortcutLongLabel="@string/static_search_label"
         android:shortcutDisabledMessage="@string/static_search_disabled_label"
         tools:ignore="UnusedAttribute">
         <intent
@@ -23,7 +23,7 @@
         android:enabled="true"
         android:icon="@drawable/ic_ntu_coa"
         android:shortcutShortLabel="@string/static_ntu_label"
-        android:shortcutLongLabel="@string/static_ntu_long_label"
+        android:shortcutLongLabel="@string/static_ntu_label"
         android:shortcutDisabledMessage="@string/static_ntu_disabled_label"
         tools:ignore="UnusedAttribute">
         <intent
