@@ -42,7 +42,7 @@ public class ParseBusStops extends AsyncTask<BusStopJSONArray, String, Void> {
 
         Timings t2 = new Timings("PBSTimeAdd", true);
         t2.start();
-        BusStopJSON[] busStops = stops.getBusStopsArray();
+        BusStopJSON[] busStops = stops.getValue();
         db.addMultipleToDB(busStops);
         t2.end();
         return null;

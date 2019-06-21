@@ -88,7 +88,7 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
                 return;
             }
             BusStopJSONArray replyArr = gson.fromJson(json, BusStopJSONArray.class);
-            if (replyArr == null || replyArr.getBusStopsArray() == null){
+            if (replyArr == null || replyArr.getValue() == null){
                 //Invalid string, retrying
                 Toast.makeText(activity, R.string.toast_message_unknown_error, Toast.LENGTH_SHORT).show();
                 new GetAllBusStops(progressDialog, db, activity, sp).execute();
