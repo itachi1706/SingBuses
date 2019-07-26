@@ -93,7 +93,8 @@ class NTURouteCacher(private val mContext: Context) {
         return sb.toString()
     }
 
-    fun writeCachedRoute(routeCode: String, route: NTUBus.MapRouting): Boolean {
+    fun writeCachedRoute(routeCode: String, route: NTUBus.MapRouting?): Boolean {
+        if (route == null) return false
         val routeString = getStringFromRoute(route)
         return writeCachedRoute(routeCode, routeString)
     }

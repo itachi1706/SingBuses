@@ -10,8 +10,11 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.itachi1706.appupdater.Util.URLHelper;
 import com.itachi1706.appupdater.Util.ValidationHelper;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.Fragments.BusStopNearbyFragment;
@@ -21,18 +24,11 @@ import com.itachi1706.busarrivalsg.gsonObjects.Distance;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.util.ArrayList;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -59,26 +55,13 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
         int limit = Integer.parseInt(sp.getString("nearbyStopsCount", "20"));
         // Get validation stuff
         String signature = ValidationHelper.getSignatureForValidation(context);
-        String url = "http://api.itachi1706.com/api/mobile/nearestBusStop.php?location=" + location.getLatitude() + "," + location.getLongitude() + "&limit=" + limit;
+        String url = "https://api.itachi1706.com/api/mobile/nearestBusStop.php?location=" + location.getLatitude() + "," + location.getLongitude() + "&limit=" + limit;
         Log.d("CURRENT-LOCATION", url); // Don't print the signature out
         url += "&sig=" + signature + "&package=" + context.getPackageName();
         String tmp;
         try {
-            URL urlConn = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
-            conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
-            conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
-            InputStream in = conn.getInputStream();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            StringBuilder str = new StringBuilder();
-            String line;
-            while((line = reader.readLine()) != null)
-            {
-                str.append(line);
-            }
-            in.close();
-            tmp = str.toString();
+            URLHelper urlHelper = new URLHelper(url);
+            tmp = urlHelper.executeString();
         } catch (IOException e) {
             except = e;
             return 1;

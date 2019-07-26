@@ -6,21 +6,17 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.itachi1706.appupdater.Util.URLHelper;
+import com.itachi1706.busarrivalsg.R;
+import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.BusStatus;
-import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.util.Objects;
 
 /**
@@ -51,26 +47,13 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
         csv = csv.substring(0, csv.length() - 1);
         this.busObjArr = busObject;
 
-        String url = "http://api.itachi1706.com/api/busarrival.php?CSV=" + csv + "&api=2";
+        String url = "https://api.itachi1706.com/api/busarrival.php?CSV=" + csv + "&api=2";
         String tmp = "";
+        URLHelper urlHelper = new URLHelper(url);
 
         Log.d("GET-FAV-BUS-SERVICE", url);
         try {
-            URL urlConn = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
-            conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
-            conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
-            InputStream in = conn.getInputStream();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            StringBuilder str = new StringBuilder();
-            String line;
-            while((line = reader.readLine()) != null)
-            {
-                str.append(line);
-            }
-            in.close();
-            tmp = str.toString();
+            tmp = urlHelper.executeString();
         } catch (IOException e) {
             exception = e;
         }

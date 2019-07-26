@@ -8,11 +8,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import androidx.core.content.FileProvider;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.itachi1706.busarrivalsg.util.StaticVariables;
+import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import static com.itachi1706.appupdater.Util.UpdaterHelper.HTTP_QUERY_TIMEOUT;
 
 /**
  * Created by Kenneth on 24/6/2015
@@ -46,8 +47,8 @@ public class DlAndInstallCompanionApp extends AsyncTask<String, Void, Boolean> {
         try {
             URL url = new URL(urlLink[0]);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
-            conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
+            conn.setConnectTimeout(HTTP_QUERY_TIMEOUT);
+            conn.setReadTimeout(HTTP_QUERY_TIMEOUT);
             conn.setRequestMethod("GET");
             conn.connect();
             Log.d("DL", "Starting Download");

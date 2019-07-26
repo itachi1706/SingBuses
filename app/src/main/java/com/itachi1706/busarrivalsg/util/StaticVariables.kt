@@ -14,8 +14,7 @@ import java.util.concurrent.TimeUnit
  */
 object StaticVariables {
 
-    var HTTP_QUERY_TIMEOUT = 15000 //15 seconds timeout
-    const val BASE_SERVER_URL = "http://api.itachi1706.com/api/appupdatechecker.php?action=androidretrievedata&packagename="
+    const val BASE_SERVER_URL = "https://api.itachi1706.com/api/appupdatechecker.php?action=androidretrievedata&packagename="
 
     val PEBBLE_APP_UUID = UUID.fromString("11198668-4e27-4e94-b51c-a27a1ea5cd82")
 

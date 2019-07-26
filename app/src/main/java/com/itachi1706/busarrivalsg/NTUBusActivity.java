@@ -28,6 +28,14 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.collection.ArrayMap;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -42,6 +50,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.itachi1706.appupdater.Util.DeprecationHelper;
+import com.itachi1706.appupdater.Util.URLHelper;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUData;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUPublicBusData;
 import com.itachi1706.busarrivalsg.Services.LocManager;
@@ -56,24 +65,11 @@ import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.NTURouteCacher;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.collection.ArrayMap;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
@@ -303,26 +299,13 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
         @Override
         protected Void doInBackground(Integer... stopIds) {
             int stopId = stopIds[0];
-            String url = "http://api.itachi1706.com/api/ntubus.php?busarrival=true&stopid=" + stopId;
+            String url = "https://api.itachi1706.com/api/ntubus.php?busarrival=true&stopid=" + stopId;
             Log.d(TAG, url);
             String tmp;
             try {
                 long start = System.currentTimeMillis();
-                URL urlConn = new URL(url);
-                HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
-                conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
-                conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
-                InputStream in = conn.getInputStream();
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                StringBuilder str = new StringBuilder();
-                String line;
-                while((line = reader.readLine()) != null)
-                {
-                    str.append(line);
-                }
-                in.close();
-                tmp = str.toString();
+                URLHelper urlHelper = new URLHelper(url);
+                tmp = urlHelper.executeString();
                 Log.i(TAG, "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
             } catch (IOException e) {
                 runOnUiThread(() -> {

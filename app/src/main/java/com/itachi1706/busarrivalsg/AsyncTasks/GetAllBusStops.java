@@ -7,18 +7,14 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.itachi1706.appupdater.Util.URLHelper;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSONArray;
 import com.itachi1706.busarrivalsg.R;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSONArray;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
-import java.net.URL;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -41,29 +37,16 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
 
     @Override
     protected String doInBackground(Integer... skipValues) {
-        String url = "http://api.itachi1706.com/api/busstops.php?api=2";
+        String url = "https://api.itachi1706.com/api/busstops.php?api=2";
         String tmp = "";
+        URLHelper urlHelper = new URLHelper(url);
 
         activity.runOnUiThread(() -> {
             progressDialog.setTitle(activity.getString(R.string.progress_title_bus_stop_data_download));
             progressDialog.setMessage(activity.getString(R.string.progress_message_bus_stop_data_download));
         });
         try {
-            URL urlConn = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
-            conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
-            conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
-            InputStream in = conn.getInputStream();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            StringBuilder str = new StringBuilder();
-            String line;
-            while((line = reader.readLine()) != null)
-            {
-                str.append(line);
-            }
-            in.close();
-            tmp = str.toString();
+            tmp = urlHelper.executeString();
         } catch (IOException e) {
             exception = e;
         }

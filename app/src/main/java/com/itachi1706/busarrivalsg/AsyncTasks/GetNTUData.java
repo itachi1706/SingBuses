@@ -7,23 +7,19 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.google.gson.Gson;
+import com.itachi1706.appupdater.Util.URLHelper;
 import com.itachi1706.busarrivalsg.NTUBusActivity;
 import com.itachi1706.busarrivalsg.R;
+import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 import com.itachi1706.busarrivalsg.util.NTURouteCacher;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
-import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
-import java.net.URL;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 /**
  * Created by Kenneth on 07/9/2018
@@ -66,26 +62,13 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
                 }
             }
         }
-        String url = "http://api.itachi1706.com/api/ntubus.php?route=" + routeString.toString() + "&update=" + update;
+        String url = "https://api.itachi1706.com/api/ntubus.php?route=" + routeString.toString() + "&update=" + update;
         Log.d(TAG, url);
         String tmp;
         try {
             long start = System.currentTimeMillis();
-            URL urlConn = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) urlConn.openConnection();
-            conn.setConnectTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
-            conn.setReadTimeout(StaticVariables.INSTANCE.getHTTP_QUERY_TIMEOUT());
-            InputStream in = conn.getInputStream();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            StringBuilder str = new StringBuilder();
-            String line;
-            while((line = reader.readLine()) != null)
-            {
-                str.append(line);
-            }
-            in.close();
-            tmp = str.toString();
+            URLHelper urlHelper = new URLHelper(url);
+            tmp = urlHelper.executeString();
             Log.i(TAG, "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
         } catch (IOException e) {
             except = e;
