@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Get all the API data duh -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Check if there's internet access -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Allows write to SD root -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:remove="android:maxSdkVersion" /> <!-- Allows write to SD root -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- Receives the intent when boot completes -->
     <!-- For getting your current location pre-GPS (so that you don't need GPS to run) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
