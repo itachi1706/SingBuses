@@ -17,7 +17,7 @@ public class CompleteBootReceiver extends BroadcastReceiver {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())){
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
             Intent startPebbleService = new Intent(context, PebbleCommunications.class);
-            if (sp.getBoolean("pebbleSvc", true)){
+            if (sp.getBoolean("pebbleSvc", false)){
                 context.startService(startPebbleService);
             } else {
                 context.stopService(startPebbleService);

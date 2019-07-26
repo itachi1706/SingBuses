@@ -445,7 +445,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
 
         //Start Pebble Service if settings are set
         Intent pebbleService = new Intent(this, PebbleCommunications.class);
-        if (sp.getBoolean("pebbleSvc", true)){
+        if (sp.getBoolean("pebbleSvc", false)){
             startService(pebbleService);
         } else {
             stopService(pebbleService);
