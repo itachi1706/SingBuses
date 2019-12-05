@@ -8,6 +8,7 @@ repositories {
 }
 
 def isTravis = System.getenv("TRAVIS")
+def isGHActions = System.getenv("GITHUB_ACTIONS") ?: false
 
 android {
     compileSdkVersion 28
@@ -53,7 +54,10 @@ android {
         installOptions "-d", "-t"
     }
     dexOptions {
-        preDexLibraries = !isTravis
+        preDexLibraries = !(isTravis || isGHActions)
+    }
+    lintOptions {
+        abortOnError !isGHActions
     }
 }
 
