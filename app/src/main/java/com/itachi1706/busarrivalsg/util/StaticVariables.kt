@@ -2,7 +2,6 @@ package com.itachi1706.busarrivalsg.util
 
 import android.content.SharedPreferences
 import android.util.Log
-import com.getpebble.android.kit.util.PebbleDictionary
 import com.itachi1706.busarrivalsg.objects.BusServices
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,19 +15,11 @@ object StaticVariables {
 
     const val BASE_SERVER_URL = "https://api.itachi1706.com/api/appupdatechecker.php?action=androidretrievedata&packagename="
 
-    val PEBBLE_APP_UUID = UUID.fromString("11198668-4e27-4e94-b51c-a27a1ea5cd82")
-
     const val CUR = 0
     const val NEXT = 1
     const val SUB = 2
 
     private const val USE_SERVER_TIME = "useServerTime"
-
-    //For Pebble Comm
-    var dict1: PebbleDictionary? = null
-    var dict2: PebbleDictionary? = null
-    var dict3: PebbleDictionary? = null
-    var dict4: PebbleDictionary? = null
 
     var favouritesList = ArrayList<BusServices>()
 
@@ -45,10 +36,6 @@ object StaticVariables {
 
     fun parseLTAEstimateArrival(arrivalString: String, useServerTime: Boolean, serverTime: String?): Long {
         return if (arrivalString.equals("", ignoreCase = true)) -9999 else parseEstimateArrival(arrivalString, useServerTime, serverTime)
-    }
-
-    fun parseWABStatusToPebble(status: Boolean): Byte {
-        return if (status) java.lang.Byte.valueOf("1") else java.lang.Byte.valueOf("0")
     }
 
     fun checkBusLocationValid(lat: Double, lng: Double): Boolean {

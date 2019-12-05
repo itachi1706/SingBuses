@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.snackbar.Snackbar;
@@ -33,9 +36,6 @@ import com.itachi1706.busarrivalsg.util.StaticVariables;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Kenneth on 31/10/2015.
@@ -251,9 +251,8 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 
         // Companion addition
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        switch (sp.getString("companionDevice", "none")) {
-            case "pebble": message += activity.getString(R.string.dialog_message_remove_from_fav_pebble);
-        }
+        /*switch (sp.getString("companionDevice", "none")) {
+        }*/
 
         AlertDialog alert = new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_remove_from_fav)
                 .setMessage(message)

@@ -28,7 +28,6 @@
     <!-- Link URLs -->
     <string name="link_updates">https://github.com/itachi1706/SingBuses/releases/latest</string>
     <string name="link_legacy">https://github.com/itachi1706/SingBuses/releases</string>
-    <string name="link_pebble_app">http://itachi1706.com/android/SingBuses.pbw</string>
 
     <!-- Permissions Messages -->
     <string name="dialog_title_permission_denied">Permission has been denied</string>
@@ -37,13 +36,8 @@
     <string name="dialog_title_request_permission_gps">Requesting GPS Permission</string>
     <string name="dialog_message_request_permission_gps_rationale">In order for the app to retrieve your current position to find bus stops near you, it requires access to your Location. Please grant it in the next screen to use it</string>
     <string name="dialog_message_request_permission_gps_view_map_rationale">In order for the app to retrieve your current position to place a marker on the map, it requires access to your Location. Please grant it in the next screen to use it</string>
-    <!-- Storage -->
-    <string name="dialog_message_no_permission_external_storage">You have denied the app access to your phone\'s storage. Due to the fact that installing the companion Pebble app requires you to use the Official Pebble App for installation, the app needs to save the Pebble App File onto your internal storage. By denying this permission, install cannot proceed as the Official Pebble App will not be able to access this app\'s private storage (which would not have required this permission).\n\nIf you wish to grant the app permissions right now, click the settings button and grant it permissions there</string>
-    <string name="dialog_title_request_permission_external_storage">Requesting External Storage Permission</string>
-    <string name="dialog_message_request_permission_external_storage_rationale">In order for the app to download the Pebble App File for the Official Pebble App to install, we require permission to write to your storage.</string>
 
     <!-- Misc Stuff -->
-    <string name="pref_summary_pebble_background_svc">Enables background service so that you do not need to have this app open when you use the pebble application. (Note: This might have an impact on your battery life)</string>
     <string name="database_name_bus_geo">Bus Geographical Database</string>
     <string name="database_name_bus">Bus Database</string>
     <string name="label_bus_stops_count">Bus Stops Count: %1$d</string>
@@ -100,13 +94,11 @@
     <string name="dialog_message_gps_disabled">GPS is not enabled. Do you want to enable it for better accuracy?</string>
     <string name="dialog_message_remove_from_fav_with_stop_name">Are you sure you want to remove %1$s from %2$s (%3$s) from your favourites?</string>
     <string name="dialog_message_remove_from_fav">Are you sure you want to remove %1$s from Bus Stop Code %2$s from your favourites?</string>
-    <string name="dialog_message_remove_from_fav_pebble">\n\nThis will also remove it from being accessible from your Pebble device</string>
     <string name="snackbar_message_remove_from_fav_with_stop_name">Swipe to remove %1$s or reorder it by moving it up and down</string>
     <string name="snackbar_message_remove_from_fav">Swipe to remove %1$s or reorder it by moving it up and down</string>
     <string name="dialog_title_remove_from_fav">Remove from Favourites</string>
     <string name="dialog_message_add_to_fav_with_stop_name">Are you sure you want to add %1$s from %2$s (%3$s) to your favourites?</string>
     <string name="dialog_message_add_to_fav">Are you sure you want to add %1$s from Bus Stop Code %2$s to your favourites?</string>
-    <string name="dialog_message_add_to_fav_pebble">\n\nThis will also make it accessible from your Pebble device</string>
     <string name="dialog_title_add_to_fav">Add to Favourites</string>
     <string name="dialog_title_no_internet">No Internet Access</string>
     <string name="dialog_message_no_internet">Internet Access is required to populate %1$s, please ensure that you have internet access before relaunching this application</string>

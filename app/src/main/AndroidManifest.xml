@@ -52,22 +52,9 @@
             android:label="@string/title_activity_bus_services_at_stop" />
 
         <service
-            android:name=".Services.PebbleCommunications"
-            android:exported="false"
-            tools:ignore="InnerclassSeparator" />
-        <service
             android:name=".Services.LocManager"
             android:exported="false"
             tools:ignore="InnerclassSeparator" />
-
-        <receiver
-            android:name=".CompleteBootReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -86,16 +73,6 @@
         <activity
             android:name=".BusLocationMapsActivity"
             android:label="@string/title_activity_bus_location_maps" />
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/companion_app_provider_paths" />
-        </provider>
 
         <activity
             android:name=".FirebaseLoginActivity"

@@ -2,7 +2,6 @@ package com.itachi1706.busarrivalsg
 
 import android.Manifest
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.net.Uri
@@ -42,7 +41,6 @@ class MainSettings : AppCompatActivity() {
             addPreferencesFromResource(R.xml.pref_general)
 
             val sp = PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
-            handleCompanions(sp)
 
             SettingsHandler(activity!!).initSettings(this)
 
@@ -97,15 +95,6 @@ class MainSettings : AppCompatActivity() {
             }
             val date = Date(dbBus)
             timeDBUpdateBus?.summary = StaticVariables.convertDateToString(date)
-        }
-
-        // Handling of all companion devices starts here
-        private fun handleCompanions(sharedPreferences: SharedPreferences) {
-            when (sharedPreferences.getString("companionDevice", "none")) {
-                "pebble" -> addPreferencesFromResource(R.xml.pref_pebble)
-                "none" -> sharedPreferences.edit().putBoolean("pebbleSvc", false).apply()
-                else -> sharedPreferences.edit().putBoolean("pebbleSvc", false).apply()
-            }
         }
 
         override fun getMusicResource(): Int {

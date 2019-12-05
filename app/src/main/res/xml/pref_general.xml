@@ -11,13 +11,13 @@
             android:defaultValue="true"
             android:key="showFavHint"
             android:summary="Shows tips for your favourites list when you press and hold a bus service" />
+        <!-- Currently Disabled until we have another companion device supported -->
         <ListPreference
             android:title="Companion Device"
             android:defaultValue="none"
             android:key="companionDevice"
             android:summary="%s"
-            android:entries="@array/companion_device"
-            android:entryValues="@array/companion_device_entry" />
+            android:enabled="false" />
         <EditTextPreference
             android:title="Number of nearby bus stops shown (Default 20)"
             android:summary="%s"
