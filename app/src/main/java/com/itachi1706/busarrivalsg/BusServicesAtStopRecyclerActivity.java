@@ -13,6 +13,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.collection.ArrayMap;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesHandler;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
@@ -27,13 +34,6 @@ import com.itachi1706.busarrivalsg.util.StaticVariables;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Map;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.collection.ArrayMap;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class BusServicesAtStopRecyclerActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, IHandleStuff {
 
@@ -118,11 +118,6 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
             else
                 message = getString(R.string.dialog_message_remove_from_fav, fav.getServiceNo(), fav.getStopID());
 
-            // Companion addition
-            switch (sp.getString("companionDevice", "none")) {
-                case "pebble": message += getString(R.string.dialog_message_remove_from_fav_pebble);
-            }
-
             new AlertDialog.Builder(this).setTitle(R.string.dialog_title_remove_from_fav)
                     .setMessage(message)
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
@@ -142,11 +137,6 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
                 message = getString(R.string.dialog_message_add_to_fav_with_stop_name, fav.getServiceNo(), busStopName, fav.getStopID());
             else
                 message = getString(R.string.dialog_message_add_to_fav, fav.getServiceNo(), fav.getStopID());
-
-            // Companion device addition
-            switch (sp.getString("companionDevice", "none")) {
-                case "pebble": message += getString(R.string.dialog_message_add_to_fav_pebble);
-            }
 
             new AlertDialog.Builder(this).setTitle(R.string.dialog_title_add_to_fav)
                     .setMessage(message)

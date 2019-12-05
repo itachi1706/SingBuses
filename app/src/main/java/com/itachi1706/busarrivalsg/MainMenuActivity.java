@@ -1,36 +1,26 @@
 package com.itachi1706.busarrivalsg;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,23 +28,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.crashlytics.android.Crashlytics;
-import com.getpebble.android.kit.PebbleKit;
-import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.appupdater.AppUpdateInitializer;
 import com.itachi1706.appupdater.Objects.CAAnalytics;
 import com.itachi1706.appupdater.Util.AnalyticsHelper;
 import com.itachi1706.appupdater.Util.ConnectivityHelper;
-import com.itachi1706.busarrivalsg.AsyncTasks.DlAndInstallCompanionApp;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetAllBusStops;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetBusServicesFavouritesRecycler;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
-import com.itachi1706.busarrivalsg.Services.PebbleCommunications;
 import com.itachi1706.busarrivalsg.objects.BusServices;
-import com.itachi1706.busarrivalsg.util.PebbleEnum;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.util.ArrayList;
@@ -65,12 +50,11 @@ import io.fabric.sdk.android.Fabric;
 public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     //Android Stuff
-    private TextView connectionStatus, pressedBtn, firmware, installPrompt, syncState;
+    private TextView syncState;
     private FloatingActionButton fab;
     private RecyclerView favouritesList;
     private FavouritesRecyclerAdapter adapter;
     private SwipeRefreshLayout swipeToRefresh;
-    private CardView pebbleCard;
 
     private SharedPreferences sp;
 
@@ -81,11 +65,6 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         if (!BuildConfig.DEBUG) Fabric.with(fabric);
         setContentView(R.layout.activity_main_menu_recycler);
 
-        pebbleCard = findViewById(R.id.card_view);
-        installPrompt = findViewById(R.id.pebbleInstallPrompt);
-        connectionStatus = findViewById(R.id.pebbleConnectionStatus);
-        pressedBtn = findViewById(R.id.pressedBtn);
-        firmware = findViewById(R.id.pebbleFW);
         fab = findViewById(R.id.add_fab);
         favouritesList = findViewById(R.id.rvFav);
         syncState = findViewById(R.id.firebase_sync_status);
@@ -166,11 +145,10 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         swipeToRefresh.setRefreshing(true);
         updateFavourites();
 
-        switch (sp.getString("companionDevice", "none")) {
-            case "pebble": pebbleCard.setVisibility(View.VISIBLE); pebbleInit(); break;
+        /*switch (sp.getString("companionDevice", "none")) {
             case "none":
-                default: pebbleCard.setVisibility(View.GONE); deinitPebble();  break;
-        }
+            default:  break;
+        }*/
 
         syncState.setClickable(true);
         syncState.setOnClickListener(v -> {
@@ -179,14 +157,6 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         });
 
         invalidateOptionsMenu();
-    }
-
-    @Override
-    public void onPause(){
-        super.onPause();
-
-        // Pebble related code
-        deinitPebble();
     }
 
     private void setAnalyticsData(boolean enabled, FirebaseAnalytics firebaseAnalytics, CAAnalytics analytics) {
@@ -232,19 +202,6 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             case R.id.action_refresh:
                 swipeToRefresh.setRefreshing(true);
                 updateFavourites();
-                return true;
-            case R.id.action_install_companion:
-                switch (sp.getString("companionDevice", "none")) {
-                    case "pebble": installPebbleApp(); break;
-                    case "none":
-                    default:
-                        new AlertDialog.Builder(this).setTitle("No Companion Device Configured")
-                                .setMessage("You have not configured a companion device! \n\nYou can do so in the app settings")
-                                .setPositiveButton(android.R.string.ok, null)
-                                .setNeutralButton(R.string.action_settings, (dialog, which) ->
-                                        startActivity(new Intent(getApplicationContext(), MainSettings.class))).show();
-                        break;
-                }
                 return true;
             case R.id.ntu_tracker:
                 startActivity(new Intent(this, NTUBusActivity.class));
@@ -336,141 +293,6 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     @Override
     public void onRefresh() {
         updateFavourites();
-    }
-
-    private static final int RC_HANDLE_REQUEST_EXTERNAL_STORAGE = 1;
-
-    private void requestStoragePermission() {
-        Log.w(PEBBLE_TAG, "Storage permission is not granted. Requesting permission");
-        final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-            ActivityCompat.requestPermissions(this, permissions, RC_HANDLE_REQUEST_EXTERNAL_STORAGE);
-            return;
-        }
-
-        final Activity thisActivity = this;
-
-        new AlertDialog.Builder(this).setTitle(R.string.dialog_title_request_permission_external_storage)
-                .setMessage(R.string.dialog_message_request_permission_external_storage_rationale)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(thisActivity, permissions, RC_HANDLE_REQUEST_EXTERNAL_STORAGE)).show();
-    }
-
-    /**
-     * Callback for the result from requesting permissions. This method
-     * is invoked for every call on {@link #requestPermissions(String[], int)}.
-     * <p>
-     * <strong>Note:</strong> It is possible that the permissions request interaction
-     * with the user is interrupted. In this case you will receive empty permissions
-     * and results arrays which should be treated as a cancellation.
-     * </p>
-     *
-     * @param requestCode  The request code passed in {@link #requestPermissions(String[], int)}.
-     * @param permissions  The requested permissions. Never null.
-     * @param grantResults The grant results for the corresponding permissions
-     *                     which is either {@link PackageManager#PERMISSION_GRANTED}
-     *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
-     * @see #requestPermissions(String[], int)
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode != RC_HANDLE_REQUEST_EXTERNAL_STORAGE){
-            Log.d(PEBBLE_TAG, "Got unexpected permission result: " + requestCode);
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            return;
-        }
-
-        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(PEBBLE_TAG, "Storage permission granted - download pebble file");
-            // we have permission, so create the camerasource
-            hasPermissionToInstallPebbleApp();
-            return;
-        }
-
-        Log.e(PEBBLE_TAG, "Permission not granted: results len = " + grantResults.length +
-                " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-
-        final Activity thisActivity = this;
-
-        new AlertDialog.Builder(this).setTitle(R.string.dialog_title_permission_denied)
-                .setMessage(R.string.dialog_message_no_permission_external_storage).setPositiveButton(android.R.string.ok, null)
-                .setNeutralButton(R.string.dialog_action_neutral_app_settings, (dialog, which) -> {
-                    Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    Uri packageURI = Uri.parse("package:" + thisActivity.getPackageName());
-                    permIntent.setData(packageURI);
-                    startActivity(permIntent);
-                }).show();
-    }
-
-    // Pebble Related Code
-    private PebbleKit.PebbleDataReceiver pebbleDataReceiver;
-    private final String PEBBLE_TAG = "Pebble";
-
-    private void pebbleInit() {
-        boolean checkIfPebbleConnected = PebbleKit.isWatchConnected(this);
-        if (checkIfPebbleConnected){
-            PebbleKit.FirmwareVersionInfo info = PebbleKit.getWatchFWVersion(this);
-            installPrompt.setVisibility(View.VISIBLE);
-            //Init
-            connectionStatus.setText(R.string.pebble_connected);
-            connectionStatus.setTextColor(Color.GREEN);
-            firmware.setText(getString(R.string.pebble_firmware_version, info.getTag()));
-            pebbleDataReceiver = new PebbleKit.PebbleDataReceiver(StaticVariables.INSTANCE.getPEBBLE_APP_UUID()) {
-                @Override
-                public void receiveData(Context context, int i, PebbleDictionary pebbleDictionary) {
-                    PebbleKit.sendAckToPebble(getApplicationContext(), i);
-
-                    //Handle stuff in the dictionary
-                    if (pebbleDictionary.contains(PebbleEnum.KEY_BUTTON_EVENT)){
-                        switch (pebbleDictionary.getUnsignedIntegerAsLong(PebbleEnum.KEY_BUTTON_EVENT).intValue()){
-                            case PebbleEnum.BUTTON_REFRESH: pressedBtn.setText(R.string.pebble_button_refresh); break;
-                            case PebbleEnum.BUTTON_NEXT: pressedBtn.setText(R.string.pebble_button_next); break;
-                            case PebbleEnum.BUTTON_PREVIOUS: pressedBtn.setText(R.string.pebble_button_previous); break;
-                        }
-                    }
-                }
-            };
-            PebbleKit.registerReceivedDataHandler(this, pebbleDataReceiver);
-
-            pebbleCard.setOnClickListener(v -> installPebbleApp());
-        } else {
-            connectionStatus.setText(R.string.pebble_disconnected);
-            connectionStatus.setTextColor(Color.RED);
-            firmware.setText("");
-            installPrompt.setVisibility(View.INVISIBLE);
-            pebbleCard.setOnClickListener(null);
-        }
-
-        //Start Pebble Service if settings are set
-        Intent pebbleService = new Intent(this, PebbleCommunications.class);
-        if (sp.getBoolean("pebbleSvc", false)){
-            startService(pebbleService);
-        } else {
-            stopService(pebbleService);
-        }
-    }
-
-    private void deinitPebble() {
-        if (pebbleDataReceiver != null)
-            unregisterReceiver(pebbleDataReceiver);
-    }
-
-    private void installPebbleApp(){
-        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (rc == PackageManager.PERMISSION_GRANTED){
-            hasPermissionToInstallPebbleApp();
-        } else {
-            requestStoragePermission();
-        }
-    }
-
-    private void hasPermissionToInstallPebbleApp(){
-        final Activity activity = this;
-        new AlertDialog.Builder(this).setTitle("Which OS to install App to").setMessage("Based on your pebble device, " +
-                "where should we launch the install request to?\n\nPebble Time: Select Pebble Time\n" +
-                "Pebble with Time OS: Select Pebble Time\nPebble with 2.0 OS: Select Pebble").setPositiveButton("Pebble Time", (dialog, which) -> new DlAndInstallCompanionApp(activity, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getString(R.string.link_pebble_app))).setNegativeButton("Pebble", (dialog, which) -> new DlAndInstallCompanionApp(activity, false).execute(getString(R.string.link_pebble_app))).setNeutralButton(android.R.string.cancel, null).show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

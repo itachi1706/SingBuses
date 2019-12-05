@@ -6,11 +6,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Get all the API data duh -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Check if there's internet access -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:remove="android:maxSdkVersion" /> <!-- Allows write to SD root -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- Receives the intent when boot completes -->
-    <!-- For getting your current location pre-GPS (so that you don't need GPS to run) -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- For getting your current location pre-GPS (so that you don't need GPS to run) -->
 
     <application
         android:allowBackup="true"
@@ -52,22 +49,9 @@
             android:label="@string/title_activity_bus_services_at_stop" />
 
         <service
-            android:name=".Services.PebbleCommunications"
-            android:exported="false"
-            tools:ignore="InnerclassSeparator" />
-        <service
             android:name=".Services.LocManager"
             android:exported="false"
             tools:ignore="InnerclassSeparator" />
-
-        <receiver
-            android:name=".CompleteBootReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -86,16 +70,6 @@
         <activity
             android:name=".BusLocationMapsActivity"
             android:label="@string/title_activity_bus_location_maps" />
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/companion_app_provider_paths" />
-        </provider>
 
         <activity
             android:name=".FirebaseLoginActivity"
