@@ -41,4 +41,6 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AttribouterTheme" parent="AppTheme.NoActionBar" />
+
 </resources>

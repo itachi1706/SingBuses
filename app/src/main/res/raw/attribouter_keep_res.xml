@@ -1,0 +1,2 @@
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/ic_attribouter_github,@drawable/ic_attribouter_rate,@drawable/ic_attribouter_link,@drawable/ic_attribouter_copyright,@drawable/ic_attribouter_email" />
