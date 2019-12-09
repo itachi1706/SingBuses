@@ -20,7 +20,7 @@ import com.itachi1706.appupdater.Util.DeprecationHelper
 import com.itachi1706.busarrivalsg.Services.LocManager
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.cepaslib.SettingsHandler
-import de.psdev.licensesdialog.LicensesDialog
+import me.jfenn.attribouter.Attribouter
 import java.util.*
 
 /**
@@ -46,10 +46,7 @@ class MainSettings : AppCompatActivity() {
 
             SettingsInitializer().setFullscreen(true).explodeUpdaterSettings(activity, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL,
                     resources.getString(R.string.link_legacy), resources.getString(R.string.link_updates), this)
-            super.addEggMethods(true) {
-                LicensesDialog.Builder(activity!!).setNotices(R.raw.notices).setIncludeOwnLicense(true).build().show()
-                false
-            }
+            super.addEggMethods(false, null, true) { Attribouter.from(context).show(); true }
 
             val favJson = findPreference<Preference>("fav_json")
             favJson?.setOnPreferenceClickListener {

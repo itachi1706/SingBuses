@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<about>
+    <me.jfenn.attribouter.wedges.AppWedge
+        repo="itachi1706/SingBuses"
+        description="Loading Description..."
+        playStoreUrl="https://play.google.com/store/apps/details?id=com.itachi1706.busarrivalsg"
+        websiteUrl="https://itachi1706.com"
+        icon="@mipmap/ic_launcher">
+    </me.jfenn.attribouter.wedges.AppWedge>
+
+    <me.jfenn.attribouter.wedges.ContributorsWedge
+        repo="itachi1706/SingBuses"
+        showDefaults="false"
+        title="Developer">
+
+        <!-- Lead developer: itachi1706 -->
+        <me.jfenn.attribouter.wedges.ContributorWedge
+            login="itachi1706"
+            name="Kenneth Soh"
+            avatar="https://avatars.githubusercontent.com/u/5357412"
+            bio="Cause I'm a potato"
+            blog="https://itachi1706.com"
+            email="kenneth@itachi1706.com"
+            position="1"
+            task="^Lead Developer">
+            <me.jfenn.attribouter.wedges.link.LinkWedge
+                name="Twitter"
+                icon="@drawable/ic_twitter"
+                url="https://twitter.com/itachi1706" />
+            <me.jfenn.attribouter.wedges.link.LinkWedge
+                name="GitLab"
+                icon="@drawable/ic_gitlab"
+                url="https://gitlab.com/itachi1706" />
+        </me.jfenn.attribouter.wedges.ContributorWedge>
+    </me.jfenn.attribouter.wedges.ContributorsWedge>
+
+    <me.jfenn.attribouter.wedges.LicensesWedge
+        showDefaults="false">
+
+        <!-- Google Gson -->
+        <me.jfenn.attribouter.wedges.LicenseWedge
+            title="Google Gson"
+            license="apache-2.0"
+            repo="google/gson" />
+
+        <!-- Farebot -->
+        <me.jfenn.attribouter.wedges.LicenseWedge
+            title="Farebot"
+            repo="codebutler/farebot" />
+
+        <!-- Attribouter -->
+        <me.jfenn.attribouter.wedges.LicenseWedge
+            title="Attribouter"
+            repo="fennifith/Attribouter"
+            license="apache-2.0" />
+
+        <!-- Material Components For Android -->
+        <me.jfenn.attribouter.wedges.LicenseWedge
+            title="Material Components for Android"
+            repo="material-components/material-components-android"
+            license="apache-2.0" />
+
+        <!-- AndroidX -->
+        <me.jfenn.attribouter.wedges.LicenseWedge
+            title="AndroidX Jetpack Support Libraries"
+            description="AndroidX is the open-source project that the Android team uses to develop, test, package, version and release libraries within Jetpack."
+            website="https://developer.android.com/jetpack/androidx"
+            licenseUrl="https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/LICENSE.txt"
+            license="apache-2.0" />
+
+        <!-- Kotlin (lol) -->
+        <me.jfenn.attribouter.wedges.LicenseWedge
+            title="Kotlin"
+            repo="JetBrains/kotlin"
+            license="apache-2.0" />
+
+        <!-- AOSP -->
+        <me.jfenn.attribouter.wedges.LicenseWedge
+            title="Android Open Source Project"
+            description="Android is an open source software stack for a wide range of mobile devices and a corresponding open source project led by Google."
+            website="https://github.com/aosp-mirror"
+            licenseUrl="https://source.android.com/license"
+            license="apache-2.0" />
+
+    </me.jfenn.attribouter.wedges.LicensesWedge>
+</about>

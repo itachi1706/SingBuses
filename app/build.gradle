@@ -4,6 +4,7 @@ apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'io.fabric'
 
 repositories {
+    maven { url "https://jitpack.io" }
     mavenCentral()
 }
 
@@ -83,7 +84,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.2.1'
     implementation 'com.google.firebase:firebase-perf:19.0.2'
     implementation 'com.google.firebase:firebase-messaging:20.0.1'
-    implementation 'de.psdev.licensesdialog:licensesdialog:2.0.0'
+    implementation 'me.jfenn:Attribouter:0.1.5'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
     testImplementation 'junit:junit:4.12'
     implementation project(':cepaslib')
