@@ -31,7 +31,6 @@ import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.BusStatus;
-import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
@@ -94,12 +93,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         BusServices i = items.get(position);
 
         holder.busOperator.setText(i.getOperator());
-        switch (i.getOperator().toUpperCase()) {
-            case "SMRT": holder.busOperator.setTextColor(Color.RED); break;
-            case "SBST": holder.busOperator.setTextColor(Color.MAGENTA); break;
-            case "TTS": holder.busOperator.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.GREEN : ContextCompat.getColor(activity, R.color.dark_green)); break;
-            case "GAS": holder.busOperator.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.YELLOW : ContextCompat.getColor(activity, R.color.dark_yellow)); break;
-        }
+        holder.busOperator.setTextColor(BusesUtil.INSTANCE.getOperatorColor(activity, i.getOperator()));
 
         holder.busNumber.setText(i.getServiceNo());
         holder.stopName.setVisibility(View.VISIBLE);
@@ -137,7 +131,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             else
                 arrivalStatusNow = est + "";
             holder.busArrivalNow.setText(arrivalStatusNow);
-            applyColorLoad(holder.busArrivalNow, i.getCurrentBus());
+            BusesUtil.INSTANCE.applyColorLoad(holder.busArrivalNow, i.getCurrentBus().getLoad());
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
             if (i.getCurrentBus().isWheelChairAccessible())
                 holder.wheelchairNow.setVisibility(View.VISIBLE);
@@ -163,7 +157,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             else
                 arrivalStatusNext = est + "";
             holder.busArrivalNext.setText(arrivalStatusNext);
-            applyColorLoad(holder.busArrivalNext, i.getNextBus());
+            BusesUtil.INSTANCE.applyColorLoad(holder.busArrivalNext, i.getNextBus().getLoad());
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
             if (i.getNextBus().isWheelChairAccessible())
                 holder.wheelchairNext.setVisibility(View.VISIBLE);
@@ -193,7 +187,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             else
                 arrivalStatusSub = est + "";
             holder.busArrivalSub.setText(arrivalStatusSub);
-            applyColorLoad(holder.busArrivalSub, i.getSubsequentBus());
+            BusesUtil.INSTANCE.applyColorLoad(holder.busArrivalSub, i.getSubsequentBus().getLoad());
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
             if (i.getSubsequentBus().isWheelChairAccessible())
                 holder.wheelchairSub.setVisibility(View.VISIBLE);
@@ -228,19 +222,6 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     @Override
     public int getItemCount() {
         return items.size();
-    }
-
-    private void applyColorLoad(TextView view, BusStatus obj){
-        if (view.getText().toString().equalsIgnoreCase("") || view.getText().toString().equalsIgnoreCase("-")) {
-            view.setTextColor(Color.GRAY);
-            return;
-        }
-        switch (obj.getLoad()){
-            case CommonEnums.BUS_SEATS_AVAIL: view.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.GREEN : ContextCompat.getColor(activity, R.color.dark_green)); break;
-            case CommonEnums.BUS_STANDING_AVAIL: view.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.YELLOW : ContextCompat.getColor(activity, R.color.dark_yellow)); break;
-            case CommonEnums.BUS_LIMITED_SEATS: view.setTextColor(Color.RED); break;
-            default: view.setTextColor(Color.GRAY); break;
-        }
     }
 
     public boolean removeFavourite(final int position) {
