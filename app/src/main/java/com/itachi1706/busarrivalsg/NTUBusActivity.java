@@ -177,9 +177,9 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
         mapView.onPause();
         shouldAutoRefresh = false;
-        refreshHandler.removeMessages(REFRESH_TASK);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(publicBusReceiver);
+        if (refreshHandler != null) refreshHandler.removeMessages(REFRESH_TASK);
+        if (receiver != null) LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        if (publicBusReceiver != null) LocalBroadcastManager.getInstance(this).unregisterReceiver(publicBusReceiver);
     }
 
     @Override
