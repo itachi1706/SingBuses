@@ -11,8 +11,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.itachi1706.appupdater.Util.PrefHelper;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
@@ -27,10 +33,6 @@ import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Kenneth on 31/10/2015.
@@ -75,8 +77,8 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         switch (i.getOperator().toUpperCase()){
             case "SMRT": holder.busOperator.setTextColor(Color.RED); break;
             case "SBST": holder.busOperator.setTextColor(Color.MAGENTA); break;
-            case "TTS": holder.busOperator.setTextColor(Color.GREEN); break;
-            case "GAS": holder.busOperator.setTextColor(Color.YELLOW); break;
+            case "TTS": holder.busOperator.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.GREEN : ContextCompat.getColor(activity, R.color.dark_green)); break;
+            case "GAS": holder.busOperator.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.YELLOW : ContextCompat.getColor(activity, R.color.dark_yellow)); break;
         }
         holder.busNumber.setText(i.getServiceNo());
 
@@ -89,7 +91,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             return;
         }
         holder.operatingStatus.setText(activity.getString(R.string.service_operational));
-        holder.operatingStatus.setTextColor(Color.GREEN);
+        holder.operatingStatus.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.GREEN : ContextCompat.getColor(activity, R.color.dark_green));
 
         assert i.getNextBus() != null;
         assert i.getNextBus2() != null;
@@ -204,8 +206,8 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             return;
         }
         switch (obj.getLoadInt()){
-            case CommonEnums.BUS_SEATS_AVAIL: view.setTextColor(Color.GREEN); break;
-            case CommonEnums.BUS_STANDING_AVAIL: view.setTextColor(Color.YELLOW); break;
+            case CommonEnums.BUS_SEATS_AVAIL: view.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.GREEN : ContextCompat.getColor(activity, R.color.dark_green)); break;
+            case CommonEnums.BUS_STANDING_AVAIL: view.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.YELLOW : ContextCompat.getColor(activity, R.color.dark_yellow)); break;
             case CommonEnums.BUS_LIMITED_SEATS: view.setTextColor(Color.RED); break;
             default: view.setTextColor(Color.GRAY); break;
         }

@@ -18,6 +18,10 @@
     <color name="black">#000000</color>
     <color name="appcompat_bg_color">#80323232</color>
 
+    <!-- Day Night Mode Colors -->
+    <color name="dark_yellow">#E3BE0E</color>
+    <color name="dark_green">#006400</color>
+
     <!-- General Colors -->
     <!-- RED -->
     <color name="red_50">#fde0dc</color>

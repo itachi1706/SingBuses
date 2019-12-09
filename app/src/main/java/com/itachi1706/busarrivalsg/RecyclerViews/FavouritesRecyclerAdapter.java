@@ -15,11 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.snackbar.Snackbar;
+import com.itachi1706.appupdater.Util.PrefHelper;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
@@ -95,8 +97,8 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         switch (i.getOperator().toUpperCase()) {
             case "SMRT": holder.busOperator.setTextColor(Color.RED); break;
             case "SBST": holder.busOperator.setTextColor(Color.MAGENTA); break;
-            case "TTS": holder.busOperator.setTextColor(Color.GREEN); break;
-            case "GAS": holder.busOperator.setTextColor(Color.YELLOW); break;
+            case "TTS": holder.busOperator.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.GREEN : ContextCompat.getColor(activity, R.color.dark_green)); break;
+            case "GAS": holder.busOperator.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.YELLOW : ContextCompat.getColor(activity, R.color.dark_yellow)); break;
         }
 
         holder.busNumber.setText(i.getServiceNo());
@@ -119,7 +121,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             return;
         }
         holder.operatingStatus.setText(activity.getString(R.string.service_operational));
-        holder.operatingStatus.setTextColor(Color.GREEN);
+        holder.operatingStatus.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.GREEN : ContextCompat.getColor(activity, R.color.dark_green));
 
         //Current Bus
         if (i.getCurrentBus().getEstimatedArrival() == null) notArriving(holder.busArrivalNow, holder.wheelchairNow, holder.busTypeNow);
@@ -234,8 +236,8 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             return;
         }
         switch (obj.getLoad()){
-            case CommonEnums.BUS_SEATS_AVAIL: view.setTextColor(Color.GREEN); break;
-            case CommonEnums.BUS_STANDING_AVAIL: view.setTextColor(Color.YELLOW); break;
+            case CommonEnums.BUS_SEATS_AVAIL: view.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.GREEN : ContextCompat.getColor(activity, R.color.dark_green)); break;
+            case CommonEnums.BUS_STANDING_AVAIL: view.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.YELLOW : ContextCompat.getColor(activity, R.color.dark_yellow)); break;
             case CommonEnums.BUS_LIMITED_SEATS: view.setTextColor(Color.RED); break;
             default: view.setTextColor(Color.GRAY); break;
         }
