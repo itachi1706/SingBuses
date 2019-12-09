@@ -16,6 +16,7 @@ import com.itachi1706.busarrivalsg.objects.BusStatus;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
 import java.util.Objects;
 
@@ -25,14 +26,14 @@ import java.util.Objects;
  */
 public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Void, String> {
 
-    private Activity activity;
+    private WeakReference<Activity> actRef;
     private Exception exception = null;
     private FavouritesRecyclerAdapter adapter;
 
     private BusServices[] busObjArr;
 
     public GetBusServicesFavouritesRecycler(Activity activity, FavouritesRecyclerAdapter adapter){
-        this.activity = activity;
+        this.actRef = new WeakReference<>(activity);
         this.adapter = adapter;
     }
 
@@ -61,6 +62,8 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
     }
 
     protected void onPostExecute(String json){
+        Activity activity = actRef.get();
+        if (activity == null) return; // NO-OP
         if (exception != null){
             if (exception instanceof SocketTimeoutException) {
                 Toast.makeText(activity, R.string.toast_message_timeout_request_retry, Toast.LENGTH_SHORT).show();

@@ -14,6 +14,7 @@ import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
 
 /**
@@ -23,14 +24,14 @@ import java.net.SocketTimeoutException;
 public class GetBusServicesHandler extends AsyncTask<String, Void, String> {
 
     private ProgressDialog dialog;
-    private Activity activity;
+    private WeakReference<Activity> actRef;
     private Exception exception = null;
 
     private Handler mHandler;
 
     public GetBusServicesHandler(ProgressDialog dialog, Activity activity, Handler handler){
         this.dialog = dialog;
-        this.activity = activity;
+        this.actRef = new WeakReference<>(activity);
         this.mHandler = handler;
     }
 
@@ -52,12 +53,14 @@ public class GetBusServicesHandler extends AsyncTask<String, Void, String> {
 
     protected void onPostExecute(String json){
         if (exception != null){
+            Activity activity = actRef.get();
+            if (activity == null) return;
             if (exception instanceof SocketTimeoutException) {
                 Toast.makeText(activity, R.string.toast_message_timeout_request, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(activity, exception.getMessage(), Toast.LENGTH_SHORT).show();
             }
-            if (activity != null && !(activity.isFinishing() || activity.isChangingConfigurations()))
+            if (!(activity.isFinishing() || activity.isChangingConfigurations()))
                 dialog.dismiss();
         } else {
             //Go parse it
