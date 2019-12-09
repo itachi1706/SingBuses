@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.google.gson.Gson;
 import com.itachi1706.appupdater.Util.URLHelper;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
@@ -14,6 +16,7 @@ import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSONArray;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
 
 /**
@@ -24,19 +27,21 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
 
     private ProgressDialog progressDialog;
     private BusStopsDB db;
-    private Activity activity;
+    private WeakReference<Activity> actRef;
     private Exception exception = null;
     private SharedPreferences sp;
 
     public GetAllBusStops(ProgressDialog progressDialog, BusStopsDB db, Activity activity, SharedPreferences sp){
         this.progressDialog = progressDialog;
         this.db = db;
-        this.activity = activity;
+        this.actRef = new WeakReference<>(activity);
         this.sp = sp;
     }
 
     @Override
     protected String doInBackground(Integer... skipValues) {
+        Activity activity = actRef.get();
+        if (activity == null) return null;
         String url = "https://api.itachi1706.com/api/busstops.php?api=2";
         String tmp = "";
         URLHelper urlHelper = new URLHelper(url);
@@ -53,7 +58,9 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
         return tmp;
     }
 
-    protected void onPostExecute(String json){
+    protected void onPostExecute(@Nullable String json){
+        Activity activity = actRef.get();
+        if (activity == null || json == null) return;
         if (exception != null){
             if (exception instanceof SocketTimeoutException) {
                 Toast.makeText(activity, R.string.toast_message_timeout_database_query_retry, Toast.LENGTH_SHORT).show();

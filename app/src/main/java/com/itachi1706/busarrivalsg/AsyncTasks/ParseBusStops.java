@@ -7,11 +7,15 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSONArray;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.util.Timings;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -21,13 +25,13 @@ public class ParseBusStops extends AsyncTask<BusStopJSONArray, String, Void> {
 
     private ProgressDialog progressDialog;
     private BusStopsDB db;
-    private Activity activity;
+    private WeakReference<Activity> actRef;
     private SharedPreferences sp;
 
     public ParseBusStops(ProgressDialog progressDialog, BusStopsDB db, Activity activity, SharedPreferences sp){
         this.progressDialog = progressDialog;
         this.db = db;
-        this.activity = activity;
+        this.actRef = new WeakReference<>(activity);
         this.sp = sp;
     }
 
@@ -49,8 +53,9 @@ public class ParseBusStops extends AsyncTask<BusStopJSONArray, String, Void> {
     }
 
     protected void onPostExecute(Void params){
+        @Nullable Activity activity = actRef.get();
         int count = db.getSize();
-        Toast.makeText(activity, activity.getString(R.string.toast_bus_stop_data_parse_success, count), Toast.LENGTH_SHORT).show();
+        if (activity != null) Toast.makeText(activity, activity.getString(R.string.toast_bus_stop_data_parse_success, count), Toast.LENGTH_SHORT).show();
         Log.d("GET-STOPS", "Loaded " + count + " bus stops into the database");
         sp.edit().putBoolean("busDBLoaded", true).apply();
         sp.edit().putLong("busDBTimeUpdated", System.currentTimeMillis()).apply();
