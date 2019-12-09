@@ -5,7 +5,7 @@
     <color name="statusBarColor">@color/green_700</color>
     <color name="primaryDark">@color/green_700</color>
     <color name="primary">@color/green_500</color>
-    <color name="accent">@color/light_green_200</color>
+    <color name="accent">@color/light_green_500</color>
 
     <color name="refresh_progress_1">@color/blue_500</color>
     <color name="refresh_progress_2">@color/green_500</color>
