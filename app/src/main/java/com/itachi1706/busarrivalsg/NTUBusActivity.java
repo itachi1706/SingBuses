@@ -1,7 +1,6 @@
 package com.itachi1706.busarrivalsg;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -49,10 +48,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.itachi1706.appupdater.Util.DeprecationHelper;
-import com.itachi1706.appupdater.Util.URLHelper;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUData;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUPublicBusData;
+import com.itachi1706.busarrivalsg.AsyncTasks.QueryNTUStops;
 import com.itachi1706.busarrivalsg.Services.LocManager;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObjectEstimate;
@@ -60,12 +58,10 @@ import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
-import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBusTimings;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.NTURouteCacher;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -278,105 +274,21 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
                         "Reopen the application afterwards and timing data should appear");
                 result.setVisibility(View.VISIBLE);
                 inProgress.setVisibility(View.GONE);
-            } else new QueryStopAsyncTask(result, inProgress, main, sub).execute(n.getId());
+            } else new QueryNTUStops(this, sub.getText().toString(), (error, resultText, title, subtext) -> {
+                if (error) {
+                    result.setText(resultText);
+                    inProgress.setVisibility(View.GONE);
+                    result.setVisibility(View.VISIBLE);
+                } else {
+                    main.setText(title);
+                    sub.setText(subtext);
+                    result.setText(resultText);
+                    inProgress.setVisibility(View.GONE);
+                    result.setVisibility(View.VISIBLE);
+                }
+            }).execute(n.getId());
         }
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private class QueryStopAsyncTask extends AsyncTask<Integer, Void, Void> {
-
-        private TextView result, title, subtext;
-        private ProgressBar pb;
-
-        QueryStopAsyncTask(TextView result, ProgressBar pb, TextView title, TextView subtext) {
-            this.result = result;
-            this.pb = pb;
-            this.title = title;
-            this.subtext = subtext;
-        }
-
-        @Override
-        protected Void doInBackground(Integer... stopIds) {
-            int stopId = stopIds[0];
-            String url = "https://api.itachi1706.com/api/ntubus.php?busarrival=true&stopid=" + stopId;
-            Log.d(TAG, url);
-            String tmp;
-            try {
-                long start = System.currentTimeMillis();
-                URLHelper urlHelper = new URLHelper(url);
-                tmp = urlHelper.executeString();
-                Log.i(TAG, "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
-            } catch (IOException e) {
-                runOnUiThread(() -> {
-                    // Update error
-                    result.setText("An I/O Exception has occurred. Please try again later\n\n" + e.getLocalizedMessage());
-                    pb.setVisibility(View.GONE);
-                    result.setVisibility(View.VISIBLE);
-                });
-                e.printStackTrace();
-                return null;
-            }
-
-            if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
-                Log.e("NTUBusTimings", "Error JSON: " + tmp);
-                runOnUiThread(() -> {
-                    // Update error
-                    result.setText("An error has occurred retrieving data from the API. Please try again later");
-                    pb.setVisibility(View.GONE);
-                    result.setVisibility(View.VISIBLE);
-                });
-                return null;
-            }
-
-            Gson gson = new Gson();
-            NTUBusTimings t = gson.fromJson(tmp, NTUBusTimings.class);
-
-            // Craft timings screen
-            StringBuilder sb = new StringBuilder();
-            ArrayMap<Integer, String> tmgs = new ArrayMap<>();
-            if (t.getForecast() == null || t.getForecast().length <= 0) sb.append("No Timings found");
-            else {
-                for (NTUBusTimings.Forecast f : t.getForecast()) {
-                    assert f.getRoute() != null;
-                    double sec = f.getForecast_seconds();
-                    String timeString = getRouteColorHtml(f.getRv_id(), f.getRoute().getShort_name()) + ":\t";
-                    if (tmgs.containsKey(f.getRv_id()))
-                        timeString = tmgs.get(f.getRv_id());
-                    if (sec > 60) {
-                        // Call in minutes
-                        int min = (int) (sec / 60);
-                        timeString += min + ((min > 1) ? " mins" : " min");
-                    } else if (sec <= 0) {
-                        timeString += "Arriving";
-                    } else {
-                        int seci = (int) sec;
-                        timeString += seci + ((seci > 1) ? " secs" : " sec");
-                    }
-                    timeString += ", ";
-                    tmgs.put(f.getRv_id(), timeString);
-                }
-
-                if (tmgs.size() > 0) {
-                    for (ArrayMap.Entry<Integer, String> pair : tmgs.entrySet()) {
-                        String ts = pair.getValue().replaceAll(", $", "");
-                        sb.append(ts).append("\n");
-                    }
-                }
-            }
-
-            String parsedString = sb.toString().replace("\t", "&nbsp;&nbsp;").replace("\n", "<br/>");
-
-            runOnUiThread(() -> {
-                // Update basically everything as well
-                title.setText(t.getName());
-                subtext.setText(subtext.getText().toString() + "\nParsed Stop ID: " + t.getId());
-                result.setText(DeprecationHelper.Html.fromHtml(parsedString));
-                pb.setVisibility(View.GONE);
-                result.setVisibility(View.VISIBLE);
-            });
-            return null;
-        }
     }
 
     private void getData(boolean refresh) {
@@ -614,7 +526,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private String getBDirection(int bearing) {
-        String directions[] = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
+        String[] directions = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
         return directions[ (int)Math.round((  ((double) Math.abs(bearing) % 360) / 45)) % 8 ];
     }
 
@@ -626,17 +538,6 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
             case 44481: return Color.parseColor("#964B00");
             case 199179: return Color.parseColor("#800080"); // SBST
             default: return Color.BLACK;
-        }
-    }
-
-    private String getRouteColorHtml(int id, String data) {
-        switch (id) {
-            case 44478: return "<font color=\"red\">" + data + "</font>";
-            case 44479: return "<font color=\"blue\">" + data + "</font>";
-            case 44480: return "<font color=\"#006400\">" + data + "</font>";
-            case 44481: return "<font color=\"#964B00\">" + data + "</font>";
-            case 199179: return "<font color=\"#800080\">" + data + "</font>"; // SBST
-            default: return "<font color=\"black\">" + data + "</font>";
         }
     }
 
