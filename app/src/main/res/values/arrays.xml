@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="dark_mode_selector">
+        <item>Light [BETA]</item>
+        <item>Dark</item>
+        <item>Battery Saver (Default)</item>
+    </string-array>
+    <string-array name="dark_mode_selector_option">
+        <item>light</item>
+        <item>dark</item>
+        <item>batterydefault</item>
+    </string-array>
+</resources>

@@ -11,6 +11,8 @@
             android:defaultValue="true"
             android:key="showFavHint"
             android:summary="Shows tips for your favourites list when you press and hold a bus service" />
+        <ListPreference android:title="Application Theme" android:summary="%s" android:defaultValue="batterydefault" android:entries="@array/dark_mode_selector"
+            android:entryValues="@array/dark_mode_selector_option" android:key="app_theme" />
         <!-- Currently Disabled until we have another companion device supported -->
         <Preference
             android:title="Companion Device"
