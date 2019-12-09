@@ -4,14 +4,19 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.PorterDuff
+import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.itachi1706.appupdater.Util.PrefHelper
+import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.objects.CommonEnums
-
+import java.util.*
 
 
 /**
@@ -72,4 +77,32 @@ object BusesUtil {
     fun pxFromDp(dp: Float, resource: Resources): Float {
         return dp * resource.displayMetrics.density
     }
+
+    fun getOperatorColor(context: Context, operator: String) : Int {
+        return when (operator.toUpperCase(Locale.getDefault())) {
+            OPERATOR_SMRT -> Color.RED
+            OPERATOR_SBST -> Color.MAGENTA
+            OPERATOR_TTS -> if (PrefHelper.isNightModeEnabled(context)) Color.GREEN else ContextCompat.getColor(context, R.color.dark_green)
+            OPERATOR_GAS -> if (PrefHelper.isNightModeEnabled(context)) Color.YELLOW else ContextCompat.getColor(context, R.color.dark_yellow)
+            else -> Color.WHITE
+        }
+    }
+
+    fun applyColorLoad(view: TextView, load: Int) {
+        if (view.text.toString().equals("", ignoreCase = true) || view.getText().toString().equals("-", ignoreCase = true)) {
+            view.setTextColor(Color.GRAY)
+            return
+        }
+        when (load) {
+            CommonEnums.BUS_SEATS_AVAIL -> view.setTextColor(if (PrefHelper.isNightModeEnabled(view.context)) Color.GREEN else ContextCompat.getColor(view.context, R.color.dark_green))
+            CommonEnums.BUS_STANDING_AVAIL -> view.setTextColor(if (PrefHelper.isNightModeEnabled(view.context)) Color.YELLOW else ContextCompat.getColor(view.context, R.color.dark_yellow))
+            CommonEnums.BUS_LIMITED_SEATS -> view.setTextColor(Color.RED)
+            else -> view.setTextColor(Color.GRAY)
+        }
+    }
+
+    private const val OPERATOR_SMRT = "SMRT" // SMRT Buses
+    private const val OPERATOR_SBST = "SBST" // SBS Transit
+    private const val OPERATOR_TTS = "TTS" // Tower Transit Singapore
+    private const val OPERATOR_GAS = "GAS" // Go Ahead Singapore
 }

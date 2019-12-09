@@ -5,7 +5,7 @@
     <color name="statusBarColor">@color/green_700</color>
     <color name="primaryDark">@color/green_700</color>
     <color name="primary">@color/green_500</color>
-    <color name="accent">@color/light_green_200</color>
+    <color name="accent">@color/light_green_500</color>
 
     <color name="refresh_progress_1">@color/blue_500</color>
     <color name="refresh_progress_2">@color/green_500</color>
@@ -17,6 +17,10 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="appcompat_bg_color">#80323232</color>
+
+    <!-- Day Night Mode Colors -->
+    <color name="dark_yellow">#E3BE0E</color>
+    <color name="dark_green">#006400</color>
 
     <!-- General Colors -->
     <!-- RED -->

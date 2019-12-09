@@ -17,6 +17,7 @@ import androidx.preference.PreferenceManager
 import com.itachi1706.appupdater.EasterEggResMultiMusicPrefFragment
 import com.itachi1706.appupdater.SettingsInitializer
 import com.itachi1706.appupdater.Util.DeprecationHelper
+import com.itachi1706.appupdater.Util.PrefHelper
 import com.itachi1706.busarrivalsg.Services.LocManager
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.cepaslib.SettingsHandler
@@ -83,6 +84,8 @@ class MainSettings : AppCompatActivity() {
             }
 
             findPreference<Preference>("location_value")?.setOnPreferenceClickListener { processAdvDevSettingLocation() }
+
+            findPreference<Preference>("app_theme")?.setOnPreferenceChangeListener { _, newValue -> PrefHelper.handleDefaultThemeSwitch(newValue.toString()); true }
         }
 
         private fun updateSummaryDBBus(timeDBUpdateBus: Preference?, dbBus: Long) {

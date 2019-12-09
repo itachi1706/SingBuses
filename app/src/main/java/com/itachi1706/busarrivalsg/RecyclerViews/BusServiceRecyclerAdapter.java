@@ -11,8 +11,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.itachi1706.appupdater.Util.PrefHelper;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
@@ -22,15 +28,10 @@ import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObjectEstimate;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.objects.BusServices;
-import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Kenneth on 31/10/2015.
@@ -72,12 +73,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         BusArrivalArrayObject i = items.get(position);
 
         holder.busOperator.setText(i.getOperator());
-        switch (i.getOperator().toUpperCase()){
-            case "SMRT": holder.busOperator.setTextColor(Color.RED); break;
-            case "SBST": holder.busOperator.setTextColor(Color.MAGENTA); break;
-            case "TTS": holder.busOperator.setTextColor(Color.GREEN); break;
-            case "GAS": holder.busOperator.setTextColor(Color.YELLOW); break;
-        }
+        holder.busOperator.setTextColor(BusesUtil.INSTANCE.getOperatorColor(activity, i.getOperator()));
         holder.busNumber.setText(i.getServiceNo());
 
         if (!i.isSvcStatus()) {
@@ -89,7 +85,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             return;
         }
         holder.operatingStatus.setText(activity.getString(R.string.service_operational));
-        holder.operatingStatus.setTextColor(Color.GREEN);
+        holder.operatingStatus.setTextColor(PrefHelper.isNightModeEnabled(activity) ? Color.GREEN : ContextCompat.getColor(activity, R.color.dark_green));
 
         assert i.getNextBus() != null;
         assert i.getNextBus2() != null;
@@ -110,7 +106,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             else
                 arrivalStatusNow = est + "";
             holder.busArrivalNow.setText(arrivalStatusNow);
-            applyColorLoad(holder.busArrivalNow, i.getNextBus());
+            BusesUtil.INSTANCE.applyColorLoad(holder.busArrivalNow, i.getNextBus().getLoadInt());
             holder.wheelchairNow.setVisibility(View.INVISIBLE);
             if (i.getNextBus().isWheelchairAccessible())
                 holder.wheelchairNow.setVisibility(View.VISIBLE);
@@ -137,7 +133,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             else
                 arrivalStatusNext = est + "";
             holder.busArrivalNext.setText(arrivalStatusNext);
-            applyColorLoad(holder.busArrivalNext, i.getNextBus2());
+            BusesUtil.INSTANCE.applyColorLoad(holder.busArrivalNext, i.getNextBus2().getLoadInt());
             holder.wheelchairNext.setVisibility(View.INVISIBLE);
             if (i.getNextBus2().isWheelchairAccessible())
                 holder.wheelchairNext.setVisibility(View.VISIBLE);
@@ -167,7 +163,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             else
                 arrivalStatusSub = est + "";
             holder.busArrivalSub.setText(arrivalStatusSub);
-            applyColorLoad(holder.busArrivalSub, i.getNextBus3());
+            BusesUtil.INSTANCE.applyColorLoad(holder.busArrivalSub, i.getNextBus3().getLoadInt());
             holder.wheelchairSub.setVisibility(View.INVISIBLE);
             if (i.getNextBus3().isWheelchairAccessible())
                 holder.wheelchairSub.setVisibility(View.VISIBLE);
@@ -196,19 +192,6 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
     @Override
     public int getItemCount() {
         return items.size();
-    }
-
-    private void applyColorLoad(TextView view, BusArrivalArrayObjectEstimate obj){
-        if (view.getText().toString().equalsIgnoreCase("") || view.getText().toString().equalsIgnoreCase("-")) {
-            view.setTextColor(Color.GRAY);
-            return;
-        }
-        switch (obj.getLoadInt()){
-            case CommonEnums.BUS_SEATS_AVAIL: view.setTextColor(Color.GREEN); break;
-            case CommonEnums.BUS_STANDING_AVAIL: view.setTextColor(Color.YELLOW); break;
-            case CommonEnums.BUS_LIMITED_SEATS: view.setTextColor(Color.RED); break;
-            default: view.setTextColor(Color.GRAY); break;
-        }
     }
 
 
