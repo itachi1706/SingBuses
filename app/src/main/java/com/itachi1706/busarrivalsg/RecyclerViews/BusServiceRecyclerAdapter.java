@@ -194,6 +194,10 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         return items.size();
     }
 
+    public BusArrivalArrayObject getItem(int position) {
+        return items.get(position);
+    }
+
 
     class BusServiceViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 

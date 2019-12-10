@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.ArrayMap;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -30,6 +31,7 @@ import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.busarrivalsg.util.SwipeFavouriteCallback;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -63,6 +65,26 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         adapter = new BusServiceRecyclerAdapter(new ArrayList<>(), this, StaticVariables.INSTANCE.useServerTime(sp));
         buses.setAdapter(adapter);
+
+        ItemTouchHelper moveAdapter = new ItemTouchHelper(new SwipeFavouriteCallback(this, new SwipeFavouriteCallback.ISwipeCallback() {
+            @Override public boolean getFavouriteState(int position) { return checkFavouriteStatus(adapter.getItem(position)); }
+            @Override public boolean moveFavourite(int oldPosition, int newPosition) { return false; } // You cannot move here
+            @Override
+            public boolean toggleFavourite(int position) {
+                final BusArrivalArrayObject item = adapter.getItem(position);
+                //Check based on thing and verify
+                BusServices fav = new BusServices();
+                fav.setObtainedNextData(false);
+                fav.setOperator(item.getOperator());
+                fav.setServiceNo(item.getServiceNo());
+                fav.setStopID(item.getStopCode());
+
+                adapter.notifyItemChanged(position); // Reset the item back to the list
+                favouriteOrUnfavourite(fav, item);
+                return false;
+            }
+        }));
+        moveAdapter.attachToRecyclerView(buses);
 
         swipeToRefresh = findViewById(R.id.refresh_swipe);
         if (swipeToRefresh != null) {
@@ -195,19 +217,26 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         if (busStopName != null)
             fav.setStopName(busStopName);
 
-        boolean alrFavourited = false;
         ArrayList<BusServices> exist = BusStorage.getStoredBuses(sp);
+        boolean alrFavourited = checkFavouriteStatus(exist, item);
+
+        addOrRemoveFav(fav, exist, alrFavourited);
+    }
+
+    public boolean checkFavouriteStatus(BusArrivalArrayObject item) {
+        return checkFavouriteStatus(BusStorage.getStoredBuses(sp), item);
+    }
+
+    public boolean checkFavouriteStatus(ArrayList<BusServices> exist, BusArrivalArrayObject item) {
         if (exist != null) {
             //Compare if in favourites already
             for (BusServices s : exist) {
                 if (s.getServiceNo().equals(item.getServiceNo()) && s.getStopID().equals(item.getStopCode())) {
-                    alrFavourited = true;
-                    break;
+                    return true;
                 }
             }
         }
-
-        addOrRemoveFav(fav, exist, alrFavourited);
+        return false;
     }
 
 
