@@ -13,6 +13,7 @@ import com.itachi1706.busarrivalsg.R
  */
 open class SwipeFavouriteCallback(var context: Context, var callback: ISwipeCallback, dragDir: Int = 0) :
         ItemTouchHelper.SimpleCallback(dragDir, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+    constructor(context: Context, callback: ISwipeCallback) : this(context, callback, 0)
 
     private val favourite: Int = Color.GREEN
     private val unfavourite: Int = Color.RED
