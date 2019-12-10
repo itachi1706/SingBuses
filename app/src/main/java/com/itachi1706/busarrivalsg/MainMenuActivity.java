@@ -41,6 +41,8 @@ import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.busarrivalsg.util.SwipeFavouriteCallback;
+import com.itachi1706.busarrivalsg.util.SwipeMoveFavouriteCallback;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -99,25 +101,11 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         adapter = new FavouritesRecyclerAdapter(new ArrayList<>(), this, StaticVariables.INSTANCE.useServerTime(sp));
         favouritesList.setAdapter(adapter);
 
-        ItemTouchHelper moveAdapter = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView,
-                                  RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                final int fromPos = viewHolder.getAdapterPosition();
-                final int toPos = target.getAdapterPosition();
-                // move item in `fromPos` to `toPos` in adapter.
-                return adapter.moveItem(fromPos, toPos);
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-                adapter.removeFavourite(position);
-            }
-
-        });
+        ItemTouchHelper moveAdapter = new ItemTouchHelper(new SwipeMoveFavouriteCallback(this, new SwipeFavouriteCallback.ISwipeCallback() {
+            @Override public boolean getFavouriteState(int position) { return true; } // Always favourited
+            @Override public boolean moveFavourite(int oldPosition, int newPosition) { return adapter.moveItem(oldPosition, newPosition); }
+            @Override public boolean toggleFavourite(int position) { return adapter.removeFavourite(position); }
+        }));
         moveAdapter.attachToRecyclerView(favouritesList);
 
         Log.d("MainMenu", "Checking for app updates");
