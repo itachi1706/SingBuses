@@ -23,7 +23,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
   device-test:
-    runs-on: macOS-latest
+    runs-on: macos-latest
     name: Android Device Test Runner
     steps:
     - name: checkout
@@ -46,31 +46,46 @@ jobs:
         profile: 'pixel_xl'
         arch: x86_64
         script: ./gradlew connectedAndroidTest
-  release:
-    name: Release APK file
-    if: startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: Checkout all submodules
-      uses: textbook/git-checkout-submodule-action@2.0.0
-    - name: set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Copy secure values
-      run: echo $GOOGLE_SERVICES > ./app/google-services.json
-      env:
-        GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
-    - name: Make Gradle executable
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
-    - name: Move APK file to main folder
-      run: mv ./app/build/outputs/apk/debug/app-debug.apk ./SingBuses-debug-gha.apk
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: SingBuses-debug-gha.apk
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  # TODO: Take note https://github.com/actions/create-release
+  #release:
+  #  name: Release APK file
+  #  if: startsWith(github.ref, 'refs/tags/')
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #  - uses: actions/checkout@v1
+  #  - name: Checkout all submodules
+  #    uses: textbook/git-checkout-submodule-action@2.0.0
+  #  - name: set up JDK 1.8
+  #    uses: actions/setup-java@v1
+  #    with:
+  #      java-version: 1.8
+  #  - name: Copy secure values
+  #    run: echo $GOOGLE_SERVICES > ./app/google-services.json
+  #    env:
+  #      GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+  #  - name: Make Gradle executable
+  #    run: chmod +x gradlew
+  #  - name: Build with Gradle
+  #    run: ./gradlew build
+  #  - name: Move APK file to main folder
+  #    run: mv ./app/build/outputs/apk/debug/app-debug.apk ./SingBuses-debug-gha.apk
+  #  - name: Create Release
+  #    id: create_release
+  #   uses: actions/create-release@v1.0.0
+  #    env:
+  #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GH Actions
+  #    with:
+  #      tag_name: ${{ github.ref }}
+  #      release_name: Release ${{ github.ref }}
+  #      draft: false
+  #      prerelease: false
+  #  - name: Upload Release Asset
+  #    id: upload-release-asset 
+  #    uses: actions/upload-release-asset@v1.0.1
+  #    env:
+  #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #    with:
+  #      upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+  #      asset_path: ./SingBuses-debug-gha.apk
+  #      asset_name: SingBuses-debug-gha.apk
+  #      asset_content_type: application/vnd.android.package-archive
