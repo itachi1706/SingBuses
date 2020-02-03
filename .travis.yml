@@ -78,7 +78,7 @@ before_script:
   #- ./gradlew clean # Uncomment to clean cache
   - travis_retry ./gradlew assembleDebug
   - travis_retry ./gradlew assembleDebugAndroidTest
-script: travis_retry travis_wait ./gradlew connectedAndroidTest -x assembleDebug -x assembleDebugAndroidTest
+script: travis_retry ./gradlew connectedAndroidTest -x assembleDebug -x assembleDebugAndroidTest
 after_success:
 - mv ./app/build/outputs/apk/debug/app-debug.apk ./app/build/outputs/apk/debug/SingBuses-debug.apk
 - ls ./app/build/outputs/apk/
