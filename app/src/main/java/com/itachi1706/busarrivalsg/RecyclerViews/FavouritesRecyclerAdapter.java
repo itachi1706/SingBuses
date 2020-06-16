@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.snackbar.Snackbar;
-import com.itachi1706.appupdater.Util.PrefHelper;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
@@ -33,6 +32,7 @@ import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.BusStatus;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.helpers.PrefHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -16,11 +16,11 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import com.itachi1706.appupdater.EasterEggResMultiMusicPrefFragment
 import com.itachi1706.appupdater.SettingsInitializer
-import com.itachi1706.appupdater.Util.DeprecationHelper
-import com.itachi1706.appupdater.Util.PrefHelper
 import com.itachi1706.busarrivalsg.Services.LocManager
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.cepaslib.SettingsHandler
+import com.itachi1706.helperlib.deprecation.HtmlDep
+import com.itachi1706.helperlib.helpers.PrefHelper
 import me.jfenn.attribouter.Attribouter
 import java.util.*
 
@@ -140,7 +140,7 @@ class MainSettings : AppCompatActivity() {
                 message.append(getLocationRawStringData(net))
             }
             AlertDialog.Builder(activity!!).setTitle("Location Data")
-                    .setMessage(DeprecationHelper.Html.fromHtml(message.toString()))
+                    .setMessage(HtmlDep.fromHtml(message.toString()))
                     .setPositiveButton(R.string.dialog_action_positive_close, null).show()
             return true
         }

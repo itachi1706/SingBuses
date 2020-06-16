@@ -9,9 +9,9 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.itachi1706.appupdater.Util.URLHelper;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.helpers.URLHelper;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;

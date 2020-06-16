@@ -8,10 +8,10 @@ import androidx.annotation.Nullable;
 import androidx.collection.ArrayMap;
 
 import com.google.gson.Gson;
-import com.itachi1706.appupdater.Util.DeprecationHelper;
-import com.itachi1706.appupdater.Util.URLHelper;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBusTimings;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.deprecation.HtmlDep;
+import com.itachi1706.helperlib.helpers.URLHelper;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -104,7 +104,7 @@ public class QueryNTUStops extends AsyncTask<Integer, Void, Void> {
 
         activity.runOnUiThread(() -> {
             // Update basically everything as well
-            callback.onComplete(false, DeprecationHelper.Html.fromHtml(parsedString).toString(), t.getName(), originalSubtext + "\nParsed Stop ID: " + t.getId());
+            callback.onComplete(false, HtmlDep.fromHtml(parsedString).toString(), t.getName(), originalSubtext + "\nParsed Stop ID: " + t.getId());
         });
         return null;
     }
