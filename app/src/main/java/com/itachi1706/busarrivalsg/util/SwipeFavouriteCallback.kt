@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.*
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.itachi1706.appupdater.Util.BitmapUtil
 import com.itachi1706.busarrivalsg.R
+import com.itachi1706.helperlib.utils.BitmapUtil
 
 /**
  * Created by Kenneth on 10/12/2019.
@@ -17,8 +17,8 @@ open class SwipeFavouriteCallback(var context: Context, var callback: ISwipeCall
 
     private val favourite: Int = Color.GREEN
     private val unfavourite: Int = Color.RED
-    private val favouriteBitmap: Bitmap = BitmapUtil.getBitmap(context, R.drawable.ic_favourite)
-    private val unfavouriteBitmap: Bitmap = BitmapUtil.getBitmap(context, R.drawable.ic_favourte_off)
+    private val favouriteBitmap: Bitmap = BitmapUtil.getBitmap(context, R.drawable.ic_favourite)!!
+    private val unfavouriteBitmap: Bitmap = BitmapUtil.getBitmap(context, R.drawable.ic_favourte_off)!!
     private val iconColor: Paint = Paint().apply { color = Color.WHITE; colorFilter = PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP) }
 
     interface ISwipeCallback {

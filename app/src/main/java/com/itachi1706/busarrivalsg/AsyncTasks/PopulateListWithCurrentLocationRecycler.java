@@ -14,8 +14,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.itachi1706.appupdater.Util.URLHelper;
-import com.itachi1706.appupdater.Util.ValidationHelper;
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.Fragments.BusStopNearbyFragment;
 import com.itachi1706.busarrivalsg.R;
@@ -23,6 +21,8 @@ import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 import com.itachi1706.busarrivalsg.gsonObjects.Distance;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.helpers.URLHelper;
+import com.itachi1706.helperlib.helpers.ValidationHelper;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
