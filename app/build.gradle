@@ -71,6 +71,7 @@ dependencies {
         transitive = true
     }
     implementation project(':appupdater')
+    implementation 'com.itachi1706.helpers:helperlib:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference:1.1.0'
