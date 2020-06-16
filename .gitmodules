@@ -1,6 +1,3 @@
 [submodule "appupdater"]
 	path = appupdater
 	url = https://github.com/itachi1706/CheesecakeAppUpdater.git
-[submodule "cepaslib"]
-	path = cepaslib
-	url = https://github.com/itachi1706/CheesecakeCEPASReader.git

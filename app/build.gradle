@@ -86,7 +86,7 @@ dependencies {
     implementation 'me.jfenn:Attribouter:0.1.5'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
     testImplementation 'junit:junit:4.12'
-    implementation project(':cepaslib')
+    implementation 'com.itachi1706.cepaslib:cepaslib:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
