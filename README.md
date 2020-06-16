@@ -26,3 +26,6 @@ Releases are located [here](https://github.com/itachi1706/SingBuses/releases)
 This application is not licensed under any open source license as of now until I feel the need to open source it. And the reason I don't feel the need to right now is because its incomplete and the code base probably sucks.
 
 Copyright © 2015 Kenneth Soh, All Rights Reserved
+
+
+This application is also available on [my personal F-Droid repository](https://fdroid.itachi1706.com/) for alternative downloads.
