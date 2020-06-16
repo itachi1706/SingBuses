@@ -70,7 +70,7 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
         transitive = true
     }
-    implementation project(':appupdater')
+    implementation 'com.itachi1706.appupdater:appupdater:2.2.1'
     implementation 'com.itachi1706.helpers:helperlib:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
