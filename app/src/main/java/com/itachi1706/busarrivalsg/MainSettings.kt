@@ -47,7 +47,11 @@ class MainSettings : AppCompatActivity() {
 
             SettingsInitializer().setFullscreen(true).explodeUpdaterSettings(activity, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL,
                     resources.getString(R.string.link_legacy), resources.getString(R.string.link_updates), this)
-            super.addEggMethods(false, null, true) { Attribouter.from(context).show(); true }
+                    .setAboutApp(true) { Attribouter.from(context).show(); true }
+                    .setIssueTracking(true, "https://itachi1706.atlassian.net/browse/SGBUSAND")
+                    .setBugReporting(true, "https://itachi1706.atlassian.net/servicedesk/customer/portal/3")
+                    .explodeInfoSettings(this)
+            super.init()
 
             val favJson = findPreference<Preference>("fav_json")
             favJson?.setOnPreferenceClickListener {
