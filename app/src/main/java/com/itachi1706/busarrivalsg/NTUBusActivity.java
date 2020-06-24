@@ -115,7 +115,6 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewAndVie
 
         // Init Map
         mapView.onCreate(savedInstanceState);
-        //mapView.getMapAsync(this);
         new OnMapViewAndViewReadyListener(mapView, this);
         Log.i(TAG, "Creating Map");
 

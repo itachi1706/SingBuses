@@ -101,7 +101,6 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewAndViewR
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mapView.onCreate(savedInstanceState);
-        //mapView.getMapAsync(this);
         new OnMapViewAndViewReadyListener(mapView, this);
     }
 
