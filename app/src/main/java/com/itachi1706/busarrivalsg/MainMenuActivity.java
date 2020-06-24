@@ -27,9 +27,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.itachi1706.appupdater.AppUpdateInitializer;
 import com.itachi1706.appupdater.object.CAAnalytics;
 import com.itachi1706.appupdater.utils.AnalyticsHelper;
@@ -47,8 +47,6 @@ import com.itachi1706.helperlib.helpers.ConnectivityHelper;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import io.fabric.sdk.android.Fabric;
-
 public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     //Android Stuff
@@ -63,8 +61,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric fabric = new Fabric.Builder(this).kits(new Crashlytics()).debuggable(BuildConfig.DEBUG).build();
-        if (!BuildConfig.DEBUG) Fabric.with(fabric);
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG);
         setContentView(R.layout.activity_main_menu_recycler);
 
         fab = findViewById(R.id.add_fab);

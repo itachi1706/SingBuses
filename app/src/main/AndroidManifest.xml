@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- Receives the intent when boot completes -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- For getting your current location pre-GPS (so that you don't need GPS to run) -->
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -32,9 +33,6 @@
                 android:resource="@xml/static_shortcuts" />
         </activity>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="4a76e5bed29f3c6bc0d8e90c16212c07cb8efbc0" />
         <meta-data
             android:name="android.allow_multiple_resumed_activities"
             android:value="true" />
