@@ -38,7 +38,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
@@ -60,6 +59,7 @@ import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.NTURouteCacher;
+import com.itachi1706.busarrivalsg.util.OnMapViewAndViewReadyListener;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+public class NTUBusActivity extends AppCompatActivity implements OnMapViewAndViewReadyListener.OnGlobalLayoutAndMapReadyListener, GoogleMap.OnInfoWindowClickListener {
 
     Switch campusRed, campusBlue, campusRider, campusWeekend, traffic, sbs;
     MapView mapView;
@@ -115,7 +115,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapReadyCallb
 
         // Init Map
         mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+        //mapView.getMapAsync(this);
+        new OnMapViewAndViewReadyListener(mapView, this);
         Log.i(TAG, "Creating Map");
 
         trafficEnabled = traffic.isChecked();

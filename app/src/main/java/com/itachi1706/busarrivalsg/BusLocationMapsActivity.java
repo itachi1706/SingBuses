@@ -11,9 +11,13 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -23,15 +27,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.Services.LocManager;
 import com.itachi1706.busarrivalsg.objects.CommonEnums;
+import com.itachi1706.busarrivalsg.util.OnMapAndViewReadyListener;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-
 @Deprecated
-public class BusLocationMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class BusLocationMapsActivity extends FragmentActivity implements OnMapAndViewReadyListener.OnGlobalLayoutAndMapReadyListener {
 
     private GoogleMap mMap;
 
@@ -79,7 +79,7 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapRe
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) new OnMapAndViewReadyListener(mapFragment, this);
     }
 
 
