@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -48,6 +49,8 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+
+    static { AppCompatDelegate.setCompatVectorFromResourcesEnabled(true); }
 
     //Android Stuff
     private TextView syncState;
