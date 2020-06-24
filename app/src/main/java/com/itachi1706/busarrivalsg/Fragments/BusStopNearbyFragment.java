@@ -42,7 +42,7 @@ import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
-import com.itachi1706.busarrivalsg.util.OnMapViewAndViewReadyListener;
+import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ import java.util.HashMap;
  * Created by Kenneth on 5/8/2018.
  * for com.itachi1706.busarrivalsg.Fragments in SingBuses
  */
-public class BusStopNearbyFragment extends Fragment implements OnMapViewAndViewReadyListener.OnGlobalLayoutAndMapReadyListener, GoogleMap.OnInfoWindowClickListener {
+public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyListener.OnGlobalMapReadyListener, GoogleMap.OnInfoWindowClickListener {
 
     RecyclerView result;
 
@@ -101,7 +101,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewAndViewR
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mapView.onCreate(savedInstanceState);
-        new OnMapViewAndViewReadyListener(mapView, this);
+        new OnMapViewReadyListener(mapView, this);
     }
 
     @Override

@@ -33,10 +33,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.Services.LocManager;
 import com.itachi1706.busarrivalsg.objects.CommonEnums;
-import com.itachi1706.busarrivalsg.util.OnMapAndViewReadyListener;
+import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
-public class BusLocationMapsDialogFragment extends DialogFragment implements OnMapAndViewReadyListener.OnGlobalLayoutAndMapReadyListener {
+public class BusLocationMapsDialogFragment extends DialogFragment implements OnMapViewReadyListener.OnGlobalMapReadyListener {
 
     private GoogleMap mMap;
 
@@ -98,7 +98,7 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        new OnMapAndViewReadyListener(mapFragment, this);
+        new OnMapViewReadyListener(mapFragment, this);
         return view;
     }
 

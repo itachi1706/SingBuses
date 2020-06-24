@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.itachi1706.busarrivalsg.util
 
 import android.view.View
 import android.view.ViewTreeObserver
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 
 /**
- * Repurposed by Kenneth on 24/6/2020.
+ * Repurposed and Modified by Kenneth on 24/6/2020.
  * for com.itachi1706.busarrivalsg.util in SingBuses
  */
 
@@ -33,20 +33,20 @@ import com.google.android.gms.maps.SupportMapFragment
  * invoke any method on the GoogleMap that also requires the View to have finished layout
  * (ie. anything that needs to know the View's true size like snapshotting).
  */
-class OnMapAndViewReadyListener(private val mapFragment: SupportMapFragment, private val toBeNotified: OnGlobalLayoutAndMapReadyListener) : ViewTreeObserver.OnGlobalLayoutListener, OnMapReadyCallback {
-    private val mapView: View? = mapFragment.view
+class OnMapViewReadyListener(private val toBeNotified: OnGlobalMapReadyListener, private val mapView: View?) : ViewTreeObserver.OnGlobalLayoutListener, OnMapReadyCallback {
+    private var frag: SupportMapFragment? = null
+    private var mapViewAsync: MapView? = null
+
+    constructor(mapFragment: SupportMapFragment, toBeNotified: OnGlobalMapReadyListener) : this(toBeNotified, mapFragment.view) { frag = mapFragment; registerListeners() }
+    constructor(mView: MapView, toBeNotified: OnGlobalMapReadyListener) : this(toBeNotified, mView) { mapViewAsync = mView; registerListeners() }
 
     private var isViewReady = false
     private var isMapReady = false
     private var map: GoogleMap? = null
 
-    /** A listener that needs to wait for both the GoogleMap and the View to be initialized.  */
-    interface OnGlobalLayoutAndMapReadyListener {
+    /** A listener that needs to wait for both the GoogleMap and the View to be initialized */
+    interface OnGlobalMapReadyListener {
         fun onMapReady(googleMap: GoogleMap?)
-    }
-
-    init {
-        registerListeners()
     }
 
     private fun registerListeners() {
@@ -60,7 +60,8 @@ class OnMapAndViewReadyListener(private val mapFragment: SupportMapFragment, pri
         }
 
         // GoogleMap. Note if the GoogleMap is already ready it will still fire the callback later.
-        mapFragment.getMapAsync(this)
+        if (frag !== null) frag?.getMapAsync(this)
+        else if (mapViewAsync !== null) mapViewAsync?.getMapAsync(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {

@@ -59,7 +59,7 @@ import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.NTURouteCacher;
-import com.itachi1706.busarrivalsg.util.OnMapViewAndViewReadyListener;
+import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-public class NTUBusActivity extends AppCompatActivity implements OnMapViewAndViewReadyListener.OnGlobalLayoutAndMapReadyListener, GoogleMap.OnInfoWindowClickListener {
+public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyListener.OnGlobalMapReadyListener, GoogleMap.OnInfoWindowClickListener {
 
     Switch campusRed, campusBlue, campusRider, campusWeekend, traffic, sbs;
     MapView mapView;
@@ -115,7 +115,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewAndVie
 
         // Init Map
         mapView.onCreate(savedInstanceState);
-        new OnMapViewAndViewReadyListener(mapView, this);
+        new OnMapViewReadyListener(mapView, this);
         Log.i(TAG, "Creating Map");
 
         trafficEnabled = traffic.isChecked();

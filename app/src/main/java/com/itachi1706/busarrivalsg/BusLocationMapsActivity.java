@@ -27,11 +27,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.Services.LocManager;
 import com.itachi1706.busarrivalsg.objects.CommonEnums;
-import com.itachi1706.busarrivalsg.util.OnMapAndViewReadyListener;
+import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 
+/**
+ * @deprecated Use {@link BusLocationMapsDialogFragment} instead
+ */
 @Deprecated
-public class BusLocationMapsActivity extends FragmentActivity implements OnMapAndViewReadyListener.OnGlobalLayoutAndMapReadyListener {
+public class BusLocationMapsActivity extends FragmentActivity implements OnMapViewReadyListener.OnGlobalMapReadyListener {
 
     private GoogleMap mMap;
 
@@ -79,7 +82,7 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapAn
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        if (mapFragment != null) new OnMapAndViewReadyListener(mapFragment, this);
+        if (mapFragment != null) new OnMapViewReadyListener(mapFragment, this);
     }
 
 
