@@ -49,7 +49,7 @@ class OnMapViewAndViewReadyListener(private val mapView: MapView, private val to
 
     private fun registerListeners() {
         // View layout.
-        if (mapView?.width != 0 && mapView?.height != 0) {
+        if (mapView.width != 0 && mapView.height != 0) {
             // View has already completed layout.
             isViewReady = true
         } else {
@@ -71,7 +71,7 @@ class OnMapViewAndViewReadyListener(private val mapView: MapView, private val to
     // We use the new method when supported
     override fun onGlobalLayout() {
         // Remove our listener.
-        mapView?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+        mapView.viewTreeObserver?.removeOnGlobalLayoutListener(this)
         isViewReady = true
         fireCallbackIfReady()
     }
