@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -43,6 +42,7 @@ import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
+import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ import java.util.HashMap;
  * Created by Kenneth on 5/8/2018.
  * for com.itachi1706.busarrivalsg.Fragments in SingBuses
  */
-public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyListener.OnGlobalMapReadyListener, GoogleMap.OnInfoWindowClickListener {
 
     RecyclerView result;
 
@@ -101,7 +101,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapReadyCallbac
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+        new OnMapViewReadyListener(mapView, this);
     }
 
     @Override
