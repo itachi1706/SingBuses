@@ -43,7 +43,7 @@ class MainSettings : AppCompatActivity() {
 
             val sp = PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
 
-            SettingsHandler(activity!!).initSettings(this)
+            SettingsHandler(requireActivity()).initSettings(this)
 
             SettingsInitializer().setFullscreen(true).explodeUpdaterSettings(activity, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL,
                     resources.getString(R.string.link_legacy), resources.getString(R.string.link_updates), this)
@@ -57,7 +57,7 @@ class MainSettings : AppCompatActivity() {
             val favJson = findPreference<Preference>("fav_json")
             favJson?.setOnPreferenceClickListener {
                 val json = sp.getString("stored", "No Favourites")
-                AlertDialog.Builder(activity!!).setMessage(json).setTitle("Favourites JSON String").setPositiveButton("Close", null).show()
+                AlertDialog.Builder(requireActivity()).setMessage(json).setTitle("Favourites JSON String").setPositiveButton("Close", null).show()
                 true
             }
 
@@ -68,7 +68,7 @@ class MainSettings : AppCompatActivity() {
             findPreference<Preference>("companionDevice")?.setOnPreferenceChangeListener { _, o ->
                 val companion = o as String
                 Log.d("DEBUG", "Companion: $companion")
-                fragmentManager!!.beginTransaction().replace(android.R.id.content, GeneralPreferenceFragment()).commit()
+                parentFragmentManager.beginTransaction().replace(android.R.id.content, GeneralPreferenceFragment()).commit()
                 true
             }
 
@@ -119,12 +119,12 @@ class MainSettings : AppCompatActivity() {
         }
 
         private fun processAdvDevSettingLocation(): Boolean {
-            if (ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                AlertDialog.Builder(activity!!).setTitle("Location Permission not granted")
+            if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                AlertDialog.Builder(requireActivity()).setTitle("Location Permission not granted")
                         .setMessage("Location permission is not granted. Enable from the App Settings page or by scanning for nearby bus stops")
                         .setNeutralButton(R.string.dialog_action_neutral_app_settings) { _, _ ->
                             val permIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                            val packageURI = Uri.parse("package:" + activity!!.packageName)
+                            val packageURI = Uri.parse("package:" + requireActivity().packageName)
                             permIntent.data = packageURI
                             startActivity(permIntent)
                         }.setPositiveButton(R.string.dialog_action_positive_close, null).show()
@@ -144,7 +144,7 @@ class MainSettings : AppCompatActivity() {
                 message.append("<b>Mobile Network Data</b><br>")
                 message.append(getLocationRawStringData(net))
             }
-            AlertDialog.Builder(activity!!).setTitle("Location Data")
+            AlertDialog.Builder(requireActivity()).setTitle("Location Data")
                     .setMessage(HtmlDep.fromHtml(message.toString()))
                     .setPositiveButton(R.string.dialog_action_positive_close, null).show()
             return true
