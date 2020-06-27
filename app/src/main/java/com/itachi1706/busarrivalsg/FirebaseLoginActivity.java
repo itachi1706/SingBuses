@@ -2,18 +2,18 @@ package com.itachi1706.busarrivalsg;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -28,6 +28,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.itachi1706.helperlib.helpers.LogHelper;
 
 public class FirebaseLoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -110,7 +111,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            Log.d(TAG, "Sign In Result:" + result.isSuccess());
+            LogHelper.d(TAG, "Sign In Result:" + result.isSuccess());
             if (result.isSuccess()) {
                 // Signed in successfully, show authenticated UI.
                 GoogleSignInAccount acct = result.getSignInAccount();
@@ -123,7 +124,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        LogHelper.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         progress.setVisibility(View.VISIBLE);
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -134,12 +135,12 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
     private void processSignIn(String provider, Task<AuthResult> task) {
         if (task.isSuccessful()) {
             // Sign in success, update UI with the signed-in user's information
-            Log.d(TAG, "signIn" + provider + ":success");
+            LogHelper.d(TAG, "signIn" + provider + ":success");
             FirebaseUser user = mAuth.getCurrentUser();
             updateUI(user, true);
         } else {
             // If sign in fails, display a message to the user.
-            Log.w(TAG, "signIn" + provider + ":failure", task.getException());
+            LogHelper.w(TAG, "signIn" + provider + ":failure", task.getException());
             Toast.makeText(getApplicationContext(), "Authentication failed.",
                     Toast.LENGTH_SHORT).show();
             updateUI(null);
@@ -181,7 +182,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        LogHelper.d(TAG, "onConnectionFailed:" + connectionResult);
         if (mAuth.getCurrentUser() == null)
             new AlertDialog.Builder(this).setTitle("Unable to connect to Google Servers")
                     .setMessage("We are unable to connect to Google Servers to sign you in, therefore this utility cannot be used")

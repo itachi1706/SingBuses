@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,7 @@ import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.BusStatus;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.helpers.LogHelper;
 import com.itachi1706.helperlib.helpers.PrefHelper;
 
 import java.util.ArrayList;
@@ -297,7 +297,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         public void onClick(View v) {
             int position = this.getLayoutPosition();
             final BusServices item = items.get(position);
-            Log.d("Size", "" + items.size());
+            LogHelper.d("Size", "" + items.size());
             Intent serviceIntent = new Intent(activity, BusServicesAtStopRecyclerActivity.class);
             serviceIntent.putExtra("stopCode", item.getStopID());
             if (item.getStopName() != null)

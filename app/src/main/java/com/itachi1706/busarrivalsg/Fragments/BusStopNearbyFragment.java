@@ -13,7 +13,6 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +42,7 @@ import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
+import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
         View v  = inflater.inflate(R.layout.fragment_bus_stops_nearby, container, false);
 
         if (getActivity() == null) {
-            Log.e(TAG, "No activity found");
+            LogHelper.e(TAG, "No activity found");
             return v;
         }
 
@@ -185,7 +185,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "Google Map Ready");
+        LogHelper.d(TAG, "Google Map Ready");
         mMap = googleMap;
         mMap.setTrafficEnabled(true);
         checkGpsForCurrentLocation();
@@ -208,17 +208,17 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
             Location myLoc = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
             if (myLoc == null) return;
             LatLng myLatLng = new LatLng(myLoc.getLatitude(), myLoc.getLongitude());
-            Log.d("NearbyFrag", "animateCamera:onStart");
+            LogHelper.d("NearbyFrag", "animateCamera:onStart");
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 17), new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
-                    Log.d("NearbyFrag", "animateCamera:onFinish");
+                    LogHelper.d("NearbyFrag", "animateCamera:onFinish");
                     isAnimating = false;
                 }
 
                 @Override
                 public void onCancel() {
-                    Log.d("NearbyFrag", "animateCamera:onCancel");
+                    LogHelper.d("NearbyFrag", "animateCamera:onCancel");
                     isAnimating = false;
                 }
             });
@@ -227,7 +227,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Log.d(TAG, "Marker Info Clicked (" + marker.getTitle() + ")");
+        LogHelper.d(TAG, "Marker Info Clicked (" + marker.getTitle() + ")");
         BusStopJSON stop = markerMap.get(marker);
         adapter.handleClick(getContext(), stop);
     }

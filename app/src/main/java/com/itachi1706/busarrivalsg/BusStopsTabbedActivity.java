@@ -11,24 +11,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.Fragments.BusStopNearbyFragment;
 import com.itachi1706.busarrivalsg.Fragments.BusStopSearchFragment;
 import com.itachi1706.busarrivalsg.Services.LocManager;
+import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.util.Objects;
 
@@ -106,7 +107,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
     }
 
     private void requestGpsPermission(final int code) {
-        Log.w(LocManager.TAG, "GPS permission is not granted. Requesting permission");
+        LogHelper.w(LocManager.TAG, "GPS permission is not granted. Requesting permission");
         final String[] permissions = new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION};
 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -157,13 +158,13 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != RC_HANDLE_ACCESS_FINE_LOCATION && requestCode != RC_HANDLE_ACCESS_FINE_LOCATION_INIT) {
-            Log.d(LocManager.TAG, "Got unexpected permission result: " + requestCode);
+            LogHelper.d(LocManager.TAG, "Got unexpected permission result: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(LocManager.TAG, "Location permission granted - initialize the gps source");
+            LogHelper.d(LocManager.TAG, "Location permission granted - initialize the gps source");
             // we have permission
             initLocationManager();
 
@@ -173,7 +174,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
             return;
         }
 
-        Log.e(LocManager.TAG, "Permission not granted: results len = " + grantResults.length +
+        LogHelper.e(LocManager.TAG, "Permission not granted: results len = " + grantResults.length +
                 " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
         final Activity thisActivity = this;
 
@@ -205,10 +206,10 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
 
     private void hideSoftKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        Log.i("IMM", "Attempting to hide keyboard");
+        LogHelper.i("IMM", "Attempting to hide keyboard");
 
         if(imm != null && getCurrentFocus() != null && (imm.isActive() || imm.isAcceptingText())) { // verify if the soft keyboard is open
-            Log.i("IMM", "Hiding Keyboard");
+            LogHelper.i("IMM", "Hiding Keyboard");
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
     }

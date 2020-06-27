@@ -1,6 +1,6 @@
 package com.itachi1706.busarrivalsg.util;
 
-import android.util.Log;
+import com.itachi1706.helperlib.helpers.LogHelper;
 
 /**
  * Created by Kenneth on 7/10/2016.
@@ -20,19 +20,19 @@ public class Timings {
 
     public void start() {
         this.start = System.currentTimeMillis();
-        if (this.verbose) Log.i(tag, "Started timing on " + start);
+        if (this.verbose) LogHelper.i(tag, "Started timing on " + start);
     }
 
     public boolean end() {
         if (start == -999) {
-            Log.e(tag, "Cannot end timing without starting it!");
+            LogHelper.e(tag, "Cannot end timing without starting it!");
             return false;
         }
         this.end = System.currentTimeMillis();
         this.duration = this.end - this.start;
-        if (this.verbose) Log.i(tag, "Ended timing on " + end);
+        if (this.verbose) LogHelper.i(tag, "Ended timing on " + end);
 
-        Log.i(tag, "Process finished in " + this.duration + " ms");
+        LogHelper.i(tag, "Process finished in " + this.duration + " ms");
         return true;
     }
 

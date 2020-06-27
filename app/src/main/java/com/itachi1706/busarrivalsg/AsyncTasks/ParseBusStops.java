@@ -4,16 +4,16 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
+import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSONArray;
-import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.util.Timings;
+import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.lang.ref.WeakReference;
 
@@ -56,10 +56,10 @@ public class ParseBusStops extends AsyncTask<BusStopJSONArray, String, Void> {
         @Nullable Activity activity = actRef.get();
         int count = db.getSize();
         if (activity != null) Toast.makeText(activity, activity.getString(R.string.toast_bus_stop_data_parse_success, count), Toast.LENGTH_SHORT).show();
-        Log.d("GET-STOPS", "Loaded " + count + " bus stops into the database");
+        LogHelper.d("GET-STOPS", "Loaded " + count + " bus stops into the database");
         sp.edit().putBoolean("busDBLoaded", true).apply();
         sp.edit().putLong("busDBTimeUpdated", System.currentTimeMillis()).apply();
         progressDialog.dismiss();
-        Log.d("INIT-1", "Task Complete");
+        LogHelper.d("INIT-1", "Task Complete");
     }
 }

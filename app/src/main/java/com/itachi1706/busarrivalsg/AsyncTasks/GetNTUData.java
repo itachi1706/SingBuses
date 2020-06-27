@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -15,6 +14,7 @@ import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 import com.itachi1706.busarrivalsg.util.NTURouteCacher;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.helpers.LogHelper;
 import com.itachi1706.helperlib.helpers.URLHelper;
 
 import java.io.IOException;
@@ -63,19 +63,19 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
             }
         }
         String url = "https://api.itachi1706.com/api/ntubus.php?route=" + routeString.toString() + "&update=" + update;
-        Log.d(TAG, url);
+        LogHelper.d(TAG, url);
         String tmp;
         try {
             long start = System.currentTimeMillis();
             URLHelper urlHelper = new URLHelper(url);
             tmp = urlHelper.executeString();
-            Log.i(TAG, "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
+            LogHelper.i(TAG, "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
         } catch (IOException e) {
             except = e;
             return 1;
         }
 
-        Log.d(TAG, tmp);
+        LogHelper.d(TAG, tmp);
         if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
             except = new Exception(mActivity.getResources().getString(R.string.toast_message_invalid_json));
             return 2;
@@ -111,7 +111,7 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
     protected void onPostExecute(Integer errorCode) {
         Context context = activityRef.get();
         if (except != null && errorCode != 0) {
-            Log.e(TAG, "Exception occurred (" + except.getMessage() + ")");
+            LogHelper.e(TAG, "Exception occurred (" + except.getMessage() + ")");
             if (except instanceof SocketTimeoutException) {
                 Toast.makeText(context, "NTU API did not respond in a timely manner", Toast.LENGTH_SHORT).show();
             } else {
