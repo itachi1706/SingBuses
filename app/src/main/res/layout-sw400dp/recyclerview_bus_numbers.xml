@@ -127,7 +127,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvBusService"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/tvBusTypeNow"
         android:layout_toStartOf="@+id/ivWheelchairNow"
@@ -140,7 +140,7 @@
         android:layout_below="@+id/tvBusService"
         android:id="@+id/tvBusTypeNext"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:layout_toStartOf="@+id/ivWheelchairNext"
         android:layout_toLeftOf="@+id/ivWheelchairNext"
         android:text="@string/label_bus_type_placeholder" />
@@ -151,7 +151,7 @@
         android:layout_below="@+id/tvBusService"
         android:id="@+id/tvBusTypeSub"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:layout_toStartOf="@+id/ivWheelchairSub"
         android:layout_toLeftOf="@+id/ivWheelchairSub"
         android:text="@string/label_bus_type_placeholder" />
