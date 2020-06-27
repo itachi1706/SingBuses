@@ -1,10 +1,10 @@
 package com.itachi1706.busarrivalsg.util
 
 import android.content.Context
-import android.util.Log
 import androidx.annotation.Nullable
 import com.google.gson.Gson
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus
+import com.itachi1706.helperlib.helpers.LogHelper
 import java.io.*
 import java.util.*
 
@@ -32,7 +32,7 @@ class NTURouteCacher(private val mContext: Context) {
         for (r in routes) {
             val f = getFileObject(r.toString())
             if (f.exists()) f.delete()
-            Log.i(TAG, "Cleared cache file for Route " + r)
+            LogHelper.i(TAG, "Cleared cache file for Route " + r)
         }
     }
 
@@ -42,7 +42,7 @@ class NTURouteCacher(private val mContext: Context) {
         if (!f.exists()) return false
 
         val lastModified = Date(f.lastModified())
-        Log.i(TAG, "Found cache for Route " + routeCode + ", last updated on " + lastModified.toString())
+        LogHelper.i(TAG, "Found cache for Route " + routeCode + ", last updated on " + lastModified.toString())
 
         // Check if greater than cache (1 week)
         val currentTime = System.currentTimeMillis()
@@ -81,15 +81,15 @@ class NTURouteCacher(private val mContext: Context) {
             fis.close()
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
-            Log.e(TAG, "Cannot parse file, assuming corrupted")
+            LogHelper.e(TAG, "Cannot parse file, assuming corrupted")
             return null
         } catch (e: IOException) {
             e.printStackTrace()
-            Log.e(TAG, "Cannot parse file, assuming corrupted")
+            LogHelper.e(TAG, "Cannot parse file, assuming corrupted")
             return null
         }
 
-        Log.i(TAG, "Loaded $routeCode from cache")
+        LogHelper.i(TAG, "Loaded $routeCode from cache")
         return sb.toString()
     }
 
@@ -102,7 +102,7 @@ class NTURouteCacher(private val mContext: Context) {
     private fun writeCachedRoute(routeCode: String, routeData: String): Boolean {
         val f = getFileObject(routeCode)
         if (f.exists() && !f.delete()) {
-            Log.e(TAG, "Unable to remove old cache. Not proceeding")
+            LogHelper.e(TAG, "Unable to remove old cache. Not proceeding")
             return false
         }
 
@@ -112,15 +112,15 @@ class NTURouteCacher(private val mContext: Context) {
             fos.close()
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
-            Log.e(TAG, "Cannot write cache, assuming cache write fail")
+            LogHelper.e(TAG, "Cannot write cache, assuming cache write fail")
             return false
         } catch (e: IOException) {
             e.printStackTrace()
-            Log.e(TAG, "IO Exception writing cache, assuming write fail")
+            LogHelper.e(TAG, "IO Exception writing cache, assuming write fail")
             return false
         }
 
-        Log.i(TAG, "Wrote $routeCode to cache")
+        LogHelper.i(TAG, "Wrote $routeCode to cache")
         return true
     }
 

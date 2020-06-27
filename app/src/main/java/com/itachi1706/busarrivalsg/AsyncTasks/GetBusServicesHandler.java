@@ -6,11 +6,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.helpers.LogHelper;
 import com.itachi1706.helperlib.helpers.URLHelper;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class GetBusServicesHandler extends AsyncTask<String, Void, String> {
         String url = "https://api.itachi1706.com/api/busarrival.php?BusStopCode=" + busCode + "&api=2";
         String tmp = "";
 
-        Log.d("GET-BUS-SERVICE", url);
+        LogHelper.d("GET-BUS-SERVICE", url);
         try {
             URLHelper urlHelper = new URLHelper(url);
             tmp = urlHelper.executeString();

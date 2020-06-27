@@ -2,7 +2,6 @@ package com.itachi1706.busarrivalsg.AsyncTasks;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -13,6 +12,7 @@ import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.BusStatus;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.helpers.LogHelper;
 import com.itachi1706.helperlib.helpers.URLHelper;
 
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
         String tmp = "";
         URLHelper urlHelper = new URLHelper(url);
 
-        Log.d("GET-FAV-BUS-SERVICE", url);
+        LogHelper.d("GET-FAV-BUS-SERVICE", url);
         try {
             tmp = urlHelper.executeString();
         } catch (IOException e) {
@@ -88,7 +88,7 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
             if (!jsonError && (mainArrs[0] == null || mainArrs[0].getServices() == null)) jsonError = true;
 
             if (jsonError){
-                Log.e("FAV-GET", "Retrying...");
+                LogHelper.e("FAV-GET", "Retrying...");
                 new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObjArr);
                 return;
             }
@@ -113,7 +113,7 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
                 }
 
                 if (busObj == null) {
-                    Log.e("GET-FAV-BUS-SERVICE", "Cannot find bus object. Something went wrong!");
+                    LogHelper.e("GET-FAV-BUS-SERVICE", "Cannot find bus object. Something went wrong!");
                     continue;
                 }
 

@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,6 +60,7 @@ import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.NTURouteCacher;
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -116,7 +116,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
         // Init Map
         mapView.onCreate(savedInstanceState);
         new OnMapViewReadyListener(mapView, this);
-        Log.i(TAG, "Creating Map");
+        LogHelper.i(TAG, "Creating Map");
 
         trafficEnabled = traffic.isChecked();
         traffic.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -197,7 +197,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
                 finish();
                 return true;
             case R.id.refresh:
-                Log.i(TAG, "Manually refreshing bus data at " + StaticVariables.INSTANCE.convertDateToString(new Date(System.currentTimeMillis())));
+                LogHelper.i(TAG, "Manually refreshing bus data at " + StaticVariables.INSTANCE.convertDateToString(new Date(System.currentTimeMillis())));
                 getData(true);
                 return true;
             default:
@@ -210,7 +210,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "onMapReady()");
+        LogHelper.d(TAG, "onMapReady()");
         mMap = googleMap;
         mMap.setTrafficEnabled(trafficEnabled);
         checkIfYouHaveGpsPermissionForThis();
@@ -220,7 +220,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
         settings.setMapToolbarEnabled(false);
         mapReady = true;
 
-        Log.d(TAG, "Map Created");
+        LogHelper.d(TAG, "Map Created");
 
         // Enable all toggles
         campusWeekend.setEnabled(true);
@@ -335,7 +335,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
     }
 
     private void requestGpsPermission() {
-        Log.w(LocManager.TAG, "GPS permission is not granted. Requesting permission");
+        LogHelper.w(LocManager.TAG, "GPS permission is not granted. Requesting permission");
         final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -355,20 +355,20 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode != RC_HANDLE_ACCESS_FINE_LOCATION) {
-            Log.d(LocManager.TAG, "Got unexpected permission result: " + requestCode);
+            LogHelper.d(LocManager.TAG, "Got unexpected permission result: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(LocManager.TAG, "Location permission granted - enabling my location");
+            LogHelper.d(LocManager.TAG, "Location permission granted - enabling my location");
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mMap.setMyLocationEnabled(true);
             }
             return;
         }
 
-        Log.e(LocManager.TAG, "Permission not granted: results len = " + grantResults.length +
+        LogHelper.e(LocManager.TAG, "Permission not granted: results len = " + grantResults.length +
                 " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
         Toast.makeText(this, "No Permission for current location", Toast.LENGTH_SHORT).show();
     }
@@ -377,7 +377,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
     public void onInfoWindowClick(Marker marker) {
         if (marker.getTag() == null) return;
         Object type = marker.getTag();
-        Log.d("NTU-BUS-MAP", "Indo clicked of " + type.getClass().toString());
+        LogHelper.d("NTU-BUS-MAP", "Indo clicked of " + type.getClass().toString());
         if (type instanceof BusStopJSON) {
             BusStopJSON json = (BusStopJSON) type;
             json.getBusStopCode();
@@ -400,7 +400,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
     private boolean shouldAutoRefresh = false;
     public static final int REFRESH_TASK = 3000;
     private Runnable refreshTask = () -> {
-        Log.i(TAG, "Auto-refreshing bus data at " + StaticVariables.INSTANCE.convertDateToString(new Date(System.currentTimeMillis())));
+        LogHelper.i(TAG, "Auto-refreshing bus data at " + StaticVariables.INSTANCE.convertDateToString(new Date(System.currentTimeMillis())));
         getData(true);
     };
 
@@ -477,7 +477,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
                             polylineOptions.color(getRouteColor(r.getId()));
                             mMap.addPolyline(polylineOptions);
 
-                            Log.i(TAG, "Generated " + r.getRoutename());
+                            LogHelper.i(TAG, "Generated " + r.getRoutename());
                         }
                     }
                 }
@@ -580,7 +580,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
                             .title(node.getDescription() + " (" + node.getRoadName() + ")")
                             .snippet("Bus Svcs: " + services)
                             .icon(stop)).setTag(node);
-                    Log.i(TAG, "Generated Public Bus Stops");
+                    LogHelper.i(TAG, "Generated Public Bus Stops");
                 }
             } else {
                 BusArrivalMain[] busObjsArr;
@@ -612,7 +612,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
                     addPublicBuses(e2, o);
                     BusArrivalArrayObjectEstimate e3 = o.getNextBus3();
                     addPublicBuses(e3, o);
-                    Log.i(TAG, "Displaying Public Bus Locations for " + o.getServiceNo());
+                    LogHelper.i(TAG, "Displaying Public Bus Locations for " + o.getServiceNo());
                 }
             }
         }

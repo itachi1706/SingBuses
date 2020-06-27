@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -33,6 +32,7 @@ import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.busarrivalsg.util.SwipeFavouriteCallback;
+import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -108,7 +108,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
     public void onResume(){
         super.onResume();
         if (busStopCode == null){
-            Log.e("BUS-SERVICE", "You aren't supposed to be here. Exiting");
+            LogHelper.e("BUS-SERVICE", "You aren't supposed to be here. Exiting");
             Toast.makeText(this, R.string.invalid_activity_access, Toast.LENGTH_SHORT).show();
             this.finish();
         } else {

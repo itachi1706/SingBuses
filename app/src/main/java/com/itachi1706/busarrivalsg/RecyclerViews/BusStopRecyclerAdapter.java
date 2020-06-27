@@ -7,7 +7,6 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +19,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
+import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -67,7 +67,7 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
     }
 
     public void handleClick(Context context, BusStopJSON stop) {
-        Log.d("Size", "" + items.size());
+        LogHelper.d("Size", "" + items.size());
         Intent serviceIntent = new Intent(context, BusServicesAtStopRecyclerActivity.class);
         serviceIntent.putExtra("stopCode", stop.getBusStopCode());
         serviceIntent.putExtra("stopName", stop.getDescription());
@@ -86,7 +86,7 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
             LinkedList<ShortcutInfo> infos = new LinkedList<>(shortcutManager.getDynamicShortcuts());
             final int shortcutCount = shortcutManager.getMaxShortcutCountPerActivity() - 2;
             if (infos.size() >= shortcutCount) {
-                Log.i("ShortcutManager", "Dynamic Shortcuts more than " + shortcutCount
+                LogHelper.i("ShortcutManager", "Dynamic Shortcuts more than " + shortcutCount
                         + ". Removing extras");
                 do {
                     infos.removeLast();

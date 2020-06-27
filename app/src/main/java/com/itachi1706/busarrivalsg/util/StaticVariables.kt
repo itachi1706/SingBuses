@@ -1,8 +1,8 @@
 package com.itachi1706.busarrivalsg.util
 
 import android.content.SharedPreferences
-import android.util.Log
 import com.itachi1706.busarrivalsg.objects.BusServices
+import com.itachi1706.helperlib.helpers.LogHelper
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -45,7 +45,7 @@ object StaticVariables {
     fun parseEstimateArrival(arrivalString: String, useServerTime: Boolean, serverTime: String?): Long {
         val currentDate: Calendar
         if (!useServerTime || serverTime == null) {
-            Log.d("DATE", "Current Time Millis: " + System.currentTimeMillis())
+            LogHelper.d("DATE", "Current Time Millis: " + System.currentTimeMillis())
             currentDate = Calendar.getInstance()
             currentDate.add(Calendar.MONTH, 1)
         } else {
@@ -55,14 +55,14 @@ object StaticVariables {
 
         val arrivalDate = parseDate(arrivalString)
 
-        Log.d("COMPARE", "Current: " + currentDate.toString())
-        Log.d("COMPARE", "Arrival: " + arrivalDate.toString())
+        LogHelper.d("COMPARE", "Current: " + currentDate.toString())
+        LogHelper.d("COMPARE", "Arrival: " + arrivalDate.toString())
         val difference = arrivalDate.timeInMillis - currentDate.timeInMillis
         return TimeUnit.MILLISECONDS.toMinutes(difference)
     }
 
     private fun parseDate(dateString: String): Calendar {
-        Log.d("SPLIT", "Date String to parse: $dateString")
+        LogHelper.d("SPLIT", "Date String to parse: $dateString")
         val firstSplit = dateString.split("T".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         val date = firstSplit[0]
         val time = firstSplit[1]

@@ -7,7 +7,6 @@ import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -20,6 +19,7 @@ import com.itachi1706.busarrivalsg.Services.LocManager
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.cepaslib.SettingsHandler
 import com.itachi1706.helperlib.deprecation.HtmlDep
+import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.PrefHelper
 import me.jfenn.attribouter.Attribouter
 import java.util.*
@@ -67,7 +67,7 @@ class MainSettings : AppCompatActivity() {
 
             findPreference<Preference>("companionDevice")?.setOnPreferenceChangeListener { _, o ->
                 val companion = o as String
-                Log.d("DEBUG", "Companion: $companion")
+                LogHelper.d("DEBUG", "Companion: $companion")
                 parentFragmentManager.beginTransaction().replace(android.R.id.content, GeneralPreferenceFragment()).commit()
                 true
             }

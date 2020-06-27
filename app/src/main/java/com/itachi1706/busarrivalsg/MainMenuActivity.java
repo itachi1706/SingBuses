@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -40,10 +39,12 @@ import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.objects.BusServices;
+import com.itachi1706.busarrivalsg.util.LogInitializer;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.busarrivalsg.util.SwipeFavouriteCallback;
 import com.itachi1706.busarrivalsg.util.SwipeMoveFavouriteCallback;
 import com.itachi1706.helperlib.helpers.ConnectivityHelper;
+import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -65,6 +66,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG);
+        LogInitializer.initLogger();
         setContentView(R.layout.activity_main_menu_recycler);
 
         fab = findViewById(R.id.add_fab);
@@ -108,9 +110,9 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         }));
         moveAdapter.attachToRecyclerView(favouritesList);
 
-        Log.d("MainMenu", "Checking for app updates");
+        LogHelper.d("MainMenu", "Checking for app updates");
         new AppUpdateInitializer(this, sp, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL, true).setOnlyOnWifiCheck(true).checkForUpdate();
-        Log.d("MainMenu", "onCreate complete");
+        LogHelper.d("MainMenu", "onCreate complete");
 
         // Create the Firebase Notification Channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) createFirebaseNotifChannel();
@@ -203,19 +205,20 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     }
 
     private void updateFavourites(){
+        final String TAG = "FAVOURITES";
         //Populate favourites from favourites list
-        Log.d("FAVOURITES", "Favourites Pref: " + sp.getString("stored", "wot"));
+        LogHelper.d(TAG, "Favourites Pref: " + sp.getString("stored", "wot"));
 
         if (BusStorage.hasFavourites(sp)) {
             //Go ahead with loading and getting data
-            Log.d("FAVOURITES", "Has Favourites. Processing");
+            LogHelper.d(TAG, "Has Favourites. Processing");
             StaticVariables.INSTANCE.setFavouritesList(BusStorage.getStoredBuses(sp));
             adapter.updateAdapter(StaticVariables.INSTANCE.getFavouritesList(), null);
             adapter.notifyDataSetChanged();
 
-            Log.d("FAVOURITES", "Finished Processing, retrieving estimated arrival data now");
+            LogHelper.d(TAG, "Finished Processing, retrieving estimated arrival data now");
             new GetBusServicesFavouritesRecycler(this, adapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StaticVariables.INSTANCE.getFavouritesList().toArray(new BusServices[0]));
-            Log.d("FAVOURITES", "Finished casting AsyncTasks to retrieve estimated arrival data");
+            LogHelper.d(TAG, "Finished casting AsyncTasks to retrieve estimated arrival data");
         }
 
         if (swipeToRefresh.isRefreshing()){
@@ -228,18 +231,19 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         boolean busDBUpdate = false;
         if (busDBLastUpdate != -1){
             long day = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - busDBLastUpdate);
-            Log.d("INIT", "Bus DB Last Update: " + day);
+            LogHelper.d("INIT", "Bus DB Last Update: " + day);
             if (day > 30)
                 busDBUpdate = true;
         }
 
         // Check upgrade
+        final String DBTAG = "DB UPGRADE";
         int dbver = sp.getInt("busDBVerCheck", 0);
-        Log.d("DB UPGRADE", "Current DB Version: " + dbver);
+        LogHelper.d(DBTAG, "Current DB Version: " + dbver);
         switch (dbver) {
             case 0:
-            case 1: Log.i("DB UPGRADE", "Upgrading to V2 API DB"); busDBUpdate = true; sp.edit().putInt("busDBVerCheck", 2).apply(); break;
-            case 2: Log.i("DB UPGRADE", "Upgrading to DB with Bus Services"); busDBUpdate = true; sp.edit().putInt("busDBVerCheck", 3).apply(); break;
+            case 1: LogHelper.i(DBTAG, "Upgrading to V2 API DB"); busDBUpdate = true; sp.edit().putInt("busDBVerCheck", 2).apply(); break;
+            case 2: LogHelper.i(DBTAG, "Upgrading to DB with Bus Services"); busDBUpdate = true; sp.edit().putInt("busDBVerCheck", 3).apply(); break;
         }
 
         //Main Database
@@ -248,7 +252,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             if (!ConnectivityHelper.hasInternetConnection(getApplicationContext())) {
                 networkUnavailable(getString(R.string.database_name_bus));
             } else {
-                Log.d("INIT", "Initializing Bus Stop Database");
+                LogHelper.d("INIT", "Initializing Bus Stop Database");
                 ProgressDialog dialog = new ProgressDialog(this);
                 dialog.setTitle(getString(R.string.database_name_bus));
                 dialog.setMessage(getString(R.string.dialog_message_retrieve_data_from_server));

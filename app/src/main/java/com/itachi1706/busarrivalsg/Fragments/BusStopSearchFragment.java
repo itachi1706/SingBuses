@@ -2,23 +2,24 @@ package com.itachi1706.busarrivalsg.Fragments;
 
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
+import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.util.ArrayList;
 
@@ -40,7 +41,7 @@ public class BusStopSearchFragment extends Fragment {
         View v  = inflater.inflate(R.layout.fragment_bus_stops_search, container, false);
 
         if (getActivity() == null) {
-            Log.e("SearchFrag", "No activity found");
+            LogHelper.e("SearchFrag", "No activity found");
             return v;
         }
 
@@ -76,10 +77,10 @@ public class BusStopSearchFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String query = s.toString();
-                Log.d("TextWatcher", "Query searched: " + query);
+                LogHelper.d("TextWatcher", "Query searched: " + query);
                 ArrayList<BusStopJSON> results = db.getBusStopsByQuery(query);
                 if (results != null) {
-                    Log.d("TextWatcher", "Finished Search. Size: " + results.size());
+                    LogHelper.d("TextWatcher", "Finished Search. Size: " + results.size());
                     adapter.updateAdapter(results);
                     adapter.notifyDataSetChanged();
                 }

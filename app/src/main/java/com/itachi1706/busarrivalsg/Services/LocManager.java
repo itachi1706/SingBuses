@@ -10,12 +10,13 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AlertDialog;
-import android.util.Log;
 
 import com.itachi1706.busarrivalsg.R;
+import com.itachi1706.helperlib.helpers.LogHelper;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -68,7 +69,7 @@ public class LocManager extends Service implements LocationListener {
         try {
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
             if (locationManager == null) {
-                Log.e(TAG, "There are no location service on device");
+                LogHelper.e(TAG, "There are no location service on device");
             }
 
             // getting GPS status
@@ -79,7 +80,7 @@ public class LocManager extends Service implements LocationListener {
 
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no netAwork provider is enabled
-                Log.e(TAG, "No provider enabled");
+                LogHelper.e(TAG, "No provider enabled");
             } else {
                 this.canGetLocation = true;
                 // First get location from Network Provider
@@ -88,7 +89,7 @@ public class LocManager extends Service implements LocationListener {
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    Log.d(TAG, "Network");
+                    LogHelper.d(TAG, "Network");
                     if (locationManager != null) {
                         location = locationManager
                                 .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -105,7 +106,7 @@ public class LocManager extends Service implements LocationListener {
                             LocationManager.GPS_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    Log.d(TAG, "GPS Enabled");
+                    LogHelper.d(TAG, "GPS Enabled");
                     if (locationManager != null) {
                         Location gpslocation = locationManager
                                 .getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -170,7 +171,7 @@ public class LocManager extends Service implements LocationListener {
      */
     public void showSettingsAlert(){
         if (mContext == null) {
-            Log.e(TAG, "Invalid Context");
+            LogHelper.e(TAG, "Invalid Context");
             return;
         }
 

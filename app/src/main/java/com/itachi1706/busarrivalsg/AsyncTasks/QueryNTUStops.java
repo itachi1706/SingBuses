@@ -2,7 +2,6 @@ package com.itachi1706.busarrivalsg.AsyncTasks;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.collection.ArrayMap;
@@ -11,6 +10,7 @@ import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBusTimings;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.helperlib.deprecation.HtmlDep;
+import com.itachi1706.helperlib.helpers.LogHelper;
 import com.itachi1706.helperlib.helpers.URLHelper;
 
 import java.io.IOException;
@@ -39,13 +39,13 @@ public class QueryNTUStops extends AsyncTask<Integer, Void, Void> {
         int stopId = stopIds[0];
         String url = "https://api.itachi1706.com/api/ntubus.php?busarrival=true&stopid=" + stopId;
         String TAG = "QueryNTU";
-        Log.d(TAG, url);
+        LogHelper.d(TAG, url);
         String tmp;
         try {
             long start = System.currentTimeMillis();
             URLHelper urlHelper = new URLHelper(url);
             tmp = urlHelper.executeString();
-            Log.i(TAG, "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
+            LogHelper.i(TAG, "Data retrieved in " + (System.currentTimeMillis() - start) + "ms");
         } catch (IOException e) {
             activity.runOnUiThread(() -> {
                 // Update error
@@ -56,7 +56,7 @@ public class QueryNTUStops extends AsyncTask<Integer, Void, Void> {
         }
 
         if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
-            Log.e(TAG, "Error JSON: " + tmp);
+            LogHelper.e(TAG, "Error JSON: " + tmp);
             activity.runOnUiThread(() -> {
                 // Update error
                 callback.onComplete(true, "An error has occurred retrieving data from the API. Please try again later", null, null);
