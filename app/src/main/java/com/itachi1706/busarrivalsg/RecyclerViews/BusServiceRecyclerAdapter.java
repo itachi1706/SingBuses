@@ -45,8 +45,8 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
 
     private List<BusArrivalArrayObject> items;
     private String currentTime;
-    private boolean serverTime;
-    private AppCompatActivity activity;
+    private final boolean serverTime;
+    private final AppCompatActivity activity;
 
     public BusServiceRecyclerAdapter(List<BusArrivalArrayObject> objectList, AppCompatActivity activity, boolean useServerTime){
         this.items = objectList;
@@ -254,7 +254,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
         }
     }
 
-    private class UnavailableButton implements View.OnClickListener {
+    private static class UnavailableButton implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
@@ -266,10 +266,12 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
 
     private class ArrivalButton implements View.OnClickListener {
 
-        private double longitude = -1000, latitude = -1000;
-        private String stopCode = "", serviceNo = "Unknown";
-        private BusArrivalArrayObject busObj;
-        private int state;
+        private final double longitude;
+        private final double latitude;
+        private final String stopCode;
+        private final String serviceNo;
+        private final BusArrivalArrayObject busObj;
+        private final int state;
 
         ArrivalButton(BusArrivalArrayObject busObj, String busStopCode, String svcNo, int state) {
             BusArrivalArrayObjectEstimate status = (state == StaticVariables.CUR) ? busObj.getNextBus() :

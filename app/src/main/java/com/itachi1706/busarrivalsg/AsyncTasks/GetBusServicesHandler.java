@@ -23,11 +23,11 @@ import java.net.SocketTimeoutException;
  */
 public class GetBusServicesHandler extends AsyncTask<String, Void, String> {
 
-    private ProgressDialog dialog;
-    private WeakReference<Activity> actRef;
+    private final ProgressDialog dialog;
+    private final WeakReference<Activity> actRef;
     private Exception exception = null;
 
-    private Handler mHandler;
+    private final Handler mHandler;
 
     public GetBusServicesHandler(ProgressDialog dialog, Activity activity, Handler handler){
         this.dialog = dialog;

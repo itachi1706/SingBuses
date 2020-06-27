@@ -77,9 +77,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         AnalyticsHelper helper = new AnalyticsHelper(this, true);
         @SuppressLint("WrongThread") CAAnalytics analytics = helper.getData();
-        if (analytics != null)
-            setAnalyticsData(true, mFirebaseAnalytics, analytics); // Update Firebase User Properties
-        else setAnalyticsData(false, mFirebaseAnalytics, analytics);
+        setAnalyticsData(analytics != null, mFirebaseAnalytics, analytics); // Update Firebase User Properties
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null);
 
         if (favouritesList != null) favouritesList.setHasFixedSize(true);
@@ -171,9 +169,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (!sp.getBoolean("showntushuttle", false))
-            menu.findItem(R.id.ntu_tracker).setVisible(false);
-        else menu.findItem(R.id.ntu_tracker).setVisible(true);
+        menu.findItem(R.id.ntu_tracker).setVisible(sp.getBoolean("showntushuttle", false));
 
         return true;
     }
@@ -182,26 +178,16 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id) {
-            case R.id.action_settings:
-                startActivity(new Intent(this, MainSettings.class));
-                return true;
-            case R.id.view_all_stops:
-                startActivity(new Intent(this, ListAllBusStopsActivity.class));
-                return true;
-            case R.id.action_refresh:
-                swipeToRefresh.setRefreshing(true);
-                updateFavourites();
-                return true;
-            case R.id.ntu_tracker:
-                startActivity(new Intent(this, NTUBusActivity.class));
-                return true;
-            case R.id.scan_cepas:
-                startActivity(new Intent(this, CEPASScanActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        if (id == R.id.action_settings) startActivity(new Intent(this, MainSettings.class));
+        else if (id == R.id.view_all_stops) startActivity(new Intent(this, ListAllBusStopsActivity.class));
+        else if (id == R.id.action_refresh) {
+            swipeToRefresh.setRefreshing(true);
+            updateFavourites();
+        } else if (id == R.id.ntu_tracker) startActivity(new Intent(this, NTUBusActivity.class));
+        else if (id == R.id.scan_cepas) startActivity(new Intent(this, CEPASScanActivity.class));
+        else return super.onOptionsItemSelected(item);
+
+        return true;
     }
 
     private void updateFavourites(){

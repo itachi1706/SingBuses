@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,8 +50,8 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
      */
 
     private List<BusServices> items;
-    private AppCompatActivity activity;
-    private boolean serverTime;
+    private final AppCompatActivity activity;
+    private final boolean serverTime;
     private String currentTime;
 
     public FavouritesRecyclerAdapter(List<BusServices> objectList, AppCompatActivity activity, boolean useServerTime){
@@ -81,6 +82,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         return true;
     }
 
+    @NonNull
     @Override
     public FavouritesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View busServiceView = LayoutInflater.from(parent.getContext())
@@ -97,7 +99,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 
         holder.busNumber.setText(i.getServiceNo());
         holder.stopName.setVisibility(View.VISIBLE);
-        holder.stopName.setText((i.getStopName() == null) ? i.getStopID().trim() : i.getStopName().trim() + " (" + i.getStopID().trim() + ")");
+        holder.stopName.setText(i.getStopName().trim() + " (" + i.getStopID().trim() + ")");
 
         if (!i.isObtainedNextData()) {
             processing(holder.busArrivalNow);
@@ -226,11 +228,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 
     public boolean removeFavourite(final int position) {
         final BusServices item = items.get(position);
-        String message;
-        if (item.getStopName() != null)
-            message = activity.getString(R.string.dialog_message_remove_from_fav_with_stop_name, item.getServiceNo(), item.getStopName(), item.getStopID());
-        else
-            message = activity.getString(R.string.dialog_message_remove_from_fav, item.getServiceNo(), item.getStopID());
+        String message = activity.getString(R.string.dialog_message_remove_from_fav_with_stop_name, item.getServiceNo(), item.getStopName(), item.getStopID());
 
         // Companion addition
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
@@ -300,8 +298,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
             LogHelper.d("Size", "" + items.size());
             Intent serviceIntent = new Intent(activity, BusServicesAtStopRecyclerActivity.class);
             serviceIntent.putExtra("stopCode", item.getStopID());
-            if (item.getStopName() != null)
-                serviceIntent.putExtra("stopName", item.getStopName());
+            serviceIntent.putExtra("stopName", item.getStopName());
             activity.startActivity(serviceIntent);
 
         }
@@ -313,19 +310,14 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 
             final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
             if (sp.getBoolean("showFavHint", true)) {
-                String message;
-                if (item.getStopName() != null)
-                    message = activity.getString(R.string.snackbar_message_remove_from_fav_with_stop_name, item.getServiceNo());
-                else
-                    message = activity.getString(R.string.snackbar_message_remove_from_fav, item.getServiceNo());
-                    Snackbar.make(v, message
-                            , Snackbar.LENGTH_SHORT).setAction("Hide Tips", view -> sp.edit().putBoolean("showFavHint", false).apply()).show();
+                String message = activity.getString(R.string.snackbar_message_remove_from_fav_with_stop_name, item.getServiceNo());
+                Snackbar.make(v, message, Snackbar.LENGTH_SHORT).setAction("Hide Tips", view -> sp.edit().putBoolean("showFavHint", false).apply()).show();
             }
             return false;
         }
     }
 
-    private class UnavailableButton implements View.OnClickListener {
+    private static class UnavailableButton implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
@@ -339,8 +331,8 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 
         private double longitude = -1000, latitude = -1000;
         private String stopCode = "", serviceNo = "Unknown";
-        private BusServices busObj;
-        private int state;
+        private final BusServices busObj;
+        private final int state;
 
         ArrivalButton(BusServices busObj, String busStopCode, String svcNo, int state) {
             BusStatus status = (state == StaticVariables.CUR) ? busObj.getCurrentBus() :

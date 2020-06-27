@@ -78,11 +78,11 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
     public static final String RECEIVE_NTU_DATA_EVENT = "RecieveNTUDataEvent";
     public static final String RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT = "RecieveNTUBDataEvent";
 
-    private BusesUtil busesUtil = BusesUtil.INSTANCE;
+    private final BusesUtil busesUtil = BusesUtil.INSTANCE;
     private int autoRefreshDelay = -1;
     private SharedPreferences sp;
 
-    private BottomSheetBehavior bottomSheetBehavior;
+    private BottomSheetBehavior<View> bottomSheetBehavior;
     private View bottomSheet;
 
     @Override
@@ -189,20 +189,14 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id) {
-            case R.id.action_settings:
-                startActivity(new Intent(this, MainSettings.class));
-                return true;
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.refresh:
-                LogHelper.i(TAG, "Manually refreshing bus data at " + StaticVariables.INSTANCE.convertDateToString(new Date(System.currentTimeMillis())));
-                getData(true);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        if (id == R.id.action_settings) startActivity(new Intent(this, MainSettings.class));
+        else if (id == android.R.id.home) finish();
+        else if (id == R.id.refresh) {
+            LogHelper.i(TAG, "Manually refreshing bus data at " + StaticVariables.INSTANCE.convertDateToString(new Date(System.currentTimeMillis())));
+            getData(true);
+        } else return super.onOptionsItemSelected(item);
+
+        return true;
     }
 
     private boolean trafficEnabled = false;
@@ -275,17 +269,13 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
                 result.setVisibility(View.VISIBLE);
                 inProgress.setVisibility(View.GONE);
             } else new QueryNTUStops(this, sub.getText().toString(), (error, resultText, title, subtext) -> {
-                if (error) {
-                    result.setText(resultText);
-                    inProgress.setVisibility(View.GONE);
-                    result.setVisibility(View.VISIBLE);
-                } else {
+                if (!error) {
                     main.setText(title);
                     sub.setText(subtext);
-                    result.setText(resultText);
-                    inProgress.setVisibility(View.GONE);
-                    result.setVisibility(View.VISIBLE);
                 }
+                result.setText(resultText);
+                inProgress.setVisibility(View.GONE);
+                result.setVisibility(View.VISIBLE);
             }).execute(n.getId());
         }
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -391,15 +381,16 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
 
     }
 
-    private ArrayList<Marker> busMarkers = new ArrayList<>();
-    private ArrayList<Marker> publicBusMarkers = new ArrayList<>();
+    private final ArrayList<Marker> busMarkers = new ArrayList<>();
+    private final ArrayList<Marker> publicBusMarkers = new ArrayList<>();
 
-    private AsyncTask runningBus = null, runningPBus = null;
+    private AsyncTask<String, Void, Integer> runningBus = null;
+    private AsyncTask<Void, Void, Integer> runningPBus = null;
 
     private Handler refreshHandler;
     private boolean shouldAutoRefresh = false;
     public static final int REFRESH_TASK = 3000;
-    private Runnable refreshTask = () -> {
+    private final Runnable refreshTask = () -> {
         LogHelper.i(TAG, "Auto-refreshing bus data at " + StaticVariables.INSTANCE.convertDateToString(new Date(System.currentTimeMillis())));
         getData(true);
     };
@@ -408,7 +399,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
      * Parsing and processing the data received from the API call
      * Might also make it in a async task in the future
      */
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String data = intent.getStringExtra("data");
@@ -544,7 +535,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
     /**
      * Parsing and processing the data received for public API calls
      */
-    private BroadcastReceiver publicBusReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver publicBusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String data = intent.getStringExtra("data");

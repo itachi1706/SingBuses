@@ -27,7 +27,7 @@ import java.net.SocketTimeoutException;
  */
 public class GetNTUData extends AsyncTask<String, Void, Integer> {
 
-    private WeakReference<Activity> activityRef;
+    private final WeakReference<Activity> activityRef;
     private Exception except;
     private int update;
     private static final String TAG = "NTUData";
@@ -75,8 +75,8 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
             return 1;
         }
 
-        LogHelper.d(TAG, tmp);
-        if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
+        LogHelper.d(TAG, (tmp == null) ? "null" : tmp);
+        if (tmp == null || !StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
             except = new Exception(mActivity.getResources().getString(R.string.toast_message_invalid_json));
             return 2;
         }

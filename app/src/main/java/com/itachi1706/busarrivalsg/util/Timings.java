@@ -9,8 +9,8 @@ import com.itachi1706.helperlib.helpers.LogHelper;
 
 public class Timings {
 
-    private String tag;
-    private boolean verbose;
+    private final String tag;
+    private final boolean verbose;
     private long start = -999, end = -999, duration = -999;
 
     public Timings(String tag, boolean verbose) {

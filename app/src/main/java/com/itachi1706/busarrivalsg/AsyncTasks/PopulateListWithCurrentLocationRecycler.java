@@ -36,9 +36,9 @@ import java.util.ArrayList;
  */
 public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location, Void, Integer> {
 
-    private WeakReference<Activity> contextRef;
-    private BusStopsDB db;
-    private BusStopRecyclerAdapter adapter;
+    private final WeakReference<Activity> contextRef;
+    private final BusStopsDB db;
+    private final BusStopRecyclerAdapter adapter;
     private Exception except;
 
     private static final String TAG = "CURRENT-LOCATION";
@@ -71,8 +71,8 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
 
         // Do the processing here
         Gson gson = new Gson();
-        LogHelper.d(TAG, tmp);
-        if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
+        LogHelper.d(TAG, (tmp == null) ? "null" : tmp);
+        if (tmp == null || !StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
             except = new Exception(context.getResources().getString(R.string.toast_message_invalid_json));
             return 2;
         }
