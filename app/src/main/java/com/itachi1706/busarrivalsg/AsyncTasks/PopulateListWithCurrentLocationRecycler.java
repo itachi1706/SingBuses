@@ -41,6 +41,8 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
     private BusStopRecyclerAdapter adapter;
     private Exception except;
 
+    private static final String TAG = "CURRENT-LOCATION";
+
     public PopulateListWithCurrentLocationRecycler(Activity context, BusStopsDB db, BusStopRecyclerAdapter adapter) {
         this.contextRef = new WeakReference<>(context);
         this.db = db;
@@ -56,7 +58,7 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
         // Get validation stuff
         String signature = ValidationHelper.getSignatureForValidation(context);
         String url = "https://api.itachi1706.com/api/mobile/nearestBusStop.php?location=" + location.getLatitude() + "," + location.getLongitude() + "&limit=" + limit;
-        LogHelper.d("CURRENT-LOCATION", url); // Don't print the signature out
+        LogHelper.d(TAG, url); // Don't print the signature out
         url += "&sig=" + signature + "&package=" + context.getPackageName();
         String tmp;
         try {
@@ -69,7 +71,7 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
 
         // Do the processing here
         Gson gson = new Gson();
-        LogHelper.d("CURRENT-LOCATION", tmp);
+        LogHelper.d(TAG, tmp);
         if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
             except = new Exception(context.getResources().getString(R.string.toast_message_invalid_json));
             return 2;
@@ -104,7 +106,7 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
     protected void onPostExecute(Integer errorCode) {
         Context context = contextRef.get();
         if (except != null && errorCode != 0) {
-            LogHelper.e("CURRENT-LOCATION", "Exception occurred (" + except.getMessage() + ")");
+            LogHelper.e(TAG, "Exception occurred (" + except.getMessage() + ")");
             if (except instanceof SocketTimeoutException) {
                 Toast.makeText(context, R.string.toast_message_timeout_distance_api, Toast.LENGTH_SHORT).show();
             } else {

@@ -205,19 +205,20 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     }
 
     private void updateFavourites(){
+        final String TAG = "FAVOURITES";
         //Populate favourites from favourites list
-        LogHelper.d("FAVOURITES", "Favourites Pref: " + sp.getString("stored", "wot"));
+        LogHelper.d(TAG, "Favourites Pref: " + sp.getString("stored", "wot"));
 
         if (BusStorage.hasFavourites(sp)) {
             //Go ahead with loading and getting data
-            LogHelper.d("FAVOURITES", "Has Favourites. Processing");
+            LogHelper.d(TAG, "Has Favourites. Processing");
             StaticVariables.INSTANCE.setFavouritesList(BusStorage.getStoredBuses(sp));
             adapter.updateAdapter(StaticVariables.INSTANCE.getFavouritesList(), null);
             adapter.notifyDataSetChanged();
 
-            LogHelper.d("FAVOURITES", "Finished Processing, retrieving estimated arrival data now");
+            LogHelper.d(TAG, "Finished Processing, retrieving estimated arrival data now");
             new GetBusServicesFavouritesRecycler(this, adapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StaticVariables.INSTANCE.getFavouritesList().toArray(new BusServices[0]));
-            LogHelper.d("FAVOURITES", "Finished casting AsyncTasks to retrieve estimated arrival data");
+            LogHelper.d(TAG, "Finished casting AsyncTasks to retrieve estimated arrival data");
         }
 
         if (swipeToRefresh.isRefreshing()){
@@ -236,12 +237,13 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         }
 
         // Check upgrade
+        final String DBTAG = "DB UPGRADE";
         int dbver = sp.getInt("busDBVerCheck", 0);
-        LogHelper.d("DB UPGRADE", "Current DB Version: " + dbver);
+        LogHelper.d(DBTAG, "Current DB Version: " + dbver);
         switch (dbver) {
             case 0:
-            case 1: LogHelper.i("DB UPGRADE", "Upgrading to V2 API DB"); busDBUpdate = true; sp.edit().putInt("busDBVerCheck", 2).apply(); break;
-            case 2: LogHelper.i("DB UPGRADE", "Upgrading to DB with Bus Services"); busDBUpdate = true; sp.edit().putInt("busDBVerCheck", 3).apply(); break;
+            case 1: LogHelper.i(DBTAG, "Upgrading to V2 API DB"); busDBUpdate = true; sp.edit().putInt("busDBVerCheck", 2).apply(); break;
+            case 2: LogHelper.i(DBTAG, "Upgrading to DB with Bus Services"); busDBUpdate = true; sp.edit().putInt("busDBVerCheck", 3).apply(); break;
         }
 
         //Main Database

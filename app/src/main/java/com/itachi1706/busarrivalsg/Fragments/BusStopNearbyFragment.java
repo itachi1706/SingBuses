@@ -208,17 +208,17 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
             Location myLoc = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
             if (myLoc == null) return;
             LatLng myLatLng = new LatLng(myLoc.getLatitude(), myLoc.getLongitude());
-            LogHelper.d("NearbyFrag", "animateCamera:onStart");
+            LogHelper.d(TAG, "animateCamera:onStart");
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 17), new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
-                    LogHelper.d("NearbyFrag", "animateCamera:onFinish");
+                    LogHelper.d(TAG, "animateCamera:onFinish");
                     isAnimating = false;
                 }
 
                 @Override
                 public void onCancel() {
-                    LogHelper.d("NearbyFrag", "animateCamera:onCancel");
+                    LogHelper.d(TAG, "animateCamera:onCancel");
                     isAnimating = false;
                 }
             });
