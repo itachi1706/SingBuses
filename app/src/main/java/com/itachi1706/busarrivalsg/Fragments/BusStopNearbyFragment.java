@@ -124,7 +124,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
         }
     }
 
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Location location = new Location("");
@@ -141,7 +141,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
 
     private HashMap<Marker, BusStopJSON> markerMap;
 
-    private BroadcastReceiver nearbyReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver nearbyReceiver = new BroadcastReceiver() {
         @SuppressLint("MissingPermission")
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -159,7 +159,9 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
             ArrayList<BusStopJSON> stops = gson.fromJson(data, listType);
 
             for (BusStopJSON stop : stops) {
-                String[] svcsRaw = stop.getServices().split(",");
+                String serviceString = stop.getServices();
+                if (serviceString == null) continue;
+                String[] svcsRaw = serviceString.split(",");
                 StringBuilder services = new StringBuilder();
                 for (String svc : svcsRaw) {
                     services.append(svc.split(":")[0]).append(", ");
@@ -167,7 +169,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
                 markerMap.put(mMap.addMarker(new MarkerOptions().position(new LatLng(stop.getLatitude(), stop.getLongitude()))
                         .title(stop.getDescription() + " (" + stop.getRoadName() + ")")
                         .snippet("Bus Svcs: " + services.toString().replaceAll(", $", ""))
-                        .icon(BusesUtil.INSTANCE.vectorToBitmapDescriptor(R.drawable.red_circle, getContext()))), stop);
+                        .icon(BusesUtil.INSTANCE.vectorToBitmapDescriptor(R.drawable.red_circle, context))), stop);
             }
 
             zoomToLocation();
@@ -229,6 +231,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
     public void onInfoWindowClick(Marker marker) {
         LogHelper.d(TAG, "Marker Info Clicked (" + marker.getTitle() + ")");
         BusStopJSON stop = markerMap.get(marker);
+        if (stop == null) return;
         adapter.handleClick(getContext(), stop);
     }
 }

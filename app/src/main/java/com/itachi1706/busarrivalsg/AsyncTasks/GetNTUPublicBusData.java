@@ -30,9 +30,9 @@ import java.util.ArrayList;
  */
 public class GetNTUPublicBusData extends AsyncTask<Void, Void, Integer> {
 
-    private WeakReference<Activity> activityRef;
+    private final WeakReference<Activity> activityRef;
     private Exception except;
-    private boolean update;
+    private final boolean update;
     private static final String TAG = "NTUPublicBusData";
 
     // Bus Stop Codes to get (we will get it based off the last stop on campus)
@@ -60,8 +60,8 @@ public class GetNTUPublicBusData extends AsyncTask<Void, Void, Integer> {
             return 1;
         }
 
-        LogHelper.d(TAG, tmp);
-        if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
+        LogHelper.d(TAG, (tmp == null) ? "null" : tmp);
+        if (tmp == null || !StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
             except = new Exception(mActivity.getResources().getString(R.string.toast_message_invalid_json));
             return 2;
         }

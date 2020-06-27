@@ -25,11 +25,11 @@ import java.net.SocketTimeoutException;
  */
 public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
 
-    private ProgressDialog progressDialog;
-    private BusStopsDB db;
-    private WeakReference<Activity> actRef;
+    private final ProgressDialog progressDialog;
+    private final BusStopsDB db;
+    private final WeakReference<Activity> actRef;
     private Exception exception = null;
-    private SharedPreferences sp;
+    private final SharedPreferences sp;
 
     public GetAllBusStops(ProgressDialog progressDialog, BusStopsDB db, Activity activity, SharedPreferences sp){
         this.progressDialog = progressDialog;

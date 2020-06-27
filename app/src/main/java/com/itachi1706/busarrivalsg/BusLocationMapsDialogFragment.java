@@ -1,7 +1,6 @@
 package com.itachi1706.busarrivalsg;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -188,7 +187,7 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
     private static final int RC_HANDLE_ACCESS_FINE_LOCATION = 3;
 
     private void checkIfYouHaveGpsPermissionForThis() {
-        int rc = ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+        int rc = ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
@@ -200,16 +199,14 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
         LogHelper.w(LocManager.TAG, "GPS permission is not granted. Requesting permission");
         final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
 
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
-            ActivityCompat.requestPermissions(this.getActivity(), permissions, code);
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+            ActivityCompat.requestPermissions(requireActivity(), permissions, code);
             return;
         }
 
-        final Activity thisActivity = this.getActivity();
-
         new AlertDialog.Builder(this.getActivity()).setTitle(R.string.dialog_title_request_permission_gps)
                 .setMessage(R.string.dialog_message_request_permission_gps_view_map_rationale)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(thisActivity, permissions, code)).show();
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(requireActivity(), permissions, code)).show();
     }
 
     /**
@@ -241,7 +238,7 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             LogHelper.d(LocManager.TAG, "Location permission granted - enabling my location");
             // we have permission, so create the camerasource
-            if (ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mMap.setMyLocationEnabled(true);
             }
             return;
@@ -249,12 +246,11 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
 
         LogHelper.e(LocManager.TAG, "Permission not granted: results len = " + grantResults.length +
                 " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-        final Activity thisActivity = this.getActivity();
         new AlertDialog.Builder(this.getActivity()).setTitle(R.string.dialog_title_permission_denied)
                 .setMessage(R.string.dialog_message_no_permission_gps).setPositiveButton(android.R.string.ok, null)
                 .setNeutralButton(R.string.dialog_action_neutral_app_settings, (dialog, which) -> {
                     Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    Uri packageURI = Uri.parse("package:" + thisActivity.getPackageName());
+                    Uri packageURI = Uri.parse("package:" + requireActivity().getPackageName());
                     permIntent.setData(packageURI);
                     startActivity(permIntent);
                 }).show();

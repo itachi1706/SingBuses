@@ -32,7 +32,7 @@ class NTURouteCacher(private val mContext: Context) {
         for (r in routes) {
             val f = getFileObject(r.toString())
             if (f.exists()) f.delete()
-            LogHelper.i(TAG, "Cleared cache file for Route " + r)
+            LogHelper.i(TAG, "Cleared cache file for Route $r")
         }
     }
 
@@ -42,7 +42,7 @@ class NTURouteCacher(private val mContext: Context) {
         if (!f.exists()) return false
 
         val lastModified = Date(f.lastModified())
-        LogHelper.i(TAG, "Found cache for Route " + routeCode + ", last updated on " + lastModified.toString())
+        LogHelper.i(TAG, "Found cache for Route $routeCode, last updated on $lastModified")
 
         // Check if greater than cache (1 week)
         val currentTime = System.currentTimeMillis()
@@ -124,7 +124,7 @@ class NTURouteCacher(private val mContext: Context) {
         return true
     }
 
-    fun getRouteFromString(routeString: String): NTUBus.MapRouting {
+    fun getRouteFromString(routeString: String?): NTUBus.MapRouting {
         val gson = Gson()
         return gson.fromJson(routeString, NTUBus.MapRouting::class.java)
     }
@@ -135,16 +135,16 @@ class NTURouteCacher(private val mContext: Context) {
     }
 
     fun getRouteCode(routeId: Int): String {
-        when (routeId) {
-            44478 -> return "red"
-            44479 -> return "blue"
-            44480 -> return "green"
-            44481 -> return "brown"
-            else -> return "red"
+        return when (routeId) {
+            44478 -> "red"
+            44479 -> "blue"
+            44480 -> "green"
+            44481 -> "brown"
+            else -> "red"
         }
     }
 
     companion object {
-        private val TAG = "NTU-ROUTE-CACHE"
+        private const val TAG = "NTU-ROUTE-CACHE"
     }
 }

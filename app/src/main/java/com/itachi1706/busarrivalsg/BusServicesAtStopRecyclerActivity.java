@@ -256,10 +256,9 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
 
             super.handleMessage(msg);
 
-            switch (msg.what) {
-                case StaticVariables.BUS_SERVICE_JSON_RETRIEVED: String json = (String) msg.getData().get("jsonString");
-                    activity.processMessage(json);
-                    break;
+            if (msg.what == StaticVariables.BUS_SERVICE_JSON_RETRIEVED) {
+                String json = (String) msg.getData().get("jsonString");
+                activity.processMessage(json);
             }
         }
     }

@@ -89,7 +89,7 @@ object BusesUtil {
     }
 
     fun applyColorLoad(view: TextView, load: Int) {
-        if (view.text.toString().equals("", ignoreCase = true) || view.getText().toString().equals("-", ignoreCase = true)) {
+        if (view.text.toString().equals("", ignoreCase = true) || view.text.toString().equals("-", ignoreCase = true)) {
             view.setTextColor(Color.GRAY)
             return
         }

@@ -22,9 +22,9 @@ import java.lang.ref.WeakReference;
  */
 public class QueryNTUStops extends AsyncTask<Integer, Void, Void> {
 
-    private WeakReference<Activity> actRef;
-    private Callback callback;
-    private String originalSubtext;
+    private final WeakReference<Activity> actRef;
+    private final Callback callback;
+    private final String originalSubtext;
 
     public QueryNTUStops(Activity activity, String subtext, Callback onCompleteCallback) {
         this.actRef = new WeakReference<>(activity);
@@ -55,7 +55,7 @@ public class QueryNTUStops extends AsyncTask<Integer, Void, Void> {
             return null;
         }
 
-        if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
+        if (tmp == null || !StaticVariables.INSTANCE.checkIfYouGotJsonString(tmp)) {
             LogHelper.e(TAG, "Error JSON: " + tmp);
             activity.runOnUiThread(() -> {
                 // Update error

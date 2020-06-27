@@ -55,8 +55,8 @@ object StaticVariables {
 
         val arrivalDate = parseDate(arrivalString)
 
-        LogHelper.d("COMPARE", "Current: " + currentDate.toString())
-        LogHelper.d("COMPARE", "Arrival: " + arrivalDate.toString())
+        LogHelper.d("COMPARE", "Current: $currentDate")
+        LogHelper.d("COMPARE", "Arrival: $arrivalDate")
         val difference = arrivalDate.timeInMillis - currentDate.timeInMillis
         return TimeUnit.MILLISECONDS.toMinutes(difference)
     }

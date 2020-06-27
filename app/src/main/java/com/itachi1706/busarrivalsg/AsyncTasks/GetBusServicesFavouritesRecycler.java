@@ -26,9 +26,9 @@ import java.util.Objects;
  */
 public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Void, String> {
 
-    private WeakReference<Activity> actRef;
+    private final WeakReference<Activity> actRef;
     private Exception exception = null;
-    private FavouritesRecyclerAdapter adapter;
+    private final FavouritesRecyclerAdapter adapter;
 
     private BusServices[] busObjArr;
 
@@ -184,6 +184,7 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
 
     private boolean checkServiceOperational(BusStatus one, BusStatus two, BusStatus three) {
         return !(one.getEstimatedArrival() == null && two.getEstimatedArrival() == null && three.getEstimatedArrival() == null)
-                && !(Objects.requireNonNull(one.getEstimatedArrival()).isEmpty() && two.getEstimatedArrival().isEmpty() && three.getEstimatedArrival().isEmpty());
+                && !(Objects.requireNonNull(one.getEstimatedArrival()).isEmpty() && Objects.requireNonNull(two.getEstimatedArrival()).isEmpty()
+                && Objects.requireNonNull(three.getEstimatedArrival()).isEmpty());
     }
 }

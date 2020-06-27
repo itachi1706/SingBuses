@@ -23,10 +23,10 @@ import java.lang.ref.WeakReference;
  */
 public class ParseBusStops extends AsyncTask<BusStopJSONArray, String, Void> {
 
-    private ProgressDialog progressDialog;
-    private BusStopsDB db;
-    private WeakReference<Activity> actRef;
-    private SharedPreferences sp;
+    private final ProgressDialog progressDialog;
+    private final BusStopsDB db;
+    private final WeakReference<Activity> actRef;
+    private final SharedPreferences sp;
 
     public ParseBusStops(ProgressDialog progressDialog, BusStopsDB db, Activity activity, SharedPreferences sp){
         this.progressDialog = progressDialog;
