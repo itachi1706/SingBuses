@@ -40,6 +40,7 @@ import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.Services.BusStorage;
 import com.itachi1706.busarrivalsg.objects.BusServices;
+import com.itachi1706.busarrivalsg.util.LogInitializer;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.busarrivalsg.util.SwipeFavouriteCallback;
 import com.itachi1706.busarrivalsg.util.SwipeMoveFavouriteCallback;
@@ -65,6 +66,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG);
+        LogInitializer.initLogger();
         setContentView(R.layout.activity_main_menu_recycler);
 
         fab = findViewById(R.id.add_fab);
