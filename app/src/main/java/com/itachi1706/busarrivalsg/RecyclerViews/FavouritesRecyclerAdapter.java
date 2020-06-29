@@ -329,8 +329,8 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 
     private class ArrivalButton implements View.OnClickListener{
 
-        private double longitude = -1000, latitude = -1000;
-        private String stopCode = "", serviceNo = "Unknown";
+        private double longitude, latitude;
+        private String stopCode, serviceNo;
         private final BusServices busObj;
         private final int state;
 

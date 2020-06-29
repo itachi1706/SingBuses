@@ -69,7 +69,8 @@
         app:srcCompat="@drawable/ic_search"
         app:elevation="4dp"
         app:borderWidth="0dp"
-        android:adjustViewBounds="false" />
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/contentdesc_search" />
 
 
 </FrameLayout>

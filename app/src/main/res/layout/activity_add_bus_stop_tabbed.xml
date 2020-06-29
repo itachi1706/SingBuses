@@ -44,6 +44,7 @@
         app:srcCompat="@drawable/ic_location_crosshair"
         app:elevation="4dp"
         app:borderWidth="0dp"
-        android:adjustViewBounds="false" />
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/contentdesc_cur_loc" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
