@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.collection.ArrayMap;
@@ -197,7 +198,6 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, MainSettings.class));
             return true;
@@ -251,7 +251,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         }
 
         @Override
-        public void handleMessage(Message msg){
+        public void handleMessage(@NonNull Message msg){
             BusServicesAtStopRecyclerActivity activity = mActivity.get();
 
             super.handleMessage(msg);

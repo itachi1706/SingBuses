@@ -56,7 +56,6 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     //Android Stuff
     private TextView syncState;
     private FloatingActionButton fab;
-    private RecyclerView favouritesList;
     private FavouritesRecyclerAdapter adapter;
     private SwipeRefreshLayout swipeToRefresh;
 
@@ -70,7 +69,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         setContentView(R.layout.activity_main_menu_recycler);
 
         fab = findViewById(R.id.add_fab);
-        favouritesList = findViewById(R.id.rvFav);
+        RecyclerView favouritesList = findViewById(R.id.rvFav);
         syncState = findViewById(R.id.firebase_sync_status);
 
         // Obtain the FirebaseAnalytics instance.

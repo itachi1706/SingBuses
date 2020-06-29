@@ -29,7 +29,7 @@
 #-keep class com.google.gson.stream.** { *; }
 
 # Application classes that will be serialized/deserialized over Gson
--keep class com.google.gson.examples.android.model.** { <fields>; }
+-keep class com.google.gson.examples.android.model.* { <fields>; }
 
 # Prevent proguard from stripping interface information from TypeAdapterFactory,
 # JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
@@ -52,4 +52,4 @@
 -dontwarn java.nio.file.OpenOption
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn com.itachi1706.busarrivalsg.**
--keep public class com.itachi1706.busarrivalsg.**
+-keep public class com.itachi1706.busarrivalsg.*
