@@ -13,9 +13,9 @@ cache:
   - $HOME/.android/build-cache
 env:
   global:
-  - API_LEVEL=28
+  - API_LEVEL=29
   - ANDROID_EMULATOR_API_LEVEL=29
-  - ANDROID_BUILD_TOOLS_VERSION=28.0.3
+  - ANDROID_BUILD_TOOLS_VERSION=29.0.3
   - ANDROID_ABI=x86_64
   - ANDROID_FLAVOUR=google_apis # Use default for non-google
   - ADB_INSTALL_TIMEOUT=20
