@@ -152,17 +152,22 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
             if (state == StaticVariables.SUB) b.include(m3.getPosition());
         }
+        Marker cur = null;
         switch (state) {
-            case StaticVariables.CUR: if (m1 != null) m1.showInfoWindow(); break;
-            case StaticVariables.NEXT: if (m2 != null) m2.showInfoWindow(); break;
-            case StaticVariables.SUB: if (m3 != null) m3.showInfoWindow(); break;
+            case StaticVariables.CUR: if (m1 != null) cur = m1; break;
+            case StaticVariables.NEXT: if (m2 != null) cur = m2; break;
+            case StaticVariables.SUB: if (m3 != null) cur = m3; break;
         }
 
         Marker stop = mMap.addMarker(new MarkerOptions().position(busStopLocation).title(getString(R.string.maps_marker_bus_stop_title))
                 .snippet(getString(R.string.maps_marker_bus_stop_snippet)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pegman)));
         b.include(stop.getPosition());
         LatLngBounds boundary = b.build();
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundary, 100));
+        Marker finalCur = cur;
+        mMap.setOnMapLoadedCallback(() -> {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundary, 100));
+            if (finalCur != null) finalCur.showInfoWindow();
+        });
     }
 
     private String processArrival(String estString) {
