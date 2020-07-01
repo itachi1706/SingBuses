@@ -52,4 +52,5 @@
 -dontwarn java.nio.file.OpenOption
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn com.itachi1706.busarrivalsg.**
--keep public class com.itachi1706.busarrivalsg.*
+#noinspection ShrinkerUnresolvedReference
+-keep public class com.itachi1706.busarrivalsg.**
