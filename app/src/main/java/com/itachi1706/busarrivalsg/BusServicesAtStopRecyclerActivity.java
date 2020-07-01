@@ -58,6 +58,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         if (this.getIntent().hasExtra("stopCode")) busStopCode = this.getIntent().getStringExtra("stopCode");
         if (this.getIntent().hasExtra("stopName")) busStopName = this.getIntent().getStringExtra("stopName");
         if (this.getIntent().hasExtra("busServices")) busServicesString = this.getIntent().getStringExtra("busServices");
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         buses = findViewById(R.id.rvBusService);
         if (buses != null) buses.setHasFixedSize(true);
@@ -193,21 +194,16 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, MainSettings.class));
-            return true;
-        } else if (id == R.id.action_refresh){
+        if (id == R.id.action_settings) startActivity(new Intent(this, MainSettings.class));
+        else if (id == R.id.action_refresh){
             swipeToRefresh.setRefreshing(true);
             updateBusStop();
-            return true;
-        }
+        } else if (id == android.R.id.home) finish();
+        else return super.onOptionsItemSelected(item);
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
