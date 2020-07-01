@@ -53,7 +53,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         pager = findViewById(R.id.main_viewpager);
