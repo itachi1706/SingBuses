@@ -20,6 +20,9 @@ plugins:
     channel: beta
     config:
       sonar.java.source: 8
+    checks:
+      squid:S3776:
+        enabled: false
 ratings:
   paths:
   - "**.java"

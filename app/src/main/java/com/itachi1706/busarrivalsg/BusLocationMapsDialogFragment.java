@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.Services.LocManager;
 import com.itachi1706.busarrivalsg.objects.CommonEnums;
+import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.helperlib.helpers.LogHelper;
@@ -152,21 +153,15 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
             if (state == StaticVariables.SUB) b.include(m3.getPosition());
         }
-        Marker cur = null;
-        switch (state) {
-            case StaticVariables.CUR: if (m1 != null) cur = m1; break;
-            case StaticVariables.NEXT: if (m2 != null) cur = m2; break;
-            case StaticVariables.SUB: if (m3 != null) cur = m3; break;
-        }
+        Marker cur = BusesUtil.INSTANCE.getCurrentMarker(m1, m2, m3, state);
 
         Marker stop = mMap.addMarker(new MarkerOptions().position(busStopLocation).title(getString(R.string.maps_marker_bus_stop_title))
                 .snippet(getString(R.string.maps_marker_bus_stop_snippet)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pegman)));
         b.include(stop.getPosition());
         LatLngBounds boundary = b.build();
-        Marker finalCur = cur;
         mMap.setOnMapLoadedCallback(() -> {
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundary, 100));
-            if (finalCur != null) finalCur.showInfoWindow();
+            if (cur != null) cur.showInfoWindow();
         });
     }
 
