@@ -53,6 +53,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         pager = findViewById(R.id.main_viewpager);
@@ -235,11 +236,10 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, MainSettings.class));
-            return true;
-        }
+        if (id == R.id.action_settings) startActivity(new Intent(this, MainSettings.class));
+         else if (id == android.R.id.home) finish();
+        else return super.onOptionsItemSelected(item);
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 }
