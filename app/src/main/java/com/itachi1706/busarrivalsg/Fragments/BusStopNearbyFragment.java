@@ -172,7 +172,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
                         .icon(BusesUtil.INSTANCE.vectorToBitmapDescriptor(R.drawable.red_circle, context))), stop);
             }
 
-            zoomToLocation();
+            mMap.setOnMapLoadedCallback(() -> zoomToLocation());
         }
     };
 
@@ -196,7 +196,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
         settings.setZoomControlsEnabled(true);
         settings.setMapToolbarEnabled(false);
 
-        zoomToLocation();
+        mMap.setOnMapLoadedCallback(this::zoomToLocation);
     }
 
     private boolean isAnimating = false;

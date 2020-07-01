@@ -223,7 +223,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
         campusBlue.setEnabled(true);
         traffic.setEnabled(true);
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(1.3478184567642855, 103.68342014685716), 15.4f)); // Hardcode center of school
+        mMap.setOnMapLoadedCallback(() -> mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(1.3478184567642855, 103.68342014685716), 15.4f))); // Hardcode center of school
+
         refreshHandler = new Handler();
         getData(false);
 
@@ -475,9 +476,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
 
                 LatLng myLatLng;
                 if (centerOn != null) myLatLng = new LatLng(centerOn.getLat(), centerOn.getLon());
-                else
-                    myLatLng = new LatLng(1.3478184567642855, 103.68342014685716); // Hardcode center of school
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15.4f));
+                else myLatLng = new LatLng(1.3478184567642855, 103.68342014685716); // Hardcode center of school
+                mMap.setOnMapLoadedCallback(() -> mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15.4f)));
             } else {
                 // Only update buses
                 for (Marker m : busMarkers) {

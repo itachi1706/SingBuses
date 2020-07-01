@@ -14,6 +14,7 @@ import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.Marker
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.objects.CommonEnums
 import com.itachi1706.helperlib.helpers.PrefHelper
@@ -98,6 +99,15 @@ object BusesUtil {
             CommonEnums.BUS_STANDING_AVAIL -> view.setTextColor(if (PrefHelper.isNightModeEnabled(view.context)) Color.YELLOW else ContextCompat.getColor(view.context, R.color.dark_yellow))
             CommonEnums.BUS_LIMITED_SEATS -> view.setTextColor(Color.RED)
             else -> view.setTextColor(Color.GRAY)
+        }
+    }
+
+    fun getCurrentMarker(m1: Marker?, m2: Marker?, m3: Marker?, state: Int): Marker? {
+        return when (state) {
+            StaticVariables.CUR -> m1
+            StaticVariables.NEXT -> m2
+            StaticVariables.SUB -> m3
+            else -> null
         }
     }
 
