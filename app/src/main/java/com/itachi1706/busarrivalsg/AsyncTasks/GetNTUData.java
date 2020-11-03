@@ -87,8 +87,17 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
             for (NTUBus.Route r : b.getRoutes()) {
                 if (fakeUpdate) {
                     // Get route from cache
-                    NTUBus.MapRouting route = cacheHelper.getRouteFromString(cacheHelper.getCachedRoute(cacheHelper.getRouteCode(r.getId())));
-                    r.setRoute(route);
+                    String rtS = cacheHelper.getCachedRoute(cacheHelper.getRouteCode(r.getId()));
+                    if (rtS != null) {
+                        NTUBus.MapRouting route = cacheHelper.getRouteFromString(rtS);
+                        r.setRoute(route);
+                    } else {
+                        // Present error
+                        Intent sendForMapParsingIntent = new Intent(NTUBusActivity.RECEIVE_NTU_DATA_EVENT);
+                        sendForMapParsingIntent.putExtra("err", true);
+                        mActivity.runOnUiThread(() -> LocalBroadcastManager.getInstance(mActivity).sendBroadcast(sendForMapParsingIntent));
+                        return 0;
+                    }
                 } else if (update != 1) {
                     // Write route to cache
                     cacheHelper.writeCachedRoute(cacheHelper.getRouteCode(r.getId()), r.getRoute());
