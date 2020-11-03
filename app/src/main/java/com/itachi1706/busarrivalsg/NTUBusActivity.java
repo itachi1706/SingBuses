@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -84,6 +85,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
 
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private View bottomSheet;
+
+    private boolean announceErr = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -403,6 +406,16 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            boolean err = intent.getBooleanExtra("err", false);
+            if (err) {
+                LogHelper.e(TAG, "Some error occurred");
+                if (!announceErr) {
+                    announceErr = true;
+                    new AlertDialog.Builder(context).setTitle("Unable to contact NTU Bus API")
+                            .setMessage("We are having trouble connecting to the API. It may be down currently. For more information, please check with NTUSU")
+                            .setPositiveButton(R.string.dialog_action_positive_close, null).show();
+                }
+            }
             String data = intent.getStringExtra("data");
             int update = intent.getIntExtra("update", 0);
             if (data == null) return;
