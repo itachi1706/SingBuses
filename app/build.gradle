@@ -82,7 +82,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:21.0.1'
     implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
     implementation 'com.google.firebase:firebase-analytics-ktx:18.0.1'
-    implementation 'me.jfenn:Attribouter:0.1.5'
+    implementation 'me.jfenn:Attribouter:0.1.8'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     testImplementation 'junit:junit:4.13.1'
     implementation 'com.itachi1706.cepaslib:cepaslib:2.1.0'

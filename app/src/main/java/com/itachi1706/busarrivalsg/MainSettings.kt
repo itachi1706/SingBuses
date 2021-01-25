@@ -56,7 +56,7 @@ class MainSettings : AppCompatActivity() {
 
             SettingsInitializer().setFullscreen(true).explodeUpdaterSettings(activity, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL,
                     resources.getString(R.string.link_legacy), resources.getString(R.string.link_updates), this)
-                    .setAboutApp(true) { Attribouter.from(context).show(); true }
+                    .setAboutApp(true) { Attribouter.from(requireContext()).show(); true }
                     .setIssueTracking(true, "https://itachi1706.atlassian.net/browse/SGBUSAND")
                     .setBugReporting(true, "https://itachi1706.atlassian.net/servicedesk/customer/portal/3")
                     .setFDroidRepo(true, "fdroidrepos://fdroid.itachi1706.com/repo?fingerprint=B321F84BCAC7C296CF50923FF98965B11019BB5FD30C8B8F3A39F2F649AF9691")

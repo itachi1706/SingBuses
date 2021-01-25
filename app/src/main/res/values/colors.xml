@@ -7,6 +7,11 @@
     <color name="primary">@color/green_500</color>
     <color name="accent">@color/light_green_500</color>
 
+    <color name="attribouter_colorPrimary">@color/primary</color>
+    <color name="attribouter_colorPrimaryDark">@color/primaryDark</color>
+    <color name="attribouter_colorPrimary_night">@color/primary</color>
+    <color name="attribouter_colorPrimaryDark_night">@color/primaryDark</color>
+
     <color name="refresh_progress_1">@color/blue_500</color>
     <color name="refresh_progress_2">@color/green_500</color>
     <color name="refresh_progress_3">@color/red_500</color>
