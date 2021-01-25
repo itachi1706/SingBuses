@@ -51,10 +51,10 @@ jobs:
           script: ./gradlew connectedAndroidTest
   device-test-full:
     runs-on: macos-latest
-    fail-fast: true
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
     name: Test run on all Android Devices
     strategy:
+      fail-fast: true
       matrix:
         api-level: [21, 22, 23, 24, 25, 26, 28, 29]
     steps:
