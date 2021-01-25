@@ -25,6 +25,9 @@ jobs:
   device-test:
     runs-on: macos-latest
     name: Android Device Test Runner
+    strategy:
+      matrix:
+        api-level: [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
     steps:
     - name: checkout
       uses: actions/checkout@v2.3.4
@@ -41,7 +44,7 @@ jobs:
     - name: run tests
       uses: reactivecircus/android-emulator-runner@v2.14.3
       with:
-        api-level: 28
+        api-level: ${{ matrix.api-level }}
         target: google_apis
         profile: 'pixel_xl'
         arch: x86_64
@@ -52,8 +55,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Checkout all submodules
-        uses: textbook/git-checkout-submodule-action@2.0.0
       - name: set up JDK 1.8
         uses: actions/setup-java@v1
         with:
