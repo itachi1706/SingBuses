@@ -24,7 +24,7 @@ jobs:
       run: ./gradlew build
   device-test:
     runs-on: macos-latest
-    name: Android Device Test Runner
+    name: Test run on Android Devices
     strategy:
       matrix:
         api-level: [21, 22, 23, 24, 25, 26, 27, 28, 29]
