@@ -26,9 +26,33 @@ jobs:
       with:
         name: SingBuses-debug-apk
         path: ./SingBuses-debug.apk
-  device-test:
+  device-test-latest:
     runs-on: macos-latest
-    name: Test run on Android Devices
+    if: github.event_name != 'pull_request' && github.ref != 'refs/heads/master' && !startsWith(github.ref, 'refs/tags/')
+    name: Test run on latest supported Android Device
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2.3.4
+      - name: Copy secure values
+        run: echo $GOOGLE_SERVICES > ./app/google-services.json
+        env:
+          GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+      - name: Make Gradle executable
+        run: chmod +x gradlew
+      - name: List Available Android Devices
+        run: $ANDROID_HOME/tools/bin/avdmanager list
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2.14.3
+        with:
+          api-level: 29
+          target: google_apis
+          profile: 'pixel_xl'
+          arch: x86_64
+          script: ./gradlew connectedAndroidTest
+  device-test-full:
+    runs-on: macos-latest
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
+    name: Test run on all Android Devices
     strategy:
       matrix:
         api-level: [21, 22, 23, 24, 25, 26, 28, 29]
