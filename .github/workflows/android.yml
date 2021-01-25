@@ -27,7 +27,7 @@ jobs:
     name: Android Device Test Runner
     strategy:
       matrix:
-        api-level: [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+        api-level: [20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
     steps:
     - name: checkout
       uses: actions/checkout@v2.3.4
