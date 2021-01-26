@@ -98,7 +98,7 @@ jobs:
         run: mv ./app/build/outputs/apk/debug/app-debug.apk ./SingBuses-debug.apk
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1.0.0
+        uses: actions/create-release@v1.1.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GH Actions
         with:
