@@ -31,6 +31,14 @@
                 icon="@drawable/ic_gitlab"
                 url="https://gitlab.com/itachi1706" />
         </ContributorWedge>
+
+        <ContributorWedge
+            name="dependabot[bot]"
+            avatar="https://avatars.githubusercontent.com/in/29110"
+            email="support@github.com"
+            bio="GitHub Internal Dependency Management Bot"
+            task="Contributor">
+        </ContributorWedge>
     </ContributorsWedge>
 
     <LicensesWedge
