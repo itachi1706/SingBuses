@@ -42,7 +42,7 @@ jobs:
       - name: List Available Android Devices
         run: $ANDROID_HOME/tools/bin/avdmanager list
       - name: run tests
-        uses: reactivecircus/android-emulator-runner@v2.14.3
+        uses: reactivecircus/android-emulator-runner@v2.15.0
         with:
           api-level: 29
           target: google_apis
@@ -69,7 +69,7 @@ jobs:
     - name: List Available Android Devices
       run: $ANDROID_HOME/tools/bin/avdmanager list
     - name: run tests
-      uses: reactivecircus/android-emulator-runner@v2.14.3
+      uses: reactivecircus/android-emulator-runner@v2.15.0
       with:
         api-level: ${{ matrix.api-level }}
         target: google_apis
