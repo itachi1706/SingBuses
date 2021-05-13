@@ -11,6 +11,8 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [master]
+  pull_request_target:
+    branches: [master]
   schedule:
     - cron: '0 19 * * 3'
 
@@ -18,6 +20,7 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
 
     strategy:
       fail-fast: false
@@ -30,11 +33,21 @@ jobs:
 
     steps:
     - name: Checkout repository
+      if: ${{ github.event_name != 'pull_request_target' }}
       uses: actions/checkout@v2.3.4
       with:
         # We must fetch at least the immediate parents so that if this is
         # a pull request then we can checkout the head.
         fetch-depth: 2
+
+    - name: Checkout repository PR
+      if: ${{ github.event_name == 'pull_request_target' }}
+      uses: actions/checkout@v2.3.4
+      with:
+        # We must fetch at least the immediate parents so that if this is
+        # a pull request then we can checkout the head.
+        fetch-depth: 2
+        ref: ${{ github.event.pull_request.head.sha }}
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
