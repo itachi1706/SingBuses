@@ -81,7 +81,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:19.0.0'
     implementation 'com.google.firebase:firebase-perf:19.1.0'
     implementation 'com.google.firebase:firebase-messaging:22.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.0'
     implementation 'com.google.firebase:firebase-analytics-ktx:19.0.0'
     implementation 'me.jfenn:Attribouter:0.1.9'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
