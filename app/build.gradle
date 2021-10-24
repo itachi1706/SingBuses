@@ -82,7 +82,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-perf:20.0.3'
     implementation 'com.google.firebase:firebase-messaging:22.0.0'
     implementation 'com.google.firebase:firebase-crashlytics:18.2.1'
-    implementation 'com.google.firebase:firebase-analytics-ktx:19.0.1'
+    implementation 'com.google.firebase:firebase-analytics-ktx:19.0.2'
     implementation 'me.jfenn:Attribouter:0.1.9'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     testImplementation 'junit:junit:4.13.2'
