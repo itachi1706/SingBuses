@@ -34,7 +34,7 @@ jobs:
     steps:
     - name: Checkout repository
       if: ${{ github.event_name != 'pull_request_target' }}
-      uses: actions/checkout@v2.3.4
+      uses: actions/checkout@v2.3.5
       with:
         # We must fetch at least the immediate parents so that if this is
         # a pull request then we can checkout the head.
@@ -42,7 +42,7 @@ jobs:
 
     - name: Checkout repository PR
       if: ${{ github.event_name == 'pull_request_target' }}
-      uses: actions/checkout@v2.3.4
+      uses: actions/checkout@v2.3.5
       with:
         # We must fetch at least the immediate parents so that if this is
         # a pull request then we can checkout the head.
