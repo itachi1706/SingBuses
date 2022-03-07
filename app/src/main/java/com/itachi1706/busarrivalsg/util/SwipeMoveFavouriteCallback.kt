@@ -12,8 +12,8 @@ class SwipeMoveFavouriteCallback(context: Context, callback: ISwipeCallback) : S
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         // move item in `fromPos` to `toPos` in adapter.
-        val fromPos = viewHolder.adapterPosition
-        val toPos = target.adapterPosition
+        val fromPos = viewHolder.bindingAdapterPosition
+        val toPos = target.bindingAdapterPosition
         return callback.moveFavourite(fromPos, toPos)
     }
 }

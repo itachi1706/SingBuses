@@ -80,7 +80,7 @@ object BusesUtil {
     }
 
     fun getOperatorColor(context: Context, operator: String) : Int {
-        return when (operator.toUpperCase(Locale.getDefault())) {
+        return when (operator.uppercase()) {
             OPERATOR_SMRT -> Color.RED
             OPERATOR_SBST -> Color.MAGENTA
             OPERATOR_TTS -> if (PrefHelper.isNightModeEnabled(context)) Color.GREEN else ContextCompat.getColor(context, R.color.dark_green)
