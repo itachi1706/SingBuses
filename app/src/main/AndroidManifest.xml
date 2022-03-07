@@ -19,8 +19,7 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
         <activity
             android:name=".MainMenuActivity"
-            android:exported="true"
-            android:label="@string/app_name">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -99,7 +98,7 @@
         <activity android:name=".CEPASScanActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="Scan EZLink Card"
-            android:screenOrientation="sensorPortrait"
+            android:exported="true"
             tools:ignore="AppLinkUrlError">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
