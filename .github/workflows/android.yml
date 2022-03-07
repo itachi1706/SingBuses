@@ -70,7 +70,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        api-level: [21, 22, 23, 24, 25, 26, 28, 29, 30]
+        api-level: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]
     steps:
     - name: Checkout Repository
       if: ${{ github.event_name != 'pull_request_target' }}
