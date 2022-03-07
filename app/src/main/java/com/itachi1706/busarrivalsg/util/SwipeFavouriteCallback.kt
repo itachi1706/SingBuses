@@ -31,7 +31,7 @@ open class SwipeFavouriteCallback(var context: Context, var callback: ISwipeCall
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean { return false }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        callback.toggleFavourite(viewHolder.adapterPosition)
+        callback.toggleFavourite(viewHolder.bindingAdapterPosition)
     }
 
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
@@ -40,7 +40,7 @@ open class SwipeFavouriteCallback(var context: Context, var callback: ISwipeCall
             val itemView = viewHolder.itemView
             val swipeDirection = if (dX > 0) ItemTouchHelper.RIGHT else if (dX < 0) ItemTouchHelper.LEFT else ItemTouchHelper.UP
 
-            val isFav = callback.getFavouriteState(viewHolder.adapterPosition)
+            val isFav = callback.getFavouriteState(viewHolder.bindingAdapterPosition)
             val selectedBackground = if (isFav) unfavourite else favourite
             val selectedBitmap = if (isFav) unfavouriteBitmap else favouriteBitmap
 

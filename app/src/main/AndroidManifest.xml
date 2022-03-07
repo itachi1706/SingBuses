@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.itachi1706.busarrivalsg"
     android:installLocation="internalOnly">
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Get all the API data duh -->
@@ -18,10 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
-        <activity
-            android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
-            tools:replace="android:launchMode"
-            android:launchMode="standard" />
         <activity
             android:name=".MainMenuActivity"
             android:exported="true"
