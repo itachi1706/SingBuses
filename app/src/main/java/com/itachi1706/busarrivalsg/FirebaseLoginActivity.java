@@ -16,7 +16,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -39,7 +41,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
     private static final String TAG = "FirebaseLogin";
     private static final String FIREBASE_UID = "firebase_uid";
 
-    private GoogleApiClient mGoogleApiClient;
+    private GoogleSignInClient mGoogleClient;
     private FirebaseAuth mAuth;
     private SharedPreferences sp;
 
@@ -73,7 +75,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         mEmailSignInButton.setOnClickListener(v -> {
             //Attempts to sign in with Google
             progress.setVisibility(View.VISIBLE);
-            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            Intent signInIntent = mGoogleClient.getSignInIntent();
             startActivityForResult(signInIntent, RC_SIGN_IN);
         });
 
@@ -81,8 +83,7 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail().build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+        mGoogleClient = GoogleSignIn.getClient(this, gso);
 
         debugAcctBtn = findViewById(R.id.test_account);
 
@@ -110,11 +111,11 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            LogHelper.d(TAG, "Sign In Result:" + result.isSuccess());
-            if (result.isSuccess()) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            LogHelper.d(TAG, "Sign In Result: " + task.isSuccessful());
+            if (task.isSuccessful()) {
                 // Signed in successfully, show authenticated UI.
-                GoogleSignInAccount acct = result.getSignInAccount();
+                GoogleSignInAccount acct = task.getResult();
                 firebaseAuthWithGoogle(acct);
             } else {
                 // Signed out, show unauthenticated UI.
