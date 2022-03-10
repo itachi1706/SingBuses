@@ -50,7 +50,7 @@ class MainSettings : AppCompatActivity() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             addPreferencesFromResource(R.xml.pref_general)
 
-            val sp = PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
+            val sp = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
             SettingsHandler(requireActivity()).initSettings(this)
 
@@ -89,11 +89,13 @@ class MainSettings : AppCompatActivity() {
             }
 
             val shuttleRefreshRate = findPreference<Preference>("ntushuttlerefrate") as EditTextPreference
-            shuttleRefreshRate.summary = resources.getQuantityString(R.plurals.seconds_count, Integer.parseInt(shuttleRefreshRate.text), Integer.parseInt(shuttleRefreshRate.text))
+            val textRefreshRate = shuttleRefreshRate.text.toString().ifEmpty { "5" }
+            shuttleRefreshRate.summary = resources.getQuantityString(R.plurals.seconds_count, Integer.parseInt(textRefreshRate), Integer.parseInt(textRefreshRate))
             shuttleRefreshRate.dialogTitle = "NTU Shuttle Tracker Auto-Refresh"
             shuttleRefreshRate.dialogMessage = "Tweaks the auto refresh rate (in seconds) of the NTU Shuttle Bus Tracking\nMinimum time is 5 seconds"
             shuttleRefreshRate.setOnPreferenceChangeListener { preference, newValue ->
-                preference.summary = resources.getQuantityString(R.plurals.seconds_count, Integer.parseInt(newValue.toString()), Integer.parseInt(newValue.toString()))
+                val newRefreshRate = newValue.toString().ifEmpty { "5" } // Minimum 5 seconds
+                preference.summary = resources.getQuantityString(R.plurals.seconds_count, Integer.parseInt(newRefreshRate), Integer.parseInt(newRefreshRate))
                 true
             }
 
