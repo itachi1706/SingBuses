@@ -11,17 +11,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -30,20 +28,18 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.itachi1706.helperlib.helpers.LogHelper;
 
-public class FirebaseLoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class FirebaseLoginActivity extends AppCompatActivity {
 
     private ProgressBar progress;
     private TextView acctView;
-    private Button signout, debugAcctBtn;
+    private Button signOut, debugAcctBtn;
     private SignInButton mEmailSignInButton;
     private static final String TAG = "FirebaseLogin";
     private static final String FIREBASE_UID = "firebase_uid";
 
-    private GoogleApiClient mGoogleApiClient;
+    private GoogleSignInClient mGoogleClient;
     private FirebaseAuth mAuth;
     private SharedPreferences sp;
-
-    private static final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +52,12 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         // Set up the login form.
         mAuth = FirebaseAuth.getInstance();
         acctView = findViewById(R.id.sign_in_as);
-        signout = findViewById(R.id.sign_out);
+        signOut = findViewById(R.id.sign_out);
         if (getIntent().hasExtra("logout") && getIntent().getBooleanExtra("logout", false)) {
             mAuth.signOut();
             updateUI(null, true);
         }
-        signout.setOnClickListener(v -> {
+        signOut.setOnClickListener(v -> {
             mAuth.signOut();
             updateUI(null);
         });
@@ -73,16 +69,15 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         mEmailSignInButton.setOnClickListener(v -> {
             //Attempts to sign in with Google
             progress.setVisibility(View.VISIBLE);
-            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-            startActivityForResult(signInIntent, RC_SIGN_IN);
+            Intent signInIntent = mGoogleClient.getSignInIntent();
+            googleSignInIntent.launch(signInIntent);
         });
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail().build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+        mGoogleClient = GoogleSignIn.getClient(this, gso);
 
         debugAcctBtn = findViewById(R.id.test_account);
 
@@ -104,24 +99,24 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
         updateUI(currentUser);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    ActivityResultLauncher<Intent> googleSignInIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    Intent data = result.getData();
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            LogHelper.d(TAG, "Sign In Result:" + result.isSuccess());
-            if (result.isSuccess()) {
-                // Signed in successfully, show authenticated UI.
-                GoogleSignInAccount acct = result.getSignInAccount();
-                firebaseAuthWithGoogle(acct);
-            } else {
-                // Signed out, show unauthenticated UI.
-                updateUI(null);
-            }
-        }
-    }
+                    // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                    LogHelper.d(TAG, "Sign In Result: " + task.isSuccessful());
+                    if (task.isSuccessful()) {
+                        // Signed in successfully, show authenticated UI.
+                        GoogleSignInAccount acct = task.getResult();
+                        firebaseAuthWithGoogle(acct);
+                    } else {
+                        // Signed out, show unauthenticated UI.
+                        updateUI(null);
+                    }
+                }
+            });
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         LogHelper.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
@@ -140,7 +135,12 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
             updateUI(user, true);
         } else {
             // If sign in fails, display a message to the user.
-            LogHelper.w(TAG, "signIn" + provider + ":failure", task.getException());
+            if (task.getException() != null) {
+                LogHelper.w(TAG, "signIn" + provider + ":failure", task.getException());
+            } else {
+                LogHelper.w(TAG, "signIn" + provider + ":failure");
+            }
+
             Toast.makeText(getApplicationContext(), "Authentication failed.",
                     Toast.LENGTH_SHORT).show();
             updateUI(null);
@@ -158,38 +158,24 @@ public class FirebaseLoginActivity extends AppCompatActivity implements GoogleAp
             // There's a user
             Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
             sp.edit().putString(FIREBASE_UID, user.getUid()).apply();
-            acctView.setText("Signed in as " + user.getEmail());
+            acctView.setText(getString(R.string.signed_in_as, user.getEmail()));
             if (BuildConfig.DEBUG)
                 debugAcctBtn.setVisibility(View.GONE);
             mEmailSignInButton.setVisibility(View.GONE);
-            signout.setVisibility(View.VISIBLE);
+            signOut.setVisibility(View.VISIBLE);
         } else {
             Toast.makeText(this, "Currently Logged Out", Toast.LENGTH_SHORT).show();
             if (sp.contains(FIREBASE_UID)) sp.edit().remove(FIREBASE_UID).apply();
-            acctView.setText("Not Signed In");
+            acctView.setText(R.string.not_signed_in);
             if (BuildConfig.DEBUG)
                 debugAcctBtn.setVisibility(View.VISIBLE);
             mEmailSignInButton.setVisibility(View.VISIBLE);
-            signout.setVisibility(View.GONE);
+            signOut.setVisibility(View.GONE);
         }
         if (returnActivity) {
             setResult(RESULT_OK);
             finish();
         }
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
-        // be available.
-        LogHelper.d(TAG, "onConnectionFailed:" + connectionResult);
-        if (mAuth.getCurrentUser() == null)
-            new AlertDialog.Builder(this).setTitle("Unable to connect to Google Servers")
-                    .setMessage("We are unable to connect to Google Servers to sign you in, therefore this utility cannot be used")
-                    .setCancelable(false).setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                setResult(RESULT_CANCELED);
-                finish();
-            }).show();
     }
 
     @Override

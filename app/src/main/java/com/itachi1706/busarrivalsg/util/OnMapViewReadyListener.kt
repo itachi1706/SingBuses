@@ -64,9 +64,9 @@ class OnMapViewReadyListener(private val toBeNotified: OnGlobalMapReadyListener,
         else if (mapViewAsync !== null) mapViewAsync?.getMapAsync(this)
     }
 
-    override fun onMapReady(googleMap: GoogleMap?) {
+    override fun onMapReady(googleMap: GoogleMap) {
         // NOTE: The GoogleMap API specifies the listener is removed just prior to invocation.
-        map = googleMap ?: return
+        map = googleMap
         isMapReady = true
         fireCallbackIfReady()
     }

@@ -45,6 +45,8 @@
     <string name="content_description_wheelchair">Wheelchair Supported Bus</string>
     <string name="service_operational">In Operation</string>
     <string name="service_not_operational">Not In Operation</string>
+    <string name="not_signed_in">Not Signed In</string>
+    <string name="signed_in_as">Signed in as %1$s</string>
 
     <!-- Google Maps Activity -->
     <string name="maps_marker_bus_location_title">Current Bus Location</string>
