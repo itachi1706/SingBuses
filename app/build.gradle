@@ -83,7 +83,7 @@ dependencies {
     implementation 'me.jfenn:Attribouter:0.1.9'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     testImplementation 'junit:junit:4.13.2'
-    implementation 'com.itachi1706.cepaslib:cepaslib:2.1.0'
+    implementation 'com.itachi1706.cepaslib:cepaslib:2.3.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
