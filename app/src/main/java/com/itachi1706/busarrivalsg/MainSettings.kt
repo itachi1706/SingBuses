@@ -89,19 +89,22 @@ class MainSettings : AppCompatActivity() {
             }
 
             val shuttleRefreshRate = findPreference<Preference>("ntushuttlerefrate") as EditTextPreference
-            val textRefreshRate = shuttleRefreshRate.text.toString().ifEmpty { "5" }
-            shuttleRefreshRate.summary = resources.getQuantityString(R.plurals.seconds_count, Integer.parseInt(textRefreshRate), Integer.parseInt(textRefreshRate))
+            updateSummaryRefreshRate(shuttleRefreshRate, shuttleRefreshRate.text.toString())
             shuttleRefreshRate.dialogTitle = "NTU Shuttle Tracker Auto-Refresh"
             shuttleRefreshRate.dialogMessage = "Tweaks the auto refresh rate (in seconds) of the NTU Shuttle Bus Tracking\nMinimum time is 5 seconds"
             shuttleRefreshRate.setOnPreferenceChangeListener { preference, newValue ->
-                val newRefreshRate = newValue.toString().ifEmpty { "5" } // Minimum 5 seconds
-                preference.summary = resources.getQuantityString(R.plurals.seconds_count, Integer.parseInt(newRefreshRate), Integer.parseInt(newRefreshRate))
+                updateSummaryRefreshRate(preference, newValue.toString())
                 true
             }
 
             findPreference<Preference>("location_value")?.setOnPreferenceClickListener { processAdvDevSettingLocation() }
 
             findPreference<Preference>("app_theme")?.setOnPreferenceChangeListener { _, newValue -> PrefHelper.handleDefaultThemeSwitch(newValue.toString()); true }
+        }
+
+        private fun updateSummaryRefreshRate(pref: Preference, value: String) {
+            val newRefreshRate = value.ifEmpty { "5" } // Minimum 5 seconds
+            pref.summary = resources.getQuantityString(R.plurals.seconds_count, Integer.parseInt(newRefreshRate), Integer.parseInt(newRefreshRate))
         }
 
         private fun updateSummaryDBBus(timeDBUpdateBus: Preference?, dbBus: Long) {
