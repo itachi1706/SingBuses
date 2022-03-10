@@ -71,7 +71,6 @@ public class FirebaseLoginActivity extends AppCompatActivity {
             progress.setVisibility(View.VISIBLE);
             Intent signInIntent = mGoogleClient.getSignInIntent();
             googleSignInIntent.launch(signInIntent);
-//            startActivityForResult(signInIntent, RC_SIGN_IN);
         });
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
