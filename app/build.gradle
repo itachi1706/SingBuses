@@ -10,14 +10,14 @@ repositories {
 def isGHActions = System.getenv("GITHUB_ACTIONS") ?: false
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion '31.0.0'
+    compileSdkVersion 32
+    buildToolsVersion '32.0.0'
     namespace 'com.itachi1706.busarrivalsg'
 
     defaultConfig {
         applicationId "com.itachi1706.busarrivalsg"
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 32
         versionCode 606
         versionName "4.6.2"
         vectorDrawables.useSupportLibrary = true
