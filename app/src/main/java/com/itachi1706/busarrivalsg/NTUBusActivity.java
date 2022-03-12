@@ -1,7 +1,7 @@
 package com.itachi1706.busarrivalsg;
 
 import android.Manifest;
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,21 +18,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,6 +43,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.itachi1706.busarrivalsg.AsyncTasks.GetNTUData;
@@ -70,7 +69,7 @@ import java.util.List;
 
 public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyListener.OnGlobalMapReadyListener, GoogleMap.OnInfoWindowClickListener {
 
-    Switch campusRed, campusBlue, campusRider, campusWeekend, traffic, sbs;
+    SwitchMaterial campusRed, campusBlue, campusRider, campusWeekend, traffic, sbs;
     MapView mapView;
     private GoogleMap mMap;
 
@@ -316,11 +315,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
         }
     }
 
-
-    private static final int RC_HANDLE_ACCESS_FINE_LOCATION = 5;
-
     private void checkIfYouHaveGpsPermissionForThis() {
-        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
@@ -330,48 +326,38 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
 
     private void requestGpsPermission() {
         LogHelper.w(LocManager.TAG, "GPS permission is not granted. Requesting permission");
-        final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+        final String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            ActivityCompat.requestPermissions(this, permissions, NTUBusActivity.RC_HANDLE_ACCESS_FINE_LOCATION);
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            requestGps.launch(permissions);
             return;
         }
-
-        final Activity thisActivity = this;
 
         new AlertDialog.Builder(this).setTitle(R.string.dialog_title_request_permission_gps)
                 .setMessage(R.string.dialog_message_request_permission_gps_view_map_rationale)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(thisActivity, permissions, NTUBusActivity.RC_HANDLE_ACCESS_FINE_LOCATION)).show();
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> requestGps.launch(permissions)).show();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode != RC_HANDLE_ACCESS_FINE_LOCATION) {
-            LogHelper.d(LocManager.TAG, "Got unexpected permission result: " + requestCode);
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            return;
-        }
+    @SuppressLint("MissingPermission") // This is basically a permission check alr
+    private final ActivityResultLauncher<String[]> requestGps = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
+            result -> {
+                boolean hasPerm = StaticVariables.INSTANCE.checkIfCoraseLocationGranted(result);
 
-        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            LogHelper.d(LocManager.TAG, "Location permission granted - enabling my location");
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                mMap.setMyLocationEnabled(true);
-            }
-            return;
-        }
-
-        LogHelper.e(LocManager.TAG, "Permission not granted: results len = " + grantResults.length +
-                " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-        Toast.makeText(this, "No Permission for current location", Toast.LENGTH_SHORT).show();
-    }
+                if (hasPerm) {
+                    LogHelper.d(LocManager.TAG, "Location permission granted - enabling my location");
+                    // we have permission, so set my location to enabled
+                    mMap.setMyLocationEnabled(true);
+                } else {
+                    LogHelper.e(LocManager.TAG, "Permission not granted");
+                    Toast.makeText(this, "No Permission for current location", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     public void onInfoWindowClick(Marker marker) {
         if (marker.getTag() == null) return;
         Object type = marker.getTag();
-        LogHelper.d("NTU-BUS-MAP", "Indo clicked of " + type.getClass().toString());
+        LogHelper.d("NTU-BUS-MAP", "Indo clicked of " + type.getClass());
         if (type instanceof BusStopJSON) {
             BusStopJSON json = (BusStopJSON) type;
             json.getBusStopCode();
@@ -379,7 +365,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
 
             Intent pBusIntent = new Intent(this, BusServicesAtStopRecyclerActivity.class);
             pBusIntent.putExtra("stopCode", json.getBusStopCode());
-            if (json.getDescription() != null) pBusIntent.putExtra("stopName", json.getDescription());
+            pBusIntent.putExtra("stopName", json.getDescription());
             startActivity(pBusIntent);
         }
 

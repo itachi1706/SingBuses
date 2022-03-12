@@ -1,6 +1,7 @@
 package com.itachi1706.busarrivalsg;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,9 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -145,7 +146,8 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
             m2 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat2, lng2)).title("Location of Bus 2")
                     .snippet("ETA: " + processArrival(arr2) + " (" + processType(type2) + ")")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_stop)));
-            if (state == StaticVariables.NEXT || state == StaticVariables.SUB) b.include(m2.getPosition());
+            if (state == StaticVariables.NEXT || state == StaticVariables.SUB)
+                b.include(m2.getPosition());
         }
         if (StaticVariables.INSTANCE.checkBusLocationValid(lat3, lng3)) {
             m3 = mMap.addMarker(new MarkerOptions().position(new LatLng(lat3, lng3)).title("Location of Bus 3")
@@ -176,83 +178,60 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
 
     private String processType(int type) {
         switch (type) {
-            case CommonEnums.BUS_BENDY: return "Bendy Bus";
-            case CommonEnums.BUS_DOUBLE_DECK: return "Double Decker Bus";
-            case CommonEnums.BUS_SINGLE_DECK: return "Normal Bus";
+            case CommonEnums.BUS_BENDY:
+                return "Bendy Bus";
+            case CommonEnums.BUS_DOUBLE_DECK:
+                return "Double Decker Bus";
+            case CommonEnums.BUS_SINGLE_DECK:
+                return "Normal Bus";
             case CommonEnums.UNKNOWN:
-            default: return "Unknown Bus Type";
+            default:
+                return "Unknown Bus Type";
         }
     }
 
-    private static final int RC_HANDLE_ACCESS_FINE_LOCATION = 3;
-
     private void checkIfYouHaveGpsPermissionForThis() {
-        int rc = ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+        int rc = ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
-            requestGpsPermission(RC_HANDLE_ACCESS_FINE_LOCATION);
+            requestGpsPermission();
         }
     }
 
-    private void requestGpsPermission(final int code) {
+    private void requestGpsPermission() {
         LogHelper.w(LocManager.TAG, "GPS permission is not granted. Requesting permission");
-        final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+        final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
-            ActivityCompat.requestPermissions(requireActivity(), permissions, code);
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            requestGps.launch(permissions);
             return;
         }
 
         new AlertDialog.Builder(this.getActivity()).setTitle(R.string.dialog_title_request_permission_gps)
                 .setMessage(R.string.dialog_message_request_permission_gps_view_map_rationale)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(requireActivity(), permissions, code)).show();
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> requestGps.launch(permissions)).show();
     }
 
-    /**
-     * Callback for the result from requesting permissions. This method
-     * is invoked for every call on {@link #requestPermissions(String[], int)}.
-     * <p>
-     * <strong>Note:</strong> It is possible that the permissions request interaction
-     * with the user is interrupted. In this case you will receive empty permissions
-     * and results arrays which should be treated as a cancellation.
-     * </p>
-     *
-     * @param requestCode  The request code passed in {@link #requestPermissions(String[], int)}.
-     * @param permissions  The requested permissions. Never null.
-     * @param grantResults The grant results for the corresponding permissions
-     *                     which is either {@link PackageManager#PERMISSION_GRANTED}
-     *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
-     * @see #requestPermissions(String[], int)
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode != RC_HANDLE_ACCESS_FINE_LOCATION) {
-            LogHelper.d(LocManager.TAG, "Got unexpected permission result: " + requestCode);
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            return;
-        }
+    @SuppressLint("MissingPermission") // This is basically a permission check alr
+    private final ActivityResultLauncher<String[]> requestGps = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
+            result -> {
+                boolean hasPerm = StaticVariables.INSTANCE.checkIfCoraseLocationGranted(result);
 
-        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            LogHelper.d(LocManager.TAG, "Location permission granted - enabling my location");
-            // we have permission, so create the camerasource
-            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                mMap.setMyLocationEnabled(true);
-            }
-            return;
-        }
-
-        LogHelper.e(LocManager.TAG, "Permission not granted: results len = " + grantResults.length +
-                " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-        new AlertDialog.Builder(this.getActivity()).setTitle(R.string.dialog_title_permission_denied)
-                .setMessage(R.string.dialog_message_no_permission_gps).setPositiveButton(android.R.string.ok, null)
-                .setNeutralButton(R.string.dialog_action_neutral_app_settings, (dialog, which) -> {
-                    Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    Uri packageURI = Uri.parse("package:" + requireActivity().getPackageName());
-                    permIntent.setData(packageURI);
-                    startActivity(permIntent);
-                }).show();
-    }
+                if (hasPerm) {
+                    LogHelper.d(LocManager.TAG, "Location permission granted - enabling my location");
+                    // we have permission, so set my location to enabled
+                    mMap.setMyLocationEnabled(true);
+                } else {
+                    LogHelper.e(LocManager.TAG, "Permission not granted");
+                    new AlertDialog.Builder(getActivity()).setTitle(R.string.dialog_title_permission_denied)
+                            .setMessage(R.string.dialog_message_no_permission_gps).setPositiveButton(android.R.string.ok, null)
+                            .setNeutralButton(R.string.dialog_action_neutral_app_settings, (dialog, which) -> {
+                                Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri packageURI = Uri.parse("package:" + requireActivity().getPackageName());
+                                permIntent.setData(packageURI);
+                                startActivity(permIntent);
+                            }).show();
+                }
+            });
 }

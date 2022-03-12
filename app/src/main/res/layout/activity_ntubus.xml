@@ -25,7 +25,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/ntu_clr_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/ntu_clb_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/ntu_cr_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/ntu_crw_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/ntu_sbs_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/ntu_traffic_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

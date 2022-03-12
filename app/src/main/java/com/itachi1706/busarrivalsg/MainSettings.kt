@@ -133,7 +133,7 @@ class MainSettings : AppCompatActivity() {
         }
 
         private fun processAdvDevSettingLocation(): Boolean {
-            if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 AlertDialog.Builder(requireActivity()).setTitle("Location Permission not granted")
                         .setMessage("Location permission is not granted. Enable from the App Settings page or by scanning for nearby bus stops")
                         .setNeutralButton(R.string.dialog_action_neutral_app_settings) { _, _ ->

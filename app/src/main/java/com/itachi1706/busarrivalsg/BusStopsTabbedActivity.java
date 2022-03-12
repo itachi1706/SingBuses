@@ -1,7 +1,6 @@
 package com.itachi1706.busarrivalsg;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +15,8 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -29,6 +29,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.Fragments.BusStopNearbyFragment;
 import com.itachi1706.busarrivalsg.Fragments.BusStopSearchFragment;
 import com.itachi1706.busarrivalsg.Services.LocManager;
+import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.util.Objects;
@@ -77,9 +78,6 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
-    private static final int RC_HANDLE_ACCESS_FINE_LOCATION = 2;
-    private static final int RC_HANDLE_ACCESS_FINE_LOCATION_INIT = 4;
-
     @Override
     public void onResume() {
         super.onResume();
@@ -89,7 +87,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
 
     private void initLocationManager() {
         if (gps == null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
                 return; // Should never happen as it should have been granted
             gps = new LocManager(this);
         }
@@ -99,37 +97,32 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
     }
 
     private void checkIfYouHaveGpsPermissionForThis() {
-        int rc = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+        int rc = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             getLocationButtonClicked();
         } else {
-            requestGpsPermission(RC_HANDLE_ACCESS_FINE_LOCATION);
+            requestGpsPermission();
         }
     }
 
-    private void requestGpsPermission(final int code) {
+    private void requestGpsPermission() {
         LogHelper.w(LocManager.TAG, "GPS permission is not granted. Requesting permission");
-        final String[] permissions = new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION};
+        final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-            ActivityCompat.requestPermissions(this, permissions, code);
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            requestGps.launch(permissions);
             return;
         }
 
-        if (code == RC_HANDLE_ACCESS_FINE_LOCATION_INIT)
-            return;
-
-        final Activity thisActivity = this;
-
-        new AlertDialog.Builder(this).setTitle(R.string.dialog_title_request_permission_gps)
+        new AlertDialog.Builder(getApplicationContext()).setTitle(R.string.dialog_title_request_permission_gps)
                 .setMessage(R.string.dialog_message_request_permission_gps_rationale)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(thisActivity, permissions, code)).show();
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> requestGps.launch(permissions)).show();
     }
 
     private void getLocationButtonClicked() {
         Toast.makeText(getApplicationContext(), R.string.toast_message_retrieving_location, Toast.LENGTH_SHORT).show();
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             gps.getLocation();
         latitude = gps.getLatitude();
         longitude = gps.getLongitude();
@@ -140,56 +133,27 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
         updateList();
     }
 
-    /**
-     * Callback for the result from requesting permissions. This method
-     * is invoked for every call on {@link #requestPermissions(String[], int)}.
-     * <p>
-     * <strong>Note:</strong> It is possible that the permissions request interaction
-     * with the user is interrupted. In this case you will receive empty permissions
-     * and results arrays which should be treated as a cancellation.
-     * </p>
-     *
-     * @param requestCode  The request code passed in {@link #requestPermissions(String[], int)}.
-     * @param permissions  The requested permissions. Never null.
-     * @param grantResults The grant results for the corresponding permissions
-     *                     which is either {@link PackageManager#PERMISSION_GRANTED}
-     *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
-     * @see #requestPermissions(String[], int)
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode != RC_HANDLE_ACCESS_FINE_LOCATION && requestCode != RC_HANDLE_ACCESS_FINE_LOCATION_INIT) {
-            LogHelper.d(LocManager.TAG, "Got unexpected permission result: " + requestCode);
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            return;
-        }
+    private final ActivityResultLauncher<String[]> requestGps = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
+            result -> {
+                boolean hasPerm = StaticVariables.INSTANCE.checkIfCoraseLocationGranted(result);
 
-        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            LogHelper.d(LocManager.TAG, "Location permission granted - initialize the gps source");
-            // we have permission
-            initLocationManager();
-
-            if (requestCode == RC_HANDLE_ACCESS_FINE_LOCATION){
-                getLocationButtonClicked();
-            }
-            return;
-        }
-
-        LogHelper.e(LocManager.TAG, "Permission not granted: results len = " + grantResults.length +
-                " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-        final Activity thisActivity = this;
-
-        if (requestCode == RC_HANDLE_ACCESS_FINE_LOCATION) {
-            new AlertDialog.Builder(this).setTitle(R.string.dialog_title_permission_denied)
-                    .setMessage(R.string.dialog_message_no_permission_gps).setPositiveButton(android.R.string.ok, null)
-                    .setNeutralButton(R.string.dialog_action_neutral_app_settings, (dialog, which) -> {
-                        Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri packageURI = Uri.parse("package:" + thisActivity.getPackageName());
-                        permIntent.setData(packageURI);
-                        startActivity(permIntent);
-                    }).show();
-        }
-    }
+                if (hasPerm) {
+                    LogHelper.d(LocManager.TAG, "Location permission granted - initialize the gps source");
+                    // we have permission
+                    initLocationManager();
+                    getLocationButtonClicked();
+                } else {
+                    LogHelper.e(LocManager.TAG, "Permission not granted");
+                    new AlertDialog.Builder(getApplicationContext()).setTitle(R.string.dialog_title_permission_denied)
+                            .setMessage(R.string.dialog_message_no_permission_gps).setPositiveButton(android.R.string.ok, null)
+                            .setNeutralButton(R.string.dialog_action_neutral_app_settings, (dialog, which) -> {
+                                Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri packageURI = Uri.parse("package:" + getApplicationContext().getPackageName());
+                                permIntent.setData(packageURI);
+                                startActivity(permIntent);
+                            }).show();
+                }
+            });
 
     private void updateList(){
         Objects.requireNonNull(tabLayout.getTabAt(1)).select();

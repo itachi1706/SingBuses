@@ -54,7 +54,7 @@ public class LocManager extends Service implements LocationListener {
         this.mContext = getApplicationContext();
     }
 
-    @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    @RequiresPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
     public LocManager(Context context) {
         this.mContext = context;
         getLocation();
@@ -64,7 +64,7 @@ public class LocManager extends Service implements LocationListener {
      * Gets current location of the user
      * @return user's current location
      */
-    @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    @RequiresPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
     public Location getLocation() {
         try {
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
