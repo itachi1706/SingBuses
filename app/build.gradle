@@ -8,14 +8,15 @@ repositories {
 }
 
 def isGHActions = System.getenv("GITHUB_ACTIONS") ?: false
+def appNamespace = "com.itachi1706.busarrivalsg"
 
 android {
     compileSdkVersion 32
     buildToolsVersion '32.0.0'
-    namespace 'com.itachi1706.busarrivalsg'
+    namespace appNamespace
 
     defaultConfig {
-        applicationId "com.itachi1706.busarrivalsg"
+        applicationId appNamespace
         minSdkVersion 19
         targetSdkVersion 32
         versionCode 606
