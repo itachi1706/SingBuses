@@ -2,7 +2,6 @@ package com.itachi1706.busarrivalsg.AsyncTasks;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +9,7 @@ import android.widget.Toast;
 
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask;
 import com.itachi1706.helperlib.helpers.LogHelper;
 import com.itachi1706.helperlib.helpers.URLHelper;
 
@@ -21,22 +21,24 @@ import java.net.SocketTimeoutException;
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.AsyncTasks
  */
-public class GetBusServicesHandler extends AsyncTask<String, Void, String> {
+public class GetBusServicesHandler extends CoroutineAsyncTask<String, Void, String> {
 
     private final ProgressDialog dialog;
     private final WeakReference<Activity> actRef;
     private Exception exception = null;
+    private static final String TASK_NAME = GetBusServicesHandler.class.getSimpleName();
 
     private final Handler mHandler;
 
     public GetBusServicesHandler(ProgressDialog dialog, Activity activity, Handler handler){
+        super(TASK_NAME);
         this.dialog = dialog;
         this.actRef = new WeakReference<>(activity);
         this.mHandler = handler;
     }
 
     @Override
-    protected String doInBackground(String... busCodes) {
+    public String doInBackground(String... busCodes) {
         String busCode = busCodes[0];
         String url = "https://api.itachi1706.com/api/busarrival.php?BusStopCode=" + busCode + "&api=2";
         String tmp = "";
@@ -51,7 +53,7 @@ public class GetBusServicesHandler extends AsyncTask<String, Void, String> {
         return tmp;
     }
 
-    protected void onPostExecute(String json){
+    public void onPostExecute(String json){
         if (exception != null){
             Activity activity = actRef.get();
             if (activity == null) return;

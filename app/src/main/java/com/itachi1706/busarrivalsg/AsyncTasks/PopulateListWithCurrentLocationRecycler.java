@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -20,6 +19,7 @@ import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 import com.itachi1706.busarrivalsg.gsonObjects.Distance;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask;
 import com.itachi1706.helperlib.helpers.LogHelper;
 import com.itachi1706.helperlib.helpers.URLHelper;
 import com.itachi1706.helperlib.helpers.ValidationHelper;
@@ -34,23 +34,25 @@ import java.util.ArrayList;
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.AsyncTasks
  */
-public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location, Void, Integer> {
+public class PopulateListWithCurrentLocationRecycler extends CoroutineAsyncTask<Location, Void, Integer> {
 
     private final WeakReference<Activity> contextRef;
     private final BusStopsDB db;
     private final BusStopRecyclerAdapter adapter;
     private Exception except;
+    private static final String TASK_NAME = PopulateListWithCurrentLocationRecycler.class.getSimpleName();
 
     private static final String TAG = "CURRENT-LOCATION";
 
     public PopulateListWithCurrentLocationRecycler(Activity context, BusStopsDB db, BusStopRecyclerAdapter adapter) {
+        super(TASK_NAME);
         this.contextRef = new WeakReference<>(context);
         this.db = db;
         this.adapter = adapter;
     }
 
     @Override
-    protected Integer doInBackground(Location... locate) {
+    public Integer doInBackground(Location... locate) {
         Location location = locate[0];
         Activity context = contextRef.get();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -103,7 +105,7 @@ public class PopulateListWithCurrentLocationRecycler extends AsyncTask<Location,
         return 0;
     }
 
-    protected void onPostExecute(Integer errorCode) {
+    public void onPostExecute(Integer errorCode) {
         Context context = contextRef.get();
         if (except != null && errorCode != 0) {
             LogHelper.e(TAG, "Exception occurred (" + except.getMessage() + ")");

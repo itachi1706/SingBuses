@@ -3,7 +3,6 @@ package com.itachi1706.busarrivalsg.AsyncTasks;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -14,6 +13,7 @@ import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBus;
 import com.itachi1706.busarrivalsg.util.NTURouteCacher;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask;
 import com.itachi1706.helperlib.helpers.LogHelper;
 import com.itachi1706.helperlib.helpers.URLHelper;
 
@@ -25,20 +25,22 @@ import java.net.SocketTimeoutException;
  * Created by Kenneth on 07/9/2018
  * for SingBuses in package com.itachi1706.busarrivalsg.AsyncTasks
  */
-public class GetNTUData extends AsyncTask<String, Void, Integer> {
+public class GetNTUData extends CoroutineAsyncTask<String, Void, Integer> {
 
     private final WeakReference<Activity> activityRef;
     private Exception except;
     private int update;
     private static final String TAG = "NTUData";
+    private static final String TASK_NAME = GetNTUData.class.getSimpleName();
 
     public GetNTUData(Activity activity, boolean update) {
+        super(TASK_NAME);
         this.activityRef = new WeakReference<>(activity);
         this.update = (update) ? 1 : 0;
     }
 
     @Override
-    protected Integer doInBackground(String... routes) {
+    public Integer doInBackground(String... routes) {
         StringBuilder routeString = new StringBuilder();
         if (routes.length == 1) {
             routeString = new StringBuilder(routes[0]);
@@ -117,7 +119,7 @@ public class GetNTUData extends AsyncTask<String, Void, Integer> {
         return 0;
     }
 
-    protected void onPostExecute(Integer errorCode) {
+    public void onPostExecute(Integer errorCode) {
         Context context = activityRef.get();
         if (except != null && errorCode != 0) {
             LogHelper.e(TAG, "Exception occurred (" + except.getMessage() + ")");
