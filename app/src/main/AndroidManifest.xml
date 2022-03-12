@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="internalOnly">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- For getting your current location pre-GPS (so that you don't need GPS to run) -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Get all the API data duh -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Check if there's internet access -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- Receives the intent when boot completes -->

@@ -178,7 +178,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
 
     private void checkGpsForCurrentLocation() {
         if (getContext() == null) return;
-        int rc = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+        int rc = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
             locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);

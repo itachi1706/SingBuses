@@ -1,5 +1,6 @@
 package com.itachi1706.busarrivalsg.util
 
+import android.Manifest
 import android.content.SharedPreferences
 import com.itachi1706.busarrivalsg.objects.BusServices
 import com.itachi1706.helperlib.helpers.LogHelper
@@ -85,5 +86,14 @@ object StaticVariables {
     fun convertDateToString(date: Date): String {
         val df = SimpleDateFormat("EE dd MMM yyyy HH:mm:ss zz", Locale.US)
         return df.format(date)
+    }
+
+    fun checkIfCoraseLocationGranted(result: Map<String, Boolean>): Boolean {
+        result.forEach {
+            if (it.key == Manifest.permission.ACCESS_COARSE_LOCATION) {
+                return it.value
+            }
+        }
+        return false
     }
 }
