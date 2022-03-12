@@ -140,7 +140,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
         }
     };
 
-    private static CoroutineAsyncTask<Location, Void, Integer> nearbyTask = null;
+    private CoroutineAsyncTask<Location, Void, Integer> nearbyTask = null;
 
     private HashMap<Marker, BusStopJSON> markerMap;
 

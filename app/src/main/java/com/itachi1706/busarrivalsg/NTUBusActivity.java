@@ -308,11 +308,10 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
             runningBus = new GetNTUData(this, refresh);
             runningBus.execute(get.toArray(new String[0]));
         }
-        if (sbs.isChecked())
-            if (runningPBus == null || runningPBus.getStatus().equals(Constants.Status.FINISHED) || runningPBus.isCancelled()) {
-                runningPBus = new GetNTUPublicBusData(this, refresh);
-                runningPBus.execute();
-            }
+        if (sbs.isChecked() && (runningPBus == null || runningPBus.getStatus().equals(Constants.Status.FINISHED) || runningPBus.isCancelled())) {
+            runningPBus = new GetNTUPublicBusData(this, refresh);
+            runningPBus.execute();
+        }
         if (!refreshHandler.hasMessages(REFRESH_TASK) && shouldAutoRefresh) {
             Message ref = Message.obtain(refreshHandler, refreshTask);
             ref.what = REFRESH_TASK;
