@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
@@ -16,6 +16,7 @@ import com.itachi1706.busarrivalsg.NTUBusActivity;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask;
 import com.itachi1706.helperlib.helpers.LogHelper;
 import com.itachi1706.helperlib.helpers.URLHelper;
 
@@ -28,23 +29,25 @@ import java.util.ArrayList;
  * Created by Kenneth on 07/9/2018
  * for SingBuses in package com.itachi1706.busarrivalsg.AsyncTasks
  */
-public class GetNTUPublicBusData extends AsyncTask<Void, Void, Integer> {
+public class GetNTUPublicBusData extends CoroutineAsyncTask<Void, Void, Integer> {
 
     private final WeakReference<Activity> activityRef;
     private Exception except;
     private final boolean update;
     private static final String TAG = "NTUPublicBusData";
+    private static final String TASK_NAME = GetNTUPublicBusData.class.getSimpleName();
 
     // Bus Stop Codes to get (we will get it based off the last stop on campus)
     // 199: 27199, 179(A): 27261;
 
     public GetNTUPublicBusData(Activity activity, boolean update) {
+        super(TASK_NAME);
         this.activityRef = new WeakReference<>(activity);
         this.update = update;
     }
 
     @Override
-    protected Integer doInBackground(Void... params) {
+    public Integer doInBackground(@NonNull Void... params) {
         Activity mActivity = activityRef.get();
         String url = "https://api.itachi1706.com/api/busarrival.php?CSV=27199:199;27261:179;27261:179A&api=2";
 
@@ -91,7 +94,7 @@ public class GetNTUPublicBusData extends AsyncTask<Void, Void, Integer> {
         return 0;
     }
 
-    protected void onPostExecute(Integer errorCode) {
+    public void onPostExecute(Integer errorCode) {
         Context context = activityRef.get();
         if (except != null && errorCode != 0) {
             LogHelper.e(TAG, "Exception occurred (" + except.getMessage() + ")");

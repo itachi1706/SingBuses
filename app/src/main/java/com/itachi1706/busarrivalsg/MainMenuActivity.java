@@ -9,7 +9,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -202,8 +201,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             adapter.notifyDataSetChanged();
 
             LogHelper.d(TAG, "Finished Processing, retrieving estimated arrival data now");
-            new GetBusServicesFavouritesRecycler(this, adapter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StaticVariables.INSTANCE.getFavouritesList().toArray(new BusServices[0]));
-            LogHelper.d(TAG, "Finished casting AsyncTasks to retrieve estimated arrival data");
+            new GetBusServicesFavouritesRecycler(this, adapter).executeOnExecutor(StaticVariables.INSTANCE.getFavouritesList().toArray(new BusServices[0]));
+            LogHelper.d(TAG, "Finished creating AsyncTasks to retrieve estimated arrival data");
         }
 
         if (swipeToRefresh.isRefreshing()){
@@ -250,7 +249,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                 sp.edit().putBoolean("busDBLoaded", false).apply();
                 dialog.show();
 
-                new GetAllBusStops(dialog, db, this, sp).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 0);
+                new GetAllBusStops(dialog, db, this, sp).executeOnExecutor(0);
             }
         } else {
             //Legacy Check

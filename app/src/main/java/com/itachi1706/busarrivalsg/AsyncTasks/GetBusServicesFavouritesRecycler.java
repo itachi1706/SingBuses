@@ -1,7 +1,6 @@
 package com.itachi1706.busarrivalsg.AsyncTasks;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -12,6 +11,7 @@ import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.BusStatus;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask;
 import com.itachi1706.helperlib.helpers.LogHelper;
 import com.itachi1706.helperlib.helpers.URLHelper;
 
@@ -24,21 +24,23 @@ import java.util.Objects;
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.AsyncTasks
  */
-public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Void, String> {
+public class GetBusServicesFavouritesRecycler extends CoroutineAsyncTask<BusServices, Void, String> {
 
     private final WeakReference<Activity> actRef;
     private Exception exception = null;
     private final FavouritesRecyclerAdapter adapter;
+    private static final String TASK_NAME = GetBusServicesFavouritesRecycler.class.getSimpleName();
 
     private BusServices[] busObjArr;
 
     public GetBusServicesFavouritesRecycler(Activity activity, FavouritesRecyclerAdapter adapter){
+        super(TASK_NAME);
         this.actRef = new WeakReference<>(activity);
         this.adapter = adapter;
     }
 
     @Override
-    protected String doInBackground(BusServices... busObject) {
+    public String doInBackground(BusServices... busObject) {
         // Create the bus obj string
         StringBuilder sb = new StringBuilder();
         for (BusServices s : busObject) {
@@ -61,13 +63,13 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
         return tmp;
     }
 
-    protected void onPostExecute(String json){
+    public void onPostExecute(String json){
         Activity activity = actRef.get();
         if (activity == null) return; // NO-OP
         if (exception != null){
             if (exception instanceof SocketTimeoutException) {
                 Toast.makeText(activity, R.string.toast_message_timeout_request_retry, Toast.LENGTH_SHORT).show();
-                new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObjArr);
+                new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(busObjArr);
             } else {
                 Toast.makeText(activity, exception.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -77,7 +79,7 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
             if (!StaticVariables.INSTANCE.checkIfYouGotJsonString(json)){
                 //Invalid string, retrying
                 Toast.makeText(activity, R.string.toast_message_invalid_json_retry, Toast.LENGTH_SHORT).show();
-                new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObjArr);
+                new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(busObjArr);
                 return;
             }
 
@@ -89,7 +91,7 @@ public class GetBusServicesFavouritesRecycler extends AsyncTask<BusServices, Voi
 
             if (jsonError){
                 LogHelper.e("FAV-GET", "Retrying...");
-                new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(THREAD_POOL_EXECUTOR, busObjArr);
+                new GetBusServicesFavouritesRecycler(activity,adapter).executeOnExecutor(busObjArr);
                 return;
             }
 

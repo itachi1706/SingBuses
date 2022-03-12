@@ -3,7 +3,6 @@ package com.itachi1706.busarrivalsg.AsyncTasks;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -13,6 +12,7 @@ import com.itachi1706.busarrivalsg.Database.BusStopsDB;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSONArray;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask;
 import com.itachi1706.helperlib.helpers.URLHelper;
 
 import java.io.IOException;
@@ -23,15 +23,17 @@ import java.net.SocketTimeoutException;
  * Created by Kenneth on 20/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.AsyncTasks
  */
-public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
+public class GetAllBusStops extends CoroutineAsyncTask<Integer, Void, String> {
 
     private final ProgressDialog progressDialog;
     private final BusStopsDB db;
     private final WeakReference<Activity> actRef;
     private Exception exception = null;
     private final SharedPreferences sp;
+    private static final String TASK_NAME = GetAllBusStops.class.getSimpleName();
 
     public GetAllBusStops(ProgressDialog progressDialog, BusStopsDB db, Activity activity, SharedPreferences sp){
+        super(TASK_NAME);
         this.progressDialog = progressDialog;
         this.db = db;
         this.actRef = new WeakReference<>(activity);
@@ -39,7 +41,7 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Integer... skipValues) {
+    public String doInBackground(Integer... skipValues) {
         Activity activity = actRef.get();
         if (activity == null) return null;
         String url = "https://api.itachi1706.com/api/busstops.php?api=2";
@@ -58,7 +60,7 @@ public class GetAllBusStops extends AsyncTask<Integer, Void, String> {
         return tmp;
     }
 
-    protected void onPostExecute(@Nullable String json){
+    public void onPostExecute(@Nullable String json){
         Activity activity = actRef.get();
         if (activity == null || json == null) return;
         if (exception != null){

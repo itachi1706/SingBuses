@@ -13,7 +13,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -60,6 +59,8 @@ import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.NTURouteCacher;
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.concurrent.Constants;
+import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask;
 import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.util.ArrayList;
@@ -303,11 +304,14 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
             campusRider.setEnabled(false);
             campusWeekend.setEnabled(false);
         }
-        if (runningBus == null || runningBus.getStatus().equals(AsyncTask.Status.FINISHED) || runningBus.isCancelled())
-            runningBus = new GetNTUData(this, refresh).execute(get.toArray(new String[0]));
-        if (sbs.isChecked())
-            if (runningPBus == null || runningPBus.getStatus().equals(AsyncTask.Status.FINISHED) || runningPBus.isCancelled())
-                runningPBus = new GetNTUPublicBusData(this, refresh).execute();
+        if (runningBus == null || runningBus.getStatus().equals(Constants.Status.FINISHED) || runningBus.isCancelled()) {
+            runningBus = new GetNTUData(this, refresh);
+            runningBus.execute(get.toArray(new String[0]));
+        }
+        if (sbs.isChecked() && (runningPBus == null || runningPBus.getStatus().equals(Constants.Status.FINISHED) || runningPBus.isCancelled())) {
+            runningPBus = new GetNTUPublicBusData(this, refresh);
+            runningPBus.execute();
+        }
         if (!refreshHandler.hasMessages(REFRESH_TASK) && shouldAutoRefresh) {
             Message ref = Message.obtain(refreshHandler, refreshTask);
             ref.what = REFRESH_TASK;
@@ -374,8 +378,8 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
     private final ArrayList<Marker> busMarkers = new ArrayList<>();
     private final ArrayList<Marker> publicBusMarkers = new ArrayList<>();
 
-    private AsyncTask<String, Void, Integer> runningBus = null;
-    private AsyncTask<Void, Void, Integer> runningPBus = null;
+    private CoroutineAsyncTask<String, Void, Integer> runningBus = null;
+    private CoroutineAsyncTask<Void, Void, Integer> runningPBus = null;
 
     private Handler refreshHandler;
     private boolean shouldAutoRefresh = false;

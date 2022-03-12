@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -42,6 +41,8 @@ import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
+import com.itachi1706.helperlib.concurrent.Constants;
+import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask;
 import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.lang.reflect.Type;
@@ -132,12 +133,14 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
             location.setLongitude(intent.getDoubleExtra("lng", 0));
             if (db == null) db = new BusStopsDB(getContext());
 
-            if (nearbyTask == null || nearbyTask.getStatus().equals(AsyncTask.Status.FINISHED))
-                nearbyTask = new PopulateListWithCurrentLocationRecycler(getActivity(), db, adapter).execute(location);
+            if (nearbyTask == null || nearbyTask.getStatus().equals(Constants.Status.FINISHED)) {
+                nearbyTask = new PopulateListWithCurrentLocationRecycler(getActivity(), db, adapter);
+                nearbyTask.execute(location);
+            }
         }
     };
 
-    private static AsyncTask<Location, Void, Integer> nearbyTask = null;
+    private CoroutineAsyncTask<Location, Void, Integer> nearbyTask = null;
 
     private HashMap<Marker, BusStopJSON> markerMap;
 

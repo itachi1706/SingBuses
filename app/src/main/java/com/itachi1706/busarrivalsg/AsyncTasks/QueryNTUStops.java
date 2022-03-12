@@ -1,7 +1,6 @@
 package com.itachi1706.busarrivalsg.AsyncTasks;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 
 import androidx.annotation.Nullable;
 import androidx.collection.ArrayMap;
@@ -9,6 +8,7 @@ import androidx.collection.ArrayMap;
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.objects.gson.ntubuses.NTUBusTimings;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
+import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask;
 import com.itachi1706.helperlib.deprecation.HtmlDep;
 import com.itachi1706.helperlib.helpers.LogHelper;
 import com.itachi1706.helperlib.helpers.URLHelper;
@@ -20,20 +20,22 @@ import java.lang.ref.WeakReference;
  * Created by Kenneth on 9/12/2019.
  * for com.itachi1706.busarrivalsg.AsyncTasks in SingBuses
  */
-public class QueryNTUStops extends AsyncTask<Integer, Void, Void> {
+public class QueryNTUStops extends CoroutineAsyncTask<Integer, Void, Void> {
 
     private final WeakReference<Activity> actRef;
     private final Callback callback;
     private final String originalSubtext;
+    private static final String TASK_NAME = QueryNTUStops.class.getSimpleName();
 
     public QueryNTUStops(Activity activity, String subtext, Callback onCompleteCallback) {
+        super(TASK_NAME);
         this.actRef = new WeakReference<>(activity);
         this.originalSubtext = subtext;
         this.callback = onCompleteCallback;
     }
 
     @Override
-    protected Void doInBackground(Integer... stopIds) {
+    public Void doInBackground(Integer... stopIds) {
         Activity activity = actRef.get();
         if (activity == null) return null;
         int stopId = stopIds[0];
