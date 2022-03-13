@@ -19,7 +19,7 @@ android {
         applicationId appNamespace
         minSdkVersion 19
         targetSdkVersion 32
-        versionCode 788
+        versionCode 789
         versionName "5.0.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -56,6 +56,12 @@ android {
     }
     lint {
         abortOnError !isGHActions
+    }
+}
+
+configurations {
+    all {
+        exclude module: 'httpclient'
     }
 }
 
