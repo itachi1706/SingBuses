@@ -162,8 +162,18 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
         b.include(stop.getPosition());
         LatLngBounds boundary = b.build();
         mMap.setOnMapLoadedCallback(() -> {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundary, 100));
-            if (cur != null) cur.showInfoWindow();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundary, 100), 500, new GoogleMap.CancelableCallback() {
+                @Override
+                public void onCancel() {
+                    LogHelper.i(LocManager.TAG, "Map moving animation cancelled");
+                }
+
+                @Override
+                public void onFinish() {
+                    LogHelper.i(LocManager.TAG, "Map moving animation finished");
+                    if (cur != null) cur.showInfoWindow();
+                }
+            });
         });
     }
 
