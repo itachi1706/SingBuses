@@ -31,7 +31,7 @@ jobs:
       run: ./gradlew build
     - name: Move APK file to main folder
       run: mv ./app/build/outputs/apk/debug/app-debug.apk ./SingBuses-debug.apk
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: SingBuses-debug-apk
         path: ./SingBuses-debug.apk
