@@ -56,7 +56,7 @@ jobs:
           distribution: 'adopt'
           java-version: 11
       - name: run tests
-        uses: reactivecircus/android-emulator-runner@v2.23.0
+        uses: reactivecircus/android-emulator-runner@v2.24.0
         with:
           api-level: 29
           target: google_apis
@@ -94,7 +94,7 @@ jobs:
         distribution: 'adopt'
         java-version: 11
     - name: run tests
-      uses: reactivecircus/android-emulator-runner@v2.23.0
+      uses: reactivecircus/android-emulator-runner@v2.24.0
       with:
         api-level: ${{ matrix.api-level }}
         target: google_apis
