@@ -1,0 +1,5 @@
+build          = "gradlew"
+arguments      = [ "assembleAndroidTest" ]
+jdkVersion     = "11"
+androidVersion = 28
+customTools = [ "https://help.sonatype.com/lift/files/78578763/78578764/1/1623180860953/pmd.sh rulesets/java/quickstart.xml" ]
