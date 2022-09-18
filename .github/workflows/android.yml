@@ -1,26 +1,24 @@
 name: Android CI
 
-on: [push,pull_request,pull_request_target]
+on: [push,pull_request]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     name: Android Compilation Test
     runs-on: ubuntu-latest
-    if: (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     steps:
     - name: Checkout Repository
-      if: ${{ github.event_name != 'pull_request_target' }}
       uses: actions/checkout@v3
-    - name: Checkout Repository PR
-      if: ${{ github.event_name == 'pull_request_target' }}
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
     - name: set up JDK 11
       uses: actions/setup-java@v3
       with:
-        distribution: 'adopt'
+        distribution: 'temurin'
         java-version: 11
+        cache: 'gradle'
     - name: Copy secure values
       run: echo $GOOGLE_SERVICES > ./app/google-services.json
       env:
@@ -53,33 +51,28 @@ jobs:
       - name: set up JDK 11
         uses: actions/setup-java@v3
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: 11
+          cache: 'gradle'
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2.23.0
         with:
-          api-level: 29
+          api-level: 32
           target: google_apis
           profile: 'pixel_xl'
           arch: x86_64
           script: ./gradlew connectedAndroidTest
   device-test-full:
     runs-on: macos-latest
-    if: (github.event_name == 'pull_request' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')) && ((github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]'))
+    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
     name: Test run on all Android Devices
     strategy:
       fail-fast: true
       matrix:
-        api-level: [21, 22, 23, 24, 25, 26, 28, 29, 30, 31, 32]
+        api-level: [21, 22, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33]
     steps:
     - name: Checkout Repository
-      if: ${{ github.event_name != 'pull_request_target' }}
       uses: actions/checkout@v3
-    - name: Checkout Repository PR
-      if: ${{ github.event_name == 'pull_request_target' }}
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
     - name: Copy secure values
       run: echo $GOOGLE_SERVICES > ./app/google-services.json
       env:
@@ -91,8 +84,9 @@ jobs:
     - name: set up JDK 11
       uses: actions/setup-java@v3
       with:
-        distribution: 'adopt'
+        distribution: 'temurin'
         java-version: 11
+        cache: 'gradle'
     - name: run tests
       uses: reactivecircus/android-emulator-runner@v2.23.0
       with:
@@ -110,8 +104,9 @@ jobs:
       - name: set up JDK 11
         uses: actions/setup-java@v3
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: 11
+          cache: 'gradle'
       - name: Copy secure values
         run: echo $GOOGLE_SERVICES > ./app/google-services.json
         env:
