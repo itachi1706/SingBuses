@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- For getting your current location pre-GPS (so that you don't need GPS to run) -->
 
     <!-- For installing the app update. Comment this out before we generate the Google Play AAB -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+<!--    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />-->
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application
