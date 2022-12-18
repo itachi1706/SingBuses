@@ -96,7 +96,7 @@ dependencies {
 // Trying something
 sonarqube {
     properties {
-        property "sonar.androidLint.reportPaths", "build/reports/lint-results.xml"
+        property "sonar.androidLint.reportPaths", "build/reports/lint-results-debug.xml"
     }
 }
 
