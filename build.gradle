@@ -28,6 +28,7 @@ sonarqube {
         property "sonar.projectKey", "itachi1706_SingBuses"
         property "sonar.organization", "itachi1706"
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.androidLint.reportPaths", "app/build/reports/lint-results-debug.xml"
     }
 }
 
