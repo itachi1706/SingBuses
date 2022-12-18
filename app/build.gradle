@@ -93,4 +93,11 @@ dependencies {
     implementation 'com.itachi1706.cepaslib:cepaslib:2.3.0'
 }
 
+// Trying something
+sonarqube {
+    properties {
+        property "sonar.androidLint.reportPaths", "build/reports/lint-results.xml"
+    }
+}
+
 apply plugin: 'com.google.gms.google-services'
