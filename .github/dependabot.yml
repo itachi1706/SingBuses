@@ -3,15 +3,26 @@ updates:
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
     schedule:
       interval: "daily"
   # Maintain dependencies for Gradle Main
   - package-ecosystem: "gradle"
     directory: "/"
+    commit-message:
+      prefix: "build"
+      prefix-development: "chore"
+      include: "scope"
     schedule:
       interval: "daily"
   # Maintain dependencies for Gradle Android
   - package-ecosystem: "gradle"
     directory: "/app"
+    commit-message:
+      prefix: "build"
+      prefix-development: "chore"
+      include: "scope"
     schedule:
       interval: "daily"
