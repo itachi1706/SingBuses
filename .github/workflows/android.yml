@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v3.3.0
+      uses: actions/checkout@v3.5.1
     - name: set up JDK 11
       uses: actions/setup-java@v3
       with:
@@ -39,7 +39,7 @@ jobs:
     name: Test run on latest supported Android Device
     steps:
       - name: checkout
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.5.1
       - name: Copy secure values
         run: echo $GOOGLE_SERVICES > ./app/google-services.json
         env:
@@ -72,7 +72,7 @@ jobs:
         api-level: [21, 22, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33]
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v3.3.0
+      uses: actions/checkout@v3.5.1
     - name: Copy secure values
       run: echo $GOOGLE_SERVICES > ./app/google-services.json
       env:
@@ -100,7 +100,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.3.0
+      - uses: actions/checkout@v3.5.1
         with:
           token: ${{ secrets.GH_PAT }}
       - name: set up JDK 11
