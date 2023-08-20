@@ -55,7 +55,7 @@ jobs:
           java-version: 11
           cache: 'gradle'
       - name: run tests
-        uses: reactivecircus/android-emulator-runner@v2.27.0
+        uses: reactivecircus/android-emulator-runner@v2.28.0
         with:
           api-level: 32
           target: google_apis
@@ -88,7 +88,7 @@ jobs:
         java-version: 11
         cache: 'gradle'
     - name: run tests
-      uses: reactivecircus/android-emulator-runner@v2.27.0
+      uses: reactivecircus/android-emulator-runner@v2.28.0
       with:
         api-level: ${{ matrix.api-level }}
         target: google_apis
