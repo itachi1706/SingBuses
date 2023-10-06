@@ -12,13 +12,13 @@ def appNamespace = "com.itachi1706.busarrivalsg"
 
 android {
     compileSdk 33
-    buildToolsVersion = '32.0.0'
+    buildToolsVersion = '33.0.2'
     namespace appNamespace
 
     defaultConfig {
         applicationId appNamespace
         minSdkVersion 19
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 838
         versionName "5.1.0"
         vectorDrawables.useSupportLibrary = true
