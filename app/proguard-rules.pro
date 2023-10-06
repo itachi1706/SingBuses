@@ -59,3 +59,19 @@
 # This is generated automatically by the Android Gradle plugin.
 -dontwarn kotlin.Experimental$Level
 -dontwarn kotlin.Experimental
+-dontwarn com.google.errorprone.BugPattern$SeverityLevel
+-dontwarn com.google.errorprone.BugPattern
+-dontwarn com.google.errorprone.ErrorProneFlags
+-dontwarn com.google.errorprone.bugpatterns.BugChecker$MemberReferenceTreeMatcher
+-dontwarn com.google.errorprone.bugpatterns.BugChecker$MethodInvocationTreeMatcher
+-dontwarn com.google.errorprone.bugpatterns.BugChecker
+-dontwarn com.google.errorprone.matchers.Matcher
+-dontwarn com.google.errorprone.matchers.Matchers
+-dontwarn com.google.errorprone.matchers.NextStatement
+-dontwarn com.google.errorprone.matchers.method.MethodMatchers$InstanceMethodMatcher
+-dontwarn com.google.errorprone.matchers.method.MethodMatchers$MethodClassMatcher
+-dontwarn com.google.errorprone.matchers.method.MethodMatchers$MethodNameMatcher
+-dontwarn com.google.errorprone.matchers.method.MethodMatchers$StaticMethodMatcher
+-dontwarn com.google.errorprone.matchers.method.MethodMatchers
+-dontwarn com.ryanharter.auto.value.gson.GsonTypeAdapterFactory
+-dontwarn com.sun.source.tree.Tree$Kind
