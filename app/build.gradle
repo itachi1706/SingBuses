@@ -23,7 +23,7 @@ android {
         versionName "5.1.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        resConfigs 'en'
+        resourceConfigurations += ['en']
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
