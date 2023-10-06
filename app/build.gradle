@@ -11,19 +11,19 @@ def isGHActions = System.getenv("GITHUB_ACTIONS") ?: false
 def appNamespace = "com.itachi1706.busarrivalsg"
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion '32.0.0'
+    compileSdk 33
+    buildToolsVersion = '33.0.2'
     namespace appNamespace
 
     defaultConfig {
         applicationId appNamespace
         minSdkVersion 19
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 838
         versionName "5.1.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        resConfigs 'en'
+        resourceConfigurations += ['en']
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
