@@ -132,7 +132,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GH Actions
         with:
           tag_name: ${{ github.ref }}
-          name: Release ${{ github.ref }}
+          name: Release ${{ github.ref_name }}
           body: ${{ steps.changelog.outputs.changes }}
           generate_release_notes: true
           draft: false
