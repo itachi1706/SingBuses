@@ -72,7 +72,7 @@ dependencies {
     androidTestImplementation('androidx.test.espresso:espresso-core:3.5.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.itachi1706.appupdater:appupdater:2.5.0'
+    implementation 'com.itachi1706.appupdater:appupdater:3.0.1'
     implementation 'com.itachi1706.helpers:helperlib:1.4.2'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
