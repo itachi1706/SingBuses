@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.2'
-        classpath 'com.squareup.sqldelight:gradle-plugin:1.5.4'
+        classpath 'com.squareup.sqldelight:gradle-plugin:1.5.5'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2' // Firebase Crashlytics
 
         // NOTE: Do not place your application dependencies here; they belong
