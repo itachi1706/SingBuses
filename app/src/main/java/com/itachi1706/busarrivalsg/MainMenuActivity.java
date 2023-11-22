@@ -74,7 +74,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         // Obtain the FirebaseAnalytics instance.
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         AnalyticsHelper helper = new AnalyticsHelper(this, true);
-        @SuppressLint("WrongThread") CAAnalytics analytics = helper.getData();
+        @SuppressLint("WrongThread") CAAnalytics analytics = helper.getData(BuildConfig.DEBUG);
         setAnalyticsData(analytics != null, mFirebaseAnalytics, analytics); // Update Firebase User Properties
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null);
 
@@ -152,7 +152,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         firebaseAnalytics.setUserProperty("device_fingerprint", (enabled) ? analytics.getdFingerprint() : null);
         firebaseAnalytics.setUserProperty("device_cpu_abi", (enabled) ? analytics.getdCPU() : null);
         firebaseAnalytics.setUserProperty("device_tags", (enabled) ? analytics.getdTags() : null);
-        firebaseAnalytics.setUserProperty("app_version_code", (enabled) ? Integer.toString(analytics.getAppVerCode()) : null);
+        firebaseAnalytics.setUserProperty("app_version_code", (enabled) ? Long.toString(analytics.getAppVerCode()) : null);
         firebaseAnalytics.setUserProperty("android_sec_patch", (enabled) ? analytics.getSdkPatch() : null);
         firebaseAnalytics.setUserProperty("AndroidOS", (enabled) ? Integer.toString(analytics.getSdkver()) : null);
     }
