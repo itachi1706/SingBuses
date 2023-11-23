@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.2.1] - 2023-11-23
+### :wrench: Chores
+- [`eb25f81`](https://github.com/itachi1706/SingBuses/commit/eb25f812ed4830b6ca63dbfed3e5edc2c758f0cc) - **deps**: bump actions/checkout from 4.1.0 to 4.1.1 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`60dec77`](https://github.com/itachi1706/SingBuses/commit/60dec775b4915906b1c5374c7fcb2471d07ecac5) - **deps**: Updated appupdater from 2.5.0 to 3.0.1 *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`12994f3`](https://github.com/itachi1706/SingBuses/commit/12994f3297bf1f00477245e1f77b562907e78dc9) - **release**: 5.2.1 bug fix *(commit by [@itachi1706](https://github.com/itachi1706))*
+
+
 ## [5.2.0] - 2023-11-21
 ### :sparkles: New Features
 - [`28a96e3`](https://github.com/itachi1706/SingBuses/commit/28a96e3d89be8fd236ea32af03a054df3b572d49) - SGBUSAND-270 Upgrade to SDK 33 *(commit by [@itachi1706](https://github.com/itachi1706))*
@@ -24,3 +31,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 [5.2.0]: https://github.com/itachi1706/SingBuses/compare/5.1.0...5.2.0
+[5.2.1]: https://github.com/itachi1706/SingBuses/compare/5.2.0...5.2.1
