@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.2.2] - 2023-11-27
+### :bug: Bug Fixes
+- [`903c58a`](https://github.com/itachi1706/SingBuses/commit/903c58a56463dbc4314abb1315b1c512ed920363) - SGBUSAND-283 Updated Gson rules for ProGuard *(commit by [@itachi1706](https://github.com/itachi1706))*
+
+
 ## [5.2.1] - 2023-11-23
 ### :wrench: Chores
 - [`eb25f81`](https://github.com/itachi1706/SingBuses/commit/eb25f812ed4830b6ca63dbfed3e5edc2c758f0cc) - **deps**: bump actions/checkout from 4.1.0 to 4.1.1 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
@@ -32,3 +37,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [5.2.0]: https://github.com/itachi1706/SingBuses/compare/5.1.0...5.2.0
 [5.2.1]: https://github.com/itachi1706/SingBuses/compare/5.2.0...5.2.1
+[5.2.2]: https://github.com/itachi1706/SingBuses/compare/5.2.1...5.2.2
