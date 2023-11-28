@@ -25,6 +25,7 @@
         android:text="@string/label_time_placeholder"
         android:gravity="center"
         android:id="@+id/btnBusArrivalSub"
+        android:contentDescription="@string/accessibility_bus_arriving_third"
         android:layout_alignTop="@+id/btnBusArrivalNext"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
@@ -38,6 +39,7 @@
         android:text="@string/label_time_placeholder"
         android:gravity="center"
         android:id="@+id/btnBusArrivalNext"
+        android:contentDescription="@string/accessibility_bus_arriving_next"
         android:layout_below="@+id/tvBusStatus"
         android:layout_toLeftOf="@+id/btnBusArrivalSub"
         android:layout_toStartOf="@+id/btnBusArrivalSub"
@@ -106,6 +108,7 @@
         android:text="@string/label_time_placeholder"
         android:gravity="center"
         android:id="@+id/btnBusArrivalNow"
+        android:contentDescription="@string/accessibility_bus_arriving_now"
         android:layout_alignBaseline="@+id/btnBusArrivalNext"
         android:layout_alignBottom="@+id/btnBusArrivalNext"
         android:layout_toLeftOf="@+id/btnBusArrivalNext"

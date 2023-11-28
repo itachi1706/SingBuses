@@ -29,6 +29,7 @@
                 android:id="@+id/ntu_clr_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/accessibility_ntu_cl_r_toggle"
                 android:enabled="false" />
 
             <TextView
@@ -49,6 +50,7 @@
                 android:id="@+id/ntu_clb_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/accessibility_ntu_cl_b_toggle"
                 android:enabled="false" />
 
             <TextView
@@ -69,6 +71,7 @@
                 android:id="@+id/ntu_cr_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/accessibility_ntu_cr_toggle"
                 android:enabled="false" />
 
             <TextView
@@ -89,6 +92,7 @@
                 android:id="@+id/ntu_crw_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/accessibility_ntu_crw_toggle"
                 android:enabled="false" />
 
             <TextView
@@ -109,6 +113,7 @@
                 android:id="@+id/ntu_sbs_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/accessibility_ntu_sbst_toggle"
                 android:enabled="true" />
 
             <TextView
@@ -129,6 +134,7 @@
                 android:id="@+id/ntu_traffic_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/accessibility_ntu_traffic_toggle"
                 android:enabled="false" />
 
             <TextView
