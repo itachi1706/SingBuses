@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessibility_bus_fav_list">Bus Favourites List</string>
+    <string name="accessibility_bus_arriving_now">Bus Arriving Now</string>
+    <string name="accessibility_bus_arriving_next">Bus Arriving Next</string>
+    <string name="accessibility_bus_arriving_third">Bus Arriving After</string>
+    <string name="accessibility_ntu_traffic_toggle">Traffic Toggle</string>
+    <string name="accessibility_ntu_sbst_toggle">SBST Toggle</string>
+    <string name="accessibility_ntu_crw_toggle">CRW Toggle</string>
+    <string name="accessibility_ntu_cr_toggle">CR Toggle</string>
+    <string name="accessibility_ntu_cl_b_toggle">CL-B Toggle</string>
+    <string name="accessibility_ntu_cl_r_toggle">CL-R Toggle</string>
+</resources>
