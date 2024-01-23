@@ -90,7 +90,7 @@ dependencies {
     implementation 'me.jfenn:Attribouter:0.1.9'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
-    implementation 'com.itachi1706.cepaslib:cepaslib:2.4.0'
+    implementation 'com.itachi1706.cepaslib:cepaslib:2.4.3'
 }
 
 // Trying something
