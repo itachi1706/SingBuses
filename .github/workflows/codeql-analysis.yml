@@ -66,9 +66,12 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
     - name: Copy secure values
-      run: echo $GOOGLE_SERVICES > ./app/google-services.json
+      run: |
+        echo $GOOGLE_SERVICES > ./app/google-services.json
+        echo $SECRET_FILE > ./secrets.properties
       env:
         GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+        SECRET_FILE: ${{ secrets.SECRET_FILE }}
         
     - name: Build (Manual)
       run: |

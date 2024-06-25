@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.squareup.sqldelight) apply false
     alias(libs.plugins.ben.manes.versions)
     alias(libs.plugins.sonarqube)
+    alias(libs.plugins.google.secrets.gradle)
 }
 
 sonarqube {
