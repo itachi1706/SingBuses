@@ -52,12 +52,12 @@ android {
             }
             multiDexEnabled = true
         }
-//        create("googlePlay") {
-//            initWith(getByName("release"))
-//            matchingFallbacks.add("release")
-//            isMinifyEnabled = true
-//            isShrinkResources = true
-//        }
+        create("googlePlay") {
+            initWith(getByName("release"))
+            matchingFallbacks.add("release")
+            isMinifyEnabled = true
+            isShrinkResources = true
+        }
     }
     // This enables long timeouts required on slow environments, e.g. Travis
     installation {
