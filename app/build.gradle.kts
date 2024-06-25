@@ -66,6 +66,9 @@ android {
     lint {
         abortOnError = !isGHActions
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 configurations.all {
