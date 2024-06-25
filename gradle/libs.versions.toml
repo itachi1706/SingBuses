@@ -6,6 +6,7 @@ benManesVersions = "0.51.0"
 cepaslib = "2.4.3"
 constraintlayout = "2.1.4"
 coreKtx = "1.9.0"
+espressoCore = "3.5.1"
 firebaseBom = "32.7.4"
 firebaseCrashlytics = "2.9.9"
 flexbox = "3.0.0"
@@ -13,6 +14,7 @@ googleServices = "4.4.1"
 gson = "2.11.0"
 helperlib = "1.4.3"
 junit = "4.13.2"
+junitVersion = "1.1.5"
 kotlin = "1.9.22"
 legacySupportV4 = "1.0.0"
 material = "1.8.0"
@@ -23,8 +25,16 @@ preferenceKtx = "1.2.1"
 recyclerview = "1.3.2"
 sonarqube = "4.4.1.3373"
 sqlDelight = "1.5.5"
+testCore = "1.5.0"
+testRules = "1.5.0"
+testRunner = "1.5.2"
 
 [libraries]
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "testCore" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "testRules" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
 appupdater = { module = "com.itachi1706.appupdater:appupdater", version.ref = "appupdater" }
 attribouter = { module = "me.jfenn:Attribouter", version.ref = "attribouter" }
 cepaslib = { module = "com.itachi1706.cepaslib:cepaslib", version.ref = "cepaslib" }

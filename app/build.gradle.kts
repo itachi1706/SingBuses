@@ -78,13 +78,18 @@ configurations.all {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.espresso.core)
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.multidex)
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1") {
-        exclude(group = "com.android.support", module = "support-annotations")
-    }
 
     implementation(libs.appupdater)
+    implementation(libs.cepaslib)
     implementation(libs.helperlib)
     implementation(libs.material)
     implementation(libs.legacy.support.v4)
@@ -106,8 +111,6 @@ dependencies {
     }
     implementation(libs.flexbox)
     implementation(libs.constraintlayout)
-    testImplementation(libs.junit)
-    implementation(libs.cepaslib)
 }
 
 apply(plugin = libs.plugins.google.services.get().pluginId)
