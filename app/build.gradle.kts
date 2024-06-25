@@ -1,9 +1,9 @@
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
-    id("com.google.firebase.crashlytics")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 val isGHActions: Boolean = System.getenv("GITHUB_ACTIONS")?.toBoolean() ?: false
@@ -75,33 +75,36 @@ configurations.all {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
-    implementation("androidx.multidex:multidex:2.0.1")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.multidex)
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1") {
         exclude(group = "com.android.support", module = "support-annotations")
     }
 
-    implementation("com.itachi1706.appupdater:appupdater:3.0.2")
-    implementation("com.itachi1706.helpers:helperlib:1.4.3")
-    implementation("com.google.android.material:material:1.8.0")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.preference:preference-ktx:1.2.1")
-    implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("com.google.code.gson:gson:2.11.0")
-    implementation("com.google.android.gms:play-services-maps:18.2.0")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
-    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation(libs.appupdater)
+    implementation(libs.helperlib)
+    implementation(libs.material)
+    implementation(libs.legacy.support.v4)
+    implementation(libs.preference.ktx)
+    implementation(libs.recyclerview)
+    implementation(libs.core.ktx)
+    implementation(libs.gson)
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.auth)
+    implementation(libs.firebase.auth.ktx)
 
-    implementation("com.google.firebase:firebase-perf")
-    implementation("com.google.firebase:firebase-messaging")
-    implementation("com.google.firebase:firebase-crashlytics")
-    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation(libs.firebase.perf)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics.ktx)
 
-    implementation("me.jfenn:Attribouter:0.1.9")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    testImplementation("junit:junit:4.13.2")
-    implementation("com.itachi1706.cepaslib:cepaslib:2.4.3")
+    implementation(libs.attribouter) {
+        exclude(group = "com.google.android", module = "flexbox")
+    }
+    implementation(libs.flexbox)
+    implementation(libs.constraintlayout)
+    testImplementation(libs.junit)
+    implementation(libs.cepaslib)
 }
 
-apply(plugin = "com.google.gms.google-services")
+apply(plugin = libs.plugins.google.services.get().pluginId)

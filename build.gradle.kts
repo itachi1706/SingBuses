@@ -1,13 +1,13 @@
 import com.android.build.gradle.AppExtension
 
 plugins {
-    id("com.android.application") version "8.5.0" apply false
-    id("com.squareup.sqldelight") version "1.5.5" apply false
-    id("com.google.firebase.crashlytics") version "2.9.9" apply false
-    id("com.google.gms.google-services") version "4.4.1" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.22" apply false
-    id("com.github.ben-manes.versions") version "0.51.0"
-    id("org.sonarqube") version "4.4.1.3373"
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.firebase.crashlytics) apply false
+    alias(libs.plugins.jetbrains.kotlin.android) apply false
+    alias(libs.plugins.squareup.sqldelight) apply false
+    alias(libs.plugins.ben.manes.versions)
+    alias(libs.plugins.sonarqube)
 }
 
 sonarqube {
