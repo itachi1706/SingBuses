@@ -8,8 +8,8 @@ pluginManagement {
             }
         }
         mavenCentral()
-        maven { url"https://jitpack.io" }
-        maven { url "https://oss.sonatype.org/content/groups/public/" }
+        maven { url = uri("https://jitpack.io") }
+        maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
         gradlePluginPortal()
     }
 }
@@ -19,11 +19,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
-        maven { url "https://oss.sonatype.org/content/groups/public/" }
+        maven { url = uri("https://jitpack.io") }
+        maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
         jcenter()
     }
 }
 
 rootProject.name = "SingBuses"
-include ':app'
+include(":app")
