@@ -121,6 +121,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+        db.close();
 
         return results;
     }
@@ -256,6 +257,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         int count = cursor.getCount();
         cursor.close();
+        db.close();
         return count;
     }
 }
