@@ -44,6 +44,8 @@ jobs:
         run: ./gradlew lint
       - name: Generate coverage report
         run: ./gradlew createDebugUnitTestCoverageReport
+      - name: Debug
+        run: ls -la app/build/reports/coverage/test/debug
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
