@@ -13,7 +13,6 @@
     <string name="action_refresh">Refresh</string>
 
     <!-- Placeholder Text -->
-    <string name="hello_world">Hello world!</string>
     <string name="label_bus_stop_name">Bus Stop Name</string>
     <string name="label_road_name_code">Road Name (Code)</string>
     <string name="label_bus_service_placeholder">184</string>
@@ -38,7 +37,6 @@
     <string name="dialog_message_request_permission_gps_view_map_rationale">In order for the app to retrieve your current position to place a marker on the map, it requires access to your Location. Please grant it in the next screen to use it</string>
 
     <!-- Misc Stuff -->
-    <string name="database_name_bus_geo">Bus Geographical Database</string>
     <string name="database_name_bus">Bus Database</string>
     <string name="label_bus_stops_count">Bus Stops Count: %1$d</string>
     <string name="edittext_hint_search_bus_stop">Stop Code/Stop Name/Road Name</string>
@@ -49,24 +47,10 @@
     <string name="signed_in_as">Signed in as %1$s</string>
 
     <!-- Google Maps Activity -->
-    <string name="maps_marker_bus_location_title">Current Bus Location</string>
-    <string name="maps_marker_bus_location_snippet">Current Bus Location as on this data</string>
     <string name="maps_marker_bus_stop_snippet">Current bus stop</string>
     <string name="maps_marker_bus_stop_title">Bus Stop</string>
 
     <!-- Notifications -->
-    <string name="notification_title_exception_download">Exception Occurred (Download)</string>
-    <string name="notification_ticker_download_fail">Download failed</string>
-    <string name="notification_content_download_fail_exception">An exception occurred while downloading the update file. (%1$s)</string>
-    <string name="notification_content_download_fail_exception_expanded">An exception occurred while downloading the update file. (%1$s)\n Click to manually download the file</string>
-    <string name="notification_content_download_fail">The update is unable to download automatically</string>
-    <string name="notification_content_download_fail_expanded">The update is unable to download automatically.\n Click to manually download the file</string>
-    <string name="notification_title_download_success">Download Complete</string>
-    <string name="notification_ticker_download_success">Download Complete!</string>
-    <string name="notification_content_download_success">Update has been successfully downloaded</string>
-    <string name="notification_title_starting_download">Downloading new update</string>
-    <string name="notification_content_starting_download">Downloading new update…</string>
-    <string name="notification_ticker_starting_download">Downloading new update to the app</string>
 
     <!-- Dialog Actions -->
     <string name="dialog_action_neutral_app_settings">APP SETTINGS</string>
@@ -76,7 +60,6 @@
     <string name="dialog_action_positive_close">Close</string>
 
     <!-- Snackbar Actions -->
-    <string name="snackbar_action_dismiss">DISMISS</string>
 
     <!-- FAB and Hints -->
     <string name="fab_hint_main_menu">Add a bus service into favourites</string>
@@ -87,17 +70,13 @@
     <string name="progress_message_bus_stop_data_parse_pre">Parsing bus stops data…</string>
     <string name="progress_title_bus_stop_data_download">Downloading Bus Stop Data</string>
     <string name="progress_message_bus_stop_data_download">This will take a few minutes. Be patient :) \nDownloading latest bus stop data</string>
-    <string name="progress_message_bus_stop_data_parse">Parsing bus stops data…\nCurrent Stop: %1$s\n%2$s</string>
 
     <!-- Alert Dialogs Messages -->
-    <string name="dialog_message_latest_update">You are on the latest release! No update is required.</string>
-    <string name="dialog_title_latest_update">Check for New Update</string>
     <string name="dialog_title_gps_disabled">GPS is disabled</string>
     <string name="dialog_message_gps_disabled">GPS is not enabled. Do you want to enable it for better accuracy?</string>
     <string name="dialog_message_remove_from_fav_with_stop_name">Are you sure you want to remove %1$s from %2$s (%3$s) from your favourites?</string>
     <string name="dialog_message_remove_from_fav">Are you sure you want to remove %1$s from Bus Stop Code %2$s from your favourites?</string>
     <string name="snackbar_message_remove_from_fav_with_stop_name">Swipe to remove %1$s or reorder it by moving it up and down</string>
-    <string name="snackbar_message_remove_from_fav">Swipe to remove %1$s or reorder it by moving it up and down</string>
     <string name="dialog_title_remove_from_fav">Remove from Favourites</string>
     <string name="dialog_message_add_to_fav_with_stop_name">Are you sure you want to add %1$s from %2$s (%3$s) to your favourites?</string>
     <string name="dialog_message_add_to_fav">Are you sure you want to add %1$s from Bus Stop Code %2$s to your favourites?</string>
@@ -105,9 +84,6 @@
     <string name="dialog_title_no_internet">No Internet Access</string>
     <string name="dialog_message_no_internet">Internet Access is required to populate %1$s, please ensure that you have internet access before relaunching this application</string>
     <string name="dialog_message_retrieve_data_from_server">Retrieving data from server</string>
-    <string name="dialog_title_no_changelog">No Changelog</string>
-    <string name="dialog_message_no_changelog">No changelog was found. Please check if you can connect to the server</string>
-    <string name="dialog_title_changelog">Changelog</string>
     <string name="dialog_title_retrieve_data_bus_service">Downloading Bus Service Data</string>
     <string name="dialog_message_retrieve_data_bus_service">Getting all Bus Services in Bus Stop %1$s</string>
 
@@ -119,18 +95,11 @@
     <string name="toast_bus_stop_data_parse_success">%1$d bus stops saved to database!</string>
     <string name="toast_message_timeout_distance_api">Distance API did not respond after the period of time</string>
     <string name="toast_message_invalid_json">Invalid JSON. Please try again</string>
-    <string name="toast_message_invalid_request">Invalid request. Please try again</string>
-    <string name="toast_message_invalid_data">Something went wrong here, re-obtain your data</string>
-    <string name="toast_message_invalid_bus_stop">Bus Stop not found in database, ignoring D:</string>
     <string name="toast_message_timeout_request">Request Timed Out</string>
     <string name="toast_message_invalid_json_retry">Invalid JSON String, Retrying</string>
     <string name="toast_message_timeout_request_retry">Request Timed Out, Retrying</string>
     <string name="toast_message_timeout_database_query_retry">Database query timed out. Retrying</string>
-    <string name="toast_message_error_occurred">An error occurred please reload the application and try again</string>
     <string name="toast_message_unknown_error">Something weird occurred, Retrying</string>
-    <string name="toast_cannot_contact_update_server">Unable to contact update server to check for updates</string>
-    <string name="toast_cannot_check_update">Unable to do app update check</string>
-    <string name="toast_message_latest_update">No update is required</string>
     <string name="dialog_title_bus_location_unavailable">Location Unavailable</string>
     <string name="dialog_message_bus_location_unavailable">Location of this bus is not available</string>
     <string name="dialog_title_bus_timing_unavailable">Bus Service Not In Operation</string>
@@ -145,4 +114,11 @@
     <string name="contentdesc_cur_loc">Get Current Location</string>
     <string name="contentdesc_search">Search</string>
     <string name="google_maps_view">Google Maps View</string>
+    <string name="accessibility_tab_menu_for_bus_stops">Tab Menu for Bus Stops</string>
+    <string name="accessibility_main_view_for_adding_bus_stops">Main View for adding bus stops</string>
+    <string name="login_as_debug_user">Login As Debug User</string>
+    <string name="sign_out">SIGN OUT</string>
+    <string name="last_synced_never">Last Synced: Never</string>
+    <string name="close">Close</string>
+    <string name="accessibility_view_google_maps_for_nearby_bus_stops">View Google Maps for Nearby Bus Stops</string>
 </resources>

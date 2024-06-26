@@ -22,6 +22,7 @@
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:contentDescription="@string/accessibility_view_google_maps_for_nearby_bus_stops"
         app:layout_constraintHeight_percent="0.4"
         app:layout_constraintBottom_toTopOf="@+id/rvNearestBusStops"
         app:layout_constraintEnd_toEndOf="parent"

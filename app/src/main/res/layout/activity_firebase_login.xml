@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/test_account"
         android:visibility="gone"
-        android:text="Login As Debug User" />
+        android:text="@string/login_as_debug_user" />
 
     <TextView
         android:layout_width="match_parent"
@@ -37,14 +37,14 @@
         android:id="@+id/sign_in_as"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:gravity="center"
-        android:text="Not Signed In"/>
+        android:text="@string/not_signed_in"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sign_out"
         android:visibility="visible"
-        android:text="SIGN OUT" />
+        android:text="@string/sign_out" />
 
     <ProgressBar
         android:id="@+id/sign_in_progress"

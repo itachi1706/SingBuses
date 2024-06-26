@@ -14,9 +14,7 @@
         android:text="@string/label_bus_stop_name"
         android:id="@+id/tvName"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
     <TextView
@@ -26,8 +24,6 @@
         android:text="@string/label_road_name_code"
         android:id="@+id/tvSubText"
         android:layout_below="@+id/tvName"
-        android:layout_alignRight="@+id/tvName"
         android:layout_alignEnd="@+id/tvName"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 </RelativeLayout>

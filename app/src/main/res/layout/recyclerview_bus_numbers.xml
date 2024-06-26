@@ -14,7 +14,6 @@
         android:text="@string/label_bus_service_placeholder"
         android:id="@+id/tvBusService"
         android:layout_below="@+id/tvBusOperator"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <Button
@@ -27,7 +26,6 @@
         android:id="@+id/btnBusArrivalSub"
         android:contentDescription="@string/accessibility_bus_arriving_third"
         android:layout_alignTop="@+id/btnBusArrivalNext"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
     <Button
@@ -41,9 +39,7 @@
         android:id="@+id/btnBusArrivalNext"
         android:contentDescription="@string/accessibility_bus_arriving_next"
         android:layout_below="@+id/tvBusStatus"
-        android:layout_toLeftOf="@+id/btnBusArrivalSub"
         android:layout_toStartOf="@+id/btnBusArrivalSub"
-        android:layout_marginRight="20dp"
         android:layout_marginEnd="20dp" />
 
     <TextView
@@ -53,7 +49,6 @@
         android:text="@string/label_bus_operator_placeholder"
         android:id="@+id/tvBusOperator"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <TextView
@@ -63,7 +58,6 @@
         android:text="@string/label_bus_status_placeholder"
         android:id="@+id/tvBusStatus"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/btnBusArrivalSub"
         android:layout_alignEnd="@+id/btnBusArrivalSub" />
 
     <TextView
@@ -73,9 +67,7 @@
         android:text="@string/label_bus_stop_name_placeholder"
         android:id="@+id/tvBusStopName"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/tvBusStatus"
         android:layout_alignEnd="@+id/tvBusStatus"
         android:visibility="invisible" />
 
@@ -85,7 +77,6 @@
         android:id="@+id/ivWheelchairNext"
         app:srcCompat="@drawable/ic_wheelchair"
         android:layout_centerVertical="true"
-        android:layout_alignRight="@+id/btnBusArrivalNext"
         android:layout_alignEnd="@+id/btnBusArrivalNext"
         android:contentDescription="@string/content_description_wheelchair" />
 
@@ -95,7 +86,6 @@
         android:id="@+id/ivWheelchairSub"
         app:srcCompat="@drawable/ic_wheelchair"
         android:layout_alignTop="@+id/ivWheelchairNext"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:contentDescription="@string/content_description_wheelchair" />
 
@@ -111,9 +101,7 @@
         android:contentDescription="@string/accessibility_bus_arriving_now"
         android:layout_alignBaseline="@+id/btnBusArrivalNext"
         android:layout_alignBottom="@+id/btnBusArrivalNext"
-        android:layout_toLeftOf="@+id/btnBusArrivalNext"
         android:layout_toStartOf="@+id/btnBusArrivalNext"
-        android:layout_marginRight="20dp"
         android:layout_marginEnd="20dp" />
 
     <ImageView
@@ -123,7 +111,6 @@
         app:srcCompat="@drawable/ic_wheelchair"
         android:contentDescription="@string/content_description_wheelchair"
         android:layout_alignTop="@+id/ivWheelchairNext"
-        android:layout_alignRight="@+id/btnBusArrivalNow"
         android:layout_alignEnd="@+id/btnBusArrivalNow" />
 
     <TextView
@@ -134,7 +121,6 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/tvBusTypeNow"
         android:layout_toStartOf="@+id/ivWheelchairNow"
-        android:layout_toLeftOf="@+id/ivWheelchairNow"
         android:text="@string/label_bus_type_placeholder" />
 
     <TextView
@@ -145,7 +131,6 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_marginTop="4dp"
         android:layout_toStartOf="@+id/ivWheelchairNext"
-        android:layout_toLeftOf="@+id/ivWheelchairNext"
         android:text="@string/label_bus_type_placeholder" />
 
     <TextView
@@ -156,6 +141,5 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_marginTop="4dp"
         android:layout_toStartOf="@+id/ivWheelchairSub"
-        android:layout_toLeftOf="@+id/ivWheelchairSub"
         android:text="@string/label_bus_type_placeholder" />
 </RelativeLayout>
