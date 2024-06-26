@@ -22,6 +22,7 @@ import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Kenneth on 5/8/2018.
@@ -57,7 +58,7 @@ public class BusStopSearchFragment extends Fragment {
 
         // Populate with blank
         db = new BusStopsDB(getContext());
-        ArrayList<BusStopJSON> results = db.getAllBusStops();
+        List<BusStopJSON> results = db.getAllBusStops();
         adapter.updateAdapter(results);
         adapter.notifyDataSetChanged();
 
@@ -78,7 +79,7 @@ public class BusStopSearchFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 String query = s.toString();
                 LogHelper.d("TextWatcher", "Query searched: " + query);
-                ArrayList<BusStopJSON> results = db.getBusStopsByQuery(query);
+                List<BusStopJSON> results = db.getBusStopsByQuery(query);
                 if (results != null) {
                     LogHelper.d("TextWatcher", "Finished Search. Size: " + results.size());
                     adapter.updateAdapter(results);

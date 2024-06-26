@@ -12,6 +12,7 @@ import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Kenneth on 20/6/2015
@@ -43,10 +44,10 @@ public class BusStopsDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_BUS_TABLE = "CREATE TABLE " + TABLE_ITEMS + "(" + CODE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+        String createBusTable = "CREATE TABLE " + TABLE_ITEMS + "(" + CODE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + BUS_STOP_CODE + " TEXT," + BUS_STOP_ROAD + " TEXT," + BUS_STOP_DESC + " TEXT," + BUS_STOP_LATITUDE + " DOUBLE,"
                 + BUS_STOP_LONGITUDE + " DOUBLE," + BUS_STOP_SERVICES + " TEXT," + BUS_STOP_TIMESTAMP + " INTEGER);";
-        db.execSQL(CREATE_BUS_TABLE);
+        db.execSQL(createBusTable);
     }
 
     @Override
@@ -109,7 +110,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
      * Gets all Bus Stops in the database
      * @return An ArrayList of all bus stops in the DB
      */
-    public ArrayList<BusStopJSON> getAllBusStops(){
+    public List<BusStopJSON> getAllBusStops(){
         String query = "SELECT * FROM " + TABLE_ITEMS;
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<BusStopJSON> results = new ArrayList<>();
@@ -121,6 +122,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+        db.close();
 
         return results;
     }
@@ -152,7 +154,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
      * @param stopName Bus Stop Name
      * @return Bus Stop Object ArrayList
      */
-    public ArrayList<BusStopJSON> getBusStopsByStopName(String stopName){
+    public List<BusStopJSON> getBusStopsByStopName(String stopName){
         stopName = DatabaseUtils.sqlEscapeString(stopName);
         String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_DESC + " LIKE " + stopName + ";";
         SQLiteDatabase db = this.getReadableDatabase();
@@ -177,7 +179,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
      * @param company Bus Service Company
      * @return Bus Stop Object ArrayList
      */
-    public ArrayList<BusStopJSON> getBusStopsBySvcNo(String svcNo, String company){
+    public List<BusStopJSON> getBusStopsBySvcNo(String svcNo, String company){
         String concat = "%" + svcNo + ":" + company + "%";
         concat = DatabaseUtils.sqlEscapeString(concat);
         String query = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_SERVICES + " LIKE " + concat + ";";
@@ -229,11 +231,11 @@ public class BusStopsDB extends SQLiteOpenHelper {
      * @param query Query String
      * @return Bus Stop Object ArrayList
      */
-    public ArrayList<BusStopJSON> getBusStopsByQuery(String query){
+    public List<BusStopJSON> getBusStopsByQuery(String query){
         query = DatabaseUtils.sqlEscapeString("%" + query + "%");
         String queryString = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + BUS_STOP_CODE + " LIKE " + query + " COLLATE NOCASE OR "
                 + BUS_STOP_ROAD + " LIKE " + query + " COLLATE NOCASE OR " + BUS_STOP_DESC + " LIKE " + query + " COLLATE NOCASE;";
-        System.out.println("DB QUERY-STRING: "+ queryString);
+        LogHelper.d("DB", "QUERY-STRING: "+ queryString);
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<BusStopJSON> result = new ArrayList<>();
 
@@ -256,6 +258,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         int count = cursor.getCount();
         cursor.close();
+        db.close();
         return count;
     }
 }

@@ -1,17 +1,18 @@
 package com.itachi1706.busarrivalsg;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.widget.TextView;
 
 import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
+import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ListAllBusStopsActivity extends AppCompatActivity {
 
@@ -32,7 +33,7 @@ public class ListAllBusStopsActivity extends AppCompatActivity {
         busStops.setItemAnimator(new DefaultItemAnimator());
 
         BusStopsDB db = new BusStopsDB(this);
-        ArrayList<BusStopJSON> data = db.getAllBusStops();
+        List<BusStopJSON> data = db.getAllBusStops();
         count.setText(getString(R.string.label_bus_stops_count, data.size()));
 
         BusStopRecyclerAdapter view = new BusStopRecyclerAdapter(data);
