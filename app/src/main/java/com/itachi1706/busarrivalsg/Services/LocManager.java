@@ -70,6 +70,7 @@ public class LocManager extends Service implements LocationListener {
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
             if (locationManager == null) {
                 LogHelper.e(TAG, "There are no location service on device");
+                return null;
             }
 
             // getting GPS status
@@ -101,7 +102,7 @@ public class LocManager extends Service implements LocationListener {
                     }
                 }
                 // if GPS Enabled get lat/long using GPS Services
-                if (isGPSEnabled) {
+                if (isGPSEnabled && locationManager != null) {
                     locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
                             MIN_TIME_BW_UPDATES,
@@ -126,7 +127,7 @@ public class LocManager extends Service implements LocationListener {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LogHelper.e(TAG, "Error getting location, " + e.getMessage(), e);
         }
 
         return location;
