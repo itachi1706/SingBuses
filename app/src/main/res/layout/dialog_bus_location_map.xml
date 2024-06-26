@@ -20,7 +20,7 @@
             android:layout_height="60dp"
             android:id="@+id/close_btn"
             android:layout_weight="1"
-            android:text="Close"/>
+            android:text="@string/close"/>
     </LinearLayout>
 
 

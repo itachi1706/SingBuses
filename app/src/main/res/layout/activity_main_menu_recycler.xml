@@ -16,7 +16,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:id="@+id/ll_fav">
             <TextView
@@ -35,7 +34,7 @@
                 android:id="@+id/firebase_sync_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last Synced: Never"
+                android:text="@string/last_synced_never"
                 android:layout_gravity="end" />
         </LinearLayout>
 
@@ -44,7 +43,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/ll_fav"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" >
 
             <!--suppress AndroidElementNotAllowed -->
@@ -64,7 +62,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/add_fab"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_gravity="end|bottom"
         app:srcCompat="@drawable/ic_search"
