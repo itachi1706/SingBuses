@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.SharedPreferences
 import com.itachi1706.busarrivalsg.objects.BusServices
 import com.itachi1706.helperlib.helpers.LogHelper
+import org.json.JSONArray
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -28,7 +30,17 @@ object StaticVariables {
     const val BUS_SERVICE_JSON_RETRIEVED = 101
 
     fun checkIfYouGotJsonString(jsonString: String): Boolean {
-        return !jsonString.startsWith("<!DOCTYPE html>")
+        try {
+            JSONObject(jsonString)
+        } catch (e: Exception) {
+            try {
+                JSONArray(jsonString)
+            } catch (e1: Exception) {
+                return false
+            }
+        }
+
+        return true
     }
 
     fun useServerTime(sp: SharedPreferences): Boolean {
