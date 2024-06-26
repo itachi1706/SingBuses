@@ -144,4 +144,5 @@
     <string name="static_ntu_disabled_label">The NTU Shuttle Buses Tracker is disabled, enable it in settings</string>
     <string name="contentdesc_cur_loc">Get Current Location</string>
     <string name="contentdesc_search">Search</string>
+    <string name="google_maps_view">Google Maps View</string>
 </resources>
