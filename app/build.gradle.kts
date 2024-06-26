@@ -50,6 +50,8 @@ android {
             configure<CrashlyticsExtension> {
                 isMappingFileUploadEnabled = false // Disabled mapping file uploading for DEBUG builds
             }
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
             multiDexEnabled = true
         }
         create("googlePlay") {
