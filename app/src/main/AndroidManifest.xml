@@ -46,7 +46,7 @@
             android:label="@string/title_activity_main_settings" />
         <activity
             android:name=".BusServicesAtStopRecyclerActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/title_activity_bus_services_at_stop" />
 
         <service
@@ -77,7 +77,7 @@
             android:label="Sign in" />
         <activity
             android:name=".BusStopsTabbedActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/title_activity_add_bus_stops"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- Required because FOR SOME REASON Google Maps is using the deprecated Apache HTTP? WTF Google? -->
         <uses-library
@@ -95,13 +95,13 @@
 
         <activity
             android:name=".NTUBusActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="NTU Buses" />
 
         <activity android:name=".CEPASScanActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="Scan EZLink Card"
-            android:exported="true"
+            android:exported="false"
             tools:ignore="AppLinkUrlError">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
