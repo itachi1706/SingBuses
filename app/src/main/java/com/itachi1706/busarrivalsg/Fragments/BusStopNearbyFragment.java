@@ -48,6 +48,7 @@ import com.itachi1706.helperlib.helpers.LogHelper;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Kenneth on 5/8/2018.
@@ -88,7 +89,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
 
         // Populate with blank
         db = new BusStopsDB(getContext());
-        ArrayList<BusStopJSON> results = db.getAllBusStops();
+        List<BusStopJSON> results = db.getAllBusStops();
         adapter.updateAdapter(results);
         adapter.notifyDataSetChanged();
 
