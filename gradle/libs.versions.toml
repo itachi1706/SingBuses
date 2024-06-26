@@ -18,6 +18,8 @@ junitVersion = "1.2.0"
 kotlin = "1.9.22"
 legacySupportV4 = "1.0.0"
 material = "1.12.0"
+mockito = "5.5.0"
+mockitoKotlin = "3.2.0"
 multidex = "2.0.1"
 playServicesMaps = "18.2.0"
 playServicesAuth = "20.7.0"
@@ -53,6 +55,8 @@ helperlib = { module = "com.itachi1706.helpers:helperlib", version.ref = "helper
 junit = { module = "junit:junit", version.ref = "junit" }
 legacy-support-v4 = { module = "androidx.legacy:legacy-support-v4", version.ref = "legacySupportV4" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }

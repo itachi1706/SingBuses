@@ -2,10 +2,16 @@ package com.itachi1706.busarrivalsg.util
 
 import android.Manifest
 import android.content.SharedPreferences
+import com.google.gson.JsonParseException
+import com.google.gson.JsonParser
+import com.google.gson.JsonSyntaxException
 import com.itachi1706.busarrivalsg.objects.BusServices
 import com.itachi1706.helperlib.helpers.LogHelper
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.GregorianCalendar
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 /**
@@ -28,7 +34,15 @@ object StaticVariables {
     const val BUS_SERVICE_JSON_RETRIEVED = 101
 
     fun checkIfYouGotJsonString(jsonString: String): Boolean {
-        return !jsonString.startsWith("<!DOCTYPE html>")
+        try {
+            JsonParser.parseString(jsonString)
+        } catch (e: JsonSyntaxException) {
+            return false
+        } catch (e: JsonParseException) {
+            return false
+        }
+
+        return true
     }
 
     fun useServerTime(sp: SharedPreferences): Boolean {
@@ -43,7 +57,7 @@ object StaticVariables {
         return !(lng == -1000.0 || lat == -1000.0) && !(lng == -11.0 && lat == -11.0) && !(lat == 0.0 && lng == 0.0)
     }
 
-    fun parseEstimateArrival(arrivalString: String, useServerTime: Boolean, serverTime: String?): Long {
+    private fun parseEstimateArrival(arrivalString: String, useServerTime: Boolean, serverTime: String?): Long {
         val currentDate: Calendar
         if (!useServerTime || serverTime == null) {
             LogHelper.d("DATE", "Current Time Millis: " + System.currentTimeMillis())
