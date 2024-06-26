@@ -1,11 +1,16 @@
 package com.itachi1706.busarrivalsg.util
 
 import android.content.SharedPreferences
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.mockito.junit.MockitoJUnitRunner
 
+@RunWith(MockitoJUnitRunner::class)
 class StaticVariablesTest {
 
     @Test
@@ -24,7 +29,12 @@ class StaticVariablesTest {
     @Test
     fun testParseLTAEstimateArrival() {
         assertEquals(-9999, StaticVariables.parseLTAEstimateArrival("", false, null))
+
         // Add more assertions for different inputs...
+        val serverTime = "2024-06-26T17:24:08+08:00"
+        assertEquals(-1, StaticVariables.parseLTAEstimateArrival("2024-06-26T17:23:01+08:00", true, serverTime))
+        assertEquals(4, StaticVariables.parseLTAEstimateArrival("2024-06-26T17:29:01+08:00", true, serverTime))
+        assertEquals(0, StaticVariables.parseLTAEstimateArrival("2024-06-26T17:24:01+08:00", true, serverTime))
     }
 
     @Test
