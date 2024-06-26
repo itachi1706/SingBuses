@@ -7,10 +7,10 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AlertDialog;
@@ -43,7 +43,7 @@ public class LocManager extends Service implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 30; // 30 seconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 30L; // 30 seconds
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
@@ -195,23 +195,18 @@ public class LocManager extends Service implements LocationListener {
 
 
     @Override
-    public void onLocationChanged(Location location) {
-
+    public void onLocationChanged(@NonNull Location location) {
+        // NO-OP
     }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
+    public void onProviderEnabled(@NonNull String provider) {
+        // NO-OP
     }
 
     @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
+    public void onProviderDisabled(@NonNull String provider) {
+        // NO-OP
     }
 
     @Nullable
@@ -220,7 +215,8 @@ public class LocManager extends Service implements LocationListener {
         return null;
     }
 
-    private Location gpsLoc = null, netLoc = null; // For dev debug settings
+    private Location gpsLoc = null;
+    private Location netLoc = null; // For dev debug settings
 
     @Nullable
     public Location getGpsLoc() {
