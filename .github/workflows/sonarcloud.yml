@@ -42,10 +42,8 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Run Lint first
         run: ./gradlew lint
-      - name: Generate coverage report
-        run: ./gradlew createDebugUnitTestCoverageReport
-      - name: Debug
-        run: ls -la app/build/reports/coverage/test/debug
+      - name: Generate Tests and Coverage Report
+        run: ./gradlew build test createDebugUnitTestCoverageReport
       - name: Manipulate the coverage file
         run: |
           mkdir -p build/reports/jacoco/test
@@ -56,4 +54,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build sonarqube --info
+        run: ./gradlew sonarqube
