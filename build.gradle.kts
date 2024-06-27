@@ -17,7 +17,7 @@ sonarqube {
         property("sonar.organization", "itachi1706")
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.androidLint.reportPaths", "app/build/reports/lint-results-debug.xml")
-        property("sonar.coverage.jacoco.xmlReportPaths", "app/build/reports/coverage/test/debug/report.xml")
+//        property("sonar.coverage.jacoco.xmlReportPaths", "../app/build/reports/coverage/test/debug/report.xml")
         property("sonar.projectVersion", project(":app").extensions.getByType(AppExtension::class.java).defaultConfig.versionName
             ?: "1.0")
     }
