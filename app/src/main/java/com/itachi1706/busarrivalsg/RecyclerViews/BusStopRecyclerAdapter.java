@@ -2,10 +2,6 @@ package com.itachi1706.busarrivalsg.RecyclerViews;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ShortcutInfo;
-import android.content.pm.ShortcutManager;
-import android.graphics.drawable.Icon;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +16,9 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.util.ShortcutHelper;
 import com.itachi1706.helperlib.helpers.LogHelper;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -83,34 +79,15 @@ public class BusStopRecyclerAdapter extends RecyclerView.Adapter<BusStopRecycler
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         // Add dynamic shortcuts
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
-            if (shortcutManager != null) {
-                LinkedList<ShortcutInfo> infos = new LinkedList<>(shortcutManager.getDynamicShortcuts());
-                final int shortcutCount = shortcutManager.getMaxShortcutCountPerActivity() - 2;
-                if (infos.size() >= shortcutCount) {
-                    LogHelper.i("ShortcutManager", "Dynamic Shortcuts more than " + shortcutCount
-                            + ". Removing extras");
-                    do {
-                        infos.removeLast();
-                    } while (infos.size() > shortcutCount);
-                }
-                serviceIntent.setAction(Intent.ACTION_VIEW);
-                ShortcutInfo newShortcut = new ShortcutInfo.Builder(context, "bus-" + stop.getBusStopCode())
-                        .setShortLabel(stop.getDescription()).setLongLabel(stop.getDescription())
-                        .setIcon(Icon.createWithResource(context, R.mipmap.ic_launcher_round))
-                        .setIntent(serviceIntent).build();
-
-                infos.add(newShortcut);
-                shortcutManager.setDynamicShortcuts(infos);
-            }
-        }
+        ShortcutHelper shortcutHelper = new ShortcutHelper(context);
+        shortcutHelper.updateBusStopShortcuts(stop, serviceIntent);
     }
 
 
     class BusStopViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
-        TextView stopName, desc;
+        TextView stopName;
+        TextView desc;
 
         BusStopViewHolder(View v){
             super(v);
