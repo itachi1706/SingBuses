@@ -29,7 +29,7 @@ secretsGradle = "2.0.1"
 sonarqube = "4.4.1.3373"
 sqlDelight = "1.5.5"
 testCore = "1.6.1"
-testRules = "1.5.0"
+testRules = "1.6.1"
 testRunner = "1.6.1"
 
 [libraries]
