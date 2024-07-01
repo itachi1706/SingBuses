@@ -72,6 +72,14 @@ android {
     buildFeatures {
         buildConfig = true
     }
+    testOptions {
+        unitTests.all {
+            it.jvmArgs(
+                "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+                "--add-opens", "java.base/java.lang.reflect=ALL-UNNAMED"
+            )
+        }
+    }
 }
 
 secrets {
