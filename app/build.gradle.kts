@@ -18,7 +18,7 @@ android {
         namespace = appNamespace
         applicationId = appNamespace
         minSdk = 19
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 937
         versionName = "5.2.2"
         vectorDrawables.useSupportLibrary = true
