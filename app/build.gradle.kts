@@ -17,7 +17,7 @@ android {
     defaultConfig {
         namespace = appNamespace
         applicationId = appNamespace
-        minSdk = 19
+        minSdk = 21
         targetSdk = 34
         versionCode = 937
         versionName = "5.2.2"
