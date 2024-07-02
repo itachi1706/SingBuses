@@ -18,7 +18,6 @@ import com.google.android.gms.maps.model.Marker
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.objects.CommonEnums
 import com.itachi1706.helperlib.helpers.PrefHelper
-import java.util.*
 
 
 /**
