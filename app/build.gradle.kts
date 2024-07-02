@@ -103,43 +103,44 @@ configurations.all {
 }
 
 dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.runner)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.kotlin)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.test.core)
-    androidTestImplementation(libs.androidx.test.runner)
-    androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(platform(libs.firebase.bom))
-    implementation(libs.multidex)
 
     implementation(libs.appupdater)
-    implementation(libs.cepaslib)
-    implementation(libs.helperlib)
-    implementation(libs.material)
-    implementation(libs.legacy.support.v4)
-    implementation(libs.preference.ktx)
-    implementation(libs.recyclerview)
-    implementation(libs.core.ktx)
-    implementation(libs.gson)
-    implementation(libs.play.services.maps)
-    implementation(libs.play.services.auth)
-    implementation(libs.firebase.auth.ktx)
-
-    implementation(libs.firebase.perf)
-    implementation(libs.firebase.messaging)
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.analytics.ktx)
-
     implementation(libs.attribouter) {
         exclude(group = "com.google.android", module = "flexbox")
     }
-    implementation(libs.flexbox)
+    implementation(libs.cepaslib)
     implementation(libs.constraintlayout)
+    implementation(libs.core.ktx)
+    implementation(libs.flexbox)
+    implementation(libs.gson)
+    implementation(libs.helperlib)
+    implementation(libs.legacy.support.v4)
+    implementation(libs.material)
+    implementation(libs.multidex)
+
+    implementation(libs.preference.ktx)
+    implementation(libs.recyclerview)
+
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.perf)
+
+    implementation(libs.play.services.auth)
+    implementation(libs.play.services.maps)
 }
 
 apply(plugin = libs.plugins.google.services.get().pluginId)
