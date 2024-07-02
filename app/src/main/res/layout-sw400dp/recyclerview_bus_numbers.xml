@@ -25,7 +25,6 @@
         android:gravity="center"
         android:id="@+id/btnBusArrivalSub"
         android:layout_alignTop="@+id/btnBusArrivalNext"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
     <Button
