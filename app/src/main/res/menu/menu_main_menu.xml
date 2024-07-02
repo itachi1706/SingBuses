@@ -7,8 +7,8 @@
         android:orderInCategory="4" app:showAsAction="never" />
     <item android:id="@+id/action_refresh" android:title="@string/action_refresh_fav"
         android:orderInCategory="3" android:icon="@drawable/ic_refresh" app:showAsAction="ifRoom" />
-    <item android:id="@+id/scan_cepas" android:title="Scan CEPAS Card" android:orderInCategory="1"
+    <item android:id="@+id/scan_cepas" android:title="@string/scan_cepas_card" android:orderInCategory="1"
         app:showAsAction="ifRoom" android:icon="@drawable/ic_scan_card"/>
-    <item android:id="@+id/ntu_tracker" android:title="NTU Buses (BETA)" android:orderInCategory="2"
+    <item android:id="@+id/ntu_tracker" android:title="@string/ntu_buses" android:orderInCategory="2"
         app:showAsAction="ifRoom" android:icon="@drawable/ic_ntu_coa_bw"/>
 </menu>

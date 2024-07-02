@@ -1,5 +1,3 @@
-@file:Suppress("PropertyName")
-
 package com.itachi1706.busarrivalsg.gsonObjects.sgLTA
 
 import com.google.gson.annotations.SerializedName

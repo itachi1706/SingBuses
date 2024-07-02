@@ -1,5 +1,3 @@
-@file:Suppress("ConstantConditionIf")
-
 package com.itachi1706.busarrivalsg.util
 
 import com.google.firebase.crashlytics.BuildConfig

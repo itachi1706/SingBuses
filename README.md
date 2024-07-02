@@ -11,18 +11,18 @@ Pebble App Support has been deprecated for a while and have since been removed i
 
 Releases are located [here](https://github.com/itachi1706/SingBuses/releases)
 
-| Device | Is Supported | Remarks |
-| ------ | ------------ | ------- |
-| Original Pebble | No (Formally Yes) | Removed as of Version 4.5.0 |
-| Pebble Steel | No (Formally Yes) | Removed as of Version 4.5.0 |
-| Pebble Time Series | No (Formally Yes) | Removed as of Version 4.5.0 |
-| Pebble Time 2 Series | No (Formally Yes) | Removed as of Version 4.5.0 |
-| Pebble 2 Series | No (Formally Yes) | Removed as of Version 4.5.0 |
-| Android Wear | No (Planned) |  |
-| Apple Watch | Hell No (Its an Android only thing) |  |
-| S Watch | No (Is there even an SDK for that?) |  |
-| Google Glass | Nope |  |
-| Any other wearables | Nope |  |
+| Device               | Is Supported                        | Remarks                     |
+|----------------------|-------------------------------------|-----------------------------|
+| Original Pebble      | No (Formally Yes)                   | Removed as of Version 4.5.0 |
+| Pebble Steel         | No (Formally Yes)                   | Removed as of Version 4.5.0 |
+| Pebble Time Series   | No (Formally Yes)                   | Removed as of Version 4.5.0 |
+| Pebble Time 2 Series | No (Formally Yes)                   | Removed as of Version 4.5.0 |
+| Pebble 2 Series      | No (Formally Yes)                   | Removed as of Version 4.5.0 |
+| Android Wear         | No (Planned)                        |                             |
+| Apple Watch          | Hell No (Its an Android only thing) |                             |
+| S Watch              | No (Is there even an SDK for that?) |                             |
+| Google Glass         | Nope                                |                             |
+| Any other wearables  | Nope                                |                             |
 
 This application is not licensed under any open source license as of now until I feel the need to open source it. And the reason I don't feel the need to right now is because its incomplete and the code base probably sucks.
 

@@ -121,4 +121,6 @@
     <string name="last_synced_never">Last Synced: Never</string>
     <string name="close">Close</string>
     <string name="accessibility_view_google_maps_for_nearby_bus_stops">View Google Maps for Nearby Bus Stops</string>
+    <string name="scan_cepas_card">Scan CEPAS Card</string>
+    <string name="ntu_buses">NTU Buses (BETA)</string>
 </resources>

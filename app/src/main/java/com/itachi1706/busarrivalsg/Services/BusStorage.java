@@ -1,6 +1,7 @@
 package com.itachi1706.busarrivalsg.Services;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.gsonObjects.offline.BusArrayJSON;
@@ -20,6 +21,8 @@ import java.util.Objects;
  */
 public class BusStorage {
 
+    private static final String TAG = "BusStorage";
+
     public static void addNewBus(BusServices bus, SharedPreferences prefs){
         String serviceNo = bus.getServiceNo();
         String operator = bus.getOperator();
@@ -38,7 +41,8 @@ public class BusStorage {
             main.put("storage",arr);
             prefs.edit().putString("stored", main.toString()).apply();
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error adding new bus to storage");
+            Log.e(TAG, "Error message: " + e.getLocalizedMessage());
         }
     }
 
@@ -51,7 +55,8 @@ public class BusStorage {
             JSONObject obj = new JSONObject(json);
             return obj.getJSONArray("storage");
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error getting existing JSON String");
+            Log.e(TAG, "Error message: " + e.getLocalizedMessage());
         }
         return new JSONArray();
     }
