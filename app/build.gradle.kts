@@ -19,8 +19,8 @@ android {
         applicationId = appNamespace
         minSdk = 23
         targetSdk = 34
-        versionCode = 937
-        versionName = "5.2.2"
+        versionCode = 1090
+        versionName = "5.2.3"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations.add("en")
