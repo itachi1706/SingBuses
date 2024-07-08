@@ -75,7 +75,6 @@ public class BusStopsDB extends SQLiteOpenHelper {
         db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement(sql);
         for (BusStopJSON busStop : busStops) {
-            LogHelper.d("DEBUG-BusStops", "Processing Bus Stop: " + busStop.getBusStopCode());
             stmt.bindString(1, busStop.getBusStopCode());
             stmt.bindString(2, busStop.getRoadName());
             stmt.bindString(3, busStop.getDescription());
