@@ -1,11 +1,12 @@
 package com.itachi1706.busarrivalsg.AsyncTasks;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
+
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.itachi1706.busarrivalsg.R;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
@@ -23,16 +24,16 @@ import java.net.SocketTimeoutException;
  */
 public class GetBusServicesHandler extends CoroutineAsyncTask<String, Void, String> {
 
-    private final ProgressDialog dialog;
+    private final SwipeRefreshLayout refreshLayout;
     private final WeakReference<Activity> actRef;
     private Exception exception = null;
     private static final String TASK_NAME = GetBusServicesHandler.class.getSimpleName();
 
     private final Handler mHandler;
 
-    public GetBusServicesHandler(ProgressDialog dialog, Activity activity, Handler handler){
+    public GetBusServicesHandler(SwipeRefreshLayout refreshLayout, Activity activity, Handler handler){
         super(TASK_NAME);
-        this.dialog = dialog;
+        this.refreshLayout = refreshLayout;
         this.actRef = new WeakReference<>(activity);
         this.mHandler = handler;
     }
@@ -63,7 +64,7 @@ public class GetBusServicesHandler extends CoroutineAsyncTask<String, Void, Stri
                 Toast.makeText(activity, exception.getMessage(), Toast.LENGTH_SHORT).show();
             }
             if (!(activity.isFinishing() || activity.isChangingConfigurations()))
-                dialog.dismiss();
+                refreshLayout.setRefreshing(false);
         } else {
             //Go parse it
             Message msg = Message.obtain();
@@ -72,7 +73,7 @@ public class GetBusServicesHandler extends CoroutineAsyncTask<String, Void, Stri
             bundle.putString("jsonString", json);
             msg.setData(bundle);
             mHandler.sendMessage(msg);
-            dialog.dismiss();
+            refreshLayout.setRefreshing(false);
         }
     }
 }

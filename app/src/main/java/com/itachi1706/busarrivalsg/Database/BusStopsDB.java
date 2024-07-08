@@ -62,6 +62,11 @@ public class BusStopsDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public int truncateDB(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_ITEMS, "1", null);
+    }
+
     private void bulkAddFromJSON(BusStopJSON[] busStops) {
         SQLiteDatabase db = this.getWritableDatabase();
         String sql = "INSERT INTO " + TABLE_ITEMS + " (" + BUS_STOP_CODE + ", " + BUS_STOP_ROAD + ", "
@@ -70,7 +75,6 @@ public class BusStopsDB extends SQLiteOpenHelper {
         db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement(sql);
         for (BusStopJSON busStop : busStops) {
-            LogHelper.d("DEBUG-BusStops", "Processing Bus Stop: " + busStop.getBusStopCode());
             stmt.bindString(1, busStop.getBusStopCode());
             stmt.bindString(2, busStop.getRoadName());
             stmt.bindString(3, busStop.getDescription());

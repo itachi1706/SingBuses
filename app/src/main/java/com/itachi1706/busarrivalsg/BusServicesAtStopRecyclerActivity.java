@@ -1,7 +1,6 @@
 package com.itachi1706.busarrivalsg;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -176,13 +175,8 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
     }
 
     private void updateBusStop(){
-        ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setIndeterminate(true);
-        dialog.setCancelable(false);
-        dialog.setTitle(getString(R.string.dialog_title_retrieve_data_bus_service));
-        dialog.setMessage(getString(R.string.dialog_message_retrieve_data_bus_service,busStopCode));
-        dialog.show();
-        new GetBusServicesHandler(dialog, this, new BusServicesAtStopHandler(this)).execute(busStopCode);
+        swipeToRefresh.setRefreshing(true);
+        new GetBusServicesHandler(swipeToRefresh, this, new BusServicesAtStopHandler(this)).execute(busStopCode);
     }
 
     @Override
