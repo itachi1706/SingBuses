@@ -62,6 +62,11 @@ public class BusStopsDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public int truncateDB(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_ITEMS, "1", null);
+    }
+
     private void bulkAddFromJSON(BusStopJSON[] busStops) {
         SQLiteDatabase db = this.getWritableDatabase();
         String sql = "INSERT INTO " + TABLE_ITEMS + " (" + BUS_STOP_CODE + ", " + BUS_STOP_ROAD + ", "
