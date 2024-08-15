@@ -30,7 +30,7 @@ sonarqube = "5.1.0.4882"
 sqlDelight = "1.5.5"
 testCore = "1.6.1"
 testRules = "1.6.1"
-testRunner = "1.6.1"
+testRunner = "1.6.2"
 
 [libraries]
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
