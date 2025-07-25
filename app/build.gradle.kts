@@ -11,8 +11,8 @@ val isGHActions: Boolean = System.getenv("GITHUB_ACTIONS")?.toBoolean() ?: false
 val appNamespace = "com.itachi1706.busarrivalsg"
 
 android {
-    compileSdk = 34
-    buildToolsVersion = "34.0.0"
+    compileSdk = 36
+    buildToolsVersion = "36.0.0"
 
     defaultConfig {
         namespace = appNamespace
