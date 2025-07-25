@@ -12,7 +12,6 @@ val appNamespace = "com.itachi1706.busarrivalsg"
 
 android {
     compileSdk = 36
-    buildToolsVersion = "36.0.0"
 
     defaultConfig {
         namespace = appNamespace
