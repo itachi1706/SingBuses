@@ -23,7 +23,8 @@ import com.itachi1706.helperlib.deprecation.HtmlDep
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.PrefHelper
 import me.jfenn.attribouter.Attribouter
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 /**
  * Created by Kenneth on 26/7/2019.
@@ -83,7 +84,7 @@ class MainSettings : AppCompatActivity() {
 
             val nearbyStopsCount = findPreference<Preference>("nearbyStopsCount")
             nearbyStopsCount?.summary = (nearbyStopsCount as EditTextPreference).text
-            nearbyStopsCount.setOnPreferenceChangeListener { preference, newValue ->
+            nearbyStopsCount?.setOnPreferenceChangeListener { preference, newValue ->
                 preference.summary = newValue.toString()
                 true
             }
