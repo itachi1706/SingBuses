@@ -192,7 +192,7 @@ public class BusStopsDB extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.getCount() == 0)
-            return null;
+            return result; // Return empty arraylist instead of null
         if (cursor.moveToFirst()){
             do {
                 result.add(getBusStopJsonObject(cursor));
