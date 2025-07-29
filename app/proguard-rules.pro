@@ -114,3 +114,4 @@
 -dontwarn com.google.errorprone.matchers.method.MethodMatchers
 -dontwarn com.ryanharter.auto.value.gson.GsonTypeAdapterFactory
 -dontwarn com.sun.source.tree.Tree$Kind
+-dontwarn kotlinx.coroutines.scheduling.ExperimentalCoroutineDispatcher
