@@ -49,7 +49,7 @@ android {
         }
         getByName("debug") {
             configure<CrashlyticsExtension> {
-                isMappingFileUploadEnabled = false // Disabled mapping file uploading for DEBUG builds
+                mappingFileUploadEnabled = false // Disable automatic upload of mapping files
             }
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
