@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.Fragments;
+package com.itachi1706.busarrivalsg.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -34,11 +34,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.itachi1706.busarrivalsg.AsyncTasks.PopulateListWithCurrentLocationRecycler;
-import com.itachi1706.busarrivalsg.Database.BusStopsDB;
+import com.itachi1706.busarrivalsg.asynctasks.PopulateListWithCurrentLocationRecycler;
+import com.itachi1706.busarrivalsg.database.BusStopsDB;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter;
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 import com.itachi1706.helperlib.concurrent.Constants;

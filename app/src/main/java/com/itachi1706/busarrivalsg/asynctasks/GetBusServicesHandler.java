@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.AsyncTasks;
+package com.itachi1706.busarrivalsg.asynctasks;
 
 import android.app.Activity;
 import android.os.Bundle;

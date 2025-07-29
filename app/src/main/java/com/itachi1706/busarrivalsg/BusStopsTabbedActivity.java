@@ -26,9 +26,9 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.itachi1706.busarrivalsg.Fragments.BusStopNearbyFragment;
-import com.itachi1706.busarrivalsg.Fragments.BusStopSearchFragment;
-import com.itachi1706.busarrivalsg.Services.LocManager;
+import com.itachi1706.busarrivalsg.fragments.BusStopNearbyFragment;
+import com.itachi1706.busarrivalsg.fragments.BusStopSearchFragment;
+import com.itachi1706.busarrivalsg.services.LocManager;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.helperlib.helpers.LogHelper;
 

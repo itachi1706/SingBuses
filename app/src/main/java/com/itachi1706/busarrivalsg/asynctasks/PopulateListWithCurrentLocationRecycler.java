@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.AsyncTasks;
+package com.itachi1706.busarrivalsg.asynctasks;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,12 +12,12 @@ import androidx.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.itachi1706.busarrivalsg.Database.BusStopsDB;
-import com.itachi1706.busarrivalsg.Fragments.BusStopNearbyFragment;
+import com.itachi1706.busarrivalsg.database.BusStopsDB;
+import com.itachi1706.busarrivalsg.fragments.BusStopNearbyFragment;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.RecyclerViews.BusStopRecyclerAdapter;
-import com.itachi1706.busarrivalsg.gsonObjects.Distance;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter;
+import com.itachi1706.busarrivalsg.objects.gson.Distance;
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask;
 import com.itachi1706.helperlib.helpers.LogHelper;

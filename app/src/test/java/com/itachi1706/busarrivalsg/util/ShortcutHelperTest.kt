@@ -2,7 +2,7 @@ package com.itachi1706.busarrivalsg.util
 
 import android.content.Context
 import android.content.Intent
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

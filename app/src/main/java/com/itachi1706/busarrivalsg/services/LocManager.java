@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.Services;
+package com.itachi1706.busarrivalsg.services;
 
 import android.Manifest;
 import android.app.Service;

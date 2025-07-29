@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.gsonObjects.offline
+package com.itachi1706.busarrivalsg.objects.gson.offline
 
 /**
  * Created by Kenneth on 17/6/2015

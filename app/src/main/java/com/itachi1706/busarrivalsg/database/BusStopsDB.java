@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.Database;
+package com.itachi1706.busarrivalsg.database;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
 import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.io.File;

@@ -16,7 +16,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import com.itachi1706.appupdater.EasterEggResMultiMusicPrefFragment
 import com.itachi1706.appupdater.SettingsInitializer
-import com.itachi1706.busarrivalsg.Services.LocManager
+import com.itachi1706.busarrivalsg.services.LocManager
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.cepaslib.SettingsHandler
 import com.itachi1706.helperlib.deprecation.HtmlDep

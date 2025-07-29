@@ -51,7 +51,7 @@
             android:label="@string/title_activity_bus_services_at_stop" />
 
         <service
-            android:name=".Services.LocManager"
+            android:name=".services.LocManager"
             android:exported="false"
             tools:ignore="InnerclassSeparator" />
         <!--
