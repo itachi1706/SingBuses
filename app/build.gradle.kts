@@ -148,6 +148,9 @@ dependencies {
 
     implementation(libs.play.services.auth)
     implementation(libs.play.services.maps)
+
+    // Test for About Page
+    implementation(libs.gitrest)
 }
 
 apply(plugin = libs.plugins.google.services.get().pluginId)

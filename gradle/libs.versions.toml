@@ -10,6 +10,7 @@ espressoCore = "3.6.1"
 firebaseBom = "33.5.1"
 firebaseCrashlytics = "2.9.9"
 flexbox = "3.0.0"
+gitrest = "0.0.8"
 googleServices = "4.4.2"
 gson = "2.11.0"
 helperlib = "1.4.4"
@@ -50,6 +51,7 @@ firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 firebase-perf = { module = "com.google.firebase:firebase-perf" }
 flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
+gitrest = { module = "dev.horrific.code.james.git-rest-wrapper:gitrest", version.ref = "gitrest" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 helperlib = { module = "com.itachi1706.helpers:helperlib", version.ref = "helperlib" }
 junit = { module = "junit:junit", version.ref = "junit" }
