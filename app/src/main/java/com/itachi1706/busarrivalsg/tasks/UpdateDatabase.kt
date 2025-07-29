@@ -13,9 +13,9 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.ServiceCompat
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
-import com.itachi1706.busarrivalsg.Database.BusStopsDB
+import com.itachi1706.busarrivalsg.database.BusStopsDB
 import com.itachi1706.busarrivalsg.R
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSONArray
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSONArray
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.busarrivalsg.util.Timings
 import com.itachi1706.helperlib.helpers.LogHelper

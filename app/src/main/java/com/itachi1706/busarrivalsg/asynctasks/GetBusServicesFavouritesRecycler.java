@@ -1,13 +1,13 @@
-package com.itachi1706.busarrivalsg.AsyncTasks;
+package com.itachi1706.busarrivalsg.asynctasks;
 
 import android.app.Activity;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.RecyclerViews.FavouritesRecyclerAdapter;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalMain;
+import com.itachi1706.busarrivalsg.recyclerviews.FavouritesRecyclerAdapter;
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject;
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalMain;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.BusStatus;
 import com.itachi1706.busarrivalsg.util.StaticVariables;

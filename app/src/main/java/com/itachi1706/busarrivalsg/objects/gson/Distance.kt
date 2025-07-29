@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.gsonObjects
+package com.itachi1706.busarrivalsg.objects.gson
 
 /**
  * Created by Kenneth on 27/8/2018.

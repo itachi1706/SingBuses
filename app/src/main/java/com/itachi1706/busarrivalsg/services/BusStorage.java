@@ -1,11 +1,11 @@
-package com.itachi1706.busarrivalsg.Services;
+package com.itachi1706.busarrivalsg.services;
 
 import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.itachi1706.busarrivalsg.gsonObjects.offline.BusArrayJSON;
-import com.itachi1706.busarrivalsg.gsonObjects.offline.BusJSON;
+import com.itachi1706.busarrivalsg.objects.gson.offline.BusArrayJSON;
+import com.itachi1706.busarrivalsg.objects.gson.offline.BusJSON;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 
 import org.json.JSONArray;

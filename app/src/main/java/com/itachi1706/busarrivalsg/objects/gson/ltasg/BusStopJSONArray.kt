@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.gsonObjects.sgLTA
+package com.itachi1706.busarrivalsg.objects.gson.ltasg
 
 /**
  * Created by Kenneth on 18/6/2015

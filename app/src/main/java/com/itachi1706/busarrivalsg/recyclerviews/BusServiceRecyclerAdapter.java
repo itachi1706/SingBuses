@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.RecyclerViews;
+package com.itachi1706.busarrivalsg.recyclerviews;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -21,11 +21,11 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
-import com.itachi1706.busarrivalsg.Database.BusStopsDB;
+import com.itachi1706.busarrivalsg.database.BusStopsDB;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObject;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusArrivalArrayObjectEstimate;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject;
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObjectEstimate;
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.StaticVariables;

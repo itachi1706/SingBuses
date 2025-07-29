@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.RecyclerViews;
+package com.itachi1706.busarrivalsg.recyclerviews;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.gsonObjects.sgLTA.BusStopJSON;
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
 import com.itachi1706.busarrivalsg.util.ShortcutHelper;
 import com.itachi1706.helperlib.helpers.LogHelper;
 
