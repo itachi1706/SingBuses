@@ -1,6 +1,6 @@
 [versions]
 appupdater = "4.0.1"
-agp = "8.11.1"
+agp = "8.12.0"
 attribouter = "0.1.9"
 benManesVersions = "0.52.0"
 cepaslib = "2.5.0"
