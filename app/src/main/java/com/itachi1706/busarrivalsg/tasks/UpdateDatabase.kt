@@ -11,10 +11,11 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.ServiceCompat
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
-import com.itachi1706.busarrivalsg.database.BusStopsDB
 import com.itachi1706.busarrivalsg.R
+import com.itachi1706.busarrivalsg.database.BusStopsDB
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSONArray
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.busarrivalsg.util.Timings
@@ -85,7 +86,7 @@ class UpdateDatabase : Service() {
     }
 
     private fun refreshDatabase() {
-        sp.edit().putBoolean("busDBLoaded", false).apply()
+        sp.edit { putBoolean("busDBLoaded", false) }
 
         // Get data from API
         var retry = 0
@@ -104,7 +105,7 @@ class UpdateDatabase : Service() {
 
                 if (dataObjects != null) {
                     LogHelper.i(TAG, "Database data retrieved Successfully")
-                    sp.edit().putBoolean("busDBLoaded", true).apply()
+                    sp.edit { putBoolean("busDBLoaded", true) }
                     break
                 }
 
@@ -115,7 +116,11 @@ class UpdateDatabase : Service() {
 
         if (dataObjects == null) {
             LogHelper.e(TAG, "Failed to get data from API after 5 tries. Exiting...")
-            Toast.makeText(this, "Failed to update database after 5 tries, try again later", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                "Failed to update database after 5 tries, try again later",
+                Toast.LENGTH_LONG
+            ).show()
             stopSelf()
             return
         }
@@ -156,7 +161,7 @@ class UpdateDatabase : Service() {
         val data = dataObjects.value
         db.addMultipleToDB(data)
         t2.end()
-        
+
         val count = db.size
         Toast.makeText(
             this,
@@ -164,8 +169,10 @@ class UpdateDatabase : Service() {
             Toast.LENGTH_SHORT
         ).show()
         d("GET-STOPS", "Loaded $count bus stops into the database")
-        sp.edit().putBoolean("busDBLoaded", true).apply()
-        sp.edit().putLong("busDBTimeUpdated", System.currentTimeMillis()).apply()
+        sp.edit {
+            putBoolean("busDBLoaded", true)
+            putLong("busDBTimeUpdated", System.currentTimeMillis())
+        }
     }
 
     private fun getFromApi(): String? {
