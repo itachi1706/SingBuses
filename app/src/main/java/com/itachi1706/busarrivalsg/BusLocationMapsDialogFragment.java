@@ -226,7 +226,7 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
     @SuppressLint("MissingPermission") // This is basically a permission check alr
     private final ActivityResultLauncher<String[]> requestGps = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
             result -> {
-                boolean hasPerm = StaticVariables.INSTANCE.checkIfCoraseLocationGranted(result);
+                boolean hasPerm = StaticVariables.INSTANCE.checkIfCoarseLocationGranted(result);
 
                 if (hasPerm) {
                     LogHelper.d(LocManager.TAG, "Location permission granted - enabling my location");

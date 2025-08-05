@@ -184,7 +184,7 @@ public class BusLocationMapsActivity extends FragmentActivity implements OnMapVi
     @SuppressLint("MissingPermission") // This is a permission check
     private final ActivityResultLauncher<String[]> requestGps = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
             result -> {
-                boolean hasPerm = StaticVariables.INSTANCE.checkIfCoraseLocationGranted(result);
+                boolean hasPerm = StaticVariables.INSTANCE.checkIfCoarseLocationGranted(result);
 
                 if (hasPerm) {
                     LogHelper.d(LocManager.TAG, "Location permission granted - enabling my location");

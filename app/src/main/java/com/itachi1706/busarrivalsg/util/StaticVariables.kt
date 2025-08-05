@@ -1,6 +1,7 @@
 package com.itachi1706.busarrivalsg.util
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
@@ -20,7 +21,8 @@ import java.util.concurrent.TimeUnit
  */
 object StaticVariables {
 
-    const val BASE_SERVER_URL = "https://api.itachi1706.com/api/appupdatechecker.php?action=androidretrievedata&packagename="
+    const val BASE_SERVER_URL =
+        "https://api.itachi1706.com/api/appupdatechecker.php?action=androidretrievedata&packagename="
 
     const val CUR = 0
     const val NEXT = 1
@@ -33,12 +35,13 @@ object StaticVariables {
     // HANDLER MESSAGES
     const val BUS_SERVICE_JSON_RETRIEVED = 101
 
+    @SuppressLint("CheckResult")
     fun checkIfYouGotJsonString(jsonString: String): Boolean {
         try {
             JsonParser.parseString(jsonString)
-        } catch (e: JsonSyntaxException) {
+        } catch (_: JsonSyntaxException) {
             return false
-        } catch (e: JsonParseException) {
+        } catch (_: JsonParseException) {
             return false
         }
 
@@ -49,15 +52,27 @@ object StaticVariables {
         return sp.getBoolean(USE_SERVER_TIME, false)
     }
 
-    fun parseLTAEstimateArrival(arrivalString: String, useServerTime: Boolean, serverTime: String?): Long {
-        return if (arrivalString.equals("", ignoreCase = true)) -9999 else parseEstimateArrival(arrivalString, useServerTime, serverTime)
+    fun parseLTAEstimateArrival(
+        arrivalString: String,
+        useServerTime: Boolean,
+        serverTime: String?
+    ): Long {
+        return if (arrivalString.equals("", ignoreCase = true)) -9999 else parseEstimateArrival(
+            arrivalString,
+            useServerTime,
+            serverTime
+        )
     }
 
     fun checkBusLocationValid(lat: Double, lng: Double): Boolean {
         return !(lng == -1000.0 || lat == -1000.0) && !(lng == -11.0 && lat == -11.0) && !(lat == 0.0 && lng == 0.0)
     }
 
-    private fun parseEstimateArrival(arrivalString: String, useServerTime: Boolean, serverTime: String?): Long {
+    private fun parseEstimateArrival(
+        arrivalString: String,
+        useServerTime: Boolean,
+        serverTime: String?
+    ): Long {
         val currentDate: Calendar
         if (!useServerTime || serverTime == null) {
             LogHelper.d("DATE", "Current Time Millis: " + System.currentTimeMillis())
@@ -78,7 +93,8 @@ object StaticVariables {
 
     private fun parseDate(dateString: String): Calendar {
         LogHelper.d("SPLIT", "Date String to parse: $dateString")
-        val firstSplit = dateString.split("T".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val firstSplit =
+            dateString.split("T".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         val date = firstSplit[0]
         val time = firstSplit[1]
         val timeSplit = time.split("\\+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
@@ -89,7 +105,8 @@ object StaticVariables {
         val month = Integer.parseInt(dateSplit[1])
         val dates = Integer.parseInt(dateSplit[2])
 
-        val trueTimeSplit = trueTime.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val trueTimeSplit =
+            trueTime.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         val hr = Integer.parseInt(trueTimeSplit[0])
         val min = Integer.parseInt(trueTimeSplit[1])
         val sec = Integer.parseInt(trueTimeSplit[2])
@@ -102,7 +119,7 @@ object StaticVariables {
         return df.format(date)
     }
 
-    fun checkIfCoraseLocationGranted(result: Map<String, Boolean>): Boolean {
+    fun checkIfCoarseLocationGranted(result: Map<String, Boolean>): Boolean {
         result.forEach {
             if (it.key == Manifest.permission.ACCESS_COARSE_LOCATION) {
                 return it.value

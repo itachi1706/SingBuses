@@ -44,11 +44,11 @@ class StaticVariablesTest {
     }
 
     @Test
-    fun testCheckIfCoraseLocationGranted() {
+    fun testCheckIfCoarseLocationGranted() {
         val result = mapOf("android.permission.ACCESS_COARSE_LOCATION" to true)
-        assertTrue(StaticVariables.checkIfCoraseLocationGranted(result))
+        assertTrue(StaticVariables.checkIfCoarseLocationGranted(result))
 
         val result2 = mapOf("android.permission.ACCESS_COARSE_LOCATION" to false)
-        assertFalse(StaticVariables.checkIfCoraseLocationGranted(result2))
+        assertFalse(StaticVariables.checkIfCoarseLocationGranted(result2))
     }
 }
