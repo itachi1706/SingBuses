@@ -84,11 +84,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         setAnalyticsData(analytics != null, mFirebaseAnalytics, analytics); // Update Firebase User Properties
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null);
 
-        if (favouritesList != null) favouritesList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
-        favouritesList.setLayoutManager(linearLayoutManager);
-        favouritesList.setItemAnimator(new DefaultItemAnimator());
 
         swipeToRefresh = findViewById(R.id.refresh_favourites);
         if (swipeToRefresh != null) {
@@ -104,7 +101,12 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         PrefHelper.handleDefaultThemeSwitch(sp.getString("app_theme", "default"));
         sp.edit().putBoolean("cepas_dark_theme", true).apply();
         adapter = new FavouritesRecyclerAdapter(new ArrayList<>(), this, StaticVariables.INSTANCE.useServerTime(sp));
-        favouritesList.setAdapter(adapter);
+        if (favouritesList != null) {
+            favouritesList.setHasFixedSize(true);
+            favouritesList.setLayoutManager(linearLayoutManager);
+            favouritesList.setItemAnimator(new DefaultItemAnimator());
+            favouritesList.setAdapter(adapter);
+        }
 
         ItemTouchHelper moveAdapter = new ItemTouchHelper(new SwipeMoveFavouriteCallback(this, new SwipeFavouriteCallback.ISwipeCallback() {
             @Override
