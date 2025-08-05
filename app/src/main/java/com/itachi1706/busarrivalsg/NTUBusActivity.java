@@ -252,7 +252,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
             String data = intent.getStringExtra("data");
             boolean update = intent.getBooleanExtra("update", false);
             if (data == null) return;
-            Log.d(TAG, "publicBusReceiver onReceive: update = " + update + ", data = " + data);
+Log.d(TAG, "publicBusReceiver onReceive: update = " + update + ", data length = " + data.length());
             Gson gson = new Gson();
             if (!update) {
                 BusStopJSON[] tmpJSON;
