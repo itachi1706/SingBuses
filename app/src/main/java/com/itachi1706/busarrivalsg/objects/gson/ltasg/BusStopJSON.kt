@@ -12,8 +12,8 @@ class BusStopJSON(
     @SerializedName("Description") var description: String = "",
     @SerializedName("Services") var services: String = "",
     var timestamp: Int = 0,
-    @SerializedName("Latitude") var latitude: Double = 0.toDouble(),
-    @SerializedName("Longitude") var longitude: Double = 0.toDouble(),
+    @SerializedName("Latitude") var latitude: Double = 0.0,
+    @SerializedName("Longitude") var longitude: Double = 0.0,
     var isHasDistance: Boolean = false,
-    var distance: Float = 0.toFloat()
+    var distance: Float = 0.0f
 )

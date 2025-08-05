@@ -23,32 +23,17 @@ class BusArrivalArrayObjectEstimate(
 
     val latitudeD: Double
         get() {
-            return try {
-                java.lang.Double.parseDouble(latitude)
-            } catch (_: NumberFormatException) {
-                -11.0
-            }
-
+            return latitude.toDoubleOrNull() ?: -11.0
         }
 
     val longitudeD: Double
         get() {
-            return try {
-                java.lang.Double.parseDouble(longitude)
-            } catch (_: NumberFormatException) {
-                -11.0
-            }
-
+            return longitude.toDoubleOrNull() ?: -11.0
         }
 
     val visitNumberD: Int
         get() {
-            return try {
-                Integer.parseInt(visitNumber)
-            } catch (_: NumberFormatException) {
-                0
-            }
-
+            return visitNumber.toIntOrNull() ?: 0
         }
 
     val isWheelchairAccessible: Boolean
