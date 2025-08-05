@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -197,7 +198,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
     @SuppressLint("MissingPermission") // This is basically a permission check alr
     private final ActivityResultLauncher<String[]> requestGps = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
             result -> {
-                boolean hasPerm = StaticVariables.INSTANCE.checkIfCoraseLocationGranted(result);
+                boolean hasPerm = StaticVariables.INSTANCE.checkIfCoarseLocationGranted(result);
 
                 if (hasPerm) {
                     LogHelper.d(LocManager.TAG, "Location permission granted - enabling my location");
@@ -251,6 +252,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
             String data = intent.getStringExtra("data");
             boolean update = intent.getBooleanExtra("update", false);
             if (data == null) return;
+Log.d(TAG, "publicBusReceiver onReceive: update = " + update + ", data length = " + data.length());
             Gson gson = new Gson();
             if (!update) {
                 BusStopJSON[] tmpJSON;

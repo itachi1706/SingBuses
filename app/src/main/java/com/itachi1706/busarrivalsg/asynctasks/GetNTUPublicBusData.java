@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -79,10 +80,11 @@ public class GetNTUPublicBusData extends CoroutineAsyncTask<Void, Void, Integer>
         if (!update && sp.getBoolean("showntusbsstops", true)) {
             // We will send data related to stops as well
             try (BusStopsDB db = new BusStopsDB(mActivity)) {
+                Log.d(TAG, "Fetching bus stops from database for NTU Public Buses");
                 ArrayList<BusStopJSON> jsons = new ArrayList<>();
-                jsons.addAll(db.getBusStopsBySvcNo("179", "SBST"));
-                jsons.addAll(db.getBusStopsBySvcNo("179A", "SBST"));
-                jsons.addAll(db.getBusStopsBySvcNo("199", "SBST"));
+                jsons.addAll(db.getBusStopsBySvcNo("179", "SMRT"));
+                jsons.addAll(db.getBusStopsBySvcNo("179A", "SMRT"));
+                jsons.addAll(db.getBusStopsBySvcNo("199", "SMRT"));
                 BusStopJSON[] stops = jsons.toArray(new BusStopJSON[0]);
 
                 Gson gson = new Gson();

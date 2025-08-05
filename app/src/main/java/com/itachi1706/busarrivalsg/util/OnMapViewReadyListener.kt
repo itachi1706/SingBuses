@@ -33,19 +33,33 @@ import com.google.android.gms.maps.SupportMapFragment
  * invoke any method on the GoogleMap that also requires the View to have finished layout
  * (ie. anything that needs to know the View's true size like snapshotting).
  */
-class OnMapViewReadyListener(private val toBeNotified: OnGlobalMapReadyListener, private val mapView: View?) : ViewTreeObserver.OnGlobalLayoutListener, OnMapReadyCallback {
+class OnMapViewReadyListener(
+    private val toBeNotified: OnGlobalMapReadyListener,
+    private val mapView: View?
+) : ViewTreeObserver.OnGlobalLayoutListener, OnMapReadyCallback {
     private var frag: SupportMapFragment? = null
     private var mapViewAsync: MapView? = null
 
-    constructor(mapFragment: SupportMapFragment, toBeNotified: OnGlobalMapReadyListener) : this(toBeNotified, mapFragment.view) { frag = mapFragment; registerListeners() }
-    constructor(mView: MapView, toBeNotified: OnGlobalMapReadyListener) : this(toBeNotified, mView) { mapViewAsync = mView; registerListeners() }
+    constructor(mapFragment: SupportMapFragment, toBeNotified: OnGlobalMapReadyListener) : this(
+        toBeNotified,
+        mapFragment.view
+    ) {
+        frag = mapFragment; registerListeners()
+    }
+
+    constructor(mView: MapView, toBeNotified: OnGlobalMapReadyListener) : this(
+        toBeNotified,
+        mView
+    ) {
+        mapViewAsync = mView; registerListeners()
+    }
 
     private var isViewReady = false
     private var isMapReady = false
     private var map: GoogleMap? = null
 
     /** A listener that needs to wait for both the GoogleMap and the View to be initialized */
-    interface OnGlobalMapReadyListener {
+    fun interface OnGlobalMapReadyListener {
         fun onMapReady(googleMap: GoogleMap?)
     }
 
