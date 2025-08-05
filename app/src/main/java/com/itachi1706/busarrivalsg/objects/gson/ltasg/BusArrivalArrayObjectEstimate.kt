@@ -1,51 +1,44 @@
-@file:Suppress("PropertyName", "PrivatePropertyName")
-
 package com.itachi1706.busarrivalsg.objects.gson.ltasg
 
+import com.google.gson.annotations.SerializedName
 import com.itachi1706.busarrivalsg.util.BusesUtil
 
 /**
  * Created by Kenneth on 18/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.gsonObjects.sgLTA
  */
-class BusArrivalArrayObjectEstimate (val EstimatedArrival: String? = null, val Load: String = "", val Feature: String = "", val Latitude: String = "-11", val Longitude: String = "-11",
-        private val VisitNumber: String = "0", val OriginCode: String? = null, val DestinationCode: String? = null, val Type: String = "") {
+class BusArrivalArrayObjectEstimate(
+    @SerializedName("EstimatedArrival") val estimatedArrival: String? = null,
+    @SerializedName("Load") val load: String = "",
+    @SerializedName("Feature") val feature: String = "",
+    @SerializedName("Latitude") val latitude: String = "-11",
+    @SerializedName("Longitude") val longitude: String = "-11",
+    @SerializedName("VisitNumber") private val visitNumber: String = "0",
+    @SerializedName("OriginCode") val originCode: String? = null,
+    @SerializedName("DestinationCode") val destinationCode: String? = null,
+    @SerializedName("Type") val type: String = ""
+) {
     val loadInt: Int
-        get() = BusesUtil.getLoad(Load)
+        get() = BusesUtil.getLoad(load)
 
     val latitudeD: Double
         get() {
-            return try {
-                java.lang.Double.parseDouble(Latitude)
-            } catch (e: NumberFormatException) {
-                -11.0
-            }
-
+            return latitude.toDoubleOrNull() ?: -11.0
         }
 
     val longitudeD: Double
         get() {
-            return try {
-                java.lang.Double.parseDouble(Longitude)
-            } catch (e: NumberFormatException) {
-                -11.0
-            }
-
+            return longitude.toDoubleOrNull() ?: -11.0
         }
 
     val visitNumberD: Int
         get() {
-            return try {
-                Integer.parseInt(VisitNumber)
-            } catch (e: NumberFormatException) {
-                0
-            }
-
+            return visitNumber.toIntOrNull() ?: 0
         }
 
     val isWheelchairAccessible: Boolean
-        get() = Feature.contains("WAB")
+        get() = feature.contains("WAB")
 
     val typeInt: Int
-        get() = BusesUtil.getType(Type)
+        get() = BusesUtil.getType(type)
 }

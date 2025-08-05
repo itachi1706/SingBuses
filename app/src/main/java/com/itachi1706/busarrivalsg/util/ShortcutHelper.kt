@@ -33,16 +33,16 @@ class ShortcutHelper(val context: Context) {
         getInfo()
         intent.setAction(Intent.ACTION_VIEW)
 
-        val shortcut = ShortcutInfoCompat.Builder(context, "bus-" + busStop.BusStopCode)
-            .setShortLabel(busStop.Description)
-            .setLongLabel(busStop.Description)
+        val shortcut = ShortcutInfoCompat.Builder(context, "bus-" + busStop.busStopCode)
+            .setShortLabel(busStop.description)
+            .setLongLabel(busStop.description)
             .setIntent(intent)
             .setIcon(IconCompat.createWithResource(context, R.mipmap.ic_launcher_round))
             .build()
 
         LogHelper.i(
             TAG,
-            "Pushing Shortcut for Bus Stop ${busStop.BusStopCode} (${busStop.Description})"
+            "Pushing Shortcut for Bus Stop ${busStop.busStopCode} (${busStop.description})"
         )
 
         return pushShortcut(shortcut)

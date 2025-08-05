@@ -30,8 +30,8 @@ class ShortcutHelperTest {
     @Test
     fun `updateBusStopShortcuts returns false when SDK version is less than Nougat`() {
         val busStop = BusStopJSON()
-        busStop.BusStopCode = "12345"
-        busStop.Description = "Test Bus Stop"
+        busStop.busStopCode = "12345"
+        busStop.description = "Test Bus Stop"
 
         val result = shortcutHelper.updateBusStopShortcuts(busStop, intent)
 
