@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
-import com.google.gson.JsonSyntaxException
 import com.itachi1706.busarrivalsg.objects.BusServices
 import com.itachi1706.helperlib.helpers.LogHelper
 import java.text.SimpleDateFormat
@@ -37,15 +36,12 @@ object StaticVariables {
 
     @SuppressLint("CheckResult")
     fun checkIfYouGotJsonString(jsonString: String): Boolean {
-        try {
+        return try {
             JsonParser.parseString(jsonString)
-        } catch (_: JsonSyntaxException) {
-            return false
+            true
         } catch (_: JsonParseException) {
-            return false
+            false
         }
-
-        return true
     }
 
     fun useServerTime(sp: SharedPreferences): Boolean {
@@ -120,11 +116,6 @@ object StaticVariables {
     }
 
     fun checkIfCoarseLocationGranted(result: Map<String, Boolean>): Boolean {
-        result.forEach {
-            if (it.key == Manifest.permission.ACCESS_COARSE_LOCATION) {
-                return it.value
-            }
-        }
-        return false
+        return result[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
     }
 }
