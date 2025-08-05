@@ -44,6 +44,7 @@ import com.itachi1706.busarrivalsg.util.SwipeFavouriteCallback;
 import com.itachi1706.busarrivalsg.util.SwipeMoveFavouriteCallback;
 import com.itachi1706.helperlib.helpers.ConnectivityHelper;
 import com.itachi1706.helperlib.helpers.LogHelper;
+import com.itachi1706.helperlib.helpers.PrefHelper;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -100,6 +101,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         }
 
         sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        PrefHelper.handleDefaultThemeSwitch(sp.getString("app_theme", "default"));
         sp.edit().putBoolean("cepas_dark_theme", true).apply();
         adapter = new FavouritesRecyclerAdapter(new ArrayList<>(), this, StaticVariables.INSTANCE.useServerTime(sp));
         favouritesList.setAdapter(adapter);
