@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -251,6 +252,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
             String data = intent.getStringExtra("data");
             boolean update = intent.getBooleanExtra("update", false);
             if (data == null) return;
+            Log.d(TAG, "publicBusReceiver onReceive: update = " + update + ", data = " + data);
             Gson gson = new Gson();
             if (!update) {
                 BusStopJSON[] tmpJSON;
