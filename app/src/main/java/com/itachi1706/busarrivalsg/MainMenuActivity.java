@@ -217,7 +217,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         if (busStorage.hasFavourites()) {
             //Go ahead with loading and getting data
             LogHelper.d(TAG, "Has Favourites. Processing");
-            StaticVariables.INSTANCE.setFavouritesList(new ArrayList(busStorage.getStoredBuses()));
+            StaticVariables.INSTANCE.setFavouritesList(new ArrayList<>(busStorage.getStoredBuses()));
             adapter.updateAdapter(StaticVariables.INSTANCE.getFavouritesList(), null);
             adapter.notifyDataSetChanged();
 
