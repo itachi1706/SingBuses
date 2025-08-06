@@ -1,11 +1,11 @@
 package com.itachi1706.busarrivalsg.services
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.core.content.edit
 import com.google.gson.Gson
 import com.itachi1706.busarrivalsg.objects.BusServices
 import com.itachi1706.busarrivalsg.objects.gson.offline.BusArrayJSON
+import com.itachi1706.helperlib.helpers.LogHelper
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -26,8 +26,8 @@ class BusStorage(val prefs: SharedPreferences) {
             main.put("storage", arr)
             prefs.edit { putString(PREF_STORED_NAME, main.toString()) }
         } catch (e: JSONException) {
-            Log.e(TAG, "Error adding new bus to storage")
-            Log.e(TAG, "Error message: ${e.localizedMessage}")
+            LogHelper.e(TAG, "Error adding new bus to storage")
+            LogHelper.e(TAG, "Error message: ${e.localizedMessage}")
         }
     }
 
@@ -80,8 +80,8 @@ class BusStorage(val prefs: SharedPreferences) {
             val obj = JSONObject(json)
             obj.getJSONArray("storage")
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting existing JSON string")
-            Log.e(TAG, "Error message: ${e.localizedMessage}")
+            LogHelper.e(TAG, "Error getting existing JSON string")
+            LogHelper.e(TAG, "Error message: ${e.localizedMessage}")
             JSONArray()
         }
     }

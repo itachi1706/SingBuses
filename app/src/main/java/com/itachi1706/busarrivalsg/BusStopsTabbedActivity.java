@@ -45,6 +45,8 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
     double longitude, latitude;
     LocManager gps;
     FirebaseAnalytics mAnalytics;
+    
+    private static final String TAG = "BusStopsTabbedActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +93,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
                 return; // Should never happen as it should have been granted
             gps = new LocManager(this);
         }
-        if (!gps.canGetLocation()) {
+        if (!gps.getCanGetLocation()) {
             gps.showSettingsAlert();
         }
     }
@@ -106,7 +108,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
     }
 
     private void requestGpsPermission() {
-        LogHelper.w(LocManager.TAG, "GPS permission is not granted. Requesting permission");
+        LogHelper.w(TAG, "GPS permission is not granted. Requesting permission");
         final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)) {
@@ -123,7 +125,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), R.string.toast_message_retrieving_location, Toast.LENGTH_SHORT).show();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            gps.getLocation();
+            gps.getLocationNow();
         latitude = gps.getLatitude();
         longitude = gps.getLongitude();
         Bundle bundle = new Bundle();
@@ -138,12 +140,12 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
                 boolean hasPerm = StaticVariables.INSTANCE.checkIfCoarseLocationGranted(result);
 
                 if (hasPerm) {
-                    LogHelper.d(LocManager.TAG, "Location permission granted - initialize the gps source");
+                    LogHelper.d(TAG, "Location permission granted - initialize the gps source");
                     // we have permission
                     initLocationManager();
                     getLocationButtonClicked();
                 } else {
-                    LogHelper.e(LocManager.TAG, "Permission not granted");
+                    LogHelper.e(TAG, "Permission not granted");
                     new AlertDialog.Builder(getApplicationContext()).setTitle(R.string.dialog_title_permission_denied)
                             .setMessage(R.string.dialog_message_no_permission_gps).setPositiveButton(android.R.string.ok, null)
                             .setNeutralButton(R.string.dialog_action_neutral_app_settings, (dialog, which) -> {
