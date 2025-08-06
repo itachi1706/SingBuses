@@ -1,8 +1,8 @@
 package com.itachi1706.busarrivalsg.recyclerviews;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,20 +13,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
-import com.itachi1706.busarrivalsg.database.BusStopsDB;
 import com.itachi1706.busarrivalsg.R;
+import com.itachi1706.busarrivalsg.database.BusStopsDB;
+import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObjectEstimate;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
-import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.helperlib.helpers.PrefHelper;
@@ -315,45 +313,42 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
                 return;
             }
 
-            Intent mapsIntent = new Intent(activity, BusLocationMapsActivity.class);
-            mapsIntent.putExtra("busCode", stopCode);
-            mapsIntent.putExtra("busSvcNo", serviceNo);
+            Bundle mapsArgs = new Bundle();
+            mapsArgs.putString("busCode", stopCode);
+            mapsArgs.putString("busSvcNo", serviceNo);
             assert busObj != null;
             assert busObj.getNextBus() != null;
             assert busObj.getNextBus2() != null;
             assert busObj.getNextBus3() != null;
 
             // 3 Bus statuses
-            mapsIntent.putExtra("lat1", busObj.getNextBus().getLatitudeD());
-            mapsIntent.putExtra("lng1", busObj.getNextBus().getLongitudeD());
-            mapsIntent.putExtra("arr1", busObj.getNextBus().getEstimatedArrival());
-            mapsIntent.putExtra("type1", busObj.getNextBus().getTypeInt());
-            mapsIntent.putExtra("lat2", busObj.getNextBus2().getLatitudeD());
-            mapsIntent.putExtra("lng2", busObj.getNextBus2().getLongitudeD());
-            mapsIntent.putExtra("arr2", busObj.getNextBus2().getEstimatedArrival());
-            mapsIntent.putExtra("type2", busObj.getNextBus2().getTypeInt());
-            mapsIntent.putExtra("lat3", busObj.getNextBus3().getLatitudeD());
-            mapsIntent.putExtra("lng3", busObj.getNextBus3().getLongitudeD());
-            mapsIntent.putExtra("arr3", busObj.getNextBus3().getEstimatedArrival());
-            mapsIntent.putExtra("type3", busObj.getNextBus3().getTypeInt());
-            mapsIntent.putExtra("sTime", currentTime);
-            mapsIntent.putExtra("state", state);
+            mapsArgs.putDouble("lat1", busObj.getNextBus().getLatitudeD());
+            mapsArgs.putDouble("lng1", busObj.getNextBus().getLongitudeD());
+            mapsArgs.putString("arr1", busObj.getNextBus().getEstimatedArrival());
+            mapsArgs.putInt("type1", busObj.getNextBus().getTypeInt());
+            mapsArgs.putDouble("lat2", busObj.getNextBus2().getLatitudeD());
+            mapsArgs.putDouble("lng2", busObj.getNextBus2().getLongitudeD());
+            mapsArgs.putString("arr2", busObj.getNextBus2().getEstimatedArrival());
+            mapsArgs.putInt("type2", busObj.getNextBus2().getTypeInt());
+            mapsArgs.putDouble("lat3", busObj.getNextBus3().getLatitudeD());
+            mapsArgs.putDouble("lng3", busObj.getNextBus3().getLongitudeD());
+            mapsArgs.putString("arr3", busObj.getNextBus3().getEstimatedArrival());
+            mapsArgs.putInt("type3", busObj.getNextBus3().getTypeInt());
+            mapsArgs.putString("sTime", currentTime);
+            mapsArgs.putInt("state", state);
 
             //Get Bus stop longitude and latitude
             BusStopsDB db = new BusStopsDB(activity);
             BusStopJSON busStop = db.getBusStopByBusStopCode(stopCode);
             if (busStop != null) {
-                mapsIntent.putExtra("buslat", busStop.getLatitude());
-                mapsIntent.putExtra("buslng", busStop.getLongitude());
+                mapsArgs.putDouble("buslat", busStop.getLatitude());
+                mapsArgs.putDouble("buslng", busStop.getLongitude());
             }
 
-            if (!PreferenceManager.getDefaultSharedPreferences(v.getContext()).getBoolean("mapPopup", true))
-                activity.startActivity(mapsIntent);
-            else {
-                final BusLocationMapsDialogFragment dialog = new BusLocationMapsDialogFragment();
-                dialog.setArguments(mapsIntent.getExtras());
-                dialog.show(activity.getSupportFragmentManager(), "123");
-            }
+
+            final BusLocationMapsDialogFragment dialog = new BusLocationMapsDialogFragment();
+            dialog.setArguments(mapsArgs);
+            dialog.show(activity.getSupportFragmentManager(), "123");
         }
     }
 }

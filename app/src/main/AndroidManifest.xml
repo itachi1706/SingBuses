@@ -70,10 +70,6 @@
             android:value="false" />
 
         <activity
-            android:name=".BusLocationMapsActivity"
-            android:label="@string/title_activity_bus_location_maps" />
-
-        <activity
             android:name=".FirebaseLoginActivity"
             android:label="Sign in" />
         <activity

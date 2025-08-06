@@ -32,11 +32,6 @@
             android:key="useServerTime"
             android:summary="Enable to use server time instead of device time" />
         <SwitchPreference
-            android:title="Use Map Popup"
-            android:defaultValue="true"
-            android:key="mapPopup"
-            android:summary="Show the map in a popup instead. \nNote: Popup will be forced in a future update" />
-        <SwitchPreference
             android:title="NTU Bus Tracker"
             android:defaultValue="false"
             android:key="showntushuttle"
