@@ -90,10 +90,16 @@ class LocManager(val mContext: Context) : Service(), LocationListener {
                 }
                 // If GPS Enabled get lat/long using GPS Services
                 if (isGPSEnabled && locationManager != null) {
-                    locationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this)
+                    locationManager!!.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER,
+                        MIN_TIME_BW_UPDATES,
+                        MIN_DISTANCE_CHANGE_FOR_UPDATES,
+                        this
+                    )
                     LogHelper.d(TAG, "GPS Enabled")
 
-                    val gpsLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                    val gpsLocation =
+                        locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                     if (location == null) {
                         location = gpsLocation
                     } else {
@@ -123,12 +129,13 @@ class LocManager(val mContext: Context) : Service(), LocationListener {
     fun showSettingsAlert() {
         AlertDialog.Builder(mContext).setTitle(R.string.dialog_title_gps_disabled)
             .setMessage(R.string.dialog_message_gps_disabled)
-            .setPositiveButton(R.string.dialog_action_positive_settings, { _, _ ->
+            .setPositiveButton(R.string.dialog_action_positive_settings) { _, _ ->
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 mContext.startActivity(intent)
-            }).setNegativeButton(
-                R.string.dialog_action_negative_cancel,
-                { dialog, _ -> dialog.cancel() }).show()
+            }.setNegativeButton(
+                R.string.dialog_action_negative_cancel
+            )
+            { dialog, _ -> dialog.cancel() }.show()
     }
 
     /**
@@ -162,6 +169,7 @@ class LocManager(val mContext: Context) : Service(), LocationListener {
 
         // The minimum distance to change Updates in meters
         private const val MIN_DISTANCE_CHANGE_FOR_UPDATES: Float = 10f // 10 meters
+
         // The minimum time between updates in milliseconds
         private const val MIN_TIME_BW_UPDATES: Long = 1000 * 30L // 30 seconds;
     }
