@@ -41,7 +41,7 @@ class BusStorage(val prefs: SharedPreferences) {
 
         val gson = Gson()
         val busArray = gson.fromJson(json, BusArrayJSON::class.java)
-        if (busArray.storage.isNullOrEmpty()) {
+        if (busArray == null || busArray.storage.isNullOrEmpty()) {
             return emptyList()
         }
         for (bus in busArray.storage) {
