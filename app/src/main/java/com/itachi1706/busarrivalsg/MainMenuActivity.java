@@ -35,8 +35,8 @@ import com.itachi1706.appupdater.utils.AnalyticsHelper;
 import com.itachi1706.busarrivalsg.asynctasks.GetBusServicesFavouritesRecycler;
 import com.itachi1706.busarrivalsg.database.BusStopsDB;
 import com.itachi1706.busarrivalsg.recyclerviews.FavouritesRecyclerAdapter;
-import com.itachi1706.busarrivalsg.services.BusStorage;
 import com.itachi1706.busarrivalsg.objects.BusServices;
+import com.itachi1706.busarrivalsg.services.BusStorage;
 import com.itachi1706.busarrivalsg.tasks.UpdateDatabase;
 import com.itachi1706.busarrivalsg.util.LogInitializer;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
@@ -62,6 +62,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
     private SwipeRefreshLayout swipeToRefresh;
 
     private SharedPreferences sp;
+    private BusStorage busStorage;
 
     private static final String DB_VERSION_CHECK = "busDBVerCheck";
     private static final String BUS_DB_TIME_UPDATE_CHECK = "busDBTimeUpdated";
@@ -107,6 +108,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             favouritesList.setItemAnimator(new DefaultItemAnimator());
             favouritesList.setAdapter(adapter);
         }
+
+        busStorage = new BusStorage(sp);
 
         ItemTouchHelper moveAdapter = new ItemTouchHelper(new SwipeMoveFavouriteCallback(this, new SwipeFavouriteCallback.ISwipeCallback() {
             @Override
@@ -211,10 +214,10 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         //Populate favourites from favourites list
         LogHelper.d(TAG, "Favourites Pref: " + sp.getString("stored", "wot"));
 
-        if (BusStorage.hasFavourites(sp)) {
+        if (busStorage.hasFavourites()) {
             //Go ahead with loading and getting data
             LogHelper.d(TAG, "Has Favourites. Processing");
-            StaticVariables.INSTANCE.setFavouritesList(BusStorage.getStoredBuses(sp));
+            StaticVariables.INSTANCE.setFavouritesList(new ArrayList(busStorage.getStoredBuses()));
             adapter.updateAdapter(StaticVariables.INSTANCE.getFavouritesList(), null);
             adapter.notifyDataSetChanged();
 
