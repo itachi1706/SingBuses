@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +22,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.snackbar.Snackbar;
-import com.itachi1706.busarrivalsg.BusLocationMapsActivity;
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
-import com.itachi1706.busarrivalsg.database.BusStopsDB;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.services.BusStorage;
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
+import com.itachi1706.busarrivalsg.database.BusStopsDB;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.BusStatus;
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
+import com.itachi1706.busarrivalsg.services.BusStorage;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.helperlib.helpers.LogHelper;
@@ -375,41 +375,37 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                 return;
             }
 
-            Intent mapsIntent = new Intent(activity, BusLocationMapsActivity.class);
-            mapsIntent.putExtra("busCode", stopCode);
-            mapsIntent.putExtra("busSvcNo", serviceNo);
+            Bundle mapsArgs = new Bundle();
+            mapsArgs.putString("busCode", stopCode);
+            mapsArgs.putString("busSvcNo", serviceNo);
 
             // 3 Bus statuses
-            mapsIntent.putExtra("lat1", busObj.getCurrentBus().getLatitude());
-            mapsIntent.putExtra("lng1", busObj.getCurrentBus().getLongitude());
-            mapsIntent.putExtra("arr1", busObj.getCurrentBus().getEstimatedArrival());
-            mapsIntent.putExtra("lat2", busObj.getNextBus().getLatitude());
-            mapsIntent.putExtra("lng2", busObj.getNextBus().getLongitude());
-            mapsIntent.putExtra("arr2", busObj.getNextBus().getEstimatedArrival());
-            mapsIntent.putExtra("lat3", busObj.getSubsequentBus().getLatitude());
-            mapsIntent.putExtra("lng3", busObj.getSubsequentBus().getLongitude());
-            mapsIntent.putExtra("arr3", busObj.getSubsequentBus().getEstimatedArrival());
-            mapsIntent.putExtra("type1", busObj.getCurrentBus().getBusType());
-            mapsIntent.putExtra("type2", busObj.getNextBus().getBusType());
-            mapsIntent.putExtra("type3", busObj.getSubsequentBus().getBusType());
-            mapsIntent.putExtra("sTime", currentTime);
-            mapsIntent.putExtra("state", state);
+            mapsArgs.putDouble("lat1", busObj.getCurrentBus().getLatitude());
+            mapsArgs.putDouble("lng1", busObj.getCurrentBus().getLongitude());
+            mapsArgs.putString("arr1", busObj.getCurrentBus().getEstimatedArrival());
+            mapsArgs.putDouble("lat2", busObj.getNextBus().getLatitude());
+            mapsArgs.putDouble("lng2", busObj.getNextBus().getLongitude());
+            mapsArgs.putString("arr2", busObj.getNextBus().getEstimatedArrival());
+            mapsArgs.putDouble("lat3", busObj.getSubsequentBus().getLatitude());
+            mapsArgs.putDouble("lng3", busObj.getSubsequentBus().getLongitude());
+            mapsArgs.putString("arr3", busObj.getSubsequentBus().getEstimatedArrival());
+            mapsArgs.putInt("type1", busObj.getCurrentBus().getBusType());
+            mapsArgs.putInt("type2", busObj.getNextBus().getBusType());
+            mapsArgs.putInt("type3", busObj.getSubsequentBus().getBusType());
+            mapsArgs.putString("sTime", currentTime);
+            mapsArgs.putInt("state", state);
 
             //Get Bus stop longitude and latitude
             BusStopsDB db = new BusStopsDB(activity);
             BusStopJSON busStop = db.getBusStopByBusStopCode(stopCode);
             if (busStop != null) {
-                mapsIntent.putExtra("buslat", busStop.getLatitude());
-                mapsIntent.putExtra("buslng", busStop.getLongitude());
+                mapsArgs.putDouble("buslat", busStop.getLatitude());
+                mapsArgs.putDouble("buslng", busStop.getLongitude());
             }
 
-            if (!PreferenceManager.getDefaultSharedPreferences(v.getContext()).getBoolean("mapPopup", true))
-                activity.startActivity(mapsIntent);
-            else {
-                final BusLocationMapsDialogFragment dialog = new BusLocationMapsDialogFragment();
-                dialog.setArguments(mapsIntent.getExtras());
-                dialog.show(activity.getSupportFragmentManager(), "123");
-            }
+            final BusLocationMapsDialogFragment dialog = new BusLocationMapsDialogFragment();
+            dialog.setArguments(mapsArgs);
+            dialog.show(activity.getSupportFragmentManager(), "123");
         }
     }
 }
