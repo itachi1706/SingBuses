@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
-import com.itachi1706.busarrivalsg.asynctasks.GetBusServicesHandler;
+import com.itachi1706.busarrivalsg.asynctasks.GetBusServicesTask;
 import com.itachi1706.busarrivalsg.database.BusStopsDB;
 import com.itachi1706.busarrivalsg.iface.IHandleStuff;
 import com.itachi1706.busarrivalsg.objects.BusServices;
@@ -179,7 +179,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
 
     private void updateBusStop(){
         swipeToRefresh.setRefreshing(true);
-        new GetBusServicesHandler(swipeToRefresh, this, new BusServicesAtStopHandler(this)).execute(busStopCode);
+        new GetBusServicesTask(swipeToRefresh, this, new BusServicesAtStopHandler(this)).execute(busStopCode);
     }
 
     @Override
