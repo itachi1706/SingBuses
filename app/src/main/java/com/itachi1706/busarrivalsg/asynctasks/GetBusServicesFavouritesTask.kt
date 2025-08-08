@@ -12,9 +12,11 @@ import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.URLHelper
+import com.itachi1706.helperlib.objects.ApiResponse
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.net.SocketTimeoutException
+import java.net.URLEncoder
 
 class GetBusServicesFavouritesTask(
     activity: Activity,
@@ -36,8 +38,9 @@ class GetBusServicesFavouritesTask(
         var csv = sb.toString()
         csv = csv.substring(0, csv.length - 1) // Remove the last semicolon
         busObj = arrayOf(*params)
+        csv = URLEncoder.encode(csv, "utf-8") // Encode URL
 
-        val url = "https://api.itachi1706.com/api/busarrival.php?CSV=$csv&api=2"
+        val url = "https://api.itachi1706.com/v1/sg-buses/arrivals?csv=$csv"
         var tmp = ""
         val urlHelper = URLHelper(url)
 
@@ -85,7 +88,10 @@ class GetBusServicesFavouritesTask(
                 return
             }
 
-            val mainArrs = gson.fromJson(result, Array<BusArrivalMain>::class.java)
+            LogHelper.d(TAG, "GET-FAV-BUS-SERVICE: JSON Result: $result")
+            val resp = gson.fromJson(result, ApiResponse::class.java)
+            val result2 = gson.toJson(resp.data)
+            val mainArrs = gson.fromJson(result2, Array<BusArrivalMain>::class.java)
 
             var jsonError = false
             if (mainArrs == null || (mainArrs[0].services == null)) {
