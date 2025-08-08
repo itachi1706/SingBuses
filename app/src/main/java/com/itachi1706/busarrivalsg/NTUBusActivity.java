@@ -41,12 +41,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.itachi1706.busarrivalsg.asynctasks.GetNTUPublicBusData;
-import com.itachi1706.busarrivalsg.services.LocManager;
+import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObjectEstimate;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalMain;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
-import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
@@ -182,7 +181,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
     }
 
     private void requestGpsPermission() {
-        LogHelper.w(LocManager.TAG, "GPS permission is not granted. Requesting permission");
+        LogHelper.w(TAG, "GPS permission is not granted. Requesting permission");
         final String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
@@ -201,11 +200,11 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
                 boolean hasPerm = StaticVariables.INSTANCE.checkIfCoarseLocationGranted(result);
 
                 if (hasPerm) {
-                    LogHelper.d(LocManager.TAG, "Location permission granted - enabling my location");
+                    LogHelper.d(TAG, "Location permission granted - enabling my location");
                     // we have permission, so set my location to enabled
                     mMap.setMyLocationEnabled(true);
                 } else {
-                    LogHelper.e(LocManager.TAG, "Permission not granted");
+                    LogHelper.e(TAG, "Permission not granted");
                     Toast.makeText(this, "No Permission for current location", Toast.LENGTH_SHORT).show();
                 }
             });

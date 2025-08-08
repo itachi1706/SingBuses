@@ -25,17 +25,18 @@ import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.asynctasks.GetBusServicesHandler;
 import com.itachi1706.busarrivalsg.database.BusStopsDB;
 import com.itachi1706.busarrivalsg.iface.IHandleStuff;
-import com.itachi1706.busarrivalsg.recyclerviews.BusServiceRecyclerAdapter;
-import com.itachi1706.busarrivalsg.services.BusStorage;
+import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalMain;
-import com.itachi1706.busarrivalsg.objects.BusServices;
+import com.itachi1706.busarrivalsg.recyclerviews.BusServiceRecyclerAdapter;
+import com.itachi1706.busarrivalsg.services.BusStorage;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.busarrivalsg.util.SwipeFavouriteCallback;
 import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class BusServicesAtStopRecyclerActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, IHandleStuff {
@@ -46,8 +47,9 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
     String busStopCode, busStopName, busServicesString;
     BusServiceRecyclerAdapter adapter;
     SwipeRefreshLayout swipeToRefresh;
-    SharedPreferences sp;
     ArrayMap<String, String> busServices; // Svc No, Operator
+
+    BusStorage busStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,10 +135,11 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
             }
             updateBusStop();
         }
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        busStorage = new BusStorage(sp);
     }
 
-    private void addOrRemoveFav(final BusServices fav, final ArrayList<BusServices> all, boolean alrFav){
+    private void addOrRemoveFav(final BusServices fav, final List<BusServices> all, boolean alrFav){
         String message;
         if (alrFav){
             if (busStopName != null)
@@ -155,7 +158,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
                                 break;
                             }
                         }
-                        BusStorage.updateBusJSON(sp, all);
+                        busStorage.updateBusJson(all);
                         Toast.makeText(getApplicationContext(), R.string.toast_message_remove_from_fav, Toast.LENGTH_SHORT).show();
                     }).setNegativeButton(android.R.string.no, null).show();
         } else {
@@ -168,7 +171,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
                     .setMessage(message)
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                         //Remove from favourites
-                        BusStorage.addNewBus(fav, sp);
+                        busStorage.addNewBus(fav);
                         Toast.makeText(getApplicationContext(), R.string.toast_message_add_to_fav, Toast.LENGTH_SHORT).show();
                     }).setNegativeButton(android.R.string.no, null).show();
         }
@@ -210,17 +213,17 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
         if (busStopName != null)
             fav.setStopName(busStopName);
 
-        ArrayList<BusServices> exist = BusStorage.getStoredBuses(sp);
+        List<BusServices> exist = busStorage.getStoredBuses();
         boolean alrFavourited = checkFavouriteStatus(exist, item);
 
         addOrRemoveFav(fav, exist, alrFavourited);
     }
 
     public boolean checkFavouriteStatus(BusArrivalArrayObject item) {
-        return checkFavouriteStatus(BusStorage.getStoredBuses(sp), item);
+        return checkFavouriteStatus(busStorage.getStoredBuses(), item);
     }
 
-    public boolean checkFavouriteStatus(ArrayList<BusServices> exist, BusArrivalArrayObject item) {
+    public boolean checkFavouriteStatus(List<BusServices> exist, BusArrivalArrayObject item) {
         if (exist != null) {
             //Compare if in favourites already
             for (BusServices s : exist) {

@@ -1,6 +1,7 @@
 package com.itachi1706.busarrivalsg
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -146,7 +147,7 @@ class MainSettings : AppCompatActivity() {
                 return true
             }
 
-            val gpsManager = LocManager(activity)
+            val gpsManager = LocManager(activity as Context)
             gpsManager.location
             val gps = gpsManager.gpsLoc
             val net = gpsManager.netLoc

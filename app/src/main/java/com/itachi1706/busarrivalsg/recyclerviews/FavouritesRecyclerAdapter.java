@@ -35,7 +35,6 @@ import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.helperlib.helpers.LogHelper;
 import com.itachi1706.helperlib.helpers.PrefHelper;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,10 +53,15 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     private final boolean serverTime;
     private String currentTime;
 
+    private final BusStorage busStorage;
+
     public FavouritesRecyclerAdapter(List<BusServices> objectList, AppCompatActivity activity, boolean useServerTime){
         this.items = objectList;
         this.activity = activity;
         this.serverTime = useServerTime;
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        this.busStorage = new BusStorage(sp);
     }
 
     public void updateAdapter(List<BusServices> newObjects, String currentTime){
@@ -78,7 +82,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         }
         notifyItemMoved(from, to);
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        BusStorage.updateBusJSON(sp, (ArrayList<BusServices>) items);
+        busStorage.updateBusJson(items);
         return true;
     }
 
@@ -246,7 +250,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
                             break;
                         }
                     }
-                    BusStorage.updateBusJSON(sp, (ArrayList<BusServices>) items);
+                    busStorage.updateBusJson(items);
                     notifyItemRemoved(position);
                     Toast.makeText(activity.getApplicationContext(), R.string.toast_message_remove_from_fav, Toast.LENGTH_SHORT).show();
                 }).setNegativeButton(android.R.string.no, null).create();

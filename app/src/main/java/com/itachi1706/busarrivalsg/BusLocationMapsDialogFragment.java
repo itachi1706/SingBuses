@@ -30,7 +30,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.itachi1706.busarrivalsg.services.LocManager;
 import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
@@ -48,6 +47,8 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
     private int type1, type2, type3;
     private String curTime;
     private int state;
+    
+    private static final String TAG = "BusLocationMapsDialogFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -165,12 +166,12 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundary, 100), 500, new GoogleMap.CancelableCallback() {
                 @Override
                 public void onCancel() {
-                    LogHelper.i(LocManager.TAG, "Map moving animation cancelled");
+                    LogHelper.i(TAG, "Map moving animation cancelled");
                 }
 
                 @Override
                 public void onFinish() {
-                    LogHelper.i(LocManager.TAG, "Map moving animation finished");
+                    LogHelper.i(TAG, "Map moving animation finished");
                     if (cur != null) cur.showInfoWindow();
                 }
             });
@@ -210,7 +211,7 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
     }
 
     private void requestGpsPermission() {
-        LogHelper.w(LocManager.TAG, "GPS permission is not granted. Requesting permission");
+        LogHelper.w(TAG, "GPS permission is not granted. Requesting permission");
         final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
@@ -229,11 +230,11 @@ public class BusLocationMapsDialogFragment extends DialogFragment implements OnM
                 boolean hasPerm = StaticVariables.INSTANCE.checkIfCoarseLocationGranted(result);
 
                 if (hasPerm) {
-                    LogHelper.d(LocManager.TAG, "Location permission granted - enabling my location");
+                    LogHelper.d(TAG, "Location permission granted - enabling my location");
                     // we have permission, so set my location to enabled
                     mMap.setMyLocationEnabled(true);
                 } else {
-                    LogHelper.e(LocManager.TAG, "Permission not granted");
+                    LogHelper.e(TAG, "Permission not granted");
                     new AlertDialog.Builder(getActivity()).setTitle(R.string.dialog_title_permission_denied)
                             .setMessage(R.string.dialog_message_no_permission_gps).setPositiveButton(android.R.string.ok, null)
                             .setNeutralButton(R.string.dialog_action_neutral_app_settings, (dialog, which) -> {
