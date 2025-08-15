@@ -35,12 +35,6 @@ class GetNTUPublicBusTask(activity: Activity, private val update: Boolean) :
     }
 
     private val url: String
-        get() = "https://api.itachi1706.com/v1/sg-buses/arrivals?csv=${
-        URLEncoder.encode(
-            BUS_CSV,
-            "utf-8"
-        )
-    }"
         get() = "https://api.itachi1706.com/v1/sg-buses/arrivals?csv=${encodeCsvParam()}"
 
     private fun encodeCsvParam(): String {
