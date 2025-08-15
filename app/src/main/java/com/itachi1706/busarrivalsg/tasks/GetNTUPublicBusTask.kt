@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.asynctasks
+package com.itachi1706.busarrivalsg.tasks
 
 import android.app.Activity
 import android.content.Intent

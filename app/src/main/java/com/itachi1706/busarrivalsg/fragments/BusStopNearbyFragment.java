@@ -35,7 +35,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.asynctasks.PopulateListCurrentLocationTask;
+import com.itachi1706.busarrivalsg.tasks.PopulateListCurrentLocationTask;
 import com.itachi1706.busarrivalsg.database.BusStopsDB;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
 import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter;
