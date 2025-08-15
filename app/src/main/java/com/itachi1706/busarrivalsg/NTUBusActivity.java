@@ -40,7 +40,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.itachi1706.busarrivalsg.asynctasks.GetNTUPublicBusData;
+import com.itachi1706.busarrivalsg.asynctasks.GetNTUPublicBusTask;
 import com.itachi1706.busarrivalsg.objects.CommonEnums;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObjectEstimate;
@@ -50,7 +50,6 @@ import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.helperlib.concurrent.Constants;
-import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask;
 import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.util.ArrayList;
@@ -161,7 +160,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
     private void getData(boolean refresh) {
         if (!mapReady) return;
         if (runningPBus == null || runningPBus.getStatus().equals(Constants.Status.FINISHED) || runningPBus.isCancelled()) {
-            runningPBus = new GetNTUPublicBusData(this, refresh);
+            runningPBus = new GetNTUPublicBusTask(this, refresh);
             runningPBus.execute();
         }
         if (!refreshHandler.hasMessages(REFRESH_TASK) && shouldAutoRefresh) {
@@ -229,7 +228,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
 
     private final ArrayList<Marker> publicBusMarkers = new ArrayList<>();
 
-    private CoroutineAsyncTask<Void, Void, Integer> runningPBus = null;
+    private GetNTUPublicBusTask runningPBus = null;
 
     private Handler refreshHandler;
     private boolean shouldAutoRefresh = false;
@@ -285,8 +284,8 @@ Log.d(TAG, "publicBusReceiver onReceive: update = " + update + ", data length = 
                     if (m != null) {
                         m.setTag(node);
                     }
-                    LogHelper.i(TAG, "Generated Public Bus Stops");
                 }
+                LogHelper.i(TAG, "Generated Public Bus Stops");
             } else {
                 BusArrivalMain[] busObjsArr;
                 try {
