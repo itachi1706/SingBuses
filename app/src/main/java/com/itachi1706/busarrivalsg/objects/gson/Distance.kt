@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
  * Created by Kenneth on 27/8/2018.
  * for com.itachi1706.busarrivalsg.gsonObjects in SingBuses
  */
-class Distance(var currentCoord: CurrentCoords? = null, var results: Array<DistanceItem>? = null) {
+class Distance(var currentCoord: CurrentCoords? = null, var stops: Array<DistanceItem>? = null) {
     data class CurrentCoords(var lat: String? = null, val lng: String? = null)
     data class DistanceItem(
         @SerializedName("BusStopCode") var busStopCode: String? = null,
