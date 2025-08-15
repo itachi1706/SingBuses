@@ -109,13 +109,7 @@ class GetBusServicesFavouritesTask(
 
                 // Assuming one
                 val item = array!![0]
-                var busObjs: BusServices? = null
-                for (b in busObj) {
-                    if (b!!.serviceNo.equals(item.serviceNo, ignoreCase = true) && b.stopID.equals(mainArr.busStopCode, ignoreCase = true)) {
-                        busObjs = b
-                        break
-                    }
-                }
+                val busObjs: BusServices? = busObj.filterNotNull().find { it.serviceNo.equals(item.serviceNo, ignoreCase = true) && it.stopID.equals(mainArr.busStopCode, ignoreCase = true) }
 
                 if (busObjs == null) {
                     LogHelper.e(TAG, "GET-FAV-BUS-SERVICE: Cannot find bus object. Something went wrong!")
