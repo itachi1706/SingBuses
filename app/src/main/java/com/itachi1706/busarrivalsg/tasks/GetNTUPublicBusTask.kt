@@ -41,7 +41,11 @@ class GetNTUPublicBusTask(activity: Activity, private val update: Boolean) :
             "utf-8"
         )
     }"
+        get() = "https://api.itachi1706.com/v1/sg-buses/arrivals?csv=${encodeCsvParam()}"
 
+    private fun encodeCsvParam(): String {
+        return URLEncoder.encode(BUS_CSV, "utf-8")
+    }
     // Bus Stop Codes to get (we will get it based off the last stop on campus)
     // - 27199 (199)
     // - 27261 (179[A])
