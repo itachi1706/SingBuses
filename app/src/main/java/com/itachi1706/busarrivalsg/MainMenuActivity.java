@@ -32,12 +32,12 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.itachi1706.appupdater.AppUpdateInitializer;
 import com.itachi1706.appupdater.object.CAAnalytics;
 import com.itachi1706.appupdater.utils.AnalyticsHelper;
-import com.itachi1706.busarrivalsg.asynctasks.GetBusServicesFavouritesRecycler;
+import com.itachi1706.busarrivalsg.tasks.GetBusServicesFavouritesTask;
 import com.itachi1706.busarrivalsg.database.BusStopsDB;
-import com.itachi1706.busarrivalsg.recyclerviews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.objects.BusServices;
+import com.itachi1706.busarrivalsg.recyclerviews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.services.BusStorage;
-import com.itachi1706.busarrivalsg.tasks.UpdateDatabase;
+import com.itachi1706.busarrivalsg.tasks.UpdateDatabaseTask;
 import com.itachi1706.busarrivalsg.util.LogInitializer;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.busarrivalsg.util.SwipeFavouriteCallback;
@@ -222,7 +222,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             adapter.notifyDataSetChanged();
 
             LogHelper.d(TAG, "Finished Processing, retrieving estimated arrival data now");
-            new GetBusServicesFavouritesRecycler(this, adapter).executeOnExecutor(StaticVariables.INSTANCE.getFavouritesList().toArray(new BusServices[0]));
+            new GetBusServicesFavouritesTask(this, adapter).executeOnExecutor(StaticVariables.INSTANCE.getFavouritesList().toArray(new BusServices[0]));
             LogHelper.d(TAG, "Finished creating AsyncTasks to retrieve estimated arrival data");
         }
 
@@ -275,7 +275,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
                     }
                 }
 
-                ContextCompat.startForegroundService(this, new Intent(this, UpdateDatabase.class));
+                ContextCompat.startForegroundService(this, new Intent(this, UpdateDatabaseTask.class));
             }
         } else {
             //Legacy Check

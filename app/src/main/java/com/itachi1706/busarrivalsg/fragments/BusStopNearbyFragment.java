@@ -34,15 +34,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.itachi1706.busarrivalsg.asynctasks.PopulateListWithCurrentLocationRecycler;
-import com.itachi1706.busarrivalsg.database.BusStopsDB;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter;
+import com.itachi1706.busarrivalsg.tasks.PopulateListCurrentLocationTask;
+import com.itachi1706.busarrivalsg.database.BusStopsDB;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
+import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 import com.itachi1706.helperlib.concurrent.Constants;
-import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask;
 import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.lang.reflect.Type;
@@ -135,13 +134,13 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
             if (db == null) db = new BusStopsDB(getContext());
 
             if (nearbyTask == null || nearbyTask.getStatus().equals(Constants.Status.FINISHED)) {
-                nearbyTask = new PopulateListWithCurrentLocationRecycler(getActivity(), db, adapter);
+                nearbyTask = new PopulateListCurrentLocationTask(requireActivity(), db, adapter);
                 nearbyTask.execute(location);
             }
         }
     };
 
-    private CoroutineAsyncTask<Location, Void, Integer> nearbyTask = null;
+    private PopulateListCurrentLocationTask nearbyTask = null;
 
     private HashMap<Marker, BusStopJSON> markerMap;
 

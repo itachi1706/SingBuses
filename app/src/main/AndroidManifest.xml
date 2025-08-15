@@ -111,7 +111,7 @@
             </intent-filter>
         </activity>
         
-        <service android:name=".tasks.UpdateDatabase"
+        <service android:name=".tasks.UpdateDatabaseTask"
             android:foregroundServiceType="shortService"
             android:exported="false" />
     </application>

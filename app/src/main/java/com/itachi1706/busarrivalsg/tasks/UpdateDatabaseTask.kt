@@ -24,7 +24,7 @@ import com.itachi1706.helperlib.helpers.LogHelper.d
 import com.itachi1706.helperlib.helpers.URLHelper
 import java.io.IOException
 
-class UpdateDatabase : Service() {
+class UpdateDatabaseTask : Service() {
 
     companion object {
         const val TAG = "UpdateDatabase"
