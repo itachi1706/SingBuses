@@ -21,7 +21,7 @@ import java.net.URLEncoder
 class GetBusServicesFavouritesTask(
     activity: Activity,
     private val adapter: FavouritesRecyclerAdapter
-) : CoroutineAsyncTask<BusServices, Void, String>(TASK_NAME) {
+) : CoroutineAsyncTask<BusServices, Unit, String>(TASK_NAME) {
     private var actRef: WeakReference<Activity> = WeakReference(activity)
     private var exception: Exception? = null
 
@@ -54,6 +54,19 @@ class GetBusServicesFavouritesTask(
         return tmp
     }
 
+    private fun handlePostException(activity: Activity) {
+        if (exception is SocketTimeoutException) {
+            Toast.makeText(
+                activity,
+                R.string.toast_message_timeout_request_retry,
+                Toast.LENGTH_SHORT
+            ).show()
+            GetBusServicesFavouritesTask(activity, adapter).executeOnExecutor(*busObj)
+        } else {
+            Toast.makeText(activity, exception!!.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onPostExecute(result: String?) {
         if (result == null) {
             LogHelper.e(TAG, "onPostExecute: JSON is null")
@@ -62,115 +75,104 @@ class GetBusServicesFavouritesTask(
         val activity = actRef.get()
         if (activity == null) return // NO-OP
         if (exception != null) {
-            if (exception is SocketTimeoutException) {
-                Toast.makeText(
-                    activity,
-                    R.string.toast_message_timeout_request_retry,
-                    Toast.LENGTH_SHORT
-                ).show()
-                GetBusServicesFavouritesTask(activity, adapter).executeOnExecutor(*busObj)
-            } else {
-                Toast.makeText(activity, exception!!.message, Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            // Parse result
-            val gson = Gson()
-            if (!StaticVariables.checkIfYouGotJsonString(result)) {
-                // Retry from invalid string
+            handlePostException(activity)
+            return
+        }
 
-                //Invalid string, retrying
-                Toast.makeText(
-                    activity,
-                    R.string.toast_message_invalid_json_retry,
-                    Toast.LENGTH_SHORT
-                ).show()
-                GetBusServicesFavouritesTask(activity, adapter).executeOnExecutor(*busObj)
-                return
-            }
+        // Parse result
+        val gson = Gson()
+        if (!StaticVariables.checkIfYouGotJsonString(result)) {
+            // Retry from invalid string
+            Toast.makeText(
+                activity,
+                R.string.toast_message_invalid_json_retry,
+                Toast.LENGTH_SHORT
+            ).show()
+            GetBusServicesFavouritesTask(activity, adapter).executeOnExecutor(*busObj)
+            return
+        }
 
-            LogHelper.d(TAG, "GET-FAV-BUS-SERVICE: JSON Result: $result")
-            val resp = gson.fromJson(result, ApiResponse::class.java)
-            val result2 = gson.toJson(resp.data)
-            val mainArrs = gson.fromJson(result2, Array<BusArrivalMain>::class.java)
+        LogHelper.d(TAG, "GET-FAV-BUS-SERVICE: JSON Result: $result")
+        val resp = gson.fromJson(result, ApiResponse::class.java)
+        val result2 = gson.toJson(resp.data)
+        val mainArrs = gson.fromJson(result2, Array<BusArrivalMain>::class.java)
 
-            var jsonError = false
-            if (mainArrs == null || mainArrs.isEmpty() || (mainArrs[0].services == null)) {
-                jsonError = true
-            }
+        if (mainArrs.isNullOrEmpty() || (mainArrs[0].services == null)) {
+            LogHelper.e(TAG, "FAV-GET: Retrying...")
+            GetBusServicesFavouritesTask(activity, adapter).executeOnExecutor(*busObj)
+            return
+        }
 
-            if (jsonError) {
-                LogHelper.e(TAG, "FAV-GET: Retrying...")
-                GetBusServicesFavouritesTask(activity, adapter).executeOnExecutor(*busObj)
-                return
+        for (mainArr in mainArrs) {
+            val array = mainArr.services
+
+            // Assuming one
+            val item = array!![0]
+            val busObjs: BusServices? = busObj.filterNotNull().find { it.serviceNo.equals(item.serviceNo, ignoreCase = true) && it.stopID.equals(mainArr.busStopCode, ignoreCase = true) }
+
+            if (busObjs == null) {
+                LogHelper.e(TAG, "GET-FAV-BUS-SERVICE: Cannot find bus object. Something went wrong!")
+                continue
             }
 
-            for (mainArr in mainArrs) {
-                val array = mainArr.services
+            val nextBus = BusStatus(
+                estimatedArrival = item.nextBus!!.estimatedArrival,
+                visitNumber = item.nextBus.visitNumberD,
+                latitude = item.nextBus.latitudeD,
+                longitude = item.nextBus.longitudeD,
+                terminatingID = item.nextBus.destinationCode,
+                originatingID = item.nextBus.originCode
+            )
+            nextBus.setIsWheelChairAccessible(item.nextBus.feature)
+            nextBus.setLoad(item.nextBus.load)
+            nextBus.setBusType(item.nextBus.type)
 
-                // Assuming one
-                val item = array!![0]
-                val busObjs: BusServices? = busObj.filterNotNull().find { it.serviceNo.equals(item.serviceNo, ignoreCase = true) && it.stopID.equals(mainArr.busStopCode, ignoreCase = true) }
+            val subsequentBus = BusStatus(
+                estimatedArrival = item.nextBus2!!.estimatedArrival,
+                visitNumber = item.nextBus2.visitNumberD,
+                latitude = item.nextBus2.latitudeD,
+                longitude = item.nextBus2.longitudeD,
+                terminatingID = item.nextBus2.destinationCode,
+                originatingID = item.nextBus2.originCode
+            )
+            subsequentBus.setIsWheelChairAccessible(item.nextBus2.feature)
+            subsequentBus.setLoad(item.nextBus2.load)
+            subsequentBus.setBusType(item.nextBus2.type)
 
-                if (busObjs == null) {
-                    LogHelper.e(TAG, "GET-FAV-BUS-SERVICE: Cannot find bus object. Something went wrong!")
-                    continue
-                }
+            val subsequent2Bus = BusStatus(
+                estimatedArrival = item.nextBus3!!.estimatedArrival,
+                visitNumber = item.nextBus3.visitNumberD,
+                latitude = item.nextBus3.latitudeD,
+                longitude = item.nextBus3.longitudeD,
+                terminatingID = item.nextBus3.destinationCode,
+                originatingID = item.nextBus3.originCode
+            )
+            subsequent2Bus.setIsWheelChairAccessible(item.nextBus3.feature)
+            subsequent2Bus.setLoad(item.nextBus3.load)
+            subsequent2Bus.setBusType(item.nextBus3.type)
 
-                val nextBus = BusStatus(
-                    estimatedArrival = item.nextBus!!.estimatedArrival,
-                    visitNumber = item.nextBus.visitNumberD,
-                    latitude = item.nextBus.latitudeD,
-                    longitude = item.nextBus.longitudeD,
-                    terminatingID = item.nextBus.destinationCode,
-                    originatingID = item.nextBus.originCode
-                )
-                nextBus.setIsWheelChairAccessible(item.nextBus.feature)
-                nextBus.setLoad(item.nextBus.load)
-                nextBus.setBusType(item.nextBus.type)
+            busObjs.currentBus = nextBus
+            busObjs.nextBus = subsequentBus
+            busObjs.subsequentBus = subsequent2Bus
+            busObjs.time = System.currentTimeMillis()
+            busObjs.isSvcStatus = checkServiceOperational(nextBus, subsequentBus, subsequent2Bus)
+            busObjs.isObtainedNextData = true
 
-                val subsequentBus = BusStatus(
-                    estimatedArrival = item.nextBus2!!.estimatedArrival,
-                    visitNumber = item.nextBus2.visitNumberD,
-                    latitude = item.nextBus2.latitudeD,
-                    longitude = item.nextBus2.longitudeD,
-                    terminatingID = item.nextBus2.destinationCode,
-                    originatingID = item.nextBus2.originCode
-                )
-                subsequentBus.setIsWheelChairAccessible(item.nextBus2.feature)
-                subsequentBus.setLoad(item.nextBus2.load)
-                subsequentBus.setBusType(item.nextBus2.type)
+            // Go through list and update the item
+            updateItemsInList(busObjs, mainArr)
+        }
+    }
 
-                val subsequent2Bus = BusStatus(
-                    estimatedArrival = item.nextBus3!!.estimatedArrival,
-                    visitNumber = item.nextBus3.visitNumberD,
-                    latitude = item.nextBus3.latitudeD,
-                    longitude = item.nextBus3.longitudeD,
-                    terminatingID = item.nextBus3.destinationCode,
-                    originatingID = item.nextBus3.originCode
-                )
-                subsequent2Bus.setIsWheelChairAccessible(item.nextBus3.feature)
-                subsequent2Bus.setLoad(item.nextBus3.load)
-                subsequent2Bus.setBusType(item.nextBus3.type)
-
-                busObjs.currentBus = nextBus
-                busObjs.nextBus = subsequentBus
-                busObjs.subsequentBus = subsequent2Bus
-                busObjs.time = System.currentTimeMillis()
-                busObjs.isSvcStatus = checkServiceOperational(nextBus, subsequentBus, subsequent2Bus)
-                busObjs.isObtainedNextData = true
-
-                // Go through list and update the item
-                for (i in 0 until StaticVariables.favouritesList.size) {
-                    val ob = StaticVariables.favouritesList[i]
-                    if (ob.serviceNo == busObjs.serviceNo && ob.stopID == busObjs.stopID) {
-                        // Update item in list
-                        StaticVariables.favouritesList[i] = busObjs
-                        adapter.updateAdapter(StaticVariables.favouritesList, mainArr.currentTime)
-                        adapter.notifyItemChanged(i)
-                        LogHelper.d(TAG, "GET-FAV-BUS-SERVICE: Updated item at position $i")
-                        break
-                    }
-                }
+    private fun updateItemsInList(busObjs: BusServices, mainArr: BusArrivalMain) {
+        for (i in 0 until StaticVariables.favouritesList.size) {
+            val ob = StaticVariables.favouritesList[i]
+            if (ob.serviceNo == busObjs.serviceNo && ob.stopID == busObjs.stopID) {
+                // Update item in list
+                StaticVariables.favouritesList[i] = busObjs
+                adapter.updateAdapter(StaticVariables.favouritesList, mainArr.currentTime)
+                adapter.notifyItemChanged(i)
+                LogHelper.d(TAG, "GET-FAV-BUS-SERVICE: Updated item at position $i")
+                break
             }
         }
     }
