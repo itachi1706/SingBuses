@@ -82,7 +82,7 @@ class PopulateListCurrentLocationTask(
 
         val results = distArray.stops
         val stops = mutableListOf<BusStopJSON>()
-        for (map in results!!) {
+        results?.forEach { map ->
             val distance = map.dist
             val stop = db.getBusStopByBusStopCode(map.busStopCode)
             stop.distance = distance * 1000 // Convert to metres, its currently in km
