@@ -177,7 +177,7 @@ class GetBusServicesFavouritesTask(
 
     private fun checkServiceOperational(one: BusStatus, two: BusStatus, three: BusStatus): Boolean {
         return !(one.estimatedArrival == null && two.estimatedArrival == null && three.estimatedArrival == null)
-                && !(one.estimatedArrival!!.isEmpty() && two.estimatedArrival!!.isEmpty() && three.estimatedArrival!!.isEmpty())
+                && !(one.estimatedArrival.isNullOrEmpty() && two.estimatedArrival.isNullOrEmpty() && three.estimatedArrival.isNullOrEmpty())
     }
 
     companion object {

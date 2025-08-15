@@ -32,13 +32,15 @@ class GetNTUPublicBusTask(activity: Activity, private val update: Boolean) :
         private val TASK_NAME = GetNTUPublicBusTask::class.simpleName ?: "GetNTUPublicBusTask"
 
         private const val BUS_CSV = "27199:199;27261:179;27261:179A"
-        private val URL = "https://api.itachi1706.com/v1/sg-buses/arrivals?csv=${
-            URLEncoder.encode(
-                BUS_CSV,
-                "utf-8"
-            )
-        }"
     }
+
+    private val url: String
+        get() = "https://api.itachi1706.com/v1/sg-buses/arrivals?csv=${
+        URLEncoder.encode(
+            BUS_CSV,
+            "utf-8"
+        )
+    }"
 
     // Bus Stop Codes to get (we will get it based off the last stop on campus)
     // - 27199 (199)
@@ -49,12 +51,12 @@ class GetNTUPublicBusTask(activity: Activity, private val update: Boolean) :
             w(TAG, "Activity is null, cannot proceed with task")
             return 3
         }
-        d(TAG, URL)
+        d(TAG, url)
 
         var tmp: String?
         try {
             val start = System.currentTimeMillis()
-            val urlHelper = URLHelper(URL)
+            val urlHelper = URLHelper(url)
             tmp = urlHelper.executeString()
             i(TAG, "Data retrieved in " + (System.currentTimeMillis() - start) + "ms")
         } catch (e: IOException) {
