@@ -94,7 +94,7 @@ class GetBusServicesFavouritesTask(
             val mainArrs = gson.fromJson(result2, Array<BusArrivalMain>::class.java)
 
             var jsonError = false
-            if (mainArrs == null || (mainArrs[0].services == null)) {
+            if (mainArrs == null || mainArrs.isEmpty() || (mainArrs[0].services == null)) {
                 jsonError = true
             }
 
