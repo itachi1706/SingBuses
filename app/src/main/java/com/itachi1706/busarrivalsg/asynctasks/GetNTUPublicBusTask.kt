@@ -20,6 +20,7 @@ import com.itachi1706.helperlib.helpers.URLHelper
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.net.SocketTimeoutException
+import java.net.URLEncoder
 
 class GetNTUPublicBusTask(activity: Activity, private val update: Boolean) :
     CoroutineAsyncTask<Unit, Unit, Int>(TASK_NAME) {
@@ -30,8 +31,13 @@ class GetNTUPublicBusTask(activity: Activity, private val update: Boolean) :
         private const val TAG = "GetNTUPublicBusTask"
         private val TASK_NAME = GetNTUPublicBusTask::class.simpleName ?: "GetNTUPublicBusTask"
 
-        private const val URL =
-            "https://api.itachi1706.com/api/busarrival.php?CSV=27199:199;27261:179;27261:179A&api=2"
+        private const val BUS_CSV = "27199:199;27261:179;27261:179A"
+        private val URL = "https://api.itachi1706.com/v1/sg-buses/arrivals?csv=${
+            URLEncoder.encode(
+                BUS_CSV,
+                "utf-8"
+            )
+        }"
     }
 
     // Bus Stop Codes to get (we will get it based off the last stop on campus)

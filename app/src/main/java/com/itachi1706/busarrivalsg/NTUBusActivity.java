@@ -51,6 +51,7 @@ import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.helperlib.concurrent.Constants;
 import com.itachi1706.helperlib.helpers.LogHelper;
+import com.itachi1706.helperlib.objects.ApiResponse;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -213,8 +214,7 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
         if (marker.getTag() == null) return;
         Object type = marker.getTag();
         LogHelper.d("NTU-BUS-MAP", "Indo clicked of " + type.getClass());
-        if (type instanceof BusStopJSON) {
-            BusStopJSON json = (BusStopJSON) type;
+        if (type instanceof BusStopJSON json) {
             json.getBusStopCode();
             json.getDescription();
 
@@ -245,90 +245,103 @@ public class NTUBusActivity extends AppCompatActivity implements OnMapViewReadyL
 
         private final int sbsColor = Color.parseColor("#800080");
 
+        private void processBusStopData(Context context, String data) {
+            LogHelper.d(TAG, "Processing Bus Stops Data");
+            Gson gson = new Gson();
+            BusStopJSON[] tmpJSON;
+            try {
+                tmpJSON = gson.fromJson(data, BusStopJSON[].class);
+            }catch (JsonSyntaxException e) {
+                Toast.makeText(context, "An error occurred parsing public bus stops. Please try again later", Toast.LENGTH_LONG).show();
+                return;
+            }
+            // Convert to something workable and unique
+            ArrayMap<String, BusStopJSON> busStops = new ArrayMap<>();
+            for (BusStopJSON j : tmpJSON) {
+                busStops.put(j.getBusStopCode(), j);
+            }
+            BitmapDescriptor stop = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_circle, context, sbsColor);
+            for (ArrayMap.Entry<String, BusStopJSON> entry : busStops.entrySet()) {
+                BusStopJSON node = entry.getValue();
+                String svcWork = node.getServices();
+                String[] svces = svcWork.split(",");
+                StringBuilder s = new StringBuilder();
+                for (String s1 : svces) {
+                    String[] svcTmp = s1.split(":");
+                    s.append(svcTmp[0]).append(", ");
+                }
+                String services = s.toString();
+                services = services.replaceAll(", $", "");
+                Marker m = mMap.addMarker(new MarkerOptions().position(new LatLng(node.getLatitude(), node.getLongitude()))
+                        .title(node.getDescription() + " (" + node.getRoadName() + ")")
+                        .snippet("Bus Svcs: " + services)
+                        .icon(stop));
+                if (m != null) {
+                    m.setTag(node);
+                }
+            }
+            LogHelper.i(TAG, "Generated Public Bus Stops");
+        }
+
+        private void processBusServicesData(Context context, String data) {
+            Gson gson = new Gson();
+            LogHelper.d(TAG, "Processing Bus Services Data");
+            BusArrivalMain[] busObjsArr;
+            try {
+                ApiResponse tmp = gson.fromJson(data, ApiResponse.class);
+                String tmp2 = gson.toJson(tmp.getData());
+                busObjsArr = gson.fromJson(tmp2, BusArrivalMain[].class);
+            } catch (JsonSyntaxException e) {
+                Toast.makeText(context, "An error occurred parsing public buses. Please try again later", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            for (BusArrivalMain busObjs : busObjsArr) {
+                if (busObjs == null || busObjs.getServices() == null || busObjs.getServices().length == 0) continue;
+
+                BusArrivalArrayObject o = busObjs.getServices()[0];
+                // Remove bus markers for this specific service
+                Iterator<Marker> iter = publicBusMarkers.iterator();
+                while (iter.hasNext()) {
+                    Marker m = iter.next();
+
+                    if (m == null || m.getTitle() == null) continue;
+
+                    if (m.getTitle().equals(o.getServiceNo() + " (" + o.getOperator() + ")")) {
+                        m.remove();
+                        iter.remove();
+                    }
+                }
+                BusArrivalArrayObjectEstimate e1 = o.getNextBus();
+                addPublicBuses(e1, o);
+                BusArrivalArrayObjectEstimate e2 = o.getNextBus2();
+                addPublicBuses(e2, o);
+                BusArrivalArrayObjectEstimate e3 = o.getNextBus3();
+                addPublicBuses(e3, o);
+                LogHelper.i(TAG, "Displaying Public Bus Locations for " + o.getServiceNo());
+            }
+        }
+
         @Override
         public void onReceive(Context context, Intent intent) {
             String data = intent.getStringExtra("data");
             boolean update = intent.getBooleanExtra("update", false);
             if (data == null) return;
-Log.d(TAG, "publicBusReceiver onReceive: update = " + update + ", data length = " + data.length());
-            Gson gson = new Gson();
+            Log.d(TAG, "publicBusReceiver onReceive: update = " + update + ", data length = " + data.length());
             if (!update) {
-                BusStopJSON[] tmpJSON;
-                try {
-                    tmpJSON = gson.fromJson(data, BusStopJSON[].class);
-                }catch (JsonSyntaxException e) {
-                    Toast.makeText(context, "An error occurred parsing public bus stops. Please try again later", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                // Convert to something workable and unique
-                ArrayMap<String, BusStopJSON> busStops = new ArrayMap<>();
-                for (BusStopJSON j : tmpJSON) {
-                    busStops.put(j.getBusStopCode(), j);
-                }
-                BitmapDescriptor stop = busesUtil.vectorToBitmapDescriptor(R.drawable.ic_circle, context, sbsColor);
-                for (ArrayMap.Entry<String, BusStopJSON> entry : busStops.entrySet()) {
-                    BusStopJSON node = entry.getValue();
-                    String svcWork = node.getServices();
-                    String[] svces = svcWork.split(",");
-                    StringBuilder s = new StringBuilder();
-                    for (String s1 : svces) {
-                        String[] svcTmp = s1.split(":");
-                        s.append(svcTmp[0]).append(", ");
-                    }
-                    String services = s.toString();
-                    services = services.replaceAll(", $", "");
-                    Marker m = mMap.addMarker(new MarkerOptions().position(new LatLng(node.getLatitude(), node.getLongitude()))
-                            .title(node.getDescription() + " (" + node.getRoadName() + ")")
-                            .snippet("Bus Svcs: " + services)
-                            .icon(stop));
-                    if (m != null) {
-                        m.setTag(node);
-                    }
-                }
-                LogHelper.i(TAG, "Generated Public Bus Stops");
+                processBusStopData(context, data);
             } else {
-                BusArrivalMain[] busObjsArr;
-                try {
-                    busObjsArr = gson.fromJson(data, BusArrivalMain[].class);
-                } catch (JsonSyntaxException e) {
-                    Toast.makeText(context, "An error occurred parsing public buses. Please try again later", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                for (BusArrivalMain busObjs : busObjsArr) {
-                    if (busObjs == null || busObjs.getServices() == null || busObjs.getServices().length == 0) continue;
-
-                    BusArrivalArrayObject o = busObjs.getServices()[0];
-                    // Remove bus markers for this specific service
-                    Iterator<Marker> iter = publicBusMarkers.iterator();
-                    while (iter.hasNext()) {
-                        Marker m = iter.next();
-
-                        if (m == null || m.getTitle() == null) continue;
-
-                        if (m.getTitle().equals(o.getServiceNo() + " (" + o.getOperator() + ")")) {
-                            m.remove();
-                            iter.remove();
-                        }
-                    }
-                    BusArrivalArrayObjectEstimate e1 = o.getNextBus();
-                    addPublicBuses(e1, o);
-                    BusArrivalArrayObjectEstimate e2 = o.getNextBus2();
-                    addPublicBuses(e2, o);
-                    BusArrivalArrayObjectEstimate e3 = o.getNextBus3();
-                    addPublicBuses(e3, o);
-                    LogHelper.i(TAG, "Displaying Public Bus Locations for " + o.getServiceNo());
-                }
+                processBusServicesData(context, data);
             }
         }
 
         private String getLoadString(int load) {
-            switch (load){
-                case CommonEnums.BUS_SEATS_AVAIL: return "Seats Available";
-                case CommonEnums.BUS_STANDING_AVAIL: return "Standing Spots Available";
-                case CommonEnums.BUS_LIMITED_SEATS: return "Limited Seats";
-                default: return "Unknown";
-            }
+            return switch (load) {
+                case CommonEnums.BUS_SEATS_AVAIL -> "Seats Available";
+                case CommonEnums.BUS_STANDING_AVAIL -> "Standing Spots Available";
+                case CommonEnums.BUS_LIMITED_SEATS -> "Limited Seats";
+                default -> "Unknown";
+            };
         }
 
         private void addPublicBuses(BusArrivalArrayObjectEstimate e1, BusArrivalArrayObject o) {
