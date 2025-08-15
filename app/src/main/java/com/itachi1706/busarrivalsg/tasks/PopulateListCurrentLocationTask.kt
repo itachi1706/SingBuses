@@ -44,7 +44,7 @@ class PopulateListCurrentLocationTask(
         val location = params.firstOrNull() ?: return -1
         val context = contextRef.get() ?: return -1
         val sp = PreferenceManager.getDefaultSharedPreferences(context)
-        val limit = sp.getString("nearbyStopsCount", "20")?.toInt()
+        val limit = sp.getString("nearbyStopsCount", "20")?.toIntOrNull() ?: 20
 
         // Validation stuff
         // NOTE: Switch to header based validation for new API. This is temporary for backwards compatibility
