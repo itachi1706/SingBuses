@@ -116,7 +116,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
             return;
         }
 
-        new AlertDialog.Builder(getApplicationContext()).setTitle(R.string.dialog_title_request_permission_gps)
+        new AlertDialog.Builder(this).setTitle(R.string.dialog_title_request_permission_gps)
                 .setMessage(R.string.dialog_message_request_permission_gps_rationale)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> requestGps.launch(permissions)).show();
     }
@@ -146,7 +146,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
                     getLocationButtonClicked();
                 } else {
                     LogHelper.e(TAG, "Permission not granted");
-                    new AlertDialog.Builder(getApplicationContext()).setTitle(R.string.dialog_title_permission_denied)
+                    new AlertDialog.Builder(this).setTitle(R.string.dialog_title_permission_denied)
                             .setMessage(R.string.dialog_message_no_permission_gps).setPositiveButton(android.R.string.ok, null)
                             .setNeutralButton(R.string.dialog_action_neutral_app_settings, (dialog, which) -> {
                                 Intent permIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
