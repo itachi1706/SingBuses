@@ -22,14 +22,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
-import com.itachi1706.busarrivalsg.tasks.GetBusServicesTask;
-import com.itachi1706.busarrivalsg.database.BusStopsDB;
+import com.itachi1706.busarrivalsg.database.BusStopsDb;
 import com.itachi1706.busarrivalsg.iface.IHandleStuff;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalMain;
 import com.itachi1706.busarrivalsg.recyclerviews.BusServiceRecyclerAdapter;
 import com.itachi1706.busarrivalsg.services.BusStorage;
+import com.itachi1706.busarrivalsg.tasks.GetBusServicesTask;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.busarrivalsg.util.SwipeFavouriteCallback;
 import com.itachi1706.helperlib.helpers.LogHelper;
@@ -123,7 +123,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
 
             if (busServicesString == null || busServicesString.isEmpty()) {
                 // Retrieve it from DB
-                BusStopsDB db = new BusStopsDB(this);
+                BusStopsDb db = new BusStopsDb(this);
                 busServicesString = db.getBusStopByBusStopCode(busStopCode).getServices();
             }
 

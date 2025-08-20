@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.itachi1706.busarrivalsg.database.BusStopsDB;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter;
+import com.itachi1706.busarrivalsg.database.BusStopsDb;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
+import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter;
 import com.itachi1706.helperlib.helpers.LogHelper;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class BusStopSearchFragment extends Fragment {
 
     BusStopRecyclerAdapter adapter;
 
-    private BusStopsDB db;
+    private BusStopsDb db;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class BusStopSearchFragment extends Fragment {
         result.setAdapter(adapter);
 
         // Populate with blank
-        db = new BusStopsDB(getContext());
+        db = new BusStopsDb(requireContext());
         List<BusStopJSON> results = db.getAllBusStops();
         adapter.updateAdapter(results);
         adapter.notifyDataSetChanged();

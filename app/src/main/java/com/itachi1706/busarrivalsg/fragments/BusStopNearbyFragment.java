@@ -35,10 +35,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.tasks.PopulateListCurrentLocationTask;
-import com.itachi1706.busarrivalsg.database.BusStopsDB;
+import com.itachi1706.busarrivalsg.database.BusStopsDb;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
 import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter;
+import com.itachi1706.busarrivalsg.tasks.PopulateListCurrentLocationTask;
 import com.itachi1706.busarrivalsg.util.BusesUtil;
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener;
 import com.itachi1706.helperlib.concurrent.Constants;
@@ -61,7 +61,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
     MapView mapView;
     private GoogleMap mMap;
     private LocationManager locationManager;
-    private BusStopsDB db;
+    private BusStopsDb db;
     private static final String TAG = "NearbyFrag";
 
     public static final String RECEIVE_LOCATION_EVENT = "ReceiveLocationEvent";
@@ -87,7 +87,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
         result.setAdapter(adapter);
 
         // Populate with blank
-        db = new BusStopsDB(getContext());
+        db = new BusStopsDb(requireContext());
         List<BusStopJSON> results = db.getAllBusStops();
         adapter.updateAdapter(results);
         adapter.notifyDataSetChanged();
@@ -131,7 +131,7 @@ public class BusStopNearbyFragment extends Fragment implements OnMapViewReadyLis
             Location location = new Location("");
             location.setLatitude(intent.getDoubleExtra("lat", 0));
             location.setLongitude(intent.getDoubleExtra("lng", 0));
-            if (db == null) db = new BusStopsDB(getContext());
+            if (db == null) db = new BusStopsDb(requireContext());
 
             if (nearbyTask == null || nearbyTask.getStatus().equals(Constants.Status.FINISHED)) {
                 nearbyTask = new PopulateListCurrentLocationTask(requireActivity(), db, adapter);

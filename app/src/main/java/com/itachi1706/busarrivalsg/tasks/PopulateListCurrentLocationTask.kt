@@ -9,7 +9,7 @@ import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.itachi1706.busarrivalsg.R
-import com.itachi1706.busarrivalsg.database.BusStopsDB
+import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.fragments.BusStopNearbyFragment
 import com.itachi1706.busarrivalsg.objects.gson.Distance
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
@@ -28,7 +28,7 @@ import java.net.URLEncoder
 
 class PopulateListCurrentLocationTask(
     activity: Activity,
-    private val db: BusStopsDB,
+    private val db: BusStopsDb,
     private val adapter: BusStopRecyclerAdapter
 ) : CoroutineAsyncTask<Location, Unit, Int>(TASK_NAME) {
     private var contextRef: WeakReference<Activity> = WeakReference(activity)
@@ -85,10 +85,12 @@ class PopulateListCurrentLocationTask(
         results?.forEach { map ->
             val distance = map.dist
             val stop = db.getBusStopByBusStopCode(map.busStopCode)
-            stop.distance = distance * 1000 // Convert to metres, its currently in km
-            stop.isHasDistance = true
+            stop?.let {
+                it.distance = distance * 1000 // Convert to metres, its currently in km
+                it.isHasDistance = true
 
-            stops.add(stop)
+                stops.add(it)
+            }
         }
 
         val sendForMapParsingIntent = Intent(BusStopNearbyFragment.RECEIVE_NEARBY_STOPS_EVENT)

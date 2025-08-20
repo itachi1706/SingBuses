@@ -32,11 +32,11 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.itachi1706.appupdater.AppUpdateInitializer;
 import com.itachi1706.appupdater.object.CAAnalytics;
 import com.itachi1706.appupdater.utils.AnalyticsHelper;
-import com.itachi1706.busarrivalsg.tasks.GetBusServicesFavouritesTask;
-import com.itachi1706.busarrivalsg.database.BusStopsDB;
+import com.itachi1706.busarrivalsg.database.BusStopsDb;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.recyclerviews.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.services.BusStorage;
+import com.itachi1706.busarrivalsg.tasks.GetBusServicesFavouritesTask;
 import com.itachi1706.busarrivalsg.tasks.UpdateDatabaseTask;
 import com.itachi1706.busarrivalsg.util.LogInitializer;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
@@ -269,8 +269,8 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
             } else {
                 LogHelper.d("INIT", "Initializing Bus Stop Database");
                 if (busDBUpdate) {
-                    try (BusStopsDB db = new BusStopsDB(this)) {
-                        db.dropAndRebuildDB(); // Rebuilding database
+                    try (BusStopsDb db = new BusStopsDb(this)) {
+                        db.dropAndRebuildDb(); // Rebuilding database
                         LogHelper.i(DBTAG, "Database Upgraded");
                     }
                 }
