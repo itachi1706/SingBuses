@@ -15,7 +15,7 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.itachi1706.busarrivalsg.R
-import com.itachi1706.busarrivalsg.database.BusStopsDB
+import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSONArray
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.busarrivalsg.util.Timings
@@ -148,18 +148,18 @@ class UpdateDatabaseTask : Service() {
 
     private fun processDatabase(dataObjects: BusStopJSONArray) {
         // Process the data here
-        val db = BusStopsDB(this)
+        val db = BusStopsDb(this)
 
         val t1 = Timings(TAG, true)
         t1.start()
-        val deletedRows = db.truncateDB()
+        val deletedRows = db.truncateDb()
         t1.end()
         d(TAG, "Deleted $deletedRows rows from the database")
 
         val t2 = Timings(TAG, true)
         t2.start()
         val data = dataObjects.value
-        db.addMultipleToDB(data)
+        db.addMultipleToDb(data)
         t2.end()
 
         val count = db.size

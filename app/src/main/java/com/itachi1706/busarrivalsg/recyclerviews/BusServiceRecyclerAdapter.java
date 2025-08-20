@@ -20,7 +20,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment;
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity;
 import com.itachi1706.busarrivalsg.R;
-import com.itachi1706.busarrivalsg.database.BusStopsDB;
+import com.itachi1706.busarrivalsg.database.BusStopsDb;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObjectEstimate;
@@ -338,7 +338,7 @@ public class BusServiceRecyclerAdapter extends RecyclerView.Adapter<BusServiceRe
             mapsArgs.putInt("state", state);
 
             //Get Bus stop longitude and latitude
-            BusStopsDB db = new BusStopsDB(activity);
+            BusStopsDb db = new BusStopsDb(activity);
             BusStopJSON busStop = db.getBusStopByBusStopCode(stopCode);
             if (busStop != null) {
                 mapsArgs.putDouble("buslat", busStop.getLatitude());

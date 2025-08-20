@@ -8,7 +8,7 @@ import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.itachi1706.busarrivalsg.NTUBusActivity
 import com.itachi1706.busarrivalsg.R
-import com.itachi1706.busarrivalsg.database.BusStopsDB
+import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask
@@ -79,7 +79,7 @@ class GetNTUPublicBusTask(activity: Activity, private val update: Boolean) :
         val sp = PreferenceManager.getDefaultSharedPreferences(mActivity)
         if (!update && sp.getBoolean("showntusbsstops", true)) {
             // Send data related to the bus stops as well
-            BusStopsDB(mActivity).use { db ->
+            BusStopsDb(mActivity).use { db ->
                 d(TAG, "Fetching bus stops from DB for NTU Public Buses")
                 val jsons = mutableListOf<BusStopJSON>()
                 jsons.addAll(db.getBusStopsBySvcNo("179", "SMRT"))

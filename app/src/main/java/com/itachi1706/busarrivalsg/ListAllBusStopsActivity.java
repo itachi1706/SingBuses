@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.itachi1706.busarrivalsg.database.BusStopsDB;
-import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter;
+import com.itachi1706.busarrivalsg.database.BusStopsDb;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON;
+import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class ListAllBusStopsActivity extends AppCompatActivity {
         busStops.setLayoutManager(linearLayoutManager);
         busStops.setItemAnimator(new DefaultItemAnimator());
 
-        BusStopsDB db = new BusStopsDB(this);
+        BusStopsDb db = new BusStopsDb(this);
         List<BusStopJSON> data = db.getAllBusStops();
         count.setText(getString(R.string.label_bus_stops_count, data.size()));
 
