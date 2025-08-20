@@ -111,6 +111,7 @@ configurations.all {
 }
 
 dependencies {
+    implementation(libs.play.services.location)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.core)

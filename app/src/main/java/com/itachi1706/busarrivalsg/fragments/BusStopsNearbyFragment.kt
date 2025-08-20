@@ -6,9 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.location.Criteria
 import android.location.Location
-import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,11 +18,15 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.itachi1706.busarrivalsg.R
@@ -43,18 +45,18 @@ import com.itachi1706.helperlib.helpers.LogHelper.w
 class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapReadyListener,
     GoogleMap.OnInfoWindowClickListener {
 
-        companion object {
-            private const val TAG = "BSNearbyF"
+    companion object {
+        private const val TAG = "BSNearbyF"
 
-            const val RECEIVE_LOCATION_EVENT = "ReceiveLocationEvent"
-            const val RECEIVE_NEARBY_STOPS_EVENT = "ReceiveNearbyEvent"
-        }
+        const val RECEIVE_LOCATION_EVENT = "ReceiveLocationEvent"
+        const val RECEIVE_NEARBY_STOPS_EVENT = "ReceiveNearbyEvent"
+    }
 
     private var binding: FragmentBusStopsNearbyBinding? = null
 
     private var adapter: BusStopRecyclerAdapter? = null
     private var mMap: GoogleMap? = null
-    private var locationManager: LocationManager? = null
+    private var fusedLocationClient: FusedLocationProviderClient? = null
     private var db: BusStopsDb? = null
 
     private var isAnimating = false
@@ -93,7 +95,8 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
         adapter?.notifyItemRangeChanged(0, results.size)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            activity?.window?.decorView?.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
+            activity?.window?.decorView?.importantForAutofill =
+                View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
         }
 
         return view
@@ -109,8 +112,10 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
         super.onResume()
         binding?.mapView?.onResume()
         if (context != null) {
-            LocalBroadcastManager.getInstance(requireContext()).registerReceiver(receiver, IntentFilter(RECEIVE_LOCATION_EVENT))
-            LocalBroadcastManager.getInstance(requireContext()).registerReceiver(nearbyReceiver, IntentFilter(RECEIVE_NEARBY_STOPS_EVENT))
+            LocalBroadcastManager.getInstance(requireContext())
+                .registerReceiver(receiver, IntentFilter(RECEIVE_LOCATION_EVENT))
+            LocalBroadcastManager.getInstance(requireContext())
+                .registerReceiver(nearbyReceiver, IntentFilter(RECEIVE_NEARBY_STOPS_EVENT))
         }
     }
 
@@ -142,10 +147,10 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
 
     private var markerMap: HashMap<Marker, BusStopJSON>? = null
     private val nearbyReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: android.content.Context, intent: android.content.Intent) {
+        override fun onReceive(context: Context, intent: android.content.Intent) {
             if (mMap == null) return // Don't do anything as no map has been initialized
             // If invoked means GPS granted so ignore check
-            if (locationManager == null) checkGpsForCurrentLocation()
+            if (fusedLocationClient == null) checkGpsForCurrentLocation()
 
             mMap?.clear()
             if (markerMap == null) markerMap = HashMap()
@@ -159,7 +164,10 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
             for (stop in stops) {
                 val serviceString = stop.services
                 if (serviceString.isEmpty()) {
-                    w(TAG, "No services found for bus stop ${stop.busStopCode}, skipping marker creation")
+                    w(
+                        TAG,
+                        "No services found for bus stop ${stop.busStopCode}, skipping marker creation"
+                    )
                     continue
                 }
 
@@ -181,10 +189,13 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
 
     private fun checkGpsForCurrentLocation() {
         if (context == null) return
-        val rc = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+        val rc = ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
         if (rc == PackageManager.PERMISSION_GRANTED) {
             mMap?.isMyLocationEnabled = true
-            locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         }
     }
 
@@ -203,25 +214,35 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
 
     @SuppressLint("MissingPermission")
     private fun zoomToLocation() {
-        if (locationManager != null && !isAnimating) {
+        if (!isAnimating) {
             // Assume location permission granted for it to be initialized to zoom to current location
             isAnimating = true
-            val myLoc = locationManager?.getLastKnownLocation(locationManager?.getBestProvider(
-                Criteria(), false)!!)
-            if (myLoc == null) return
-            val myLatLng = LatLng(myLoc.latitude, myLoc.longitude)
-            d(TAG, "animateCamera:onStart: $myLatLng")
-            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 17f), object: GoogleMap.CancelableCallback {
-                override fun onFinish() {
-                    d(TAG, "animateCamera:onFinish")
-                    isAnimating = false
-                }
 
-                override fun onCancel() {
-                    d(TAG, "animateCamera:onCancel")
+            fusedLocationClient?.getCurrentLocation(
+                Priority.PRIORITY_BALANCED_POWER_ACCURACY,
+                CancellationTokenSource().token
+            )?.addOnSuccessListener {
+                if (it == null) {
+                    e(TAG, "No location found, cannot animate camera")
                     isAnimating = false
+                    return@addOnSuccessListener
                 }
-            })
+                val myPos = LatLng(it.latitude, it.longitude)
+                d(TAG, "animateCamera:onStart: $myPos")
+                mMap?.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(myPos, 17f),
+                    object : GoogleMap.CancelableCallback {
+                        override fun onFinish() {
+                            d(TAG, "animateCamera:onFinish")
+                            isAnimating = false
+                        }
+
+                        override fun onCancel() {
+                            d(TAG, "animateCamera:onCancel")
+                            isAnimating = false
+                        }
+                    })
+            }
         }
     }
 

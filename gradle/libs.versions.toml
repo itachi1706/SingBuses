@@ -32,6 +32,7 @@ sqlDelight = "1.5.5"
 testCore = "1.7.0"
 testRules = "1.7.0"
 testRunner = "1.7.0"
+playServicesLocation = "21.3.0"
 
 [libraries]
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -64,6 +65,7 @@ play-services-auth = { module = "com.google.android.gms:play-services-auth", ver
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
