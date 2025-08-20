@@ -99,13 +99,13 @@ class BusStopsDb(context: Context) : SQLiteOpenHelper(
 
     private fun getBusStopJsonObject(cursor: Cursor): BusStopJSON {
         return BusStopJSON(
-            busStopCode = cursor.getString(1),
-            roadName = cursor.getString(2),
-            description = cursor.getString(3),
-            latitude = cursor.getDouble(4),
-            longitude = cursor.getDouble(5),
-            services = cursor.getString(6),
-            timestamp = cursor.getLong(7).toInt()
+            busStopCode = cursor.getString(cursor.getColumnIndexOrThrow(BUS_STOP_CODE)),
+            roadName = cursor.getString(cursor.getColumnIndexOrThrow(BUS_STOP_ROAD)),
+            description = cursor.getString(cursor.getColumnIndexOrThrow(BUS_STOP_DESC)),
+            latitude = cursor.getDouble(cursor.getColumnIndexOrThrow(BUS_STOP_LATITUDE)),
+            longitude = cursor.getDouble(cursor.getColumnIndexOrThrow(BUS_STOP_LONGITUDE)),
+            services = cursor.getString(cursor.getColumnIndexOrThrow(BUS_STOP_SERVICES)),
+            timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(BUS_STOP_TIMESTAMP)).toInt()
         )
     }
 
@@ -134,10 +134,9 @@ class BusStopsDb(context: Context) : SQLiteOpenHelper(
     /**
      * Return single bus stop object based on Unique Bus Stop Code
      * @param busStopCode Unique bus stop code to search for
-     * @return BusStopJSON object representing the bus stop with the given code
-     * @throws NoSuchElementException if no bus stop with the given code is found
+     * @return BusStopJSON object representing the bus stop with the given code or null if not found
      */
-    fun getBusStopByBusStopCode(busStopCode: String): BusStopJSON {
+    fun getBusStopByBusStopCode(busStopCode: String): BusStopJSON? {
         val query = "SELECT * FROM $TABLE_ITEMS WHERE $BUS_STOP_CODE = ?"
         val db = this.readableDatabase
         val cursor = db.rawQuery(query, arrayOf(busStopCode))
@@ -150,7 +149,7 @@ class BusStopsDb(context: Context) : SQLiteOpenHelper(
         }
         cursor.close()
         db.close()
-        throw NoSuchElementException("No bus stop found with code: $busStopCode")
+        return null
     }
 
     /**
