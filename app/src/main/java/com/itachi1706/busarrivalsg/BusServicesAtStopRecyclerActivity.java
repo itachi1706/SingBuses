@@ -23,7 +23,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 import com.itachi1706.busarrivalsg.database.BusStopsDb;
-import com.itachi1706.busarrivalsg.iface.IHandleStuff;
+import com.itachi1706.busarrivalsg.iface.IFavouritesHandler;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalMain;
@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class BusServicesAtStopRecyclerActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, IHandleStuff {
+public class BusServicesAtStopRecyclerActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, IFavouritesHandler {
 
     static { AppCompatDelegate.setCompatVectorFromResourcesEnabled(true); }
 
@@ -209,7 +209,7 @@ public class BusServicesAtStopRecyclerActivity extends AppCompatActivity impleme
     }
 
     @Override
-    public void favouriteOrUnfavourite(BusServices fav, BusArrivalArrayObject item) {
+    public void favouriteOrUnfavourite(@NonNull BusServices fav, @NonNull BusArrivalArrayObject item) {
         if (busStopName != null)
             fav.setStopName(busStopName);
 
