@@ -68,52 +68,45 @@ class LocManager(val mContext: Context) : Service(), LocationListener {
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // No network provider is enabled
                 e(TAG, "No provider enabled")
-            } else {
-                this.canGetLocation = true
-                // First get location from Network Provider
-                if (isNetworkEnabled) {
-                    locationManager!!.requestLocationUpdates(
-                        LocationManager.NETWORK_PROVIDER,
-                        MIN_TIME_BW_UPDATES,
-                        MIN_DISTANCE_CHANGE_FOR_UPDATES,
-                        this
-                    )
-                    LogHelper.d(TAG, "Network")
 
-                    location =
-                        locationManager!!.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                    if (location != null) {
-                        latitude = location!!.latitude
-                        longitude = location!!.longitude
-                    }
-                    netLoc = location
+                return location
+            }
+
+            this.canGetLocation = true
+            // First get location from Network Provider
+            if (isNetworkEnabled) {
+                locationManager!!.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    MIN_TIME_BW_UPDATES,
+                    MIN_DISTANCE_CHANGE_FOR_UPDATES,
+                    this
+                )
+                LogHelper.d(TAG, "Network")
+
+                location =
+                    locationManager!!.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                if (location != null) {
+                    latitude = location!!.latitude
+                    longitude = location!!.longitude
                 }
-                // If GPS Enabled get lat/long using GPS Services
-                if (isGPSEnabled && locationManager != null) {
-                    locationManager!!.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER,
-                        MIN_TIME_BW_UPDATES,
-                        MIN_DISTANCE_CHANGE_FOR_UPDATES,
-                        this
-                    )
-                    LogHelper.d(TAG, "GPS Enabled")
+                netLoc = location
+            }
+            // If GPS Enabled get lat/long using GPS Services
+            if (isGPSEnabled && locationManager != null) {
+                locationManager!!.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    MIN_TIME_BW_UPDATES,
+                    MIN_DISTANCE_CHANGE_FOR_UPDATES,
+                    this
+                )
+                LogHelper.d(TAG, "GPS Enabled")
 
-                    val gpsLocation =
-                        locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                    if (location == null) {
-                        location = gpsLocation
-                    } else {
-                        // Check time and get later one as it is more accurate
-                        if ((gpsLocation?.time ?: 0) > (location?.time ?: 0)) {
-                            location = gpsLocation
-                        }
-                    }
+                gpsLoc = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                determineGpsLocation(gpsLoc)
 
-                    gpsLoc = gpsLocation
-                    if (location != null) {
-                        latitude = location!!.latitude
-                        longitude = location!!.longitude
-                    }
+                if (location != null) {
+                    latitude = location!!.latitude
+                    longitude = location!!.longitude
                 }
             }
         } catch (e: Exception) {
@@ -121,6 +114,17 @@ class LocManager(val mContext: Context) : Service(), LocationListener {
         }
 
         return location
+    }
+
+    private fun determineGpsLocation(gpsLocation: Location?) {
+        if (location == null) {
+            location = gpsLocation
+        } else {
+            // Check time and get later one as it is more accurate
+            if ((gpsLocation?.time ?: 0) > (location?.time ?: 0)) {
+                location = gpsLocation
+            }
+        }
     }
 
     /**
