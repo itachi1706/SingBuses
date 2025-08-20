@@ -159,7 +159,9 @@ class UpdateDatabaseTask : Service() {
         val t2 = Timings(TAG, true)
         t2.start()
         val data = dataObjects.value
-        db.addMultipleToDb(data)
+        data?.let {
+            db.addMultipleToDb(it)
+        }
         t2.end()
 
         val count = db.size

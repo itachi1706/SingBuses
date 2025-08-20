@@ -89,8 +89,8 @@ class BusStopsDb(context: Context) : SQLiteOpenHelper(
      * Add array of records to the database
      * @param busStops Array of BusStopJSON objects to be added to the database
      */
-    fun addMultipleToDb(busStops: Array<BusStopJSON>?) {
-        if (busStops == null || busStops.isEmpty()) {
+    fun addMultipleToDb(busStops: Array<BusStopJSON>) {
+        if (busStops.isEmpty()) {
             w(TAG, "No bus stops to add to the database")
             return
         }
@@ -136,7 +136,7 @@ class BusStopsDb(context: Context) : SQLiteOpenHelper(
      * @param busStopCode Unique bus stop code to search for
      * @return BusStopJSON object representing the bus stop with the given code or null if not found
      */
-    fun getBusStopByBusStopCode(busStopCode: String): BusStopJSON? {
+    fun getBusStopByBusStopCode(busStopCode: String?): BusStopJSON? {
         val query = "SELECT * FROM $TABLE_ITEMS WHERE $BUS_STOP_CODE = ?"
         val db = this.readableDatabase
         val cursor = db.rawQuery(query, arrayOf(busStopCode))
