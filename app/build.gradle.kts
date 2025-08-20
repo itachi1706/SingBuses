@@ -111,7 +111,6 @@ configurations.all {
 }
 
 dependencies {
-    implementation(libs.play.services.location)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.core)
@@ -149,6 +148,7 @@ dependencies {
     implementation(libs.firebase.perf)
 
     implementation(libs.play.services.auth)
+    implementation(libs.play.services.location)
     implementation(libs.play.services.maps)
 
     // Test for About Page
