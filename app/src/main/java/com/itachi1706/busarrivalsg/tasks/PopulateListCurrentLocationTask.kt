@@ -85,10 +85,12 @@ class PopulateListCurrentLocationTask(
         results?.forEach { map ->
             val distance = map.dist
             val stop = db.getBusStopByBusStopCode(map.busStopCode!!)
-            stop.distance = distance * 1000 // Convert to metres, its currently in km
-            stop.isHasDistance = true
+            stop?.let {
+                it.distance = distance * 1000 // Convert to metres, its currently in km
+                it.isHasDistance = true
 
-            stops.add(stop)
+                stops.add(it)
+            }
         }
 
         val sendForMapParsingIntent = Intent(BusStopNearbyFragment.RECEIVE_NEARBY_STOPS_EVENT)
