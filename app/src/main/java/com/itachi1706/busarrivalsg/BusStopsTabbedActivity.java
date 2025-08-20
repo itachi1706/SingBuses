@@ -26,8 +26,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.itachi1706.busarrivalsg.fragments.BusStopNearbyFragment;
 import com.itachi1706.busarrivalsg.fragments.BusStopSearchFragment;
+import com.itachi1706.busarrivalsg.fragments.BusStopsNearbyFragment;
 import com.itachi1706.busarrivalsg.services.LocManager;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.helperlib.helpers.LogHelper;
@@ -75,7 +75,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFrag(new BusStopSearchFragment(), "Search");
-        adapter.addFrag(new BusStopNearbyFragment(), "Nearby");
+        adapter.addFrag(new BusStopsNearbyFragment(), "Nearby");
 
         viewPager.setAdapter(adapter);
     }
@@ -165,7 +165,7 @@ public class BusStopsTabbedActivity extends AppCompatActivity {
 
         hideSoftKeyBoard();
 
-        Intent lIntent = new Intent(BusStopNearbyFragment.RECEIVE_LOCATION_EVENT);
+        Intent lIntent = new Intent(BusStopsNearbyFragment.RECEIVE_LOCATION_EVENT);
         lIntent.putExtra("lat", latitude);
         lIntent.putExtra("lng", longitude);
         LocalBroadcastManager.getInstance(this).sendBroadcast(lIntent);

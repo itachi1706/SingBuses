@@ -10,7 +10,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.database.BusStopsDb
-import com.itachi1706.busarrivalsg.fragments.BusStopNearbyFragment
+import com.itachi1706.busarrivalsg.fragments.BusStopsNearbyFragment
 import com.itachi1706.busarrivalsg.objects.gson.Distance
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
 import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter
@@ -93,7 +93,7 @@ class PopulateListCurrentLocationTask(
             }
         }
 
-        val sendForMapParsingIntent = Intent(BusStopNearbyFragment.RECEIVE_NEARBY_STOPS_EVENT)
+        val sendForMapParsingIntent = Intent(BusStopsNearbyFragment.RECEIVE_NEARBY_STOPS_EVENT)
         val listType = object : TypeToken<ArrayList<BusStopJSON>>() {}.type
         sendForMapParsingIntent.putExtra("data", gson.toJson(stops, listType))
         context.runOnUiThread {

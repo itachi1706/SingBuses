@@ -71,6 +71,7 @@ android {
         abortOnError = !isGHActions
     }
     buildFeatures {
+        viewBinding = true
         buildConfig = true
     }
     testOptions {
