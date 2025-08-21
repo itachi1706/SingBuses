@@ -71,6 +71,7 @@ android {
         abortOnError = !isGHActions
     }
     buildFeatures {
+        viewBinding = true
         buildConfig = true
     }
     testOptions {
@@ -133,7 +134,6 @@ dependencies {
     implementation(libs.flexbox)
     implementation(libs.gson)
     implementation(libs.helperlib)
-    implementation(libs.legacy.support.v4)
     implementation(libs.material)
     implementation(libs.multidex)
 
@@ -147,6 +147,7 @@ dependencies {
     implementation(libs.firebase.perf)
 
     implementation(libs.play.services.auth)
+    implementation(libs.play.services.location)
     implementation(libs.play.services.maps)
 
     // Test for About Page

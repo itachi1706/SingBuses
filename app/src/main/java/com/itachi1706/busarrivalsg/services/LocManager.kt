@@ -18,6 +18,7 @@ import com.itachi1706.helperlib.helpers.LogHelper.e
 
 
 @SuppressLint("MissingPermission")
+@Deprecated("To switch to use FusedLocationProvider instead of custom location manager")
 class LocManager(val mContext: Context) : Service(), LocationListener {
 
     var locationManager: LocationManager? = null
