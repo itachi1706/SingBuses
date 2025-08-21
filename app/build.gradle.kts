@@ -134,7 +134,6 @@ dependencies {
     implementation(libs.flexbox)
     implementation(libs.gson)
     implementation(libs.helperlib)
-    implementation(libs.legacy.support.v4)
     implementation(libs.material)
     implementation(libs.multidex)
 
