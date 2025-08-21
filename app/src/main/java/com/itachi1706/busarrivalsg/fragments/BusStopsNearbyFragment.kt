@@ -158,7 +158,7 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
 
             val data = intent.getStringExtra("data")
             val gson = Gson()
-            val listType = object : TypeToken<ArrayList<BusStopJSON?>?>() {}.type
+            val listType = object : TypeToken<ArrayList<BusStopJSON>>() {}.type
             val stops = gson.fromJson<ArrayList<BusStopJSON>>(data, listType)
 
             for (stop in stops) {
