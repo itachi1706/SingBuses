@@ -82,4 +82,9 @@ class BusStopsSearchFragment : Fragment() {
         binding?.inputData?.addTextChangedListener(inputWatcher)
         return v
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 }

@@ -128,6 +128,11 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
     private var nearbyTask: PopulateListCurrentLocationTask? = null
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: android.content.Context, intent: android.content.Intent) {
@@ -178,7 +183,7 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
                 }
                 val markerOption = MarkerOptions().position(LatLng(stop.latitude, stop.longitude))
                     .title("${stop.description} (${stop.roadName})")
-                    .snippet("Bus Svcs: ${services.toString().replace(", $", "")}")
+                    .snippet("Bus Svcs: ${services.toString().removeSuffix(", ")}")
                     .icon(BusesUtil.vectorToBitmapDescriptor(R.drawable.red_circle, context))
                 mMap?.addMarker(markerOption)?.let { markerMap?.put(it, stop) }
             }
@@ -207,7 +212,7 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
         mMap?.setOnInfoWindowClickListener(this)
         val settings = mMap?.uiSettings
         settings?.isZoomControlsEnabled = true
-        settings?.isMapToolbarEnabled = true
+        settings?.isMapToolbarEnabled = false
 
         mMap?.setOnMapLoadedCallback(this::zoomToLocation)
     }
