@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.databinding.FragmentBusStopsSearchBinding
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
 import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter
 import com.itachi1706.helperlib.helpers.LogHelper.d
 import com.itachi1706.helperlib.helpers.LogHelper.e
@@ -46,7 +45,7 @@ class BusStopsSearchFragment : Fragment() {
         binding?.rvNearestBusStops?.layoutManager = llm
         binding?.rvNearestBusStops?.itemAnimator = DefaultItemAnimator()
 
-        adapter = BusStopRecyclerAdapter(mutableListOf<BusStopJSON>())
+        adapter = BusStopRecyclerAdapter(mutableListOf())
         binding?.rvNearestBusStops?.adapter = adapter
 
         // Blank population
