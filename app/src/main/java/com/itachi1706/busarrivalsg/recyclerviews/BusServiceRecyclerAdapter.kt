@@ -236,18 +236,24 @@ class BusServiceRecyclerAdapter(
             mapsArgs.putString("busSvcNo", serviceNo)
 
             // 3 Bus statuses
-            mapsArgs.putDouble("lat1", busObj.nextBus!!.latitudeD)
-            mapsArgs.putDouble("lng1", busObj.nextBus.longitudeD)
-            mapsArgs.putString("arr1", busObj.nextBus.estimatedArrival)
-            mapsArgs.putInt("type1", busObj.nextBus.typeInt)
-            mapsArgs.putDouble("lat2", busObj.nextBus2!!.latitudeD)
-            mapsArgs.putDouble("lng2", busObj.nextBus2.longitudeD)
-            mapsArgs.putString("arr2", busObj.nextBus2.estimatedArrival)
-            mapsArgs.putInt("type2", busObj.nextBus2.typeInt)
-            mapsArgs.putDouble("lat3", busObj.nextBus3!!.latitudeD)
-            mapsArgs.putDouble("lng3", busObj.nextBus3.longitudeD)
-            mapsArgs.putString("arr3", busObj.nextBus3.estimatedArrival)
-            mapsArgs.putInt("type3", busObj.nextBus3.typeInt)
+            busObj.nextBus?.let {
+                mapsArgs.putDouble("lat1", it.latitudeD)
+                mapsArgs.putDouble("lng1", it.longitudeD)
+                mapsArgs.putString("arr1", it.estimatedArrival)
+                mapsArgs.putInt("type1", it.typeInt)
+            }
+            busObj.nextBus2?.let {
+                mapsArgs.putDouble("lat2", it.latitudeD)
+                mapsArgs.putDouble("lng2", it.longitudeD)
+                mapsArgs.putString("arr2", it.estimatedArrival)
+                mapsArgs.putInt("type2", it.typeInt)
+            }
+            busObj.nextBus3?.let {
+                mapsArgs.putDouble("lat3", it.latitudeD)
+                mapsArgs.putDouble("lng3", it.longitudeD)
+                mapsArgs.putString("arr3", it.estimatedArrival)
+                mapsArgs.putInt("type3", it.typeInt)
+            }
             mapsArgs.putString("sTime", currentTime)
             mapsArgs.putInt("state", state)
 

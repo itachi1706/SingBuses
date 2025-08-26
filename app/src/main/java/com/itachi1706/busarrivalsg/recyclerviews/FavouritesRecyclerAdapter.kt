@@ -285,8 +285,8 @@ class FavouritesRecyclerAdapter(
                 if (state == StaticVariables.CUR) busObj.currentBus else if (state == StaticVariables.NEXT) busObj.nextBus else busObj.subsequentBus
             this.state = state
             this.busObj = busObj
-            this.longitude = status!!.longitude
-            this.latitude = status.latitude
+            this.longitude = status?.longitude ?: -1000.0
+            this.latitude = status?.latitude ?: -1000.0
             this.stopCode = busStopCode.trim { it <= ' ' }
             this.serviceNo = svcNo.trim { it <= ' ' }
         }
@@ -326,18 +326,24 @@ class FavouritesRecyclerAdapter(
             mapsArgs.putString("busSvcNo", serviceNo)
 
             // 3 Bus statuses
-            mapsArgs.putDouble("lat1", busObj.currentBus!!.latitude)
-            mapsArgs.putDouble("lng1", busObj.currentBus!!.longitude)
-            mapsArgs.putString("arr1", busObj.currentBus!!.estimatedArrival)
-            mapsArgs.putDouble("lat2", busObj.nextBus!!.latitude)
-            mapsArgs.putDouble("lng2", busObj.nextBus!!.longitude)
-            mapsArgs.putString("arr2", busObj.nextBus!!.estimatedArrival)
-            mapsArgs.putDouble("lat3", busObj.subsequentBus!!.latitude)
-            mapsArgs.putDouble("lng3", busObj.subsequentBus!!.longitude)
-            mapsArgs.putString("arr3", busObj.subsequentBus!!.estimatedArrival)
-            mapsArgs.putInt("type1", busObj.currentBus!!.busType)
-            mapsArgs.putInt("type2", busObj.nextBus!!.busType)
-            mapsArgs.putInt("type3", busObj.subsequentBus!!.busType)
+            busObj.currentBus?.let {
+                mapsArgs.putDouble("lat1", it.latitude)
+                mapsArgs.putDouble("lng1", it.longitude)
+                mapsArgs.putString("arr1", it.estimatedArrival)
+                mapsArgs.putInt("type1", it.busType)
+            }
+            busObj.nextBus?.let {
+                mapsArgs.putDouble("lat2", it.latitude)
+                mapsArgs.putDouble("lng2", it.longitude)
+                mapsArgs.putString("arr2", it.estimatedArrival)
+                mapsArgs.putInt("type2", it.busType)
+            }
+            busObj.subsequentBus?.let {
+                mapsArgs.putDouble("lat3", it.latitude)
+                mapsArgs.putDouble("lng3", it.longitude)
+                mapsArgs.putString("arr3", it.estimatedArrival)
+                mapsArgs.putInt("type3", it.busType)
+            }
             mapsArgs.putString("sTime", currentTime)
             mapsArgs.putInt("state", state)
 
