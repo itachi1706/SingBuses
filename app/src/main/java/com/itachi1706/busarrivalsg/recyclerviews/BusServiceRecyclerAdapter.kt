@@ -194,8 +194,8 @@ class BusServiceRecyclerAdapter(
             this.busObj = busObj
             this.longitude = status?.longitudeD ?: -1000.0
             this.latitude = status?.latitudeD ?: -1000.0
-            this.stopCode = busStopCode.trim { it <= ' ' }
-            this.serviceNo = svcNo.trim { it <= ' ' }
+            this.stopCode = busStopCode.trim()
+            this.serviceNo = svcNo.trim()
         }
 
         override fun onClick(v: View?) {

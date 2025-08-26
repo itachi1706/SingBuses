@@ -280,8 +280,8 @@ class FavouritesRecyclerAdapter(
             this.busObj = busObj
             this.longitude = status?.longitude ?: -1000.0
             this.latitude = status?.latitude ?: -1000.0
-            this.stopCode = busStopCode.trim { it <= ' ' }
-            this.serviceNo = svcNo.trim { it <= ' ' }
+            this.stopCode = busStopCode.trim()
+            this.serviceNo = svcNo.trim()
         }
 
         override fun onClick(v: View?) {
