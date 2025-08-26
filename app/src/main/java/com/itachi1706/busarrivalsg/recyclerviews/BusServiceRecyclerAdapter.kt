@@ -195,8 +195,8 @@ class BusServiceRecyclerAdapter(
                 if (state == StaticVariables.CUR) busObj.nextBus else if (state == StaticVariables.NEXT) busObj.nextBus2 else busObj.nextBus3
             this.state = state
             this.busObj = busObj
-            this.longitude = status!!.longitudeD
-            this.latitude = status.latitudeD
+            this.longitude = status?.longitudeD ?: -1000.0
+            this.latitude = status?.latitudeD ?: -1000.0
             this.stopCode = busStopCode.trim { it <= ' ' }
             this.serviceNo = svcNo.trim { it <= ' ' }
         }
