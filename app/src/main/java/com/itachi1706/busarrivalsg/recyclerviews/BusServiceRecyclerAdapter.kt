@@ -4,12 +4,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity
 import com.itachi1706.busarrivalsg.R
@@ -202,32 +199,7 @@ class BusServiceRecyclerAdapter(
         }
 
         override fun onClick(v: View?) {
-            if (longitude == -1000.0 || latitude == -1000.0) {
-                //Error, invalid location
-                AlertDialog.Builder(activity)
-                    .setTitle(R.string.dialog_title_bus_location_unavailable)
-                    .setMessage(R.string.dialog_message_bus_location_unavailable)
-                    .setPositiveButton(R.string.dialog_action_positive_close, null).show()
-                return
-            }
-            if (longitude == -11.0 && latitude == -11.0) {
-                AlertDialog.Builder(activity).setTitle(R.string.dialog_title_bus_timing_unavailable)
-                    .setMessage(R.string.dialog_message_bus_timing_unavailable)
-                    .setPositiveButton(R.string.dialog_action_positive_close, null).show()
-                return
-            }
-
-            if (latitude == 0.0 && longitude == 0.0) {
-                AlertDialog.Builder(activity).setTitle("Bus Service in Depot")
-                    .setMessage("The Bus Service is currently still in the depot so no location can be obtained!")
-                    .setPositiveButton("Close", null).show()
-                return
-            }
-
-            //Check if Google Play Services is enabled
-            val code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity)
-            if (code != ConnectionResult.SUCCESS) {
-                GoogleApiAvailability.getInstance().getErrorDialog(activity, code, 0)
+            if (!BusesUtil.commonOnClickArrival(activity, longitude, latitude)) {
                 return
             }
 

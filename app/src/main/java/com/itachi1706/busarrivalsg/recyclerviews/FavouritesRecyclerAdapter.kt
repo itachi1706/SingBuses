@@ -13,8 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.snackbar.Snackbar
 import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity
@@ -193,16 +191,11 @@ class FavouritesRecyclerAdapter(
             .setMessage(message)
             .setPositiveButton(android.R.string.yes) { _, _ ->
                 // Remove from favourites
-                for (i in items.indices) {
-                    val s = items[i]
-                    if (s.stopID.equals(
-                            item.stopID,
-                            ignoreCase = true
-                        ) && s.serviceNo.equals(item.serviceNo, ignoreCase = true)
-                    ) {
-                        items.remove(s)
-                        break
-                    }
+                val index = items.indexOfFirst {
+                    it.stopID.equals(item.stopID, ignoreCase = true) && it.serviceNo.equals(item.serviceNo, ignoreCase = true)
+                }
+                if (index != -1) {
+                    items.removeAt(index)
                 }
                 busStorage.updateBusJson(items)
                 notifyItemRemoved(position)
@@ -292,32 +285,7 @@ class FavouritesRecyclerAdapter(
         }
 
         override fun onClick(v: View?) {
-            if (longitude == -1000.0 || latitude == -1000.0) {
-                //Error, invalid location
-                AlertDialog.Builder(activity)
-                    .setTitle(R.string.dialog_title_bus_location_unavailable)
-                    .setMessage(R.string.dialog_message_bus_location_unavailable)
-                    .setPositiveButton(R.string.dialog_action_positive_close, null).show()
-                return
-            }
-            if (longitude == -11.0 && latitude == -11.0) {
-                AlertDialog.Builder(activity).setTitle(R.string.dialog_title_bus_timing_unavailable)
-                    .setMessage(R.string.dialog_message_bus_timing_unavailable)
-                    .setPositiveButton(R.string.dialog_action_positive_close, null).show()
-                return
-            }
-
-            if (latitude == 0.0 && longitude == 0.0) {
-                AlertDialog.Builder(activity).setTitle("Bus Service in Depot")
-                    .setMessage("The Bus Service is currently still in the depot so no location can be obtained!")
-                    .setPositiveButton("Close", null).show()
-                return
-            }
-
-            //Check if Google Play Services is enabled
-            val code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity)
-            if (code != ConnectionResult.SUCCESS) {
-                GoogleApiAvailability.getInstance().getErrorDialog(activity, code, 0)
+            if (!BusesUtil.commonOnClickArrival(activity, longitude, latitude)) {
                 return
             }
 
@@ -357,7 +325,7 @@ class FavouritesRecyclerAdapter(
 
             val dialog = BusLocationMapsDialogFragment()
             dialog.setArguments(mapsArgs)
-            dialog.show(activity.getSupportFragmentManager(), "123")
+            dialog.show(activity.supportFragmentManager, "123")
         }
     }
 }
