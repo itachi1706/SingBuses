@@ -4,8 +4,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -17,6 +15,7 @@ import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.databinding.RecyclerviewBusNumbersBinding
+import com.itachi1706.busarrivalsg.objects.BusRecordView
 import com.itachi1706.busarrivalsg.objects.BusServices
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject
 import com.itachi1706.busarrivalsg.util.BusesUtil
@@ -57,24 +56,45 @@ class BusServiceRecyclerAdapter(
         holder.binding.tvBusOperator.setTextColor(BusesUtil.getOperatorColor(activity, i.operator))
         holder.binding.tvBusService.text = i.serviceNo
 
+        val currentBusViews = BusRecordView(
+            holder.binding.tvBusService,
+            holder.binding.tvBusOperator,
+            holder.binding.btnBusArrivalNow,
+            holder.binding.tvBusStatus,
+            holder.binding.tvBusStopName,
+            holder.binding.ivWheelchairNow,
+            holder.binding.tvBusTypeNow,
+            serverTime
+        )
+
+        val nextBusViews = BusRecordView(
+            holder.binding.tvBusService,
+            holder.binding.tvBusOperator,
+            holder.binding.btnBusArrivalNext,
+            holder.binding.tvBusStatus,
+            holder.binding.tvBusStopName,
+            holder.binding.ivWheelchairNext,
+            holder.binding.tvBusTypeNext,
+            serverTime
+        )
+
+        val subBusViews = BusRecordView(
+            holder.binding.tvBusService,
+            holder.binding.tvBusOperator,
+            holder.binding.btnBusArrivalSub,
+            holder.binding.tvBusStatus,
+            holder.binding.tvBusStopName,
+            holder.binding.ivWheelchairSub,
+            holder.binding.tvBusTypeSub,
+            serverTime
+        )
+
         if (!i.isSvcStatus) {
             holder.binding.tvBusStatus.text = activity.getString(R.string.service_not_operational)
             holder.binding.tvBusStatus.setTextColor(Color.RED)
-            notArriving(
-                holder.binding.btnBusArrivalNow,
-                holder.binding.ivWheelchairNow,
-                holder.binding.tvBusTypeNow
-            )
-            notArriving(
-                holder.binding.btnBusArrivalNext,
-                holder.binding.ivWheelchairNext,
-                holder.binding.tvBusTypeNext
-            )
-            notArriving(
-                holder.binding.btnBusArrivalSub,
-                holder.binding.ivWheelchairSub,
-                holder.binding.tvBusTypeSub
-            )
+            currentBusViews.notArriving()
+            nextBusViews.notArriving()
+            subBusViews.notArriving()
             return
         }
         holder.binding.tvBusStatus.text = activity.getString(R.string.service_operational)
@@ -86,157 +106,25 @@ class BusServiceRecyclerAdapter(
         )
 
         // Current Bus
-        if (i.nextBus?.estimatedArrival == null) {
-            notArriving(
-                holder.binding.btnBusArrivalNow,
-                holder.binding.ivWheelchairNow,
-                holder.binding.tvBusTypeNow
-            )
-        } else {
-            val est = StaticVariables.parseLTAEstimateArrival(
-                i.nextBus.estimatedArrival,
-                serverTime,
-                currentTime
-            )
-            val arrivalStatusNow = when {
-                est == -9999L -> {
-                    "-"
-                }
-
-                est <= 0 -> {
-                    "Arr"
-                }
-
-                else -> {
-                    est.toString()
-                }
-            }
-
-            holder.binding.btnBusArrivalNow.text = arrivalStatusNow
-            BusesUtil.applyColorLoad(holder.binding.btnBusArrivalNow, i.nextBus.loadInt)
-            holder.binding.ivWheelchairNow.visibility = View.INVISIBLE
-            if (i.nextBus.isWheelchairAccessible) {
-                holder.binding.ivWheelchairNow.visibility = View.VISIBLE
-            }
-            holder.binding.tvBusTypeNow.visibility = View.INVISIBLE
-            if (arrivalStatusNow != "-") {
-                holder.binding.tvBusTypeNow.text = BusesUtil.getType(i.nextBus.typeInt)
-                holder.binding.tvBusTypeNow.visibility = View.VISIBLE
-            }
-            holder.binding.btnBusArrivalNow.setOnClickListener(
-                ArrivalButton(
-                    i, i.stopCode, i.serviceNo,
-                    StaticVariables.CUR
-                )
-            )
-        }
+        currentBusViews.setInformationBusStopServices(
+            i.nextBus,
+            currentTime,
+            ArrivalButton(i, i.stopCode, i.serviceNo, StaticVariables.CUR)
+        )
 
         // 2nd Bus
-        if (i.nextBus2?.estimatedArrival == null) {
-            notArriving(
-                holder.binding.btnBusArrivalNext,
-                holder.binding.ivWheelchairNext,
-                holder.binding.tvBusTypeNext
-            )
-        } else {
-            val est = StaticVariables.parseLTAEstimateArrival(
-                i.nextBus2.estimatedArrival,
-                serverTime,
-                currentTime
-            )
-            val arrivalStatusNext = when {
-                est == -9999L -> {
-                    "-"
-                }
+        nextBusViews.setInformationBusStopServices(
+            i.nextBus2,
+            currentTime,
+            ArrivalButton(i, i.stopCode, i.serviceNo, StaticVariables.NEXT)
+        )
 
-                est <= 0 -> {
-                    "Arr"
-                }
-
-                else -> {
-                    est.toString()
-                }
-            }
-
-            holder.binding.btnBusArrivalNext.text = arrivalStatusNext
-            BusesUtil.applyColorLoad(holder.binding.btnBusArrivalNext, i.nextBus2.loadInt)
-            holder.binding.ivWheelchairNext.visibility = View.INVISIBLE
-            if (i.nextBus2.isWheelchairAccessible) {
-                holder.binding.ivWheelchairNext.visibility = View.VISIBLE
-            }
-            holder.binding.tvBusTypeNext.visibility = View.INVISIBLE
-            if (arrivalStatusNext != "-") {
-                holder.binding.tvBusTypeNext.text = BusesUtil.getType(i.nextBus2.typeInt)
-                holder.binding.tvBusTypeNext.visibility = View.VISIBLE
-            }
-            holder.binding.btnBusArrivalNext.setOnClickListener(
-                ArrivalButton(
-                    i, i.stopCode, i.serviceNo,
-                    StaticVariables.NEXT
-                )
-            )
-        }
-
-        // Current Bus
-        if (i.nextBus3 == null) {
-            comingSoon(holder.binding.btnBusArrivalSub)
-        } else if (i.nextBus3.estimatedArrival == null) {
-            notArriving(
-                holder.binding.btnBusArrivalSub,
-                holder.binding.ivWheelchairSub,
-                holder.binding.tvBusTypeSub
-            )
-        } else {
-            val est = StaticVariables.parseLTAEstimateArrival(
-                i.nextBus3.estimatedArrival,
-                serverTime,
-                currentTime
-            )
-            val arrivalStatusSub = when {
-                est == -9999L -> {
-                    "-"
-                }
-
-                est <= 0 -> {
-                    "Arr"
-                }
-
-                else -> {
-                    est.toString()
-                }
-            }
-
-            holder.binding.btnBusArrivalSub.text = arrivalStatusSub
-            BusesUtil.applyColorLoad(holder.binding.btnBusArrivalSub, i.nextBus3.loadInt)
-            holder.binding.ivWheelchairSub.visibility = View.INVISIBLE
-            if (i.nextBus3.isWheelchairAccessible) {
-                holder.binding.ivWheelchairSub.visibility = View.VISIBLE
-            }
-            holder.binding.tvBusTypeSub.visibility = View.INVISIBLE
-            if (arrivalStatusSub != "-") {
-                holder.binding.tvBusTypeSub.text = BusesUtil.getType(i.nextBus3.typeInt)
-                holder.binding.tvBusTypeSub.visibility = View.VISIBLE
-            }
-            holder.binding.btnBusArrivalSub.setOnClickListener(
-                ArrivalButton(
-                    i, i.stopCode, i.serviceNo,
-                    StaticVariables.SUB
-                )
-            )
-        }
-    }
-
-    private fun comingSoon(view: TextView) {
-        view.setText(R.string.feature_coming_soon)
-        view.setTextColor(Color.GRAY)
-    }
-
-    private fun notArriving(view: TextView, wheelchair: ImageView, busType: TextView) {
-        view.text = "-"
-        view.setTextColor(Color.GRAY)
-        wheelchair.visibility = View.INVISIBLE
-        busType.visibility = View.INVISIBLE
-        view.setOnClickListener(UnavailableButton())
+        // Subsequent Bus
+        subBusViews.setInformationBusStopServices(
+            i.nextBus3,
+            currentTime,
+            ArrivalButton(i, i.stopCode, i.serviceNo, StaticVariables.SUB)
+        )
     }
 
     override fun getItemCount(): Int {
@@ -245,15 +133,6 @@ class BusServiceRecyclerAdapter(
 
     fun getItem(position: Int): BusArrivalArrayObject? {
         return items[position]
-    }
-
-    inner class UnavailableButton() : View.OnClickListener {
-        override fun onClick(v: View) {
-            AlertDialog.Builder(v.context)
-                .setTitle(R.string.dialog_title_bus_timing_unavailable)
-                .setMessage(R.string.dialog_message_bus_timing_unavailable)
-                .setPositiveButton(R.string.dialog_action_positive_close, null).show()
-        }
     }
 
     inner class BusServiceViewHolder(val binding: RecyclerviewBusNumbersBinding) :
