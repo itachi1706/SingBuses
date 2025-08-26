@@ -8,11 +8,15 @@ import android.graphics.Color
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.graphics.createBitmap
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.Marker
@@ -136,6 +140,39 @@ object BusesUtil {
             StaticVariables.SUB -> m3
             else -> null
         }
+    }
+
+    fun commonOnClickArrival(activity: AppCompatActivity, longitude: Double, latitude: Double): Boolean {
+        if (longitude == -1000.0 || latitude == -1000.0) {
+            //Error, invalid location
+            AlertDialog.Builder(activity)
+                .setTitle(R.string.dialog_title_bus_location_unavailable)
+                .setMessage(R.string.dialog_message_bus_location_unavailable)
+                .setPositiveButton(R.string.dialog_action_positive_close, null).show()
+            return false
+        }
+        if (longitude == -11.0 && latitude == -11.0) {
+            AlertDialog.Builder(activity).setTitle(R.string.dialog_title_bus_timing_unavailable)
+                .setMessage(R.string.dialog_message_bus_timing_unavailable)
+                .setPositiveButton(R.string.dialog_action_positive_close, null).show()
+            return false
+        }
+
+        if (latitude == 0.0 && longitude == 0.0) {
+            AlertDialog.Builder(activity).setTitle(R.string.dialog_title_bus_service_in_depot)
+                .setMessage(R.string.dialog_message_bus_service_in_depot)
+                .setPositiveButton(R.string.dialog_action_positive_close, null).show()
+            return false
+        }
+
+        //Check if Google Play Services is enabled
+        val code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity)
+        if (code != ConnectionResult.SUCCESS) {
+            GoogleApiAvailability.getInstance().getErrorDialog(activity, code, 0)
+            return false
+        }
+
+        return true
     }
 
     private const val OPERATOR_SMRT = "SMRT" // SMRT Buses

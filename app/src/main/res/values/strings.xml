@@ -86,6 +86,8 @@
     <string name="dialog_message_retrieve_data_from_server">Retrieving data from server</string>
     <string name="dialog_title_retrieve_data_bus_service">Downloading Bus Service Data</string>
     <string name="dialog_message_retrieve_data_bus_service">Getting all Bus Services in Bus Stop %1$s</string>
+    <string name="dialog_title_bus_service_in_depot">Bus Service in Depot</string>
+    <string name="dialog_message_bus_service_in_depot">The Bus Service is currently still in the depot so no location can be obtained!</string>
 
     <!-- Toast Messages -->
     <string name="toast_message_add_to_fav">Added to favourites</string>
@@ -120,6 +122,8 @@
     <string name="sign_out">SIGN OUT</string>
     <string name="last_synced_never">Last Synced: Never</string>
     <string name="close">Close</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="accessibility_view_google_maps_for_nearby_bus_stops">View Google Maps for Nearby Bus Stops</string>
     <string name="scan_cepas_card">Scan CEPAS Card</string>
     <string name="ntu_buses">NTU Buses (BETA)</string>
