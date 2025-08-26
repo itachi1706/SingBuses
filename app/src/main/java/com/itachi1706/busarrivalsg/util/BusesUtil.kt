@@ -159,9 +159,9 @@ object BusesUtil {
         }
 
         if (latitude == 0.0 && longitude == 0.0) {
-            AlertDialog.Builder(activity).setTitle("Bus Service in Depot")
-                .setMessage("The Bus Service is currently still in the depot so no location can be obtained!")
-                .setPositiveButton("Close", null).show()
+            AlertDialog.Builder(activity).setTitle(R.string.dialog_title_bus_service_in_depot)
+                .setMessage(R.string.dialog_message_bus_service_in_depot)
+                .setPositiveButton(R.string.dialog_action_positive_close, null).show()
             return false
         }
 

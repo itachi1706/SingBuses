@@ -189,7 +189,7 @@ class FavouritesRecyclerAdapter(
 
         val alert = AlertDialog.Builder(activity).setTitle(R.string.dialog_title_remove_from_fav)
             .setMessage(message)
-            .setPositiveButton(android.R.string.yes) { _, _ ->
+            .setPositiveButton(R.string.yes) { _, _ ->
                 // Remove from favourites
                 val index = items.indexOfFirst {
                     it.stopID.equals(item.stopID, ignoreCase = true) && it.serviceNo.equals(item.serviceNo, ignoreCase = true)
@@ -204,7 +204,7 @@ class FavouritesRecyclerAdapter(
                     R.string.toast_message_remove_from_fav,
                     Toast.LENGTH_SHORT
                 ).show()
-            }.setNegativeButton(android.R.string.no, null).create()
+            }.setNegativeButton(R.string.no, null).create()
         alert.setOnDismissListener { notifyItemChanged(position) }
         alert.show()
         return true
