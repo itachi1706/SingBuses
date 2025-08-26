@@ -12,7 +12,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.databinding.FragmentBusStopsSearchBinding
-import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
+import com.itachi1706.busarrivalsg.adapters.BusStopRecyclerAdapter
 import com.itachi1706.helperlib.helpers.LogHelper.d
 import com.itachi1706.helperlib.helpers.LogHelper.e
 

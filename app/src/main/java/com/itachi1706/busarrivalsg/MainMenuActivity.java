@@ -34,7 +34,7 @@ import com.itachi1706.appupdater.object.CAAnalytics;
 import com.itachi1706.appupdater.utils.AnalyticsHelper;
 import com.itachi1706.busarrivalsg.database.BusStopsDb;
 import com.itachi1706.busarrivalsg.objects.BusServices;
-import com.itachi1706.busarrivalsg.recyclerviews.FavouritesRecyclerAdapter;
+import com.itachi1706.busarrivalsg.adapters.FavouritesRecyclerAdapter;
 import com.itachi1706.busarrivalsg.services.BusStorage;
 import com.itachi1706.busarrivalsg.tasks.GetBusServicesFavouritesTask;
 import com.itachi1706.busarrivalsg.tasks.UpdateDatabaseTask;

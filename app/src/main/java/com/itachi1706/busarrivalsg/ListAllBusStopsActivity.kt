@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.databinding.ActivityListAllBusStopsBinding
-import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter
+import com.itachi1706.busarrivalsg.adapters.BusStopRecyclerAdapter
 
 class ListAllBusStopsActivity : AppCompatActivity() {
 

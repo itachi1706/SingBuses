@@ -28,6 +28,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.itachi1706.busarrivalsg.fragments.BusStopsNearbyFragment;
 import com.itachi1706.busarrivalsg.fragments.BusStopsSearchFragment;
+import com.itachi1706.busarrivalsg.adapters.ViewPagerAdapter;
 import com.itachi1706.busarrivalsg.services.LocManager;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
 import com.itachi1706.helperlib.helpers.LogHelper;

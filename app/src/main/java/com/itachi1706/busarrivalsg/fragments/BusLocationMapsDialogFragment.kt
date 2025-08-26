@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg
+package com.itachi1706.busarrivalsg.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -24,15 +24,13 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.databinding.DialogBusLocationMapBinding
 import com.itachi1706.busarrivalsg.objects.CommonEnums
 import com.itachi1706.busarrivalsg.util.BusesUtil
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener
 import com.itachi1706.busarrivalsg.util.StaticVariables
-import com.itachi1706.helperlib.helpers.LogHelper.d
-import com.itachi1706.helperlib.helpers.LogHelper.e
-import com.itachi1706.helperlib.helpers.LogHelper.i
-import com.itachi1706.helperlib.helpers.LogHelper.w
+import com.itachi1706.helperlib.helpers.LogHelper
 
 class BusLocationMapsDialogFragment : DialogFragment(),
     OnMapViewReadyListener.OnGlobalMapReadyListener {
@@ -164,12 +162,12 @@ class BusLocationMapsDialogFragment : DialogFragment(),
                 500,
                 object : GoogleMap.CancelableCallback {
                     override fun onFinish() {
-                        i(TAG, "Map moving animation finished")
+                        LogHelper.i(TAG, "Map moving animation finished")
                         cur?.showInfoWindow()
                     }
 
                     override fun onCancel() {
-                        i(TAG, "Map moving animation cancelled")
+                        LogHelper.i(TAG, "Map moving animation cancelled")
                     }
                 })
         }
@@ -222,7 +220,7 @@ class BusLocationMapsDialogFragment : DialogFragment(),
     }
 
     private fun requestGpsPermission() {
-        w(TAG, "GPS Permission not granted. Requestion permission")
+        LogHelper.w(TAG, "GPS Permission not granted. Requestion permission")
         val permissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
@@ -251,10 +249,10 @@ class BusLocationMapsDialogFragment : DialogFragment(),
                 val hasPerm = StaticVariables.checkIfCoarseLocationGranted(result)
 
                 if (hasPerm) {
-                    d(TAG, "Location permission granted: Enabling my location")
+                    LogHelper.d(TAG, "Location permission granted: Enabling my location")
                     mMap?.isMyLocationEnabled = true // Checked already
                 } else {
-                    e(TAG, "Location permission not granted")
+                    LogHelper.e(TAG, "Location permission not granted")
                     AlertDialog.Builder(requireContext())
                         .setTitle(R.string.dialog_title_permission_denied)
                         .setMessage(R.string.dialog_message_no_permission_gps)

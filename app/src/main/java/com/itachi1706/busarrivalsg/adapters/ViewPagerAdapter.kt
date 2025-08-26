@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg
+package com.itachi1706.busarrivalsg.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

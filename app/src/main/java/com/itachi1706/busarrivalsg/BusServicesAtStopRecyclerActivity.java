@@ -27,7 +27,7 @@ import com.itachi1706.busarrivalsg.iface.IFavouritesHandler;
 import com.itachi1706.busarrivalsg.objects.BusServices;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject;
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalMain;
-import com.itachi1706.busarrivalsg.recyclerviews.BusServiceRecyclerAdapter;
+import com.itachi1706.busarrivalsg.adapters.BusServiceRecyclerAdapter;
 import com.itachi1706.busarrivalsg.services.BusStorage;
 import com.itachi1706.busarrivalsg.tasks.GetBusServicesTask;
 import com.itachi1706.busarrivalsg.util.StaticVariables;
