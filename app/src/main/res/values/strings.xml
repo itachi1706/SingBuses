@@ -127,4 +127,6 @@
     <string name="accessibility_view_google_maps_for_nearby_bus_stops">View Google Maps for Nearby Bus Stops</string>
     <string name="scan_cepas_card">Scan CEPAS Card</string>
     <string name="ntu_buses">NTU Buses (BETA)</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

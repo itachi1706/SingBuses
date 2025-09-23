@@ -35,7 +35,8 @@ object StaticVariables {
     const val BUS_SERVICE_JSON_RETRIEVED = 101
 
     @SuppressLint("CheckResult")
-    fun checkIfYouGotJsonString(jsonString: String): Boolean {
+    fun checkIfYouGotJsonString(jsonString: String?): Boolean {
+        if (jsonString == null) return false
         return try {
             JsonParser.parseString(jsonString)
             true
