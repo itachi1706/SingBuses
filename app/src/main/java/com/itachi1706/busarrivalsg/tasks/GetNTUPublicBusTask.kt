@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
-import com.itachi1706.busarrivalsg.NTUBusActivity
+import com.itachi1706.busarrivalsg.NtuBusActivity
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
@@ -69,7 +69,7 @@ class GetNTUPublicBusTask(activity: Activity, private val update: Boolean) :
             return 2
         }
 
-        val sendForMapParsingIntent = Intent(NTUBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT)
+        val sendForMapParsingIntent = Intent(NtuBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT)
         sendForMapParsingIntent.putExtra("data", tmp)
         sendForMapParsingIntent.putExtra("update", true)
         mActivity.runOnUiThread {
@@ -89,7 +89,7 @@ class GetNTUPublicBusTask(activity: Activity, private val update: Boolean) :
 
                 val gson = Gson()
                 val js = gson.toJson(stops, Array<BusStopJSON>::class.java)
-                val sendForParseIntent = Intent(NTUBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT)
+                val sendForParseIntent = Intent(NtuBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT)
                 sendForParseIntent.putExtra("data", js)
                 sendForParseIntent.putExtra("update", false)
                 mActivity.runOnUiThread {

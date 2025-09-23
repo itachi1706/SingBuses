@@ -202,7 +202,7 @@ public class MainMenuActivity extends AppCompatActivity implements SwipeRefreshL
         else if (id == R.id.action_refresh) {
             swipeToRefresh.setRefreshing(true);
             updateFavourites();
-        } else if (id == R.id.ntu_tracker) startActivity(new Intent(this, NTUBusActivity.class));
+        } else if (id == R.id.ntu_tracker) startActivity(new Intent(this, NtuBusActivity.class));
         else if (id == R.id.scan_cepas) startActivity(new Intent(this, CEPASScanActivity.class));
         else return super.onOptionsItemSelected(item);
 

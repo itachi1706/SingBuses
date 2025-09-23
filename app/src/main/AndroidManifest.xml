@@ -91,7 +91,7 @@
             android:value="firebase-msg" />
 
         <activity
-            android:name=".NTUBusActivity"
+            android:name=".NtuBusActivity"
             android:exported="false"
             android:label="NTU Buses" />
 

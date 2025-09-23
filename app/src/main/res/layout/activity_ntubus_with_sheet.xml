@@ -5,6 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".NTUBusActivity">
 
-    <include layout="@layout/activity_ntubus" />
+    <include android:id="@+id/extend_layout" layout="@layout/activity_ntubus" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
