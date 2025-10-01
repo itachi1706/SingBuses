@@ -1,11 +1,13 @@
 package com.itachi1706.busarrivalsg.objects
 
 import com.itachi1706.busarrivalsg.util.BusesUtil
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Kenneth on 17/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg
  */
+@Serializable
 class BusStatus(
     var estimatedArrival: String? = null,
     var load: Int = 0,

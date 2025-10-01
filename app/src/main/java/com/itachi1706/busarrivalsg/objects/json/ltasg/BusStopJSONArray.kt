@@ -1,9 +1,5 @@
-package com.itachi1706.busarrivalsg.objects.gson.ltasg
+package com.itachi1706.busarrivalsg.objects.json.ltasg
 
-/**
- * Created by Kenneth on 18/6/2015
- * for SingBuses in package com.itachi1706.busarrivalsg.gsonObjects.sgLTA
- */
 data class BusStopJSONArray(val value: Array<BusStopJSON>? = null) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

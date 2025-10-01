@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity
 import com.itachi1706.busarrivalsg.databinding.RecyclerviewBusStopsBinding
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusStopJSON
 import com.itachi1706.busarrivalsg.util.ShortcutHelper
 import com.itachi1706.helperlib.helpers.LogHelper.d
 import java.util.Locale

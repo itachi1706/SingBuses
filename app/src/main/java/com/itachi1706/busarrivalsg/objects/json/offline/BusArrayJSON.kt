@@ -1,9 +1,8 @@
-package com.itachi1706.busarrivalsg.objects.gson.offline
+package com.itachi1706.busarrivalsg.objects.json.offline
 
-/**
- * Created by Kenneth on 17/6/2015
- * for SingBuses in package com.itachi1706.busarrivalsg.gsonObjects.offline
- */
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class BusArrayJSON(val storage: Array<BusJSON>? = null) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

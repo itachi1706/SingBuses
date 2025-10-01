@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.itachi1706.busarrivalsg.R
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObjectEstimate
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusArrivalArrayObjectEstimate
 import com.itachi1706.busarrivalsg.util.BusesUtil
 import com.itachi1706.busarrivalsg.util.StaticVariables
 

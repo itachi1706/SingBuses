@@ -30,14 +30,12 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
 import com.itachi1706.busarrivalsg.databinding.ActivityNtubusWithSheetBinding
 import com.itachi1706.busarrivalsg.objects.CommonEnums
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObjectEstimate
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalMain
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusArrivalArrayObject
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusArrivalArrayObjectEstimate
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusArrivalMain
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusStopJSON
 import com.itachi1706.busarrivalsg.tasks.GetNTUPublicBusTask
 import com.itachi1706.busarrivalsg.util.BusesUtil
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener
@@ -45,6 +43,8 @@ import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.helperlib.concurrent.Constants
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.objects.ApiResponse
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import java.util.Date
 
 class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapReadyListener, GoogleMap.OnInfoWindowClickListener {
@@ -241,10 +241,11 @@ class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapRe
 
         private fun processBusStopData(context: Context, data: String) {
             LogHelper.d(TAG, "Processing Bus Stops Data")
-            val gson = Gson()
+            val json = Json { ignoreUnknownKeys = true }
             val tmpJson = try {
-                gson.fromJson(data, Array<BusStopJSON>::class.java)
-            } catch (_ : JsonSyntaxException) {
+                json.decodeFromString<Array<BusStopJSON>>(data)
+
+            } catch (_ : SerializationException) {
                 Toast.makeText(
                     context,
                     "An error occurred parsing public bus stops. Please try again later",
@@ -283,13 +284,12 @@ class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapRe
         }
 
         private fun processBusServicesData(context: Context, data: String) {
-            val gson = Gson()
+            val json = Json { ignoreUnknownKeys = true }
             LogHelper.d(TAG, "Processing Bus Services Data")
             val busObjsArr = try {
-                val tmp = gson.fromJson(data, ApiResponse::class.java)
-                val tmp2 = gson.toJson(tmp.data)
-                gson.fromJson(tmp2, Array<BusArrivalMain>::class.java)
-            } catch (_: JsonSyntaxException) {
+                val tmp = json.decodeFromString<ApiResponse>(data)
+                tmp.getTypedData<Array<BusArrivalMain>>(json)
+            } catch (_: SerializationException) {
                 Toast.makeText(
                     context,
                     "An error occurred parsing public buses. Please try again later",

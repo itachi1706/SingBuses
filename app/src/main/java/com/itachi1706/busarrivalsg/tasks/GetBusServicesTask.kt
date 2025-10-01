@@ -6,13 +6,14 @@ import android.os.Handler
 import android.os.Message
 import android.widget.Toast
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.gson.Gson
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.URLHelper
 import com.itachi1706.helperlib.objects.ApiResponse
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import java.lang.ref.WeakReference
 import java.net.SocketTimeoutException
 
@@ -42,10 +43,10 @@ class GetBusServicesTask(
     }
 
     override fun onPostExecute(result: String?) {
-        if (exception != null) {
+        if (exception != null || result.isNullOrEmpty()) {
             val activity = actRef.get()
             if (activity == null) return
-            if (exception is SocketTimeoutException) {
+            if (exception is SocketTimeoutException || result.isNullOrEmpty()) {
                 Toast.makeText(activity, R.string.toast_message_timeout_request, Toast.LENGTH_SHORT)
                     .show()
             } else {
@@ -56,17 +57,28 @@ class GetBusServicesTask(
             }
         } else {
             // Parse info
-            val gson = Gson()
-            val template = gson.fromJson(result, ApiResponse::class.java)
-            val json = gson.toJson(template.data)
+            val jsonConfig = Json { ignoreUnknownKeys = true }
+            try {
+                val template = jsonConfig.decodeFromString<ApiResponse>(result)
+                val json = jsonConfig.encodeToString(template.data)
 
-            val msg = Message.obtain()
-            msg.what = StaticVariables.BUS_SERVICE_JSON_RETRIEVED
-            val bundle = Bundle()
-            bundle.putString("jsonString", json)
-            msg.data = bundle
-            mHandler.sendMessage(msg)
-            refreshLayout.isRefreshing = false
+                val msg = Message.obtain()
+                msg.what = StaticVariables.BUS_SERVICE_JSON_RETRIEVED
+                val bundle = Bundle()
+                bundle.putString("jsonString", json)
+                msg.data = bundle
+                mHandler.sendMessage(msg)
+                refreshLayout.isRefreshing = false
+            } catch (e: SerializationException) {
+                LogHelper.e(TAG, "SerializationException: ${e.message}")
+                val activity = actRef.get()
+                if (activity == null) return
+                Toast.makeText(activity, e.message, Toast.LENGTH_SHORT).show()
+                if (!(activity.isFinishing || activity.isChangingConfigurations)) {
+                    refreshLayout.isRefreshing = false
+                }
+                return
+            }
         }
     }
 

@@ -2,10 +2,11 @@ package com.itachi1706.busarrivalsg.services
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import com.google.gson.Gson
 import com.itachi1706.busarrivalsg.objects.BusServices
-import com.itachi1706.busarrivalsg.objects.gson.offline.BusArrayJSON
+import com.itachi1706.busarrivalsg.objects.json.offline.BusArrayJSON
 import com.itachi1706.helperlib.helpers.LogHelper
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -39,8 +40,13 @@ class BusStorage(val prefs: SharedPreferences) {
 
         val services = ArrayList<BusServices>()
 
-        val gson = Gson()
-        val busArray = gson.fromJson(json, BusArrayJSON::class.java)
+        val jsonConfig = Json { ignoreUnknownKeys = true }
+        val busArray = try {
+            jsonConfig.decodeFromString<BusArrayJSON>(json)
+        } catch (e: SerializationException) {
+            LogHelper.e(TAG, "Error parsing stored bus JSON. Error: ${e.message}")
+            null
+        }
         if (busArray == null || busArray.storage.isNullOrEmpty()) {
             return emptyList()
         }

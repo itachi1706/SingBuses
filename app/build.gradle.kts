@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.google.secrets.gradle)
 }
@@ -132,7 +133,6 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.core.ktx)
     implementation(libs.flexbox)
-    implementation(libs.gson)
     implementation(libs.helperlib)
     implementation(libs.material)
     implementation(libs.multidex)
@@ -149,6 +149,8 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.play.services.location)
     implementation(libs.play.services.maps)
+
+    implementation(libs.kotlinx.serialization.json)
 
     // Test for About Page
     implementation(libs.gitrest)

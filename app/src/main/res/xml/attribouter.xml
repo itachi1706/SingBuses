@@ -44,12 +44,6 @@
     <LicensesWedge
         showDefaults="false">
 
-        <!-- Google Gson -->
-        <LicenseWedge
-            title="Google Gson"
-            license="apache-2.0"
-            repo="google/gson" />
-
         <!-- Farebot -->
         <LicenseWedge
             title="Farebot"

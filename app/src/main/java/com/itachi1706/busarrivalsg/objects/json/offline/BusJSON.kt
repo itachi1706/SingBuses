@@ -1,9 +1,8 @@
-package com.itachi1706.busarrivalsg.objects.gson.offline
+package com.itachi1706.busarrivalsg.objects.json.offline
 
-/**
- * Created by Kenneth on 18/6/2015
- * for SingBuses in package com.itachi1706.busarrivalsg.gsonObjects.offline
- */
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class BusJSON(
     val service: String? = null,
     val operator: String? = null,
