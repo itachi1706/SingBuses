@@ -16,12 +16,13 @@ import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.database.BusStopsDb
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSONArray
+import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.busarrivalsg.util.Timings
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.LogHelper.d
 import com.itachi1706.helperlib.helpers.URLHelper
+import com.itachi1706.helperlib.objects.ApiResponse
 import java.io.IOException
 
 class UpdateDatabaseTask : Service() {
@@ -29,7 +30,7 @@ class UpdateDatabaseTask : Service() {
     companion object {
         const val TAG = "UpdateDatabase"
         const val NOTIFICATION_CHANNEL_ID = "tasks"
-        const val UPDATE_URL = "https://api.itachi1706.com/api/busstops.php?api=2"
+        const val UPDATE_URL = "https://api.itachi1706.com/v1/sg-buses/stops"
         const val MAX_RETRY = 5
     }
 
@@ -90,7 +91,7 @@ class UpdateDatabaseTask : Service() {
 
         // Get data from API
         var retry = 0
-        var dataObjects: BusStopJSONArray? = null
+        var dataObjects: Array<BusStopJSON>? = null
         while (retry < MAX_RETRY) {
             LogHelper.i(TAG, "Attempting to get data from API")
             val data = getFromApi()
@@ -103,7 +104,7 @@ class UpdateDatabaseTask : Service() {
 
                 dataObjects = parseJsonString(data)
 
-                if (dataObjects != null) {
+                if (!dataObjects.isNullOrEmpty()) {
                     LogHelper.i(TAG, "Database data retrieved Successfully")
                     sp.edit { putBoolean("busDBLoaded", true) }
                     break
@@ -129,7 +130,7 @@ class UpdateDatabaseTask : Service() {
         stopSelf()
     }
 
-    private fun parseJsonString(data: String): BusStopJSONArray? {
+    private fun parseJsonString(data: String): Array<BusStopJSON>? {
         val gson = Gson()
         if (!StaticVariables.checkIfYouGotJsonString(data)) {
             // Retry, invalid string
@@ -137,16 +138,15 @@ class UpdateDatabaseTask : Service() {
             return null
         }
 
-        val replyArr = gson.fromJson(data, BusStopJSONArray::class.java)
-        if (replyArr?.value == null) {
-            LogHelper.e(TAG, "Error in parsing JSON String")
-            return null
-        }
+        d(TAG, "Results: $data")
+        val tmpArr = gson.fromJson(data, ApiResponse::class.java)
+        val tmp2 = gson.toJson(tmpArr.data)
+        val replyArr = gson.fromJson(tmp2, Array<BusStopJSON>::class.java)
 
         return replyArr
     }
 
-    private fun processDatabase(dataObjects: BusStopJSONArray) {
+    private fun processDatabase(data: Array<BusStopJSON>?) {
         // Process the data here
         val db = BusStopsDb(this)
 
@@ -158,7 +158,6 @@ class UpdateDatabaseTask : Service() {
 
         val t2 = Timings(TAG, true)
         t2.start()
-        val data = dataObjects.value
         data?.let {
             db.addMultipleToDb(it)
         }
