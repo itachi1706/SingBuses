@@ -82,7 +82,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         sp = PreferenceManager.getDefaultSharedPreferences(this)
         PrefHelper.handleDefaultThemeSwitch(sp.getString("app_theme", "default") ?: "default")
         sp.edit { putBoolean("cepas_dark_theme", true) }
-        adapter = FavouritesRecyclerAdapter(listOf(), this, StaticVariables.useServerTime(sp))
+        adapter = FavouritesRecyclerAdapter(arrayListOf(), this, StaticVariables.useServerTime(sp))
         binding?.rvFav?.let {
             it.setHasFixedSize(true)
             it.layoutManager = llm
@@ -220,7 +220,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
             StaticVariables.favouritesList = ArrayList(busStorage?.getStoredBuses() ?: emptyList())
             adapter?.let {
                 it.updateAdapter(StaticVariables.favouritesList, null)
-                it.notifyItemChanged(0, StaticVariables.favouritesList.size)
+                it.notifyItemRangeChanged(0, StaticVariables.favouritesList.size)
 
                 LogHelper.d(TAG, "$innerTag Finished Processing, retrieving estimated arrival data...")
                 GetBusServicesFavouritesTask(this, it).executeOnExecutor(*StaticVariables.favouritesList.toTypedArray())

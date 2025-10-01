@@ -5,9 +5,9 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.itachi1706.busarrivalsg.adapters.BusStopRecyclerAdapter
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.databinding.ActivityListAllBusStopsBinding
-import com.itachi1706.busarrivalsg.adapters.BusStopRecyclerAdapter
 
 class ListAllBusStopsActivity : AppCompatActivity() {
 
@@ -28,7 +28,7 @@ class ListAllBusStopsActivity : AppCompatActivity() {
         val data = db.getAllBusStops()
         binding.tvCount.text = getString(R.string.label_bus_stops_count, data.size)
 
-        val view = BusStopRecyclerAdapter(data)
+        val view = BusStopRecyclerAdapter(data.toMutableList())
         binding.rvAllBusStops.adapter = view
     }
 

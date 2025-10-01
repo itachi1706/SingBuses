@@ -236,6 +236,7 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
             val activity = mActivity.get()
             super.handleMessage(msg)
 
+            LogHelper.d(TAG, "Received message: ${msg.what}")
             if (msg.what == StaticVariables.BUS_SERVICE_JSON_RETRIEVED) {
                 val json = msg.data.getString("jsonString")
                 activity?.processMessage(json)
@@ -249,6 +250,7 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
             Toast.makeText(this, R.string.toast_message_invalid_json_string, Toast.LENGTH_SHORT).show()
             return
         }
+        LogHelper.d(TAG, "Received JSON: $json")
         val gson = Gson()
 
         val items = mutableListOf<BusArrivalArrayObject>()
@@ -292,7 +294,6 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
         }
 
         adapter?.updateAdapter(items, mainArr.currentTime)
-        adapter?.notifyItemChanged(0, items.size)
     }
 
     companion object {

@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.recyclerviews
+package com.itachi1706.busarrivalsg.adapters
 
 import android.content.Context
 import android.content.Intent
@@ -22,8 +22,14 @@ class BusStopRecyclerAdapter(private var items: MutableList<BusStopJSON>) :
     RecyclerView.Adapter<BusStopRecyclerAdapter.BusStopViewHolder>() {
 
     fun updateAdapter(newObjects: List<BusStopJSON>?) {
+        val oldSize = items.size
         items = newObjects?.toMutableList() ?: mutableListOf()
-        notifyItemRangeChanged(0, items.size)
+        if (oldSize == items.size) {
+            notifyItemRangeChanged(0, items.size)
+        } else {
+            notifyItemRangeRemoved(0, oldSize)
+            notifyItemRangeInserted(0, items.size)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BusStopViewHolder {

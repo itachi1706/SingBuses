@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.recyclerviews
+package com.itachi1706.busarrivalsg.adapters
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -14,11 +14,11 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.databinding.RecyclerviewBusNumbersBinding
+import com.itachi1706.busarrivalsg.fragments.BusLocationMapsDialogFragment
 import com.itachi1706.busarrivalsg.objects.BusRecordView
 import com.itachi1706.busarrivalsg.objects.BusServices
 import com.itachi1706.busarrivalsg.services.BusStorage
