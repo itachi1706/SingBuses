@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class Distance(var currentCoord: CurrentCoords? = null, var stops: Array<DistanceItem>? = null) {
-    @Serializable data class CurrentCoords(var lat: Double = 0.0, val lng: Double = 0.0)
+    @Serializable data class CurrentCoords(val lat: Double = 0.0, val lng: Double = 0.0)
     @Serializable
     data class DistanceItem(
         @SerialName("BusStopCode") var busStopCode: String? = null,
