@@ -2,17 +2,17 @@ package com.itachi1706.busarrivalsg.tasks
 
 import android.app.Activity
 import android.widget.Toast
-import com.google.gson.Gson
 import com.itachi1706.busarrivalsg.R
+import com.itachi1706.busarrivalsg.adapters.FavouritesRecyclerAdapter
 import com.itachi1706.busarrivalsg.objects.BusServices
 import com.itachi1706.busarrivalsg.objects.BusStatus
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalMain
-import com.itachi1706.busarrivalsg.adapters.FavouritesRecyclerAdapter
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.URLHelper
 import com.itachi1706.helperlib.objects.ApiResponse
+import kotlinx.serialization.json.Json
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.net.SocketTimeoutException
@@ -80,7 +80,6 @@ class GetBusServicesFavouritesTask(
         }
 
         // Parse result
-        val gson = Gson()
         if (!StaticVariables.checkIfYouGotJsonString(result)) {
             // Retry from invalid string
             Toast.makeText(
@@ -93,9 +92,9 @@ class GetBusServicesFavouritesTask(
         }
 
         LogHelper.d(TAG, "GET-FAV-BUS-SERVICE: JSON Result: $result")
-        val resp = gson.fromJson(result, ApiResponse::class.java)
-        val result2 = gson.toJson(resp.data)
-        val mainArrs = gson.fromJson(result2, Array<BusArrivalMain>::class.java)
+        val json = Json { ignoreUnknownKeys = true }
+        val resp = json.decodeFromString<ApiResponse>(result)
+        val mainArrs = resp.getTypedData<Array<BusArrivalMain>>(json)
 
         if (mainArrs.isNullOrEmpty() || (mainArrs[0].services == null)) {
             LogHelper.e(TAG, "FAV-GET: Retrying...")

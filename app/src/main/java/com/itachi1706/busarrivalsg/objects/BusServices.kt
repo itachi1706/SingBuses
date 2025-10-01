@@ -1,9 +1,12 @@
 package com.itachi1706.busarrivalsg.objects
 
+import kotlinx.serialization.Serializable
+
 /**
  * Created by Kenneth on 17/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg
  */
+@Serializable
 data class BusServices(
     var serviceNo: String = "",
     var operator: String = "",

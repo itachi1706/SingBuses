@@ -1,11 +1,13 @@
 package com.itachi1706.busarrivalsg.objects.gson.ltasg
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Kenneth on 18/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.gsonObjects.sgLTA
  */
+@Serializable
 class BusStopJSON(
     @SerializedName("BusStopCode") var busStopCode: String = "",
     @SerializedName("RoadName") var roadName: String = "",

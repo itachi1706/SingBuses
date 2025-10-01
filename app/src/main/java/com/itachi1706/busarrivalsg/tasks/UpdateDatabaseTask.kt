@@ -13,26 +13,26 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.ServiceCompat
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import com.google.gson.Gson
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
-import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.busarrivalsg.util.Timings
+import com.itachi1706.helperlib.helpers.ApiCallsHelper
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.LogHelper.d
-import com.itachi1706.helperlib.helpers.URLHelper
 import com.itachi1706.helperlib.objects.ApiResponse
-import java.io.IOException
+import kotlinx.serialization.json.Json
 
-class UpdateDatabaseTask : Service() {
+class UpdateDatabaseTask : Service(), ApiCallsHelper.ApiCallListener {
 
     companion object {
         const val TAG = "UpdateDatabase"
         const val NOTIFICATION_CHANNEL_ID = "tasks"
-        const val UPDATE_URL = "https://api.itachi1706.com/v1/sg-buses/stops"
+        const val UPDATE_PATH = "sg-buses/stops"
         const val MAX_RETRY = 5
     }
+
+    private var retry = 0
 
     private val sp by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
 
@@ -43,7 +43,6 @@ class UpdateDatabaseTask : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         LogHelper.i(TAG, "Starting Database Update as Foreground Service")
         startForeground()
-
         refreshDatabase()
 
         return super.onStartCommand(intent, flags, startId)
@@ -90,32 +89,11 @@ class UpdateDatabaseTask : Service() {
         sp.edit { putBoolean("busDBLoaded", false) }
 
         // Get data from API
-        var retry = 0
-        var dataObjects: Array<BusStopJSON>? = null
-        while (retry < MAX_RETRY) {
-            LogHelper.i(TAG, "Attempting to get data from API")
-            val data = getFromApi()
-
-            if (data != null) {
-                if (data == "retry") {
-                    LogHelper.e(TAG, "Error in API Call. Retrying...")
-                    continue
-                }
-
-                dataObjects = parseJsonString(data)
-
-                if (!dataObjects.isNullOrEmpty()) {
-                    LogHelper.i(TAG, "Database data retrieved Successfully")
-                    sp.edit { putBoolean("busDBLoaded", true) }
-                    break
-                }
-
-                LogHelper.w(TAG, "Error in parsing JSON. Retrying...")
-            }
+        if (retry < MAX_RETRY) {
             retry++
-        }
-
-        if (dataObjects == null) {
+            LogHelper.i(TAG, "Attempting to get data from API. Try #$retry/$MAX_RETRY")
+            ApiCallsHelper(this).makeGetCall(UPDATE_PATH, this)
+        } else {
             LogHelper.e(TAG, "Failed to get data from API after 5 tries. Exiting...")
             Toast.makeText(
                 this,
@@ -123,30 +101,38 @@ class UpdateDatabaseTask : Service() {
                 Toast.LENGTH_LONG
             ).show()
             stopSelf()
+        }
+    }
+
+    override fun onApiCallSuccess(response: ApiResponse) {
+        d(TAG, "onApiCallSuccess: $response")
+        if (!response.success || response.data == null) {
+            LogHelper.e(TAG, "API Call was not successful, retrying. Error Message: ${response.error}")
+            refreshDatabase() // Retry
             return
         }
 
-        processDatabase(dataObjects)
-        stopSelf()
-    }
+        val json = Json { ignoreUnknownKeys = true }
+        val data = response.getTypedData<List<BusStopJSON>>(json)
+        if (!data.isNullOrEmpty()) {
+            LogHelper.i(TAG, "Database data retrieved Successfully")
+            sp.edit { putBoolean("busDBLoaded", true) }
+            processDatabase(data)
 
-    private fun parseJsonString(data: String): Array<BusStopJSON>? {
-        val gson = Gson()
-        if (!StaticVariables.checkIfYouGotJsonString(data)) {
-            // Retry, invalid string
-            LogHelper.w(TAG, "Invalid JSON String. Retrying...")
-            return null
+            LogHelper.i(TAG, "Database Update Complete, stopping service")
+            stopSelf()
+        } else {
+            LogHelper.w(TAG, "Error in parsing data. Retrying...")
+            refreshDatabase()
         }
-
-        d(TAG, "Results: $data")
-        val tmpArr = gson.fromJson(data, ApiResponse::class.java)
-        val tmp2 = gson.toJson(tmpArr.data)
-        val replyArr = gson.fromJson(tmp2, Array<BusStopJSON>::class.java)
-
-        return replyArr
     }
 
-    private fun processDatabase(data: Array<BusStopJSON>?) {
+    override fun onApiCallError(error: String) {
+        LogHelper.e(TAG, "Error making API Call: $error")
+        refreshDatabase() // Retry
+    }
+
+    private fun processDatabase(data: List<BusStopJSON>) {
         // Process the data here
         val db = BusStopsDb(this)
 
@@ -158,9 +144,7 @@ class UpdateDatabaseTask : Service() {
 
         val t2 = Timings(TAG, true)
         t2.start()
-        data?.let {
-            db.addMultipleToDb(it)
-        }
+        db.addMultipleToDb(data)
         t2.end()
 
         val count = db.size
@@ -176,19 +160,7 @@ class UpdateDatabaseTask : Service() {
         }
     }
 
-    private fun getFromApi(): String? {
-        // Do API Calls here
-        val urlHelper = URLHelper(UPDATE_URL)
-        var tmp: String?
-        try {
-            tmp = urlHelper.executeString()
-        } catch (err: IOException) {
-            LogHelper.e(TAG, "Error in API Call: ${err.message}", err)
-            tmp = "retry"
-        }
 
-        return tmp
-    }
 
     override fun onDestroy() {
         LogHelper.i(TAG, "Destroying Service")

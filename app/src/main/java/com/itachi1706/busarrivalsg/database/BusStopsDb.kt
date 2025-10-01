@@ -89,12 +89,12 @@ class BusStopsDb(context: Context) : SQLiteOpenHelper(
      * Add array of records to the database
      * @param busStops Array of BusStopJSON objects to be added to the database
      */
-    fun addMultipleToDb(busStops: Array<BusStopJSON>) {
+    fun addMultipleToDb(busStops: List<BusStopJSON>) {
         if (busStops.isEmpty()) {
             w(TAG, "No bus stops to add to the database")
             return
         }
-        bulkAddFromJson(busStops)
+        bulkAddFromJson(busStops.toTypedArray())
     }
 
     private fun getBusStopJsonObject(cursor: Cursor): BusStopJSON {

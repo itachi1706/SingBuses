@@ -287,8 +287,9 @@ class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapRe
             LogHelper.d(TAG, "Processing Bus Services Data")
             val busObjsArr = try {
                 val tmp = gson.fromJson(data, ApiResponse::class.java)
-                val tmp2 = gson.toJson(tmp.data)
-                gson.fromJson(tmp2, Array<BusArrivalMain>::class.java)
+                tmp.getTypedData<Array<BusArrivalMain>>()
+//                val tmp2 = gson.toJson(tmp.data)
+//                gson.fromJson(tmp2, Array<BusArrivalMain>::class.java)
             } catch (_: JsonSyntaxException) {
                 Toast.makeText(
                     context,

@@ -9,11 +9,11 @@ import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.itachi1706.busarrivalsg.R
+import com.itachi1706.busarrivalsg.adapters.BusStopRecyclerAdapter
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.fragments.BusStopsNearbyFragment
 import com.itachi1706.busarrivalsg.objects.gson.Distance
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
-import com.itachi1706.busarrivalsg.adapters.BusStopRecyclerAdapter
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask
 import com.itachi1706.helperlib.helpers.LogHelper.d
@@ -71,10 +71,7 @@ class PopulateListCurrentLocationTask(
         }
 
         val tmp2 = gson.fromJson(tmp, ApiResponse::class.java)
-        val tmp3 = gson.toJson(tmp2.data)
-        d(TAG, "Data: $tmp3")
-
-        val distArray = gson.fromJson(tmp3, Distance::class.java)
+        val distArray = tmp2.getTypedData<Distance>()
         if (distArray == null || distArray.stops == null) {
             exception = Exception("Invalid distance retrieved from API. Please try again later")
             return 3

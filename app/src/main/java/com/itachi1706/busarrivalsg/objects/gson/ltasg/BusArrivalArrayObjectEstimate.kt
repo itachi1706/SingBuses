@@ -1,22 +1,24 @@
 package com.itachi1706.busarrivalsg.objects.gson.ltasg
 
-import com.google.gson.annotations.SerializedName
 import com.itachi1706.busarrivalsg.util.BusesUtil
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Kenneth on 18/6/2015
  * for SingBuses in package com.itachi1706.busarrivalsg.gsonObjects.sgLTA
  */
+@Serializable
 class BusArrivalArrayObjectEstimate(
-    @SerializedName("EstimatedArrival") val estimatedArrival: String? = null,
-    @SerializedName("Load") val load: String = "",
-    @SerializedName("Feature") val feature: String = "",
-    @SerializedName("Latitude") val latitude: String = "-11",
-    @SerializedName("Longitude") val longitude: String = "-11",
-    @SerializedName("VisitNumber") private val visitNumber: String = "0",
-    @SerializedName("OriginCode") val originCode: String? = null,
-    @SerializedName("DestinationCode") val destinationCode: String? = null,
-    @SerializedName("Type") val type: String = ""
+    @SerialName("EstimatedArrival") val estimatedArrival: String? = null,
+    @SerialName("Load") val load: String = "",
+    @SerialName("Feature") val feature: String = "",
+    @SerialName("Latitude") val latitude: String = "-11",
+    @SerialName("Longitude") val longitude: String = "-11",
+    @SerialName("VisitNumber") private val visitNumber: String = "0",
+    @SerialName("OriginCode") val originCode: String? = null,
+    @SerialName("DestinationCode") val destinationCode: String? = null,
+    @SerialName("Type") val type: String = ""
 ) {
     val loadInt: Int
         get() = BusesUtil.getLoad(load)
