@@ -81,7 +81,7 @@ class GetBusServicesTask(
                 LogHelper.e(TAG, "SerializationException: ${e.message}")
                 val activity = actRef.get()
                 if (activity == null) return
-                Toast.makeText(activity, exception!!.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, e.message, Toast.LENGTH_SHORT).show()
                 if (!(activity.isFinishing || activity.isChangingConfigurations)) {
                     refreshLayout.isRefreshing = false
                 }
