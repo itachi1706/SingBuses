@@ -1,4 +1,4 @@
-package com.itachi1706.busarrivalsg.recyclerviews
+package com.itachi1706.busarrivalsg.adapters
 
 import android.graphics.Color
 import android.os.Bundle
@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.itachi1706.busarrivalsg.BusLocationMapsDialogFragment
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.databinding.RecyclerviewBusNumbersBinding
+import com.itachi1706.busarrivalsg.fragments.BusLocationMapsDialogFragment
 import com.itachi1706.busarrivalsg.objects.BusRecordView
 import com.itachi1706.busarrivalsg.objects.BusServices
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject
@@ -28,10 +28,17 @@ class BusServiceRecyclerAdapter(
 
     private var currentTime: String = ""
 
-    fun updateAdapter(newObjects: List<BusArrivalArrayObject>, currentTime: String) {
+    fun updateAdapter(newObjects: List<BusArrivalArrayObject>, currentTime: String?) {
+        val oldSize = items.size
         items = newObjects.toMutableList()
-        this.currentTime = currentTime
-        notifyItemRangeChanged(0, items.size)
+        val newSize = items.size
+        this.currentTime = currentTime ?: ""
+        if (oldSize == newSize) {
+            notifyItemRangeChanged(0, newSize)
+        } else {
+            notifyItemRangeRemoved(0, oldSize)
+            notifyItemRangeInserted(0, newSize)
+        }
     }
 
     override fun onCreateViewHolder(

@@ -33,7 +33,7 @@ import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.databinding.FragmentBusStopsNearbyBinding
 import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
-import com.itachi1706.busarrivalsg.recyclerviews.BusStopRecyclerAdapter
+import com.itachi1706.busarrivalsg.adapters.BusStopRecyclerAdapter
 import com.itachi1706.busarrivalsg.tasks.PopulateListCurrentLocationTask
 import com.itachi1706.busarrivalsg.util.BusesUtil
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener
