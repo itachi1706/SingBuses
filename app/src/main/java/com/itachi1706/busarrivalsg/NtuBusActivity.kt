@@ -169,10 +169,12 @@ class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapRe
             runningPBus?.execute()
         }
 
-        if (refreshHandler != null && !refreshHandler!!.hasMessages(REFRESH_TASK) && shouldAutoRefresh) {
-            val ref = Message.obtain(refreshHandler, refreshTask)
-            ref.what = REFRESH_TASK
-            refreshHandler?.sendMessageDelayed(ref, autoRefreshDelay * 1000L)
+        refreshHandler?.let {
+            if (!it.hasMessages(REFRESH_TASK) && shouldAutoRefresh) {
+                val ref = Message.obtain(refreshHandler, refreshTask)
+                ref.what = REFRESH_TASK
+                it.sendMessageDelayed(ref, autoRefreshDelay * 1000L)
+            }
         }
     }
 
@@ -360,7 +362,7 @@ class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapRe
     }
 
     companion object {
-        private const val TAG = "NTUBusA"
+        private const val TAG = "NTUBusActivity"
         const val RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT = "ReceiveNTUBDataEvent"
         const val REFRESH_TASK = 3000
     }

@@ -116,7 +116,7 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
         supportActionBar?.title = if (busStopName != null) "${busStopName?.trim()} (${busStopCode?.trim()})" else "${busStopCode?.trim()}"
         binding?.refreshSwipe?.isRefreshing = true
 
-        if (busServicesString == null || busServicesString!!.isEmpty()) {
+        if (busServicesString.isNullOrEmpty()) {
             // Get from DB
             val db = BusStopsDb(this)
             busServicesString = db.getBusStopByBusStopCode(busStopCode)?.services

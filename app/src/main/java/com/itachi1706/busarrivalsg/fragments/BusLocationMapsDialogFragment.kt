@@ -245,25 +245,23 @@ class BusLocationMapsDialogFragment : DialogFragment(),
     @SuppressLint("MissingPermission")
     private val requestGps =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
-            {
-                val hasPerm = StaticVariables.checkIfCoarseLocationGranted(result)
+            val hasPerm = StaticVariables.checkIfCoarseLocationGranted(result)
 
-                if (hasPerm) {
-                    LogHelper.d(TAG, "Location permission granted: Enabling my location")
-                    mMap?.isMyLocationEnabled = true // Checked already
-                } else {
-                    LogHelper.e(TAG, "Location permission not granted")
-                    AlertDialog.Builder(requireContext())
-                        .setTitle(R.string.dialog_title_permission_denied)
-                        .setMessage(R.string.dialog_message_no_permission_gps)
-                        .setPositiveButton(android.R.string.ok, null)
-                        .setNeutralButton(R.string.dialog_action_neutral_app_settings) { _, _ ->
-                            val permIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                            val uri = "package:${requireActivity().packageName}".toUri()
-                            permIntent.data = uri
-                            startActivity(permIntent)
-                        }.show()
-                }
+            if (hasPerm) {
+                LogHelper.d(TAG, "Location permission granted: Enabling my location")
+                mMap?.isMyLocationEnabled = true // Checked already
+            } else {
+                LogHelper.e(TAG, "Location permission not granted")
+                AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.dialog_title_permission_denied)
+                    .setMessage(R.string.dialog_message_no_permission_gps)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .setNeutralButton(R.string.dialog_action_neutral_app_settings) { _, _ ->
+                        val permIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        val uri = "package:${requireActivity().packageName}".toUri()
+                        permIntent.data = uri
+                        startActivity(permIntent)
+                    }.show()
             }
         }
 }
