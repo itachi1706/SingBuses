@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class BusArrivalArrayObjectEstimate(
+data class BusArrivalArrayObjectEstimate(
     @SerialName("EstimatedArrival") val estimatedArrival: String? = null,
     @SerialName("Load") val load: String = "",
     @SerialName("Feature") val feature: String = "",

@@ -43,23 +43,15 @@ class GetBusServicesTask(
     }
 
     override fun onPostExecute(result: String?) {
-        if (exception != null) {
+        if (exception != null || result.isNullOrEmpty()) {
             val activity = actRef.get()
             if (activity == null) return
-            if (exception is SocketTimeoutException) {
+            if (exception is SocketTimeoutException || result.isNullOrEmpty()) {
                 Toast.makeText(activity, R.string.toast_message_timeout_request, Toast.LENGTH_SHORT)
                     .show()
             } else {
                 Toast.makeText(activity, exception!!.message, Toast.LENGTH_SHORT).show()
             }
-            if (!(activity.isFinishing || activity.isChangingConfigurations)) {
-                refreshLayout.isRefreshing = false
-            }
-        } else if (result.isNullOrEmpty()) {
-            val activity = actRef.get()
-            if (activity == null) return
-            Toast.makeText(activity, R.string.toast_message_timeout_request, Toast.LENGTH_SHORT)
-                .show()
             if (!(activity.isFinishing || activity.isChangingConfigurations)) {
                 refreshLayout.isRefreshing = false
             }
