@@ -6,7 +6,7 @@ import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.adapters.FavouritesRecyclerAdapter
 import com.itachi1706.busarrivalsg.objects.BusServices
 import com.itachi1706.busarrivalsg.objects.BusStatus
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalMain
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusArrivalMain
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask
 import com.itachi1706.helperlib.helpers.LogHelper

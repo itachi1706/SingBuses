@@ -6,14 +6,12 @@ import android.location.Location
 import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.adapters.BusStopRecyclerAdapter
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.fragments.BusStopsNearbyFragment
-import com.itachi1706.busarrivalsg.objects.gson.Distance
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
+import com.itachi1706.busarrivalsg.objects.json.Distance
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusStopJSON
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask
 import com.itachi1706.helperlib.helpers.LogHelper.d
@@ -21,6 +19,8 @@ import com.itachi1706.helperlib.helpers.LogHelper.e
 import com.itachi1706.helperlib.helpers.URLHelper
 import com.itachi1706.helperlib.helpers.ValidationHelper
 import com.itachi1706.helperlib.objects.ApiResponse
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.json.Json
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.net.SocketTimeoutException
@@ -63,14 +63,14 @@ class PopulateListCurrentLocationTask(
         }
 
         // Do processing
-        val gson = Gson()
+        val json = Json { ignoreUnknownKeys = true }
         d(TAG, tmp)
         if (!StaticVariables.checkIfYouGotJsonString(tmp)) {
             exception = Exception(context.resources.getString(R.string.toast_message_invalid_json))
             return 2
         }
 
-        val tmp2 = gson.fromJson(tmp, ApiResponse::class.java)
+        val tmp2 = json.decodeFromString<ApiResponse>(tmp)
         val distArray = tmp2.getTypedData<Distance>()
         if (distArray == null || distArray.stops == null) {
             exception = Exception("Invalid distance retrieved from API. Please try again later")
@@ -91,8 +91,7 @@ class PopulateListCurrentLocationTask(
         }
 
         val sendForMapParsingIntent = Intent(BusStopsNearbyFragment.RECEIVE_NEARBY_STOPS_EVENT)
-        val listType = object : TypeToken<ArrayList<BusStopJSON>>() {}.type
-        sendForMapParsingIntent.putExtra("data", gson.toJson(stops, listType))
+        sendForMapParsingIntent.putExtra("data", json.encodeToString(ListSerializer(BusStopJSON.serializer()), stops))
         context.runOnUiThread {
             LocalBroadcastManager.getInstance(context).sendBroadcast(sendForMapParsingIntent)
             adapter.updateAdapter(stops)

@@ -1,11 +1,7 @@
-package com.itachi1706.busarrivalsg.objects.gson.offline
+package com.itachi1706.busarrivalsg.objects.json.offline
 
 import kotlinx.serialization.Serializable
 
-/**
- * Created by Kenneth on 18/6/2015
- * for SingBuses in package com.itachi1706.busarrivalsg.gsonObjects.offline
- */
 @Serializable
 data class BusJSON(
     val service: String? = null,

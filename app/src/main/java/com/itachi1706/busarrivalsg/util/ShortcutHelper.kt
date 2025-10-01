@@ -7,7 +7,7 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import com.itachi1706.busarrivalsg.R
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusStopJSON
 import com.itachi1706.helperlib.helpers.LogHelper
 
 class ShortcutHelper(val context: Context) {

@@ -6,13 +6,13 @@ import android.os.Handler
 import android.os.Message
 import android.widget.Toast
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.gson.Gson
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.URLHelper
 import com.itachi1706.helperlib.objects.ApiResponse
+import kotlinx.serialization.json.Json
 import java.lang.ref.WeakReference
 import java.net.SocketTimeoutException
 
@@ -54,11 +54,19 @@ class GetBusServicesTask(
             if (!(activity.isFinishing || activity.isChangingConfigurations)) {
                 refreshLayout.isRefreshing = false
             }
+        } else if (result.isNullOrEmpty()) {
+            val activity = actRef.get()
+            if (activity == null) return
+            Toast.makeText(activity, R.string.toast_message_timeout_request, Toast.LENGTH_SHORT)
+                .show()
+            if (!(activity.isFinishing || activity.isChangingConfigurations)) {
+                refreshLayout.isRefreshing = false
+            }
         } else {
             // Parse info
-            val gson = Gson()
-            val template = gson.fromJson(result, ApiResponse::class.java)
-            val json = gson.toJson(template.data)
+            val jsonConfig = Json { ignoreUnknownKeys = true }
+            val template = jsonConfig.decodeFromString<ApiResponse>(result)
+            val json = jsonConfig.encodeToString(template.data)
 
             val msg = Message.obtain()
             msg.what = StaticVariables.BUS_SERVICE_JSON_RETRIEVED

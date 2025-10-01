@@ -1,12 +1,8 @@
-package com.itachi1706.busarrivalsg.objects.gson.ltasg
+package com.itachi1706.busarrivalsg.objects.json.ltasg
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/**
- * Created by Kenneth on 18/6/2015
- * for SingBuses in package com.itachi1706.busarrivalsg.gsonObjects.sgLTA
- */
 @Serializable
 data class BusArrivalMain(
     @SerialName("BusStopCode") val busStopCode: String? = null,

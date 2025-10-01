@@ -133,7 +133,6 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.core.ktx)
     implementation(libs.flexbox)
-    implementation(libs.gson)
     implementation(libs.helperlib)
     implementation(libs.material)
     implementation(libs.multidex)

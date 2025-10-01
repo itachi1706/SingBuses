@@ -14,7 +14,7 @@ import com.itachi1706.busarrivalsg.databinding.RecyclerviewBusNumbersBinding
 import com.itachi1706.busarrivalsg.fragments.BusLocationMapsDialogFragment
 import com.itachi1706.busarrivalsg.objects.BusRecordView
 import com.itachi1706.busarrivalsg.objects.BusServices
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusArrivalArrayObject
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusArrivalArrayObject
 import com.itachi1706.busarrivalsg.util.BusesUtil
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.helperlib.helpers.LogHelper.d

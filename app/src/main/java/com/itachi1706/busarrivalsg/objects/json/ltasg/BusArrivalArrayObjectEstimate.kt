@@ -1,13 +1,9 @@
-package com.itachi1706.busarrivalsg.objects.gson.ltasg
+package com.itachi1706.busarrivalsg.objects.json.ltasg
 
 import com.itachi1706.busarrivalsg.util.BusesUtil
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/**
- * Created by Kenneth on 18/6/2015
- * for SingBuses in package com.itachi1706.busarrivalsg.gsonObjects.sgLTA
- */
 @Serializable
 class BusArrivalArrayObjectEstimate(
     @SerialName("EstimatedArrival") val estimatedArrival: String? = null,

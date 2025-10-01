@@ -3,10 +3,10 @@ package com.itachi1706.busarrivalsg.util
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import com.google.gson.JsonParseException
-import com.google.gson.JsonParser
 import com.itachi1706.busarrivalsg.objects.BusServices
 import com.itachi1706.helperlib.helpers.LogHelper
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -38,9 +38,9 @@ object StaticVariables {
     fun checkIfYouGotJsonString(jsonString: String?): Boolean {
         if (jsonString == null) return false
         return try {
-            JsonParser.parseString(jsonString)
+            Json.parseToJsonElement(jsonString)
             true
-        } catch (_: JsonParseException) {
+        } catch (_: SerializationException) {
             false
         }
     }

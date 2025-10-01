@@ -15,7 +15,7 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.database.BusStopsDb
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusStopJSON
 import com.itachi1706.busarrivalsg.util.Timings
 import com.itachi1706.helperlib.helpers.ApiCallsHelper
 import com.itachi1706.helperlib.helpers.LogHelper

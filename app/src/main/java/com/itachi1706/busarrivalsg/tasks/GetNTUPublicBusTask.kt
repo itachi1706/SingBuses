@@ -5,11 +5,10 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
-import com.google.gson.Gson
 import com.itachi1706.busarrivalsg.NtuBusActivity
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.database.BusStopsDb
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusStopJSON
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask
 import com.itachi1706.helperlib.helpers.LogHelper.d
@@ -17,6 +16,7 @@ import com.itachi1706.helperlib.helpers.LogHelper.e
 import com.itachi1706.helperlib.helpers.LogHelper.i
 import com.itachi1706.helperlib.helpers.LogHelper.w
 import com.itachi1706.helperlib.helpers.URLHelper
+import kotlinx.serialization.json.Json
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.net.SocketTimeoutException
@@ -87,8 +87,8 @@ class GetNTUPublicBusTask(activity: Activity, private val update: Boolean) :
                 jsons.addAll(db.getBusStopsBySvcNo("199", "SMRT"))
                 val stops = jsons.toTypedArray()
 
-                val gson = Gson()
-                val js = gson.toJson(stops, Array<BusStopJSON>::class.java)
+                val json = Json { ignoreUnknownKeys = true }
+                val js = json.encodeToString(stops)
                 val sendForParseIntent = Intent(NtuBusActivity.RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT)
                 sendForParseIntent.putExtra("data", js)
                 sendForParseIntent.putExtra("update", false)

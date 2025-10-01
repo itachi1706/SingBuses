@@ -27,13 +27,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.CancellationTokenSource
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.itachi1706.busarrivalsg.R
+import com.itachi1706.busarrivalsg.adapters.BusStopRecyclerAdapter
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.databinding.FragmentBusStopsNearbyBinding
-import com.itachi1706.busarrivalsg.objects.gson.ltasg.BusStopJSON
-import com.itachi1706.busarrivalsg.adapters.BusStopRecyclerAdapter
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusStopJSON
 import com.itachi1706.busarrivalsg.tasks.PopulateListCurrentLocationTask
 import com.itachi1706.busarrivalsg.util.BusesUtil
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener
@@ -41,6 +39,7 @@ import com.itachi1706.helperlib.concurrent.Constants
 import com.itachi1706.helperlib.helpers.LogHelper.d
 import com.itachi1706.helperlib.helpers.LogHelper.e
 import com.itachi1706.helperlib.helpers.LogHelper.w
+import kotlinx.serialization.json.Json
 
 class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapReadyListener,
     GoogleMap.OnInfoWindowClickListener {
@@ -162,9 +161,12 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
             markerMap?.clear()
 
             val data = intent.getStringExtra("data")
-            val gson = Gson()
-            val listType = object : TypeToken<ArrayList<BusStopJSON>>() {}.type
-            val stops = gson.fromJson<ArrayList<BusStopJSON>>(data, listType)
+            if (data == null) {
+                w(TAG, "No data received for nearby stops, cannot render markers")
+                return
+            }
+            val json = Json { ignoreUnknownKeys = true }
+            val stops = json.decodeFromString<ArrayList<BusStopJSON>>(data)
 
             for (stop in stops) {
                 val serviceString = stop.services
