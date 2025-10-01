@@ -21,6 +21,7 @@ import com.itachi1706.helperlib.helpers.ApiCallsHelper
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.LogHelper.d
 import com.itachi1706.helperlib.objects.ApiResponse
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
 class UpdateDatabaseTask : Service(), ApiCallsHelper.ApiCallListener {
@@ -113,7 +114,12 @@ class UpdateDatabaseTask : Service(), ApiCallsHelper.ApiCallListener {
         }
 
         val json = Json { ignoreUnknownKeys = true }
-        val data = response.getTypedData<List<BusStopJSON>>(json)
+        val data = try {
+            response.getTypedData<Array<BusStopJSON>>(json)
+        } catch (e: SerializationException) {
+            LogHelper.e(TAG, "Serialization Exception: ${e.message}")
+            null
+        }
         if (!data.isNullOrEmpty()) {
             LogHelper.i(TAG, "Database data retrieved Successfully")
             sp.edit { putBoolean("busDBLoaded", true) }
@@ -132,7 +138,7 @@ class UpdateDatabaseTask : Service(), ApiCallsHelper.ApiCallListener {
         refreshDatabase() // Retry
     }
 
-    private fun processDatabase(data: List<BusStopJSON>) {
+    private fun processDatabase(data: Array<BusStopJSON>) {
         // Process the data here
         val db = BusStopsDb(this)
 

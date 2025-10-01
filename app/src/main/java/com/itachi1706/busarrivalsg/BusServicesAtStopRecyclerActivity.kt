@@ -24,12 +24,14 @@ import com.itachi1706.busarrivalsg.databinding.ActivityBusServicesAtStopRecycler
 import com.itachi1706.busarrivalsg.iface.IFavouritesHandler
 import com.itachi1706.busarrivalsg.objects.BusServices
 import com.itachi1706.busarrivalsg.objects.json.ltasg.BusArrivalArrayObject
+import com.itachi1706.busarrivalsg.objects.json.ltasg.BusArrivalArrayObjectEstimate
 import com.itachi1706.busarrivalsg.objects.json.ltasg.BusArrivalMain
 import com.itachi1706.busarrivalsg.services.BusStorage
 import com.itachi1706.busarrivalsg.tasks.GetBusServicesTask
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.busarrivalsg.util.SwipeFavouriteCallback
 import com.itachi1706.helperlib.helpers.LogHelper
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import java.lang.ref.WeakReference
 
@@ -255,7 +257,13 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
 
         val items = mutableListOf<BusArrivalArrayObject>()
         if (json == null) return
-        val mainArr = jsonConfig.decodeFromString<BusArrivalMain>(json)
+        val mainArr = try {
+            jsonConfig.decodeFromString<BusArrivalMain>(json)
+        } catch (e: SerializationException) {
+            LogHelper.e(TAG, "Failed to parse JSON: Error: ${e.message}", e)
+            Toast.makeText(this, R.string.toast_message_invalid_json_string, Toast.LENGTH_SHORT).show()
+            return
+        }
         if (mainArr.services == null || mainArr.busStopCode == null) return
         val array = mainArr.services
         val stopId = mainArr.busStopCode
@@ -268,7 +276,7 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
         }
 
         // Find all non operational services
-        val inOperation = ArrayMap<String, String>()
+        val nonOperational = ArrayMap<String, String>()
         for (svc in busServices.entries) {
             var found = false
             for (i in items) {
@@ -277,21 +285,21 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
                     break
                 }
             }
-            if (!found) inOperation[svc.key] = svc.value
+            if (!found) nonOperational[svc.key] = svc.value
         }
 
         // Add all non operational services to the end of the list
-        for (s in inOperation.entries) {
-            val jsonCraft = "{\"ServiceNo\": \"${s.key}\", \"Operator\": \"${s.value}\",\"NextBus\":" +
-                    "{\"EstimatedArrival\":\"\",\"Latitude\":\"\",\"Longitude\":\"\",\"" +
-                    "VisitNumber\":\"\",\"Load\":\"\",\"Feature\":\"\"},\"SubsequentBus\":{\"" +
-                    "EstimatedArrival\":\"\",\"Latitude\":\"\",\"Longitude\":\"\",\"VisitNumber\":\"\",\"" +
-                    "Load\":\"\",\"Feature\":\"\"},\"SubsequentBus3\":{\"EstimatedArrival\":\"\",\"" +
-                    "Latitude\":\"\",\"Longitude\":\"\",\"VisitNumber\":\"\",\"Load\":\"\",\"Feature\":\"\"}}"
-            val obj = jsonConfig.decodeFromString<BusArrivalArrayObject>(jsonCraft)
-            obj.isSvcStatus = false
-            obj.stopCode = stopId
-            items.add(obj)
+        for (s in nonOperational.entries) {
+            val notOpObj = BusArrivalArrayObject(
+                serviceNo = s.key,
+                operator = s.value,
+                nextBus = BusArrivalArrayObjectEstimate(estimatedArrival = "", latitude = "", longitude = ""),
+                nextBus2 = BusArrivalArrayObjectEstimate(estimatedArrival = "", latitude = "", longitude = ""),
+                nextBus3 = BusArrivalArrayObjectEstimate(estimatedArrival = "", latitude = "", longitude = ""),
+                isSvcStatus = false,
+                stopCode = stopId
+            )
+            items.add(notOpObj)
         }
 
         adapter?.updateAdapter(items, mainArr.currentTime)

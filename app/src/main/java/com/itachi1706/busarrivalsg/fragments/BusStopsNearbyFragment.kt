@@ -39,6 +39,7 @@ import com.itachi1706.helperlib.concurrent.Constants
 import com.itachi1706.helperlib.helpers.LogHelper.d
 import com.itachi1706.helperlib.helpers.LogHelper.e
 import com.itachi1706.helperlib.helpers.LogHelper.w
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
 class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapReadyListener,
@@ -166,7 +167,12 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
                 return
             }
             val json = Json { ignoreUnknownKeys = true }
-            val stops = json.decodeFromString<ArrayList<BusStopJSON>>(data)
+            val stops = try {
+                json.decodeFromString<ArrayList<BusStopJSON>>(data)
+            } catch (e: SerializationException) {
+                w(TAG, "Failed to parse data ${e.message}. Not showing markers")
+                return
+            }
 
             for (stop in stops) {
                 val serviceString = stop.services

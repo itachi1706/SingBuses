@@ -12,6 +12,7 @@ import com.itachi1706.helperlib.concurrent.CoroutineAsyncTask
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.URLHelper
 import com.itachi1706.helperlib.objects.ApiResponse
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import java.io.IOException
 import java.lang.ref.WeakReference
@@ -93,7 +94,13 @@ class GetBusServicesFavouritesTask(
 
         LogHelper.d(TAG, "GET-FAV-BUS-SERVICE: JSON Result: $result")
         val json = Json { ignoreUnknownKeys = true }
-        val resp = json.decodeFromString<ApiResponse>(result)
+        val resp = try {
+            json.decodeFromString<ApiResponse>(result)
+        } catch (e: SerializationException) {
+            LogHelper.e(TAG, "FAV-GET: Retrying... Err: ${e.message}")
+            GetBusServicesFavouritesTask(activity, adapter).executeOnExecutor(*busObj)
+            return
+        }
         val mainArrs = resp.getTypedData<Array<BusArrivalMain>>(json)
 
         if (mainArrs.isNullOrEmpty() || (mainArrs[0].services == null)) {

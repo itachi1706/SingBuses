@@ -19,6 +19,7 @@ import com.itachi1706.helperlib.helpers.LogHelper.e
 import com.itachi1706.helperlib.helpers.URLHelper
 import com.itachi1706.helperlib.helpers.ValidationHelper
 import com.itachi1706.helperlib.objects.ApiResponse
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import java.io.IOException
@@ -70,7 +71,12 @@ class PopulateListCurrentLocationTask(
             return 2
         }
 
-        val tmp2 = json.decodeFromString<ApiResponse>(tmp)
+        val tmp2 = try {
+            json.decodeFromString<ApiResponse>(tmp)
+        } catch (e: SerializationException) {
+            exception = e
+            return 2
+        }
         val distArray = tmp2.getTypedData<Distance>()
         if (distArray == null || distArray.stops == null) {
             exception = Exception("Invalid distance retrieved from API. Please try again later")
