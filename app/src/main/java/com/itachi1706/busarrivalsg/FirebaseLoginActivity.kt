@@ -40,9 +40,7 @@ class FirebaseLoginActivity : AppCompatActivity() {
         binding = ActivityFirebaseLoginBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        if (!(supportActionBar?.isShowing ?: false)) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Configure login form
         mAuth = FirebaseAuth.getInstance()

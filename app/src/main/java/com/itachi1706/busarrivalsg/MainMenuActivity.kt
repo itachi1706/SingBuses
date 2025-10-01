@@ -125,6 +125,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         val analytics = helper.getData(BuildConfig.DEBUG)
         setAnalyticsData(analytics != null, mFirebaseAnalytics, analytics)
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
+        LogHelper.d(TAG, "Firebase Analytics data set")
     }
 
     override fun onResume() {
