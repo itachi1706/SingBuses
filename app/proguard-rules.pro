@@ -48,3 +48,9 @@
 -dontwarn com.ryanharter.auto.value.gson.GsonTypeAdapterFactory
 -dontwarn com.sun.source.tree.Tree$Kind
 -dontwarn kotlinx.coroutines.scheduling.ExperimentalCoroutineDispatcher
+-dontwarn io.ktor.client.call.TypeInfo
+-dontwarn io.ktor.client.features.json.JsonSerializer$DefaultImpls
+-dontwarn io.ktor.client.features.json.JsonSerializer
+-dontwarn io.ktor.utils.io.core.Input
+-dontwarn java.lang.management.ManagementFactory
+-dontwarn java.lang.management.RuntimeMXBean
