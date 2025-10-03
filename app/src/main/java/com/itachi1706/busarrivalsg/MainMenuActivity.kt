@@ -107,10 +107,15 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         }))
         moveAdapter.attachToRecyclerView(binding?.rvFav)
 
-        LogHelper.d(TAG, "Checking for app updates...")
-        AppUpdateInitializer(this, sp, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL, true)
-            .setOnlyOnWifiCheck(true).checkForUpdate()
-        LogHelper.d(TAG, "onCreate complete")
+        if (savedInstanceState == null) {
+            LogHelper.d(TAG, "Checking for app updates...")
+            AppUpdateInitializer(this, sp, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL, true)
+                .setOnlyOnWifiCheck(true).setPathBasedApi(true).checkForUpdate()
+            LogHelper.d(TAG, "onCreate complete")
+        } else {
+            LogHelper.d(TAG, "Skipping app update check as it should be already done")
+        }
+
 
         // Create Firebase Notification Channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

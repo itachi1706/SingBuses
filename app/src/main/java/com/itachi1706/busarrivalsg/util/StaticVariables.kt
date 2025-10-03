@@ -20,8 +20,7 @@ import java.util.concurrent.TimeUnit
  */
 object StaticVariables {
 
-    const val BASE_SERVER_URL =
-        "https://api.itachi1706.com/api/appupdatechecker.php?action=androidretrievedata&packagename="
+    const val BASE_SERVER_URL = "https://api.itachi1706.com/v1"
 
     const val CUR = 0
     const val NEXT = 1
