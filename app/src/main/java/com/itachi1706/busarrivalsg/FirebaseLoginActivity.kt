@@ -29,7 +29,7 @@ import com.itachi1706.busarrivalsg.databinding.ActivityFirebaseLoginBinding
 import com.itachi1706.helperlib.helpers.LogHelper.d
 import com.itachi1706.helperlib.helpers.LogHelper.w
 import kotlinx.coroutines.launch
-import kotlin.random.Random
+import java.security.SecureRandom
 
 class FirebaseLoginActivity : AppCompatActivity() {
 
@@ -71,9 +71,7 @@ class FirebaseLoginActivity : AppCompatActivity() {
             binding?.signInProgress?.visibility = View.VISIBLE
 
             // Generate a random nonce
-            val nonceStr = "fla-basg-${System.currentTimeMillis()}-${Random.nextInt()}"
-            val nonce = Base64.encodeToString(nonceStr.toByteArray(), Base64.URL_SAFE)
-
+            val nonce = generateSecureNonce()
             val googleidOption = GetGoogleIdOption.Builder()
                 .setServerClientId(getString(R.string.default_web_client_id))
                 .setAutoSelectEnabled(true)
@@ -97,9 +95,8 @@ class FirebaseLoginActivity : AppCompatActivity() {
             } else {
                 lifecycleScope.launch {
                     try {
-                        val result = credentialManager!!.getCredential(baseContext, request)
-
-                        handleGoogleSignIn(result.credential)
+                        val result = credentialManager?.getCredential(this@FirebaseLoginActivity, request)
+                        handleGoogleSignIn(result?.credential)
                     } catch (e: GetCredentialException) {
                         Log.e(TAG, "Unable to login user due to ${e.message}")
                         binding?.root?.let {
@@ -131,16 +128,30 @@ class FirebaseLoginActivity : AppCompatActivity() {
         updateUI(currentUser)
     }
 
-    private fun handleGoogleSignIn(credential: Credential) {
+    private fun generateSecureNonce(size: Int = 32): String {
+        val nonce = ByteArray(size)
+        SecureRandom().nextBytes(nonce)
+        return Base64.encodeToString(nonce, Base64.URL_SAFE or Base64.NO_WRAP)
+    }
+
+    private fun handleGoogleSignIn(credential: Credential?) {
+        if (credential == null) {
+            Log.e(TAG, "Credentials not found")
+            return
+        }
         if (credential is CustomCredential && credential.type == TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
             // Get google id token
             val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
 
             firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
+        } else {
+            Log.e(TAG, "Unexpected credential type: ${credential.type}")
+            updateUI(null)
         }
     }
     private fun firebaseAuthWithGoogle(idToken: String) {
-        d(TAG, "firebaseAuthWithGoogle: $idToken")
+        val idTokenLast8 = if (idToken.length >= 8) "xxx${idToken.takeLast(8)}" else idToken
+        d(TAG, "firebaseAuthWithGoogle: $idTokenLast8")
         binding?.signInProgress?.visibility = View.VISIBLE
 
         val credential = GoogleAuthProvider.getCredential(idToken, null)
