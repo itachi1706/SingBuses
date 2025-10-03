@@ -40,6 +40,7 @@ import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.busarrivalsg.util.SwipeFavouriteCallback
 import com.itachi1706.busarrivalsg.util.SwipeMoveFavouriteCallback
 import com.itachi1706.helperlib.helpers.ConnectivityHelper
+import com.itachi1706.helperlib.helpers.EdgeToEdgeHelper
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.PrefHelper
 import kotlinx.coroutines.async
@@ -60,7 +61,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         LogInitializer.initLogger()
 
         binding = ActivityMainMenuRecyclerBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
 
         // Obtain Firebase Analytics instance
         val analyticsTask = lifecycleScope.async { loadAnalytics() }

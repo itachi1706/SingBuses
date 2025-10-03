@@ -41,6 +41,7 @@ import com.itachi1706.busarrivalsg.util.BusesUtil
 import com.itachi1706.busarrivalsg.util.OnMapViewReadyListener
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.helperlib.concurrent.Constants
+import com.itachi1706.helperlib.helpers.EdgeToEdgeHelper
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.objects.ApiResponse
 import kotlinx.serialization.SerializationException
@@ -65,7 +66,7 @@ class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapRe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNtubusWithSheetBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
 
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)

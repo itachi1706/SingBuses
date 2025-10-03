@@ -30,6 +30,7 @@ import com.itachi1706.busarrivalsg.services.BusStorage
 import com.itachi1706.busarrivalsg.tasks.GetBusServicesTask
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.busarrivalsg.util.SwipeFavouriteCallback
+import com.itachi1706.helperlib.helpers.EdgeToEdgeHelper
 import com.itachi1706.helperlib.helpers.LogHelper
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -49,7 +50,7 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBusServicesAtStopRecyclerBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
 
         if (intent.hasExtra("stopCode")) busStopCode = intent.getStringExtra("stopCode")
         if (intent.hasExtra("stopName")) busStopName = intent.getStringExtra("stopName")
