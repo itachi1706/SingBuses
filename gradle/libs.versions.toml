@@ -1,7 +1,7 @@
 [versions]
 appupdater = "4.1.0"
 agp = "8.13.0"
-attribouter = "0.1.9"
+attribouter = "1.0.0"
 benManesVersions = "0.53.0"
 cepaslib = "2.5.0"
 constraintlayout = "2.2.1"
@@ -44,7 +44,7 @@ androidx-credentials = { group = "androidx.credentials", name = "credentials", v
 androidx-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
 googleid-identity = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 appupdater = { module = "com.itachi1706.appupdater:appupdater", version.ref = "appupdater" }
-attribouter = { module = "me.jfenn:Attribouter", version.ref = "attribouter" }
+attribouter = { group = "com.itachi1706.abp", name="attribouter", version.ref = "attribouter" }
 cepaslib = { module = "com.itachi1706.cepaslib:cepaslib", version.ref = "cepaslib" }
 constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }

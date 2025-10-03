@@ -126,9 +126,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
 
     implementation(libs.appupdater)
-    implementation(libs.attribouter) {
-        exclude(group = "com.google.android", module = "flexbox")
-    }
+    implementation(libs.attribouter)
     implementation(libs.cepaslib)
     implementation(libs.constraintlayout)
     implementation(libs.core.ktx)

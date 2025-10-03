@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
+import com.itachi1706.abp.attribouter.Attribouter
 import com.itachi1706.appupdater.EasterEggResMultiMusicPrefFragment
 import com.itachi1706.appupdater.SettingsInitializer
 import com.itachi1706.busarrivalsg.services.LocManager
@@ -25,7 +26,6 @@ import com.itachi1706.helperlib.deprecation.HtmlDep
 import com.itachi1706.helperlib.helpers.EdgeToEdgeHelper
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.PrefHelper
-import me.jfenn.attribouter.Attribouter
 import java.util.Date
 import java.util.Locale
 
