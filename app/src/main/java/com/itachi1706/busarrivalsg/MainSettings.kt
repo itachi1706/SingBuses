@@ -9,21 +9,23 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
+import com.itachi1706.abp.attribouter.Attribouter
 import com.itachi1706.appupdater.EasterEggResMultiMusicPrefFragment
 import com.itachi1706.appupdater.SettingsInitializer
 import com.itachi1706.busarrivalsg.services.LocManager
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.cepaslib.SettingsHandler
 import com.itachi1706.helperlib.deprecation.HtmlDep
+import com.itachi1706.helperlib.helpers.EdgeToEdgeHelper
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.PrefHelper
-import me.jfenn.attribouter.Attribouter
 import java.util.Date
 import java.util.Locale
 
@@ -35,6 +37,9 @@ class MainSettings : AppCompatActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val rootView = findViewById<View>(android.R.id.content)
+        EdgeToEdgeHelper.setViewEdgeToEdge(rootView)
 
         supportFragmentManager.beginTransaction().replace(android.R.id.content, GeneralPreferenceFragment())
                 .commit()
@@ -57,12 +62,13 @@ class MainSettings : AppCompatActivity() {
             SettingsHandler(requireActivity()).initSettings(this)
 
             SettingsInitializer().setFullscreen(true).explodeUpdaterSettings(activity, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL,
-                    resources.getString(R.string.link_legacy), resources.getString(R.string.link_updates), this)
-                    .setAboutApp(true) { Attribouter.from(requireContext()).show(); true }
-                    .setIssueTracking(true, "https://itachi1706.atlassian.net/browse/SGBUSAND")
-                    .setBugReporting(true, "https://itachi1706.atlassian.net/servicedesk/customer/portal/3")
-                    .setFDroidRepo(true, "fdroidrepos://fdroid.itachi1706.com/repo?fingerprint=B321F84BCAC7C296CF50923FF98965B11019BB5FD30C8B8F3A39F2F649AF9691")
-                    .explodeInfoSettings(this)
+                resources.getString(R.string.link_legacy), resources.getString(R.string.link_updates), this)
+                .setAboutApp(true) { Attribouter.from(requireContext()).show(); true }
+                .setIssueTracking(true, "https://itachi1706.atlassian.net/browse/SGBUSAND")
+                .setBugReporting(true, "https://itachi1706.atlassian.net/servicedesk/customer/portal/3")
+                .setFDroidRepo(true, "fdroidrepos://fdroid.itachi1706.com/repo?fingerprint=B321F84BCAC7C296CF50923FF98965B11019BB5FD30C8B8F3A39F2F649AF9691")
+                .setPathBasedApi(true)
+                .explodeInfoSettings(this)
             super.init()
 
             val favJson = findPreference<Preference>("fav_json")

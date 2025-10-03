@@ -8,13 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.itachi1706.busarrivalsg.adapters.BusStopRecyclerAdapter
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.databinding.ActivityListAllBusStopsBinding
+import com.itachi1706.helperlib.helpers.EdgeToEdgeHelper
 
 class ListAllBusStopsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityListAllBusStopsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding.root, this)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.itachi1706.busarrivalsg.databinding.ActivityFirebaseLoginBinding
+import com.itachi1706.helperlib.helpers.EdgeToEdgeHelper
 import com.itachi1706.helperlib.helpers.LogHelper.d
 import com.itachi1706.helperlib.helpers.LogHelper.w
 import kotlinx.coroutines.launch
@@ -48,7 +49,7 @@ class FirebaseLoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFirebaseLoginBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

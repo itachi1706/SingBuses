@@ -19,7 +19,8 @@ import com.itachi1706.helperlib.helpers.LogHelper.e
 
 @SuppressLint("MissingPermission")
 @Deprecated("To switch to use FusedLocationProvider instead of custom location manager")
-class LocManager(val mContext: Context) : Service(), LocationListener {
+class LocManager(val mContext: Context?) : Service(), LocationListener {
+    constructor() : this(null)
 
     var locationManager: LocationManager? = null
 
@@ -54,7 +55,7 @@ class LocManager(val mContext: Context) : Service(), LocationListener {
     @RequiresPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
     fun getLocationNow(): Location? {
         try {
-            locationManager = mContext.getSystemService(LOCATION_SERVICE) as LocationManager
+            locationManager = mContext?.getSystemService(LOCATION_SERVICE) as LocationManager
             if (locationManager == null) {
                 e(TAG, "There are no location services available on this device")
                 return null
@@ -132,6 +133,7 @@ class LocManager(val mContext: Context) : Service(), LocationListener {
      * Function to show settings alert dialog
      */
     fun showSettingsAlert() {
+        if (mContext == null) return
         AlertDialog.Builder(mContext).setTitle(R.string.dialog_title_gps_disabled)
             .setMessage(R.string.dialog_message_gps_disabled)
             .setPositiveButton(R.string.dialog_action_positive_settings) { _, _ ->

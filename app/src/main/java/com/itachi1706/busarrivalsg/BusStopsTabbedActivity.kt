@@ -25,6 +25,7 @@ import com.itachi1706.busarrivalsg.fragments.BusStopsNearbyFragment
 import com.itachi1706.busarrivalsg.fragments.BusStopsSearchFragment
 import com.itachi1706.busarrivalsg.services.LocManager
 import com.itachi1706.busarrivalsg.util.StaticVariables
+import com.itachi1706.helperlib.helpers.EdgeToEdgeHelper
 import com.itachi1706.helperlib.helpers.LogHelper
 
 class BusStopsTabbedActivity : AppCompatActivity() {
@@ -41,7 +42,7 @@ class BusStopsTabbedActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityAddBusStopTabbedBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
 
         setSupportActionBar(binding?.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

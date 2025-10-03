@@ -40,6 +40,7 @@ import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.busarrivalsg.util.SwipeFavouriteCallback
 import com.itachi1706.busarrivalsg.util.SwipeMoveFavouriteCallback
 import com.itachi1706.helperlib.helpers.ConnectivityHelper
+import com.itachi1706.helperlib.helpers.EdgeToEdgeHelper
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.PrefHelper
 import kotlinx.coroutines.async
@@ -60,7 +61,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         LogInitializer.initLogger()
 
         binding = ActivityMainMenuRecyclerBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
 
         // Obtain Firebase Analytics instance
         val analyticsTask = lifecycleScope.async { loadAnalytics() }
@@ -107,10 +108,15 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         }))
         moveAdapter.attachToRecyclerView(binding?.rvFav)
 
-        LogHelper.d(TAG, "Checking for app updates...")
-        AppUpdateInitializer(this, sp, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL, true)
-            .setOnlyOnWifiCheck(true).checkForUpdate()
-        LogHelper.d(TAG, "onCreate complete")
+        if (savedInstanceState == null) {
+            LogHelper.d(TAG, "Checking for app updates...")
+            AppUpdateInitializer(this, sp, R.drawable.notification_icon, StaticVariables.BASE_SERVER_URL, true)
+                .setOnlyOnWifiCheck(true).setPathBasedApi(true).checkForUpdate()
+            LogHelper.d(TAG, "onCreate complete")
+        } else {
+            LogHelper.d(TAG, "Skipping app update check as it should be already done")
+        }
+
 
         // Create Firebase Notification Channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
