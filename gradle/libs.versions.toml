@@ -2,7 +2,7 @@
 appupdater = "4.0.1"
 agp = "8.13.0"
 attribouter = "0.1.9"
-benManesVersions = "0.52.0"
+benManesVersions = "0.53.0"
 cepaslib = "2.5.0"
 constraintlayout = "2.2.1"
 coreKtx = "1.17.0"
