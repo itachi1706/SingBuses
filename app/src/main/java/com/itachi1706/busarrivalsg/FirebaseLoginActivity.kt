@@ -14,6 +14,7 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
+import androidx.credentials.exceptions.NoCredentialException
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.gms.tasks.Task
@@ -103,6 +104,15 @@ class FirebaseLoginActivity : AppCompatActivity() {
                             Snackbar.make(
                                 it,
                                 "An error occurred signing in with Google: ${e.localizedMessage}",
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
+                    } catch (e: NoCredentialException) {
+                        Log.e(TAG, "No credentials found: ${e.message}")
+                        binding?.root?.let {
+                            Snackbar.make(
+                                it,
+                                "Unable to login. No Google Credentials found on device",
                                 Snackbar.LENGTH_LONG
                             ).show()
                         }
