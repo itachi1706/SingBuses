@@ -22,7 +22,6 @@ mockito = "5.20.0"
 mockitoKotlin = "6.1.0"
 multidex = "2.0.1"
 playServicesMaps = "19.2.0"
-playServicesAuth = "21.4.0"
 preferenceKtx = "1.2.1"
 recyclerview = "1.4.0"
 secretsGradle = "2.0.1"
@@ -32,6 +31,8 @@ testCore = "1.7.0"
 testRules = "1.7.0"
 testRunner = "1.7.0"
 playServicesLocation = "21.3.0"
+credentials = "1.5.0"
+googleid = "1.1.1"
 
 [libraries]
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -39,6 +40,9 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "testCore" }
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "testRules" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
+androidx-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
+googleid-identity = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 appupdater = { module = "com.itachi1706.appupdater:appupdater", version.ref = "appupdater" }
 attribouter = { module = "me.jfenn:Attribouter", version.ref = "attribouter" }
 cepaslib = { module = "com.itachi1706.cepaslib:cepaslib", version.ref = "cepaslib" }
@@ -59,7 +63,6 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
-play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }

@@ -146,7 +146,10 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.perf)
 
-    implementation(libs.play.services.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid.identity)
+
     implementation(libs.play.services.location)
     implementation(libs.play.services.maps)
 

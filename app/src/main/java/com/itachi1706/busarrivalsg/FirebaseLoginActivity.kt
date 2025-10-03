@@ -2,18 +2,26 @@ package com.itachi1706.busarrivalsg
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Base64
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
+import androidx.credentials.Credential
+import androidx.credentials.CredentialManager
+import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialException
+import androidx.credentials.exceptions.NoCredentialException
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -21,6 +29,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.itachi1706.busarrivalsg.databinding.ActivityFirebaseLoginBinding
 import com.itachi1706.helperlib.helpers.LogHelper.d
 import com.itachi1706.helperlib.helpers.LogHelper.w
+import kotlinx.coroutines.launch
+import java.security.SecureRandom
 
 class FirebaseLoginActivity : AppCompatActivity() {
 
@@ -29,7 +39,7 @@ class FirebaseLoginActivity : AppCompatActivity() {
         private const val FIREBASE_UID = "firebase_uid"
     }
 
-    private var mGoogleClient: GoogleSignInClient? = null
+    private var credentialManager: CredentialManager? = null
     private var mAuth: FirebaseAuth? = null
     private var sp: SharedPreferences? = null
 
@@ -54,20 +64,62 @@ class FirebaseLoginActivity : AppCompatActivity() {
         }
         binding?.signInProgress?.isIndeterminate = true
         binding?.signInProgress?.visibility = View.GONE
+        credentialManager = CredentialManager.create(this)
 
         sp = PreferenceManager.getDefaultSharedPreferences(this)
         binding?.emailSignInButton?.setOnClickListener {
             // Attempt to sign in with Google
             binding?.signInProgress?.visibility = View.VISIBLE
-            val signInIntent = mGoogleClient?.signInIntent
-            googleSignInIntent.launch(signInIntent)
+
+            // Generate a random nonce
+            val nonce = generateSecureNonce()
+            val googleidOption = GetGoogleIdOption.Builder()
+                .setServerClientId(getString(R.string.default_web_client_id))
+                .setAutoSelectEnabled(true)
+                .setNonce(nonce)
+                .build()
+
+            val request = GetCredentialRequest.Builder()
+                .addCredentialOption(googleidOption)
+                .build()
+
+            if (credentialManager == null) {
+                Log.e(TAG, "Credential Manager is null, cannot proceed")
+                binding?.root?.let {
+                    Snackbar.make(
+                        it,
+                        "An error occurred with the app. Are you on a Google certified device? If so, please restart the app and try again",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+                return@setOnClickListener
+            } else {
+                lifecycleScope.launch {
+                    try {
+                        val result = credentialManager?.getCredential(this@FirebaseLoginActivity, request)
+                        handleGoogleSignIn(result?.credential)
+                    } catch (e: GetCredentialException) {
+                        Log.e(TAG, "Unable to login user due to ${e.message}")
+                        binding?.root?.let {
+                            Snackbar.make(
+                                it,
+                                "An error occurred signing in with Google: ${e.localizedMessage}",
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
+                    } catch (e: NoCredentialException) {
+                        Log.e(TAG, "No credentials found: ${e.message}")
+                        binding?.root?.let {
+                            Snackbar.make(
+                                it,
+                                "Unable to login. No Google Credentials found on device",
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                }
+            }
         }
-
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail().build()
-
-        mGoogleClient = GoogleSignIn.getClient(this, gso)
 
         if (BuildConfig.DEBUG) {
             binding?.testAccount?.visibility = View.VISIBLE
@@ -86,29 +138,33 @@ class FirebaseLoginActivity : AppCompatActivity() {
         updateUI(currentUser)
     }
 
-    val googleSignInIntent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val data = result.data
-
-            // Result returned from launching sign in intent
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            d(TAG, "Sign In Result: ${task.isSuccessful}")
-            if (task.isSuccessful) {
-                // Signed in successfully
-                val acct = task.result
-                firebaseAuthWithGoogle(acct)
-            } else {
-                // Signed out
-                updateUI(null)
-            }
-        }
+    private fun generateSecureNonce(size: Int = 32): String {
+        val nonce = ByteArray(size)
+        SecureRandom().nextBytes(nonce)
+        return Base64.encodeToString(nonce, Base64.URL_SAFE or Base64.NO_WRAP)
     }
 
-    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
-        d(TAG, "firebaseAuthWithGoogle: ${acct.id}")
+    private fun handleGoogleSignIn(credential: Credential?) {
+        if (credential == null) {
+            Log.e(TAG, "Credentials not found")
+            return
+        }
+        if (credential is CustomCredential && credential.type == TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+            // Get google id token
+            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+
+            firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
+        } else {
+            Log.e(TAG, "Unexpected credential type: ${credential.type}")
+            updateUI(null)
+        }
+    }
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val idTokenLast8 = if (idToken.length >= 8) "xxx${idToken.takeLast(8)}" else idToken
+        d(TAG, "firebaseAuthWithGoogle: $idTokenLast8")
         binding?.signInProgress?.visibility = View.VISIBLE
 
-        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
         mAuth?.signInWithCredential(credential)?.addOnCompleteListener(this) { task -> processSignIn("WithGoogle", task) }
     }
 
