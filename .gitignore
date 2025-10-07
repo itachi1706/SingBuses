@@ -44,3 +44,4 @@ fabric.properties
 google-services.json
 app/release/
 secrets.properties
+/app/googlePlay

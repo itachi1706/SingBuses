@@ -20,7 +20,7 @@ android {
         applicationId = appNamespace
         minSdk = 23
         targetSdk = 36
-        versionCode = 1312
+        versionCode = 1313
         versionName = "5.3.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -106,9 +106,28 @@ secrets {
     ignoreList.add("sdk.*")       // Ignore all keys matching the regexp "sdk.*"
 }
 
-
 configurations.all {
     exclude(module = "httpclient")
+}
+
+afterEvaluate {
+    listOf("release", "debug", "googlePlay").forEach { variant ->
+        val capVariant = variant.replaceFirstChar { it.uppercase() }
+        val bundleTaskName = "bundle$capVariant"
+        val zipTaskName = "zipNativeDebugSymbols$capVariant"
+        tasks.register<Zip>(zipTaskName) {
+            group = "other"
+            description = "Zips the native debug symbols for $variant"
+            from("build/intermediates/merged_native_libs/$variant/merge${capVariant}NativeLibs/out/lib")
+            exclude("armeabi*")
+            exclude("mips")
+            archiveFileName.set("native-debug-symbols.zip")
+            destinationDirectory.set(layout.projectDirectory.dir("$variant/mappings"))
+        }
+        tasks.named(bundleTaskName).configure {
+            finalizedBy(tasks.named(zipTaskName))
+        }
+    }
 }
 
 dependencies {

@@ -2,13 +2,12 @@ package com.itachi1706.busarrivalsg.services
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Service
 import android.content.Context
+import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.os.IBinder
 import android.provider.Settings
 import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AlertDialog
@@ -19,8 +18,7 @@ import com.itachi1706.helperlib.helpers.LogHelper.e
 
 @SuppressLint("MissingPermission")
 @Deprecated("To switch to use FusedLocationProvider instead of custom location manager")
-class LocManager(val mContext: Context?) : Service(), LocationListener {
-    constructor() : this(null)
+class LocManager(val mContext: Context?) : LocationListener {
 
     var locationManager: LocationManager? = null
 
@@ -165,10 +163,6 @@ class LocManager(val mContext: Context?) : Service(), LocationListener {
 
     override fun onProviderDisabled(provider: String) {
         // NO-OP
-    }
-
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
     }
 
     companion object {

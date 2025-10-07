@@ -10,8 +10,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- For getting your current location pre-GPS (so that you don't need GPS to run) -->
 
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application
@@ -50,12 +48,6 @@
             android:name=".BusServicesAtStopRecyclerActivity"
             android:exported="false"
             android:label="@string/title_activity_bus_services_at_stop" />
-
-        <service
-            android:name=".services.LocManager"
-            android:exported="false"
-            android:foregroundServiceType="location"
-            tools:ignore="InnerclassSeparator" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
