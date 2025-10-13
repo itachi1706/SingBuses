@@ -30,7 +30,7 @@
     </style>
 
     <style name="AppTheme.AlertDialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
-        <item name="android:background">@color/appcompat_bg_color</item>\
+        <item name="android:background">@color/appcompat_bg_color</item>
         <item name="colorSecondary">@color/accent</item>
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primaryDark</item>
