@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.DialogFragment
@@ -23,6 +22,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.databinding.DialogBusLocationMapBinding
@@ -233,7 +233,7 @@ class BusLocationMapsDialogFragment : DialogFragment(),
         ) {
             requestGps.launch(permissions)
         } else {
-            AlertDialog.Builder(requireContext())
+            MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.dialog_title_request_permission_gps)
                 .setMessage(R.string.dialog_message_request_permission_gps_view_map_rationale)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
@@ -252,7 +252,7 @@ class BusLocationMapsDialogFragment : DialogFragment(),
                 mMap?.isMyLocationEnabled = true // Checked already
             } else {
                 LogHelper.e(TAG, "Location permission not granted")
-                AlertDialog.Builder(requireContext())
+                MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.dialog_title_permission_denied)
                     .setMessage(R.string.dialog_message_no_permission_gps)
                     .setPositiveButton(android.R.string.ok, null)

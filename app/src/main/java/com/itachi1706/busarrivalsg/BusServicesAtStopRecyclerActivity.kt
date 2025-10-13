@@ -9,7 +9,6 @@ import android.util.ArrayMap
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
@@ -18,6 +17,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itachi1706.busarrivalsg.adapters.BusServiceRecyclerAdapter
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.databinding.ActivityBusServicesAtStopRecyclerBinding
@@ -141,7 +141,7 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
             val message = if (busStopName != null) getString(R.string.dialog_message_remove_from_fav_with_stop_name,
                 fav.serviceNo, busStopName, fav.stopID) else getString(R.string.dialog_message_remove_from_fav,
                 fav.serviceNo, fav.stopID)
-            AlertDialog.Builder(this).setTitle(R.string.dialog_title_remove_from_fav)
+            MaterialAlertDialogBuilder(this).setTitle(R.string.dialog_title_remove_from_fav)
                 .setMessage(message)
                 .setPositiveButton(R.string.yes) { _, _ ->
                     // Remove from favourites
@@ -159,7 +159,7 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
             val message = if (busStopName != null) getString(R.string.dialog_message_add_to_fav_with_stop_name,
                 fav.serviceNo, busStopName, fav.stopID) else getString(R.string.dialog_message_add_to_fav,
                 fav.serviceNo, fav.stopID)
-            AlertDialog.Builder(this).setTitle(R.string.dialog_title_add_to_fav)
+            MaterialAlertDialogBuilder(this).setTitle(R.string.dialog_title_add_to_fav)
                 .setMessage(message)
                 .setPositiveButton(R.string.yes) { _, _ ->
                     busStorage?.addNewBus(fav)
