@@ -41,6 +41,6 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 
-    <style name="AttribouterTheme" parent="Theme.MaterialComponents.NoActionBar.Bridge" />
+    <style name="AttribouterTheme" parent="Theme.MaterialComponents.NoActionBar" />
 
 </resources>
