@@ -15,7 +15,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.collection.ArrayMap
 import androidx.core.app.ActivityCompat
@@ -30,6 +29,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itachi1706.busarrivalsg.databinding.ActivityNtubusWithSheetBinding
 import com.itachi1706.busarrivalsg.objects.CommonEnums
 import com.itachi1706.busarrivalsg.objects.json.ltasg.BusArrivalArrayObject
@@ -196,7 +196,7 @@ class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapRe
             return
         }
 
-        AlertDialog.Builder(this).setTitle(R.string.dialog_title_request_permission_gps)
+        MaterialAlertDialogBuilder(this).setTitle(R.string.dialog_title_request_permission_gps)
             .setMessage(R.string.dialog_message_request_permission_gps_view_map_rationale)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 requestGps.launch(permissions)

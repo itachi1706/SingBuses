@@ -9,7 +9,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.WorkerThread
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.NotificationChannelCompat
@@ -24,6 +23,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.itachi1706.appupdater.AppUpdateInitializer
@@ -295,7 +295,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
     }
 
     private fun networkUnavailable(reason: String) {
-        AlertDialog.Builder(this).setTitle(R.string.dialog_title_no_internet)
+        MaterialAlertDialogBuilder(this).setTitle(R.string.dialog_title_no_internet)
             .setMessage(getString(R.string.dialog_message_no_internet, reason))
             .setCancelable(false)
             .setNeutralButton(R.string.dialog_action_neutral_override, null)

@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.itachi1706.busarrivalsg.adapters.ViewPagerAdapter
@@ -101,7 +102,7 @@ class BusStopsTabbedActivity : AppCompatActivity() {
             return
         }
 
-        AlertDialog.Builder(this).setTitle(R.string.dialog_title_request_permission_gps)
+        MaterialAlertDialogBuilder(this).setTitle(R.string.dialog_title_request_permission_gps)
             .setMessage(R.string.dialog_message_request_permission_gps_rationale)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 requestGps.launch(permissions)
@@ -134,7 +135,7 @@ class BusStopsTabbedActivity : AppCompatActivity() {
             getLocationButtonClicked()
         } else {
             LogHelper.e(TAG, "Location permission NOT granted")
-            AlertDialog.Builder(this).setTitle(R.string.dialog_title_permission_denied)
+            MaterialAlertDialogBuilder(this).setTitle(R.string.dialog_title_permission_denied)
                 .setMessage(R.string.dialog_message_no_permission_gps)
                 .setPositiveButton(android.R.string.ok, null)
                 .setNeutralButton(R.string.dialog_action_neutral_app_settings) { _, _ ->

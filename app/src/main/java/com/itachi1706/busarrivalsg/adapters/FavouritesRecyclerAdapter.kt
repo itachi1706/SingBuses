@@ -7,12 +7,12 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.itachi1706.busarrivalsg.BusServicesAtStopRecyclerActivity
 import com.itachi1706.busarrivalsg.R
@@ -187,7 +187,7 @@ class FavouritesRecyclerAdapter(
             }
         }
 
-        val alert = AlertDialog.Builder(activity).setTitle(R.string.dialog_title_remove_from_fav)
+        val alert = MaterialAlertDialogBuilder(activity).setTitle(R.string.dialog_title_remove_from_fav)
             .setMessage(message)
             .setPositiveButton(R.string.yes) { _, _ ->
                 // Remove from favourites

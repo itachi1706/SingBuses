@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.busarrivalsg.objects.json.ltasg.BusArrivalArrayObjectEstimate
 import com.itachi1706.busarrivalsg.util.BusesUtil
@@ -124,7 +124,7 @@ data class BusRecordView(
 
     inner class UnavailableButton() : View.OnClickListener {
         override fun onClick(v: View) {
-            AlertDialog.Builder(v.context)
+            MaterialAlertDialogBuilder(v.context)
                 .setTitle(R.string.dialog_title_bus_timing_unavailable)
                 .setMessage(R.string.dialog_message_bus_timing_unavailable)
                 .setPositiveButton(R.string.dialog_action_positive_close, null).show()

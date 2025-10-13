@@ -10,7 +10,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.provider.Settings
 import androidx.annotation.RequiresPermission
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itachi1706.busarrivalsg.R
 import com.itachi1706.helperlib.helpers.LogHelper
 import com.itachi1706.helperlib.helpers.LogHelper.e
@@ -132,7 +132,7 @@ class LocManager(val mContext: Context?) : LocationListener {
      */
     fun showSettingsAlert() {
         if (mContext == null) return
-        AlertDialog.Builder(mContext).setTitle(R.string.dialog_title_gps_disabled)
+        MaterialAlertDialogBuilder(mContext).setTitle(R.string.dialog_title_gps_disabled)
             .setMessage(R.string.dialog_message_gps_disabled)
             .setPositiveButton(R.string.dialog_action_positive_settings) { _, _ ->
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)

@@ -10,12 +10,12 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itachi1706.abp.attribouter.Attribouter
 import com.itachi1706.appupdater.EasterEggResMultiMusicPrefFragment
 import com.itachi1706.appupdater.SettingsInitializer
@@ -74,7 +74,7 @@ class MainSettings : AppCompatActivity() {
             val favJson = findPreference<Preference>("fav_json")
             favJson?.setOnPreferenceClickListener {
                 val json = sp.getString("stored", "No Favourites")
-                AlertDialog.Builder(requireActivity()).setMessage(json).setTitle("Favourites JSON String").setPositiveButton("Close", null).show()
+                MaterialAlertDialogBuilder(requireActivity()).setMessage(json).setTitle("Favourites JSON String").setPositiveButton("Close", null).show()
                 true
             }
 
@@ -142,7 +142,7 @@ class MainSettings : AppCompatActivity() {
 
         private fun processAdvDevSettingLocation(): Boolean {
             if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                AlertDialog.Builder(requireActivity()).setTitle("Location Permission not granted")
+                MaterialAlertDialogBuilder(requireActivity()).setTitle("Location Permission not granted")
                         .setMessage("Location permission is not granted. Enable from the App Settings page or by scanning for nearby bus stops")
                         .setNeutralButton(R.string.dialog_action_neutral_app_settings) { _, _ ->
                             val permIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -166,7 +166,7 @@ class MainSettings : AppCompatActivity() {
                 message.append("<b>Mobile Network Data</b><br>")
                 message.append(getLocationRawStringData(net))
             }
-            AlertDialog.Builder(requireActivity()).setTitle("Location Data")
+            MaterialAlertDialogBuilder(requireActivity()).setTitle("Location Data")
                     .setMessage(HtmlDep.fromHtml(message.toString()))
                     .setPositiveButton(R.string.dialog_action_positive_close, null).show()
             return true
