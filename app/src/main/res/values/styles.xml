@@ -34,7 +34,6 @@
         <item name="colorSecondary">@color/accent</item>
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primaryDark</item>
-        <item name="buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
