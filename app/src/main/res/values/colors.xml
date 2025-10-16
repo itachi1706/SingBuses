@@ -2,15 +2,7 @@
 <resources>
 
     <!-- App State Colors -->
-    <color name="statusBarColor">@color/green_700</color>
-    <color name="primaryDark">@color/green_700</color>
-    <color name="primary">@color/green_500</color>
     <color name="accent">@color/light_green_500</color>
-
-    <color name="attribouter_colorPrimary">@color/primary</color>
-    <color name="attribouter_colorPrimaryDark">@color/primaryDark</color>
-    <color name="attribouter_colorPrimary_night">@color/primary</color>
-    <color name="attribouter_colorPrimaryDark_night">@color/primaryDark</color>
 
     <color name="refresh_progress_1">@color/blue_500</color>
     <color name="refresh_progress_2">@color/green_500</color>
@@ -18,8 +10,6 @@
     <color name="refresh_progress_4">@color/yellow_500</color>
 
     <!-- Generic Colors -->
-    <color name="transparent">#00000000</color>
-    <color name="appcompat_bg_color">#80323232</color>
 
     <!-- Day Night Mode Colors -->
     <color name="dark_yellow">#E3BE0E</color>
@@ -29,7 +19,6 @@
     <color name="red_500">#e51c23</color>
     <color name="blue_500">#5677fc</color>
     <color name="green_500">#259b24</color>
-    <color name="green_700">#0a7e07</color>
     <color name="light_green_500">#8bc34a</color>
     <color name="yellow_500">#ffeb3b</color>
 
@@ -58,7 +47,6 @@
     <color name="md_theme_onSurfaceVariant">#42493F</color>
     <color name="md_theme_outline">#73796E</color>
     <color name="md_theme_outlineVariant">#C2C8BC</color>
-    <color name="md_theme_scrim">#000000</color>
     <color name="md_theme_inverseSurface">#2E322B</color>
     <color name="md_theme_inverseOnSurface">#EFF2E8</color>
     <color name="md_theme_inversePrimary">#A4D397</color>
@@ -105,7 +93,6 @@
     <color name="md_theme_onSurfaceVariant_mediumContrast">#32382F</color>
     <color name="md_theme_outline_mediumContrast">#4E544B</color>
     <color name="md_theme_outlineVariant_mediumContrast">#696F65</color>
-    <color name="md_theme_scrim_mediumContrast">#000000</color>
     <color name="md_theme_inverseSurface_mediumContrast">#2E322B</color>
     <color name="md_theme_inverseOnSurface_mediumContrast">#EFF2E8</color>
     <color name="md_theme_inversePrimary_mediumContrast">#A4D397</color>
@@ -152,7 +139,6 @@
     <color name="md_theme_onSurfaceVariant_highContrast">#000000</color>
     <color name="md_theme_outline_highContrast">#282E25</color>
     <color name="md_theme_outlineVariant_highContrast">#454B42</color>
-    <color name="md_theme_scrim_highContrast">#000000</color>
     <color name="md_theme_inverseSurface_highContrast">#2E322B</color>
     <color name="md_theme_inverseOnSurface_highContrast">#FFFFFF</color>
     <color name="md_theme_inversePrimary_highContrast">#A4D397</color>
