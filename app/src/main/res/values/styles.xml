@@ -1,47 +1,5 @@
 <resources>
-
     <!-- LEGACY STYLES -->
-
-    <!-- Base application theme. -->
-    <style name="AppThemeOld" parent="AppThemeOld.Base" />
-    <style name="AppThemeOld.Base" parent="Theme.MaterialComponents.DayNight">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/primaryDark</item>
-        <item name="colorSecondary">@color/accent</item>
-    </style>
-
-    <style name="AppThemeOld.NoActionBar" parent="AppThemeOld">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppThemeOld.NoActionBar.FullScreen" parent="AppThemeOld.NoActionBar">
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
-    <style name="AppThemeOld.Wallpaper.NoActionBar" parent="AppThemeOld.NoActionBar">
-        <item name="android:windowBackground">@color/transparent</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:windowShowWallpaper">true</item>
-    </style>
-
-    <style name="AppThemeOld.Wallpaper.NoActionBar.FullScreen" parent="AppThemeOld.Wallpaper.NoActionBar">
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
-    <style name="AppThemeOld.AlertDialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
-        <item name="android:background">@color/appcompat_bg_color</item>
-        <item name="colorSecondary">@color/accent</item>
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/primaryDark</item>
-    </style>
-
-    <style name="AppThemeOld.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
-
-    <style name="AppThemeOld.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
-
     <style name="AttribouterTheme" parent="Theme.MaterialComponents.NoActionBar" />
 
 </resources>
