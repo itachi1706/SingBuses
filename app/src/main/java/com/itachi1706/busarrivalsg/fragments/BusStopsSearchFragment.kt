@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.itachi1706.busarrivalsg.adapters.BusStopRecyclerAdapter
 import com.itachi1706.busarrivalsg.database.BusStopsDb
 import com.itachi1706.busarrivalsg.databinding.FragmentBusStopsSearchBinding
-import com.itachi1706.busarrivalsg.adapters.BusStopRecyclerAdapter
 import com.itachi1706.helperlib.helpers.LogHelper.d
 import com.itachi1706.helperlib.helpers.LogHelper.e
 
@@ -22,7 +22,7 @@ class BusStopsSearchFragment : Fragment() {
         private const val TAG = "BSSearchF"
     }
 
-    private var binding: FragmentBusStopsSearchBinding? = null
+    private lateinit var binding: FragmentBusStopsSearchBinding
     private var adapter: BusStopRecyclerAdapter? = null
     private var db: BusStopsDb? = null
 
@@ -32,21 +32,23 @@ class BusStopsSearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentBusStopsSearchBinding.inflate(inflater, container, false)
-        val v = binding?.root
+        val v = binding.root
 
         if (activity == null) {
             e(TAG, "No activity found")
             return v
         }
 
-        binding?.rvNearestBusStops?.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         llm.orientation = LinearLayoutManager.VERTICAL
-        binding?.rvNearestBusStops?.layoutManager = llm
-        binding?.rvNearestBusStops?.itemAnimator = DefaultItemAnimator()
-
         adapter = BusStopRecyclerAdapter(mutableListOf())
-        binding?.rvNearestBusStops?.adapter = adapter
+
+        binding.rvNearestBusStops.let {
+            it.setHasFixedSize(true)
+            it.layoutManager = llm
+            it.itemAnimator = DefaultItemAnimator()
+            it.adapter = adapter
+        }
 
         // Blank population
         db = BusStopsDb(requireContext())
@@ -78,12 +80,7 @@ class BusStopsSearchFragment : Fragment() {
                 }
             }
         }
-        binding?.inputData?.addTextChangedListener(inputWatcher)
+        binding.inputData.addTextChangedListener(inputWatcher)
         return v
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
     }
 }

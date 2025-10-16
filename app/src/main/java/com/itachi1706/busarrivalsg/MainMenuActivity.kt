@@ -51,7 +51,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
     private lateinit var sp: SharedPreferences
     private var busStorage: BusStorage? = null
 
-    private var binding: ActivityMainMenuRecyclerBinding? = null
+    private lateinit var binding: ActivityMainMenuRecyclerBinding
     private var adapter: FavouritesRecyclerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,8 +61,8 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         LogInitializer.initLogger()
 
         binding = ActivityMainMenuRecyclerBinding.inflate(layoutInflater)
-        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
-        setSupportActionBar(binding?.toolbar)
+        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding.root, this)
+        setSupportActionBar(binding.toolbar)
 
         // Obtain Firebase Analytics instance
         val analyticsTask = lifecycleScope.async { loadAnalytics() }
@@ -71,7 +71,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         val llm = LinearLayoutManager(this)
         llm.orientation = RecyclerView.VERTICAL
 
-        binding?.refreshFavourites?.let {
+        binding.refreshFavourites.let {
             it.setOnRefreshListener(this)
             it.setColorSchemeResources(
                 R.color.refresh_progress_1,
@@ -85,7 +85,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         PrefHelper.handleDefaultThemeSwitch(sp.getString("app_theme", "default") ?: "default")
         sp.edit { putBoolean("cepas_dark_theme", true) }
         adapter = FavouritesRecyclerAdapter(arrayListOf(), this, StaticVariables.useServerTime(sp))
-        binding?.rvFav?.let {
+        binding.rvFav.let {
             it.setHasFixedSize(true)
             it.layoutManager = llm
             it.itemAnimator = DefaultItemAnimator()
@@ -107,7 +107,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
                 return adapter?.removeFavourite(position) ?: false
             }
         }))
-        moveAdapter.attachToRecyclerView(binding?.rvFav)
+        moveAdapter.attachToRecyclerView(binding.rvFav)
 
         if (savedInstanceState == null) {
             LogHelper.d(TAG, "Checking for app updates...")
@@ -138,7 +138,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
     override fun onResume() {
         super.onResume()
 
-        binding?.addFab?.let {
+        binding.addFab.let {
             it.setOnClickListener { startActivity(Intent(this, BusStopsTabbedActivity::class.java)) }
             it.setOnLongClickListener { _ ->
                 Toast.makeText(this, R.string.fab_hint_main_menu, Toast.LENGTH_SHORT).show()
@@ -148,7 +148,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
 
         checkIfDatabaseUpdated()
 
-        binding?.refreshFavourites?.isRefreshing = true
+        binding.refreshFavourites.isRefreshing = true
         updateFavourites()
 
         // Companion objects
@@ -157,7 +157,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
             else -> LogHelper.i(TAG, "No companion device selected")
         }
 
-        binding?.firebaseSyncStatus?.let {
+        binding.firebaseSyncStatus.let {
             it.isClickable = true
             it.setOnClickListener { startActivity(Intent(this, FirebaseLoginActivity::class.java)) }
         }
@@ -200,7 +200,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
                 true
             }
             R.id.action_refresh -> {
-                binding?.refreshFavourites?.isRefreshing = true
+                binding.refreshFavourites.isRefreshing = true
                 updateFavourites()
                 true
             }
@@ -235,7 +235,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
             }
         }
 
-        binding?.refreshFavourites?.let {
+        binding.refreshFavourites.let {
             if (it.isRefreshing) it.isRefreshing = false
         }
     }
