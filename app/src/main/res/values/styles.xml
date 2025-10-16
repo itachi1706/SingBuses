@@ -1,5 +1,0 @@
-<resources>
-    <!-- LEGACY STYLES -->
-    <style name="AttribouterTheme" parent="Theme.MaterialComponents.NoActionBar" />
-
-</resources>
