@@ -17,6 +17,7 @@ class ListAllBusStopsActivity : AppCompatActivity() {
         val binding = ActivityListAllBusStopsBinding.inflate(layoutInflater)
         EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding.root, this)
 
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.rvAllBusStops.setHasFixedSize(true)

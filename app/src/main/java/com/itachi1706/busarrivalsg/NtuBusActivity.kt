@@ -67,6 +67,7 @@ class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapRe
         super.onCreate(savedInstanceState)
         binding = ActivityNtubusWithSheetBinding.inflate(layoutInflater)
         EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
+        setSupportActionBar(binding?.extendLayout?.toolbar)
 
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)

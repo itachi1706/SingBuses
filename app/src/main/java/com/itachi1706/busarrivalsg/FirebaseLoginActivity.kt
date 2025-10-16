@@ -50,6 +50,7 @@ class FirebaseLoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityFirebaseLoginBinding.inflate(layoutInflater)
         EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
+        setSupportActionBar(binding?.toolbar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

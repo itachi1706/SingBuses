@@ -51,6 +51,7 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
         super.onCreate(savedInstanceState)
         binding = ActivityBusServicesAtStopRecyclerBinding.inflate(layoutInflater)
         EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
+        setSupportActionBar(binding?.toolbar)
 
         if (intent.hasExtra("stopCode")) busStopCode = intent.getStringExtra("stopCode")
         if (intent.hasExtra("stopName")) busStopName = intent.getStringExtra("stopName")
