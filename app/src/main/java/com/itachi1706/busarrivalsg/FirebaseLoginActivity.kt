@@ -44,12 +44,13 @@ class FirebaseLoginActivity : AppCompatActivity() {
     private var mAuth: FirebaseAuth? = null
     private var sp: SharedPreferences? = null
 
-    private var binding: ActivityFirebaseLoginBinding? = null
+    private lateinit var binding: ActivityFirebaseLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFirebaseLoginBinding.inflate(layoutInflater)
-        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
+        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding.root, this)
+        setSupportActionBar(binding.toolbar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -59,18 +60,20 @@ class FirebaseLoginActivity : AppCompatActivity() {
             mAuth?.signOut()
             updateUI(null, true)
         }
-        binding?.signOut?.setOnClickListener {
+        binding.signOut.setOnClickListener {
             mAuth?.signOut()
             updateUI(null)
         }
-        binding?.signInProgress?.isIndeterminate = true
-        binding?.signInProgress?.visibility = View.GONE
+        binding.signInProgress.let {
+            it.isIndeterminate = true
+            it.visibility = View.GONE
+        }
         credentialManager = CredentialManager.create(this)
 
         sp = PreferenceManager.getDefaultSharedPreferences(this)
-        binding?.emailSignInButton?.setOnClickListener {
+        binding.emailSignInButton.setOnClickListener {
             // Attempt to sign in with Google
-            binding?.signInProgress?.visibility = View.VISIBLE
+            binding.signInProgress.visibility = View.VISIBLE
 
             // Generate a random nonce
             val nonce = generateSecureNonce()
@@ -86,13 +89,12 @@ class FirebaseLoginActivity : AppCompatActivity() {
 
             if (credentialManager == null) {
                 Log.e(TAG, "Credential Manager is null, cannot proceed")
-                binding?.root?.let {
-                    Snackbar.make(
-                        it,
-                        "An error occurred with the app. Are you on a Google certified device? If so, please restart the app and try again",
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                }
+
+                Snackbar.make(
+                    binding.root,
+                    "An error occurred with the app. Are you on a Google certified device? If so, please restart the app and try again",
+                    Snackbar.LENGTH_LONG
+                ).show()
                 return@setOnClickListener
             } else {
                 lifecycleScope.launch {
@@ -101,32 +103,30 @@ class FirebaseLoginActivity : AppCompatActivity() {
                         handleGoogleSignIn(result?.credential)
                     } catch (e: GetCredentialException) {
                         Log.e(TAG, "Unable to login user due to ${e.message}")
-                        binding?.root?.let {
-                            Snackbar.make(
-                                it,
-                                "An error occurred signing in with Google: ${e.localizedMessage}",
-                                Snackbar.LENGTH_LONG
-                            ).show()
-                        }
+                        Snackbar.make(
+                            binding.root,
+                            "An error occurred signing in with Google: ${e.localizedMessage}",
+                            Snackbar.LENGTH_LONG
+                        ).show()
                     } catch (e: NoCredentialException) {
                         Log.e(TAG, "No credentials found: ${e.message}")
-                        binding?.root?.let {
-                            Snackbar.make(
-                                it,
-                                "Unable to login. No Google Credentials found on device",
-                                Snackbar.LENGTH_LONG
-                            ).show()
-                        }
+                        Snackbar.make(
+                            binding.root,
+                            "Unable to login. No Google Credentials found on device",
+                            Snackbar.LENGTH_LONG
+                        ).show()
                     }
                 }
             }
         }
 
         if (BuildConfig.DEBUG) {
-            binding?.testAccount?.visibility = View.VISIBLE
-            binding?.testAccount?.setOnClickListener {
-                binding?.signInProgress?.visibility = View.VISIBLE
-                mAuth?.signInWithEmailAndPassword("test@test.com", "test123")?.addOnCompleteListener { task -> processSignIn("TestEmail", task) }
+            binding.testAccount.let {
+                it.visibility = View.VISIBLE
+                it.setOnClickListener {
+                    binding.signInProgress.visibility = View.VISIBLE
+                    mAuth?.signInWithEmailAndPassword("test@test.com", "test123")?.addOnCompleteListener { task -> processSignIn("TestEmail", task) }
+                }
             }
         }
     }
@@ -163,7 +163,7 @@ class FirebaseLoginActivity : AppCompatActivity() {
     private fun firebaseAuthWithGoogle(idToken: String) {
         val idTokenLast8 = if (idToken.length >= 8) "xxx${idToken.takeLast(8)}" else idToken
         d(TAG, "firebaseAuthWithGoogle: $idTokenLast8")
-        binding?.signInProgress?.visibility = View.VISIBLE
+        binding.signInProgress.visibility = View.VISIBLE
 
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         mAuth?.signInWithCredential(credential)?.addOnCompleteListener(this) { task -> processSignIn("WithGoogle", task) }
@@ -189,24 +189,24 @@ class FirebaseLoginActivity : AppCompatActivity() {
     }
 
     private fun updateUI(user: FirebaseUser?, returnActivity: Boolean = false) {
-        binding?.signInProgress?.visibility = View.GONE
+        binding.signInProgress.visibility = View.GONE
         if (user != null) {
             // User exists
             Toast.makeText(this, "Signed in as ${user.email}", Toast.LENGTH_SHORT).show()
             sp?.edit { putString(FIREBASE_UID, user.uid) }
-            binding?.signInAs?.text = getString(R.string.signed_in_as, user.email)
+            binding.signInAs.text = getString(R.string.signed_in_as, user.email)
             if (BuildConfig.DEBUG)
-                binding?.testAccount?.visibility = View.GONE
-            binding?.emailSignInButton?.visibility = View.GONE
-            binding?.signOut?.visibility = View.VISIBLE
+                binding.testAccount.visibility = View.GONE
+            binding.emailSignInButton.visibility = View.GONE
+            binding.signOut.visibility = View.VISIBLE
         } else {
             Toast.makeText(this, "Currently Logged Out", Toast.LENGTH_SHORT).show()
             sp?.edit { remove(FIREBASE_UID) }
-            binding?.signInAs?.setText(R.string.not_signed_in)
+            binding.signInAs.setText(R.string.not_signed_in)
             if (BuildConfig.DEBUG)
-                binding?.testAccount?.visibility = View.VISIBLE
-            binding?.emailSignInButton?.visibility = View.VISIBLE
-            binding?.signOut?.visibility = View.GONE
+                binding.testAccount.visibility = View.VISIBLE
+            binding.emailSignInButton.visibility = View.VISIBLE
+            binding.signOut.visibility = View.GONE
         }
 
         if (returnActivity) {

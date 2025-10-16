@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NTUBusActivity">
+    tools:context=".NtuBusActivity">
 
     <include android:id="@+id/extend_layout" layout="@layout/activity_ntubus" />
 

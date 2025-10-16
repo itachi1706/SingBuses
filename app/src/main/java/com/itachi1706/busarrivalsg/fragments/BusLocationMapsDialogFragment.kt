@@ -60,8 +60,6 @@ class BusLocationMapsDialogFragment : DialogFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setStyle(STYLE_NO_TITLE, R.style.AppTheme_AlertDialog)
     }
 
     override fun onCreateView(

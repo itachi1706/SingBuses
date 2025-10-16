@@ -41,7 +41,7 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
     private var busStopCode: String? = null
     private var busStopName: String? = null
     private var busServicesString: String? = null
-    private var binding: ActivityBusServicesAtStopRecyclerBinding? = null
+    private lateinit var binding: ActivityBusServicesAtStopRecyclerBinding
     private var adapter: BusServiceRecyclerAdapter? = null
 
     private val busServices = ArrayMap<String, String>()
@@ -50,22 +50,23 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBusServicesAtStopRecyclerBinding.inflate(layoutInflater)
-        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
+        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding.root, this)
+        setSupportActionBar(binding.toolbar)
 
         if (intent.hasExtra("stopCode")) busStopCode = intent.getStringExtra("stopCode")
         if (intent.hasExtra("stopName")) busStopName = intent.getStringExtra("stopName")
         if (intent.hasExtra("busServices")) busServicesString = intent.getStringExtra("busServices")
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding?.rvBusService?.setHasFixedSize(true)
+        binding.rvBusService.setHasFixedSize(true)
         val llm = LinearLayoutManager(this)
         llm.orientation = RecyclerView.VERTICAL
-        binding?.rvBusService?.layoutManager = llm
-        binding?.rvBusService?.itemAnimator = DefaultItemAnimator()
+        binding.rvBusService.layoutManager = llm
+        binding.rvBusService.itemAnimator = DefaultItemAnimator()
 
         val sp = PreferenceManager.getDefaultSharedPreferences(this)
         adapter = BusServiceRecyclerAdapter(ArrayList(), this, StaticVariables.useServerTime(sp))
-        binding?.rvBusService?.adapter = adapter
+        binding.rvBusService.adapter = adapter
 
         val moveAdapter = ItemTouchHelper(SwipeFavouriteCallback(this, object : SwipeFavouriteCallback.ISwipeCallback {
             override fun getFavouriteState(position: Int): Boolean {
@@ -90,9 +91,9 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
                 return false
             }
         }))
-        moveAdapter.attachToRecyclerView(binding?.rvBusService)
+        moveAdapter.attachToRecyclerView(binding.rvBusService)
 
-        binding?.refreshSwipe?.let {
+        binding.refreshSwipe.let {
             it.setOnRefreshListener(this)
             it.setColorSchemeResources(
                 R.color.refresh_progress_1,
@@ -117,7 +118,7 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
         }
 
         supportActionBar?.title = if (busStopName != null) "${busStopName?.trim()} (${busStopCode?.trim()})" else "${busStopCode?.trim()}"
-        binding?.refreshSwipe?.isRefreshing = true
+        binding.refreshSwipe.isRefreshing = true
 
         if (busServicesString.isNullOrEmpty()) {
             // Get from DB
@@ -169,7 +170,7 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
     }
 
     private fun updateBusStop() {
-        binding?.refreshSwipe?.let {
+        binding.refreshSwipe.let {
             it.isRefreshing = true
             GetBusServicesTask(it, this, BusServicesAtStopHandler(this)).execute(busStopCode)
         }
@@ -187,7 +188,7 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
                 true
             }
             R.id.action_refresh -> {
-                binding?.refreshSwipe?.isRefreshing = true
+                binding.refreshSwipe.isRefreshing = true
                 updateBusStop()
                 true
             }
@@ -268,7 +269,7 @@ class BusServicesAtStopRecyclerActivity : AppCompatActivity(), SwipeRefreshLayou
         if (mainArr.services == null || mainArr.busStopCode == null) return
         val array = mainArr.services
         val stopId = mainArr.busStopCode
-        binding?.refreshSwipe?.isRefreshing = false
+        binding.refreshSwipe.isRefreshing = false
         for (obj in array) {
             obj.stopCode = stopId
             // Check service status

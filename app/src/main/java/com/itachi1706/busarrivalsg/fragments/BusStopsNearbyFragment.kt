@@ -52,7 +52,7 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
         const val RECEIVE_NEARBY_STOPS_EVENT = "ReceiveNearbyEvent"
     }
 
-    private var binding: FragmentBusStopsNearbyBinding? = null
+    private lateinit var binding: FragmentBusStopsNearbyBinding
 
     private var adapter: BusStopRecyclerAdapter? = null
     private var mMap: GoogleMap? = null
@@ -67,21 +67,24 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentBusStopsNearbyBinding.inflate(inflater, container, false)
-        val view = binding?.root
+        val view = binding.root
 
         if (activity == null) {
             e(TAG, "No activity found, cannot proceed with BusStopsNearbyFragment")
             return view
         }
 
-        binding?.rvNearestBusStops?.setHasFixedSize(true)
         val llm = LinearLayoutManager(context)
         llm.orientation = RecyclerView.VERTICAL
-        binding?.rvNearestBusStops?.layoutManager = llm
-        binding?.rvNearestBusStops?.itemAnimator = DefaultItemAnimator()
+        adapter = BusStopRecyclerAdapter(mutableListOf())
 
-        adapter = BusStopRecyclerAdapter(mutableListOf<BusStopJSON>())
-        binding?.rvNearestBusStops?.adapter = adapter
+
+        binding.rvNearestBusStops.let {
+            it.setHasFixedSize(true)
+            it.layoutManager = llm
+            it.itemAnimator = DefaultItemAnimator()
+            it.adapter = adapter
+        }
 
         // Populate with empty view
         db = BusStopsDb(requireContext())
@@ -104,13 +107,15 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.mapView?.onCreate(savedInstanceState)
-        binding?.mapView?.let { OnMapViewReadyListener(it, this) }
+        binding.mapView.let {
+            it.onCreate(savedInstanceState)
+            OnMapViewReadyListener(it, this)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        binding?.mapView?.onResume()
+        binding.mapView.onResume()
         if (context != null) {
             LocalBroadcastManager.getInstance(requireContext())
                 .registerReceiver(receiver, IntentFilter(RECEIVE_LOCATION_EVENT))
@@ -121,21 +126,16 @@ class BusStopsNearbyFragment : Fragment(), OnMapViewReadyListener.OnGlobalMapRea
 
     override fun onPause() {
         super.onPause()
-        binding?.mapView?.onPause()
+        binding.mapView.onPause()
         if (context != null) {
             LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(receiver)
             LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(nearbyReceiver)
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-    }
-
     private var nearbyTask: PopulateListCurrentLocationTask? = null
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: android.content.Context, intent: android.content.Intent) {
+        override fun onReceive(context: Context, intent: android.content.Intent) {
             val location = Location("")
             location.latitude = intent.getDoubleExtra("lat", 0.0)
             location.longitude = intent.getDoubleExtra("lng", 0.0)

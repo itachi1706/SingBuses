@@ -50,7 +50,7 @@ import java.util.Date
 
 class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapReadyListener, GoogleMap.OnInfoWindowClickListener {
 
-    private var binding: ActivityNtubusWithSheetBinding? = null
+    private lateinit var binding: ActivityNtubusWithSheetBinding
 
     private var mMap: GoogleMap? = null
     private var autoRefreshDelay = -1
@@ -66,7 +66,8 @@ class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapRe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNtubusWithSheetBinding.inflate(layoutInflater)
-        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
+        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding.root, this)
+        setSupportActionBar(binding.extendLayout.toolbar)
 
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
@@ -79,7 +80,7 @@ class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapRe
         }
 
         // Init map
-        binding?.extendLayout?.mapView?.let {
+        binding.extendLayout.mapView.let {
             it.onCreate(savedInstanceState)
             OnMapViewReadyListener(it, this)
             LogHelper.i(TAG, "Creating Map")
@@ -89,7 +90,7 @@ class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapRe
     override fun onResume() {
         super.onResume()
 
-        binding?.extendLayout?.mapView?.onResume()
+        binding.extendLayout.mapView.onResume()
         LocalBroadcastManager.getInstance(this).registerReceiver(publicBusReceiver,
             IntentFilter(RECEIVE_NTU_PUBLIC_BUS_DATA_EVENT)
         )
@@ -103,7 +104,7 @@ class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapRe
     override fun onPause() {
         super.onPause()
 
-        binding?.extendLayout?.mapView?.onPause()
+        binding.extendLayout.mapView.onPause()
         shouldAutoRefresh = false
         if (refreshHandler != null) {
             refreshHandler?.removeMessages(REFRESH_TASK)
@@ -302,7 +303,7 @@ class NtuBusActivity : AppCompatActivity(), OnMapViewReadyListener.OnGlobalMapRe
             if (busObjsArr == null) return
 
             for (busObjs in busObjsArr) {
-                if (busObjs.services == null || busObjs.services.size == 0) continue // No action
+                if (busObjs.services == null || busObjs.services.isEmpty()) continue // No action
 
                 val o = busObjs.services[0]
                 // Remove markers for this service

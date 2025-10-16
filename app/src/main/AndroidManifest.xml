@@ -73,8 +73,7 @@
         <activity
             android:name=".BusStopsTabbedActivity"
             android:exported="false"
-            android:label="@string/title_activity_add_bus_stops"
-            android:theme="@style/AppTheme.NoActionBar" /> <!-- Required because FOR SOME REASON Google Maps is using the deprecated Apache HTTP? WTF Google? -->
+            android:label="@string/title_activity_add_bus_stops" /> <!-- Required because FOR SOME REASON Google Maps is using the deprecated Apache HTTP? WTF Google? -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" /> <!-- Used for Firebase Cloud Messaging -->

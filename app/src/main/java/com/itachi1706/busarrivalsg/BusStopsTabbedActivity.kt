@@ -30,7 +30,7 @@ import com.itachi1706.helperlib.helpers.LogHelper
 
 class BusStopsTabbedActivity : AppCompatActivity() {
 
-    private var binding: ActivityAddBusStopTabbedBinding? = null
+    private lateinit var binding: ActivityAddBusStopTabbedBinding
 
     private var longitude: Double = 0.0
     private var latitude: Double = 0.0
@@ -42,15 +42,17 @@ class BusStopsTabbedActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityAddBusStopTabbedBinding.inflate(layoutInflater)
-        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
+        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding.root, this)
 
-        setSupportActionBar(binding?.toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        setupViewPager(binding?.mainViewpager)
-        binding?.mainTablayout?.setupWithViewPager(binding?.mainViewpager)
-        binding?.mainTablayout?.tabGravity = TabLayout.GRAVITY_FILL
-        binding?.mainTablayout?.tabMode = TabLayout.MODE_FIXED
+        setupViewPager(binding.mainViewpager)
+        binding.mainTablayout.let {
+            it.setupWithViewPager(binding.mainViewpager)
+            it.tabGravity = TabLayout.GRAVITY_FILL
+            it.tabMode = TabLayout.MODE_FIXED
+        }
 
         mAnalytics = FirebaseAnalytics.getInstance(this)
     }
@@ -67,7 +69,7 @@ class BusStopsTabbedActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         initLocationManager()
-        binding?.currentLocationFab?.setOnClickListener {
+        binding.currentLocationFab.setOnClickListener {
             checkIfYouHaveGpsPermissionForThis()
         }
     }
@@ -147,7 +149,7 @@ class BusStopsTabbedActivity : AppCompatActivity() {
     }
 
     private fun updateList() {
-        binding?.mainTablayout?.getTabAt(1)?.select()
+        binding.mainTablayout.getTabAt(1)?.select()
         val location = Location("")
         location.latitude = latitude
         location.longitude = longitude
