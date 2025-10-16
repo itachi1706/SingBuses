@@ -62,6 +62,7 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
 
         binding = ActivityMainMenuRecyclerBinding.inflate(layoutInflater)
         EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding?.root!!, this)
+        setSupportActionBar(binding?.toolbar)
 
         // Obtain Firebase Analytics instance
         val analyticsTask = lifecycleScope.async { loadAnalytics() }
