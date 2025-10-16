@@ -23,7 +23,6 @@
     <color name="md_theme_onSurfaceVariant">#C2C8BC</color>
     <color name="md_theme_outline">#8C9387</color>
     <color name="md_theme_outlineVariant">#42493F</color>
-    <color name="md_theme_scrim">#000000</color>
     <color name="md_theme_inverseSurface">#E0E4DA</color>
     <color name="md_theme_inverseOnSurface">#2E322B</color>
     <color name="md_theme_inversePrimary">#3E6837</color>
@@ -70,7 +69,6 @@
     <color name="md_theme_onSurfaceVariant_mediumContrast">#D8DED2</color>
     <color name="md_theme_outline_mediumContrast">#AEB4A8</color>
     <color name="md_theme_outlineVariant_mediumContrast">#8C9287</color>
-    <color name="md_theme_scrim_mediumContrast">#000000</color>
     <color name="md_theme_inverseSurface_mediumContrast">#E0E4DA</color>
     <color name="md_theme_inverseOnSurface_mediumContrast">#272B25</color>
     <color name="md_theme_inversePrimary_mediumContrast">#285122</color>
@@ -117,7 +115,6 @@
     <color name="md_theme_onSurfaceVariant_highContrast">#FFFFFF</color>
     <color name="md_theme_outline_highContrast">#ECF2E5</color>
     <color name="md_theme_outlineVariant_highContrast">#BFC5B8</color>
-    <color name="md_theme_scrim_highContrast">#000000</color>
     <color name="md_theme_inverseSurface_highContrast">#E0E4DA</color>
     <color name="md_theme_inverseOnSurface_highContrast">#000000</color>
     <color name="md_theme_inversePrimary_highContrast">#285122</color>

@@ -94,6 +94,14 @@ class MainMenuActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
 
         busStorage = BusStorage(sp)
 
+        // Set new theme based on (temporary here for now)
+        val themeSetting = sp.getString("m3_theme", "default")
+        when (themeSetting) {
+            "hc" -> setTheme(R.style.ThemeOverlay_AppTheme_HighContrast)
+            "mc" -> setTheme(R.style.ThemeOverlay_AppTheme_MediumContrast)
+            else -> setTheme(R.style.AppTheme)
+        }
+
         val moveAdapter = ItemTouchHelper(SwipeMoveFavouriteCallback(this, object: SwipeFavouriteCallback.ISwipeCallback {
             override fun getFavouriteState(position: Int): Boolean {
                 return true // Always favourite here
