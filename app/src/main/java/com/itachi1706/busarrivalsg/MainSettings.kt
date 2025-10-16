@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.preference.EditTextPreference
@@ -19,6 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itachi1706.abp.attribouter.Attribouter
 import com.itachi1706.appupdater.EasterEggResMultiMusicPrefFragment
 import com.itachi1706.appupdater.SettingsInitializer
+import com.itachi1706.busarrivalsg.databinding.ActivityAppSettingsBinding
 import com.itachi1706.busarrivalsg.services.LocManager
 import com.itachi1706.busarrivalsg.util.StaticVariables
 import com.itachi1706.cepaslib.SettingsHandler
@@ -34,15 +34,17 @@ import java.util.Locale
  * for com.itachi1706.busarrivalsg in SingBuses
  */
 class MainSettings : AppCompatActivity() {
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val binding = ActivityAppSettingsBinding.inflate(layoutInflater)
+        EdgeToEdgeHelper.setEdgeToEdgeWithContentView(binding.root, this)
+
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val rootView = findViewById<View>(android.R.id.content)
-        EdgeToEdgeHelper.setViewEdgeToEdge(rootView)
-
-        supportFragmentManager.beginTransaction().replace(android.R.id.content, GeneralPreferenceFragment())
-                .commit()
+        supportFragmentManager.beginTransaction().replace(binding.settingsFragmentContainer.id,
+            GeneralPreferenceFragment()).commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -85,7 +87,7 @@ class MainSettings : AppCompatActivity() {
             findPreference<Preference>("companionDevice")?.setOnPreferenceChangeListener { _, o ->
                 val companion = o as String
                 LogHelper.d("DEBUG", "Companion: $companion")
-                parentFragmentManager.beginTransaction().replace(android.R.id.content, GeneralPreferenceFragment()).commit()
+                parentFragmentManager.beginTransaction().replace(R.id.settings_fragment_container, GeneralPreferenceFragment()).commit()
                 true
             }
 
