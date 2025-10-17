@@ -29,6 +29,6 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="com.itachi1706.busarrivalsg"
-            android:targetClass="com.itachi1706.busarrivalsg.NTUBusActivity" />
+            android:targetClass="com.itachi1706.busarrivalsg.NtuBusActivity" />
     </shortcut>
 </shortcuts>
