@@ -9,8 +9,6 @@
     <color name="refresh_progress_3">@color/red_500</color>
     <color name="refresh_progress_4">@color/yellow_500</color>
 
-    <!-- Generic Colors -->
-
     <!-- Day Night Mode Colors -->
     <color name="dark_yellow">#E3BE0E</color>
     <color name="dark_green">#006400</color>
