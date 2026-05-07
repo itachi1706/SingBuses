@@ -1,6 +1,6 @@
 [versions]
 appupdater = "4.2.0"
-agp = "8.13.2"
+agp = "9.2.1"
 attribouter = "1.0.0"
 benManesVersions = "0.53.0"
 cepaslib = "2.6.1"
@@ -20,12 +20,11 @@ kotlinxSerializationJson = "1.11.0"
 material = "1.13.0"
 mockito = "5.23.0"
 mockitoKotlin = "6.1.0"
-multidex = "2.0.1"
 playServicesMaps = "19.2.0"
 preferenceKtx = "1.2.1"
 recyclerview = "1.4.0"
 secretsGradle = "2.0.1"
-sonarqube = "7.2.3.7755"
+sonarqube = "7.3.0.8198"
 sqlDelight = "1.5.5"
 testCore = "1.7.0"
 testRules = "1.7.0"
@@ -62,7 +61,6 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 material = { module = "com.google.android.material:material", version.ref = "material" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
@@ -74,7 +72,6 @@ ben-manes-versions = { id = "com.github.ben-manes.versions", version.ref = "benM
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
 google-secrets-gradle = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secretsGradle" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
 squareup-sqldelight = { id = "com.squareup.sqldelight", version.ref = "sqlDelight" }
