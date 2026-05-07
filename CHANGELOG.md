@@ -4,6 +4,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.0] - 2026-05-07
+### :sparkles: New Features
+- [`10f48b7`](https://github.com/itachi1706/SingBuses/commit/10f48b7df3a4cbf39bbebfc414ca265792e4c588) - SGBUSAND-311 Migrated to MDC *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`edfc2fd`](https://github.com/itachi1706/SingBuses/commit/edfc2fdf5c34ff6211995d258b168fd2b6eb2010) - SGBUSAND-312 Migrate to use Material 3 Themes *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`2c1a033`](https://github.com/itachi1706/SingBuses/commit/2c1a0334d6068e814692fd54d1acf073a624bc8b) - SGBUSAND-268 Updated app icon to support monochromatic icons *(commit by [@itachi1706](https://github.com/itachi1706))*
+
+### :recycle: Refactors
+- [`14379b9`](https://github.com/itachi1706/SingBuses/commit/14379b9a804b16a563fc44ef8ee9cd37d35b73ac) - Replaced all alert dialogs to MDC variant *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`8604fa1`](https://github.com/itachi1706/SingBuses/commit/8604fa1283561e279cd8e6cb6918b4c3afc565d7) - Update drawables to make use of new attrs *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`4ad74fe`](https://github.com/itachi1706/SingBuses/commit/4ad74fedf4e8df3dcf5c3e7e95a6966b1f9b27af) - Removed all old themes *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`4ecbb73`](https://github.com/itachi1706/SingBuses/commit/4ecbb739ad5549fa7d6a4218b00f99e0101b555e) - Move binding to a lateinit *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`00aab0b`](https://github.com/itachi1706/SingBuses/commit/00aab0b7cc041948bb21125712cc5e1a4088a531) - Update stylings *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`8fd38b8`](https://github.com/itachi1706/SingBuses/commit/8fd38b82e888120d41f73ab721e45c42e89c2aef) - Removed unnecessary colours *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`3168f64`](https://github.com/itachi1706/SingBuses/commit/3168f64f10bcaf4808b7e747e530ec16b796fbe6) - Fixed issues with colors *(commit by [@itachi1706](https://github.com/itachi1706))*
+
+### :wrench: Chores
+- [`253c428`](https://github.com/itachi1706/SingBuses/commit/253c428f6e9f5ddb57f772a0e15beefdbc626a31) - **deps**: bump stefanzweifel/git-auto-commit-action from 6 to 7 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`41fa007`](https://github.com/itachi1706/SingBuses/commit/41fa007a87bf1763264be5456f4a2f0344a64ca4) - Switch themes to MDC *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`628eca7`](https://github.com/itachi1706/SingBuses/commit/628eca7be76e6a9b733beac6a1a7abd37362e475) - Switched Toolbar to MaterialToolbar *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`5de6394`](https://github.com/itachi1706/SingBuses/commit/5de6394d1d9c094c791225e8d26950ae01ea6e59) - Remove Bridge theme *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`a4820dd`](https://github.com/itachi1706/SingBuses/commit/a4820dd2d93b60d722fecb5bd21cc1a86353b2cc) - Update app/src/main/res/values/styles.xml *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`a761ff9`](https://github.com/itachi1706/SingBuses/commit/a761ff9a9371b1caf590482bfbba99e5abf03e61) - Removed button style *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`d66ebf9`](https://github.com/itachi1706/SingBuses/commit/d66ebf90e9eccde2ea5cea0b843aa46e7878f3d3) - Remove unused import *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`d4b35d9`](https://github.com/itachi1706/SingBuses/commit/d4b35d96722c72b9faf31f2e746c364b1f9b4c65) - Added Toolbar for Main Activity *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`877aac8`](https://github.com/itachi1706/SingBuses/commit/877aac856954aca5e2e2025dd4e24bb415aa92cd) - Implemented a Material Toolbar for Settings page *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`6cf3866`](https://github.com/itachi1706/SingBuses/commit/6cf3866177f8281a67dbda2a3e364690fb8cb323) - Finished implementing toolbar on the remaining pages *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`67a6ce7`](https://github.com/itachi1706/SingBuses/commit/67a6ce7ce92f829217444075ee33c872bcb41b7f) - **deps**: bump actions/upload-artifact from 4 to 5 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`eaa1ef6`](https://github.com/itachi1706/SingBuses/commit/eaa1ef6c368361071e0ba46b1eeb5ab6d2b4cc1b) - **deps**: bump reactivecircus/android-emulator-runner *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`ceeb34f`](https://github.com/itachi1706/SingBuses/commit/ceeb34f58300c711138d9e4e84ecd524033877a0) - **deps**: bump actions/checkout from 5.0.0 to 6.0.1 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`f376b0c`](https://github.com/itachi1706/SingBuses/commit/f376b0c6ca92e1db86b55c8244d2ded753c445dd) - **deps**: bump actions/cache from 4 to 5 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`424a9cb`](https://github.com/itachi1706/SingBuses/commit/424a9cb7ad9cbfb68a2d6651060b818d74a29537) - **deps**: bump actions/checkout from 6.0.1 to 6.0.2 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`eb0b8d4`](https://github.com/itachi1706/SingBuses/commit/eb0b8d4b8962aac688efc693f8f45a932d75d4ea) - **deps**: bump actions/upload-artifact from 5 to 7 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`c05c7b1`](https://github.com/itachi1706/SingBuses/commit/c05c7b10a07b0fe4289f8ccf18ade87e6606065e) - **deps**: bump softprops/action-gh-release from 2 to 3 *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`643dd17`](https://github.com/itachi1706/SingBuses/commit/643dd173a64313eade19e35a0524c8533cd2111b) - **deps**: bump reactivecircus/android-emulator-runner *(commit by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`ea88c0c`](https://github.com/itachi1706/SingBuses/commit/ea88c0c5530f335e8e81225c30fb07b167105893) - **deps**: Bump AGP to 9.2.1 *(commit by [@itachi1706](https://github.com/itachi1706))*
+- [`a1bf97e`](https://github.com/itachi1706/SingBuses/commit/a1bf97e1d3377833fd6b8c0fdd7e9b0649b870e3) - **deps**: Bump sonarqube plugin *(commit by [@itachi1706](https://github.com/itachi1706))*
+
+
 ## [5.3.1] - 2025-10-09
 ### :bug: Bug Fixes
 - [`f285dd4`](https://github.com/itachi1706/SingBuses/commit/f285dd48da358c617bd7e5a071ff162895ebb838) - Restore Foreground Service issue *(commit by [@itachi1706](https://github.com/itachi1706))*
@@ -201,3 +239,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [5.2.3]: https://github.com/itachi1706/SingBuses/compare/5.2.2...5.2.3
 [5.3.0]: https://github.com/itachi1706/SingBuses/compare/5.2.3...5.3.0
 [5.3.1]: https://github.com/itachi1706/SingBuses/compare/5.3.0...5.3.1
+[6.0.0]: https://github.com/itachi1706/SingBuses/compare/5.3.1...6.0.0
