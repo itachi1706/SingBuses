@@ -19,5 +19,6 @@ sonarqube {
         property("sonar.androidLint.reportPaths", "app/build/reports/lint-results-debug.xml")
         property("sonar.projectVersion", project(":app").extensions.getByType(ApplicationExtension::class.java).defaultConfig.versionName
             ?: "1.0")
+        property("sonar.coverage.jacoco.xmlReportPaths", "**/build/reports/coverage/test/debug/report.xml")
     }
 }
