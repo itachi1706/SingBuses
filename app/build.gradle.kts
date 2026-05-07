@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.google.secrets.gradle)
@@ -46,7 +45,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             multiDexEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("debug") {
             configure<CrashlyticsExtension> {
@@ -152,7 +151,6 @@ dependencies {
     implementation(libs.flexbox)
     implementation(libs.helperlib)
     implementation(libs.material)
-    implementation(libs.multidex)
 
     implementation(libs.preference.ktx)
     implementation(libs.recyclerview)
